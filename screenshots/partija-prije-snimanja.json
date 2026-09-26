@@ -1,0 +1,14 @@
+{
+  "format": "lordaeron-save",
+  "version": 1,
+  "seed": 2005,
+  "roster": [
+    "grom",
+    "lyra",
+    "karn",
+    "aldric",
+    "brann",
+    "elyra"
+  ],
+  "commands": []
+}

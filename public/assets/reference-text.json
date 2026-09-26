@@ -1,0 +1,4609 @@
+[
+  {
+    "id": "chalice_amulet_of_protection",
+    "name": "Amulet of Protection",
+    "description": "Start of your dice pool step : If you are not rolling any red dice, you may add 3 green dice to your dice pool",
+    "level": "5",
+    "price": "17",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/chalice_amulet_of_protection.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_ankh_of_life",
+    "name": "AnkhOfLife",
+    "description": "Your health capacity is increased by 3",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/chalice_ankh_of_life.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_archeus",
+    "name": "Archeus",
+    "description": "Add 2 red dices, 1 blue dice and 1 green dice",
+    "level": "3",
+    "price": "14",
+    "energy": "0",
+    "trait": "Sword",
+    "image": "/assets/reference/chalice_archeus.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_avengers_breastplate",
+    "name": "Avenger's Breastplate",
+    "description": "Add 2 green dices to your dice pool. During your Place Token step : For each armor token you place in the defense box, you may also place 1 hit token in the attrition box",
+    "level": "5",
+    "price": "20",
+    "energy": "0",
+    "trait": "Mail",
+    "image": "/assets/reference/chalice_avengers_breastplate.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_bad_mojo_mask",
+    "name": "Bad Mojo Mask",
+    "description": "Add 1 green dice and 1 blue dice to your dice pool",
+    "level": "4",
+    "price": "16",
+    "energy": "0",
+    "trait": "Helmet - Cloth",
+    "image": "/assets/reference/chalice_bad_mojo_mask.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_biznicks_accurascope",
+    "name": "Biznick's Accurascope",
+    "description": "Start of your Place Token step : If you have a bow or gun equipped, you may place 1 hit token in the damage box",
+    "level": "4",
+    "price": "18",
+    "energy": "0",
+    "trait": "Scope - Bow or Gun",
+    "image": "/assets/reference/chalice_biznicks_accurascope.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_bloodrazor",
+    "name": "Bloodrazor",
+    "description": "Add 3 red dices to your dice pool. Start of your Place Token step : If it is at least the second round of combat, place 2 hit tokens in the damage box",
+    "level": "4",
+    "price": "15",
+    "energy": "0",
+    "trait": "Sword",
+    "image": "/assets/reference/chalice_bloodrazor.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_cannonball_runner",
+    "name": "Cannonball Runner",
+    "description": "End of your Reroll step : Discard this item to place 3 hit tokens in the damage box",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/chalice_cannonball_runner.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_colossal_bag_of_loot",
+    "name": "Colossal Bag of Loot",
+    "description": "Start of your Action : Discard this card o reveal the top four cards on the Bonus item deck. Each friendly character in your region may take any of the revealed items that are level 2 or lower, then discard the other revealed cards",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/chalice_colossal_bag_of_loot.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_cowl_of_heroes",
+    "name": "Cowl of Heroes",
+    "description": "Start of your Dice Pool step : If you are in combat with at least one red creature, boss (including the Overlord), or enemy player, add 1 blue dice and 1 green dice to your dice pool",
+    "level": "2",
+    "price": "9",
+    "energy": "0",
+    "trait": "Helmet - Cloth",
+    "image": "/assets/reference/chalice_cowl_of_heroes.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_crest_of_retribution",
+    "name": "Crest of Retribution",
+    "description": "Add 2 green dices to your dice pool. End of your Reroll step : Spot one 8 green dice to place 1 hot toekn in the damage box",
+    "level": "5",
+    "price": "17",
+    "energy": "0",
+    "trait": "Shield - Mail",
+    "image": "/assets/reference/chalice_crest_of_retribution.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_cursed_ooze_jar",
+    "name": "Cursed Ooze Jar",
+    "description": "Does not count towards your bag limit. Start of your Dice Pool step : Discard this card to place 1 curse token on each enemy participating character. You may only use one potion per combat round",
+    "level": "4",
+    "price": "17",
+    "energy": "0",
+    "trait": "Potion",
+    "image": "/assets/reference/chalice_cursed_ooze_jar.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_doomshot",
+    "name": "Doomshot",
+    "description": "Does not count toward you Bag limit. Start your Dice Pool step : If you have a Bow equipped, discard this card to add 2 blue dices and 2 red dices to your dice pool. You may only use one Ammo per combat round.",
+    "level": "3",
+    "price": "11",
+    "energy": "0",
+    "trait": "Ammo",
+    "image": "/assets/reference/chalice_doomshot.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_electrocutioner_leg",
+    "name": "Electrocutioner Leg",
+    "description": "Add 2 red dices to your dice pool. Reroll +1. Start your Place Token step : You may place 1 hit token in the damage box",
+    "level": "3",
+    "price": "13",
+    "energy": "0",
+    "trait": "Sword",
+    "image": "/assets/reference/chalice_electrocutioner_leg.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_feathered_breastplate",
+    "name": "Feathered Breastplate",
+    "description": "Add 3 green dices to your pool. During your Travel action : When you enter a region with one or more independent creatures, you do not have to stop traveling",
+    "level": "4",
+    "price": "16",
+    "energy": "0",
+    "trait": "Leather",
+    "image": "/assets/reference/chalice_feathered_breastplate.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_fellstone_good_luck_charm",
+    "name": "Felstone Good Luck Charm",
+    "description": "End of your Dice Pool step : Discard this card to reroll all your dice",
+    "level": "4",
+    "price": "16",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/chalice_fellstone_good_luck_charm.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_fist_of_stone",
+    "name": "Fist of Stone",
+    "description": "Add 4 red dices to your dice pool. Reroll -1 Attrition +3.",
+    "level": "3",
+    "price": "8",
+    "energy": "0",
+    "trait": "Mace",
+    "image": "/assets/reference/chalice_fist_of_stone.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_fist_of_the_peoples_militia",
+    "name": "Fist of the People's Militia",
+    "description": "Add 3 red dices to your dice pool. Reroll +2 Attrition +1",
+    "level": "3",
+    "price": "13",
+    "energy": "0",
+    "trait": "Mace",
+    "image": "/assets/reference/chalice_fist_of_the_peoples_militia.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_gnomish_shrink_ray",
+    "name": "Gnomish Shrink Ray",
+    "description": "Place X armor tokens on this card. X is equal to the Energy you spend when you equip this card. Start of your Dice Pool step : Add a number of green dice to your dice pool equal to the number of armor tokens on this card. End of your Dice Pool step : Lose 1 armor token from this card for each 1 green dice or 2 green dice in your dice pool.",
+    "level": "5",
+    "price": "19",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/chalice_gnomish_shrink_ray.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_greater_firestone",
+    "name": "Greater Firestone",
+    "description": "Add 2 red dices to your dice pool.",
+    "level": "4",
+    "price": "14",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/chalice_greater_firestone.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_head_of_grimhal_duuc",
+    "name": "Head of Grim'shal Duuc",
+    "description": "Start of your Dice Pool step : You may unequip this card to reduce the Threat value of each opponent by 1 until the end of your Attack phase",
+    "level": "3",
+    "price": "12",
+    "energy": "0",
+    "trait": "Head",
+    "image": "/assets/reference/chalice_head_of_grimhal_duuc.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_heartseeking_crossbow",
+    "name": "Heartseeking Crossbow",
+    "description": "Add 2 blue dices to your dice pool. Start of your Reroll step : Place 1hit token in the damage box for each blue dice you spot with a result of at least 2 higher than your opponent's Threat value.",
+    "level": "3",
+    "price": "12",
+    "energy": "0",
+    "trait": "Bow",
+    "image": "/assets/reference/chalice_heartseeking_crossbow.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_icicle_rod",
+    "name": "Icicle Rod",
+    "description": "Add 2 red dices and 1 blue dice to your dice pool. Start of each combat round : Regain 1 energy",
+    "level": "3",
+    "price": "10",
+    "energy": "0",
+    "trait": "Staff",
+    "image": "/assets/reference/chalice_icicle_rod.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_ironfoe",
+    "name": "Ironfoe",
+    "description": "Add 3 red dices to your dice pool. Start of your Reroll step : You may gain Reroll + 4 if you choose not to reroll any blue dice or any green dice.",
+    "level": "4",
+    "price": "15",
+    "energy": "0",
+    "trait": "Mace",
+    "image": "/assets/reference/chalice_ironfoe.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_jade_breastplate_of_power",
+    "name": "Jade Breastplate of Power",
+    "description": "Add 4 green dices and 1 red dice to your dice pool. Reroll + 1.",
+    "level": "5",
+    "price": "22",
+    "energy": "0",
+    "trait": "Mail",
+    "image": "/assets/reference/chalice_jade_breastplate_of_power.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_lorekeepers_ring",
+    "name": "Lorekeeper's Ring",
+    "description": "Your energy capacity is increased by 2. Start of each combat round : Regain 1 energy.",
+    "level": "5",
+    "price": "11",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/chalice_lorekeepers_ring.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_lunar_wand_of_arcane_wrath",
+    "name": "Lunar Wand of Arcane Wrath",
+    "description": "Add 3 blue dices to your dice pool. End of your Dice Pool step : you may spend any amount of your available Health to roll an equal number of additional blue dice.",
+    "level": "5",
+    "price": "19",
+    "energy": "0",
+    "trait": "Wand",
+    "image": "/assets/reference/chalice_lunar_wand_of_arcane_wrath.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_outriders_bow",
+    "name": "Outrider's Bow",
+    "description": "Add 4 blue dices to your dice pool. End of your Dice Pool step : You may change one 1 blue dice into a 7 blue dice.",
+    "level": "5",
+    "price": "18",
+    "energy": "0",
+    "trait": "Bow",
+    "image": "/assets/reference/chalice_outriders_bow.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_pyric_caduceus",
+    "name": "Pyric Caduceus",
+    "description": "Add 3 blue dices to your dice pool. End of your Reroll step : You may spend 2 Energy to place 2 hit tokens in the damage box",
+    "level": "4",
+    "price": "14",
+    "energy": "0",
+    "trait": "Wand",
+    "image": "/assets/reference/chalice_pyric_caduceus.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_quelserrar",
+    "name": "Quel'Serrar",
+    "description": "Add 4 red dices to your dice pool. End of your Reroll step : Spot one 8 red dice to place 1 armor token in the defense box",
+    "level": "5",
+    "price": "20",
+    "energy": "0",
+    "trait": "Sword",
+    "image": "/assets/reference/chalice_quelserrar.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_rageclaw_helm",
+    "name": "Rageclaw Helm ",
+    "description": "End of your Reroll step : If you did not roll any blue dice during this Dice Pool step, you may place an additional hit token in the damage box for 8 red dice you spot",
+    "level": "4",
+    "price": "13",
+    "energy": "0",
+    "trait": "Helmet - Leather",
+    "image": "/assets/reference/chalice_rageclaw_helm.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_robe_of_power",
+    "name": "Robe of Power",
+    "description": "Add 1 green dice to your dice pool. After you lose a Health : Once per combat round, you may spend up to 2 Energy. Regain 1 Health for each Energy you spend.",
+    "level": "3",
+    "price": "13",
+    "energy": "0",
+    "trait": "Cloth",
+    "image": "/assets/reference/chalice_robe_of_power.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_robes_of_the_west",
+    "name": "Robe of The West",
+    "description": "Add 2 green dices to your dice pool. End of your Dice Pool step : You may spend 1 Energy to gain Reroll + 2.",
+    "level": "2",
+    "price": "8",
+    "energy": "0",
+    "trait": "Cloth",
+    "image": "/assets/reference/chalice_robes_of_the_west.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_runeblade_of_baron_rivendare",
+    "name": "Runeblade of Baron Rivendare",
+    "description": "Add 3 red dices to your dice pool. End of your Reroll step : Regain 1 Energy for each 8 red dice you spot.",
+    "level": "4",
+    "price": "14",
+    "energy": "0",
+    "trait": "Sword",
+    "image": "/assets/reference/chalice_runeblade_of_baron_rivendare.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_scroll_of_teleportation",
+    "name": "Scroll of Teleportation",
+    "description": "Does not count towards your Bag limit. Using this card counts as an action. Roll 3 blue dices. If you roll at least one 6+ blue dice, you may place your character on any region containing one or more friendly characters.",
+    "level": "3",
+    "price": "13",
+    "energy": "0",
+    "trait": "Scroll",
+    "image": "/assets/reference/chalice_scroll_of_teleportation.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_scroll_of_the_whale",
+    "name": "Scroll of The Whale",
+    "description": "Does not count towards your Bag limit. Using this card counts as an action. End of your Dice Pool step : Discard this card to change up to four red or blue dices into an equal number of 8 green dices. You may only use one Scroll per combat round.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Scroll",
+    "image": "/assets/reference/chalice_scroll_of_the_whale.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_scrying_orb",
+    "name": "Scrying Orb",
+    "description": "Immediately before your faction draws a new quest : Draw 2 cards from the deck and choose which quest to put into play. Place the other quest on the bottom of its deck. Then unequip this card.",
+    "level": "3",
+    "price": "10",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/chalice_scrying_orb.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_seal_of_ascension",
+    "name": "Seal of Ascension",
+    "description": "During your Character Management step : You may equip items that are one level higher than your character.",
+    "level": "3",
+    "price": "11",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/chalice_seal_of_ascension.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_shadowforge_bushmaster",
+    "name": "Shadowforge Bushmaster",
+    "description": "Add 4 blue dices to your dice pool. End of your Reroll step : Spot one 7+ blue dice to place 2 hit tokens in the damage box.",
+    "level": "4",
+    "price": "15",
+    "energy": "0",
+    "trait": "Gun",
+    "image": "/assets/reference/chalice_shadowforge_bushmaster.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_skullflame_shield",
+    "name": "Skullflame Shield",
+    "description": "During your Place Tokens step : Place 1 hit token in the attrition box for each armor token you place in the defense box.",
+    "level": "5",
+    "price": "20",
+    "energy": "0",
+    "trait": "Shield - Mail",
+    "image": "/assets/reference/chalice_skullflame_shield.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_staff_of_rampant_growth",
+    "name": "Staff of Rampant Growth",
+    "description": "Add 2 red dices to your dice pool. After a friendly participating character loses Health : If you use an instant power that allows that character to regain Health, you may regain 1 Energy.",
+    "level": "3",
+    "price": "13",
+    "energy": "0",
+    "trait": "Staff",
+    "image": "/assets/reference/chalice_staff_of_rampant_growth.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_stormrager",
+    "name": "Stormrager",
+    "description": "Add 3 blue dices to your dice pool. If you have 6 or more available Energy, add an additional 2 red dices to your dice pool.",
+    "level": "4",
+    "price": "11",
+    "energy": "0",
+    "trait": "Wand",
+    "image": "/assets/reference/chalice_stormrager.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_takierthan_songblade",
+    "name": "Ta'Kierthan Songblade",
+    "description": "Add 2 red dices to your dice pool. End of your Reroll step : Spent up to 3 of your available Health. Change one red dice into an 8 red dice for each Health you spend.",
+    "level": "3",
+    "price": "12",
+    "energy": "0",
+    "trait": "Sword",
+    "image": "/assets/reference/chalice_takierthan_songblade.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_the_unstoppable_force",
+    "name": "The Unstoppable Force",
+    "description": "You may not have any cards equipped in your General Item area. Add 3 red dices to your dice pool. Reroll +3.",
+    "level": "3",
+    "price": "8",
+    "energy": "0",
+    "trait": "Mace",
+    "image": "/assets/reference/chalice_the_unstoppable_force.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_thorium_helm",
+    "name": "Thorium Helm",
+    "description": "Add 1 green dice to your dice pool. End of your Dice Pool step : Spot one 8 green dice to gain Reroll +2.",
+    "level": "3",
+    "price": "12",
+    "energy": "0",
+    "trait": "Helmet - Mail",
+    "image": "/assets/reference/chalice_thorium_helm.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_token_of_good_fortune",
+    "name": "Token of Good Fortune",
+    "description": "End of your Dice Pool step : Discard this card to gain Reroll +6.",
+    "level": "3",
+    "price": "8",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/chalice_token_of_good_fortune.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_tome_of_wisdom",
+    "name": "Tome of Wisdom",
+    "description": "Start of your action : You may purchase one power from your class deck and immediately equip it. Then unequip this card.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/chalice_tome_of_wisdom.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "chalice_viskag_the_bloodletter",
+    "name": "Vis'kag The Bloodletter",
+    "description": "Add 3 red dices to your dice pool. End of your Reroll step : Spot two 8 red dice to place 2 hit tokens in the damage box.",
+    "level": "3",
+    "price": "11",
+    "energy": "0",
+    "trait": "Sword",
+    "image": "/assets/reference/chalice_viskag_the_bloodletter.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_arcanist_bindings",
+    "name": "Arcanist Bindings",
+    "description": "Add 2 blue dices to your dice pool. Start of each combat round : Regain 1 Energy.",
+    "level": "5",
+    "price": "20",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/circle_arcanist_bindings.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_basilisk_crackling_staff",
+    "name": "Crackling Staff",
+    "description": "Add 3 red dices to your dice pool. End of your Dice Pool step : For each 8 red dice you spot, gain Attrition +1 and Reroll +1.",
+    "level": "5",
+    "price": "18",
+    "energy": "0",
+    "trait": "Staff",
+    "image": "/assets/reference/circle_basilisk_crackling_staff.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_basilisk_venom",
+    "name": "Basilisk Venom",
+    "description": "End of your Reroll step : Gain Attrition +1 for each 8 red dice you spot.",
+    "level": "5",
+    "price": "20",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/circle_basilisk_venom.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_blade_of_the_titans",
+    "name": "Blade of the Titans",
+    "description": "Add 4 red dices to your dice pool.If you are in combat with at least one red creature or boss (including the Overlord), add an additional 2 blue dices to your dice pool.",
+    "level": "5",
+    "price": "20",
+    "energy": "0",
+    "trait": "Sword",
+    "image": "/assets/reference/circle_blade_of_the_titans.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_bone_of_the_infernal",
+    "name": "Bone of the Infernal",
+    "description": "Add 3 blue dices and 1 red dice to your dice pool. Attrition +2.",
+    "level": "5",
+    "price": "20",
+    "energy": "0",
+    "trait": "Wand",
+    "image": "/assets/reference/circle_bone_of_the_infernal.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_burst_of_knowledge",
+    "name": "Burst of Knowledge",
+    "description": "Lower the Energy cost of your instant powers bby 1 (to a minimum of 0). End of combat : Discard this card.",
+    "level": "4",
+    "price": "14",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/circle_burst_of_knowledge.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_cadaverous_armor",
+    "name": "Cadaverous Armor",
+    "description": "Add 1 red dice and 3 green dices to your dice pool. Reroll +1.",
+    "level": "5",
+    "price": "18",
+    "energy": "0",
+    "trait": "Leather",
+    "image": "/assets/reference/circle_cadaverous_armor.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_chained_essence_of_eranikus",
+    "name": "Chained Essence of Eranikus",
+    "description": "Start of your Place Tokens step : Discard this card to gain Attrition +2. If more than one opponent is participating in the combat, gain an additional Attrition +4.",
+    "level": "4",
+    "price": "14",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/circle_chained_essence_of_eranikus.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_deathblow",
+    "name": "Deathblow",
+    "description": "Add 3 red dices to your dice pool. End of your Dice Pool step : Spot one 7+ red dice to roll  an additional red dice",
+    "level": "4",
+    "price": "14",
+    "energy": "0",
+    "trait": "Sword",
+    "image": "/assets/reference/circle_deathblow.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_deathchill_armor",
+    "name": "Deathchill Armor",
+    "description": "Add 4 green dices to your dice pool.",
+    "level": "4",
+    "price": "17",
+    "energy": "0",
+    "trait": "Sword",
+    "image": "/assets/reference/circle_deathchill_armor.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_dragonscale_armor",
+    "name": "Dragonscale Armor",
+    "description": "Add 4 green dices to your dice pool. Reroll +1. You are immune to the special ability of the Drake creature.",
+    "level": "5",
+    "price": "20",
+    "energy": "0",
+    "trait": "Sword",
+    "image": "/assets/reference/circle_dragonscale_armor.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_earthen_rod",
+    "name": "Earthen Rod",
+    "description": "Add 2 blue dices and 1 red dice to your dice pool. End of your Dice Pool step : Spot one 7+ blue dice to roll and additional blue dice",
+    "level": "5",
+    "price": "20",
+    "energy": "0",
+    "trait": "Sword",
+    "image": "/assets/reference/circle_earthen_rod.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_flamestrider_robes",
+    "name": "Flamestrider Robes",
+    "description": "Add 3 green dices to your dice pool. Reroll +1. While equipped, your Health capacity is increased by 2.",
+    "level": "4",
+    "price": "14",
+    "energy": "0",
+    "trait": "Leather",
+    "image": "/assets/reference/circle_flamestrider_robes.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_flaming_incinerator",
+    "name": "Flaming Incinerator",
+    "description": "Add 3 blue dices to your dice pool. End of your Reroll step : For each 8 blue dice you spot, remove 1 armor token from your opponents defense box.",
+    "level": "4",
+    "price": "13",
+    "energy": "0",
+    "trait": "Wand",
+    "image": "/assets/reference/circle_flaming_incinerator.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_free_action_potion",
+    "name": "Flamestrider Robes",
+    "description": "Does not count towards your Bag limit. Start of your faction turn : Discard this card to take one additional action this faction turn.",
+    "level": "5",
+    "price": "19",
+    "energy": "0",
+    "trait": "Potion",
+    "image": "/assets/reference/circle_free_action_potion.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_gorewood_bow",
+    "name": "Gorewood Bow",
+    "description": "Add 4 blue dices to your dice pool. Reroll +1. While equipped, your Energy capacity is increased by 2.",
+    "level": "5",
+    "price": "19",
+    "energy": "0",
+    "trait": "Leather",
+    "image": "/assets/reference/circle_gorewood_bow.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_grand_marshals_punisher",
+    "name": "Grand Marshal's Punisher",
+    "description": "Add 3 red dices to your dice pool. End of your Reroll step : Unequip this card to change two red dices into two 8 red dices.",
+    "level": "4",
+    "price": "14",
+    "energy": "0",
+    "trait": "Mace",
+    "image": "/assets/reference/circle_grand_marshals_punisher.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_hameyas_slayer",
+    "name": "Hameya's Slayer",
+    "description": "Add 3 red dices and 1 green dice to your dice pool. Start of your Place Tokens step : If it is at least the second round of combat, place 1 hit token in the damage box.",
+    "level": "5",
+    "price": "18",
+    "energy": "0",
+    "trait": "Leather",
+    "image": "/assets/reference/circle_hameyas_slayer.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_hammer_of_the_north_wind",
+    "name": "Hammer of the North Wind",
+    "description": "Add 3 red dices and 1 green dice to your dice pool. End of your Reroll step : Spot ont 9 red dice to lower the Threat value of all opponents by 1 until the end of your Attack phase.",
+    "level": "5",
+    "price": "20",
+    "energy": "0",
+    "trait": "Mace",
+    "image": "/assets/reference/circle_hammer_of_the_north_wind.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_lost_kris_of_zedd",
+    "name": "Lost Kris of Zedd",
+    "description": "Add 3 red dices to your dice pool. End of your Reroll step : Change up two 3+ red dice into 8 blue dice.",
+    "level": "4",
+    "price": "14",
+    "energy": "0",
+    "trait": "Sword",
+    "image": "/assets/reference/circle_lost_kris_of_zedd.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_lucky_charm",
+    "name": "Lucky Charm",
+    "description": "End of your Reroll step : Discard this card to change two red or blue dices into two 8 red or blue dice.",
+    "level": "4",
+    "price": "14",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/circle_lucky_charm.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_martin_thunder",
+    "name": "Martin Thunder",
+    "description": "Add 4 red dices to your dice pool. End of your Place Tokens step : Spot three 8 red dices to move all hit tokens in the defense box into the damage box.",
+    "level": "5",
+    "price": "20",
+    "energy": "0",
+    "trait": "Mace",
+    "image": "/assets/reference/circle_martin_thunder.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_mithril_frag_bomb",
+    "name": "Mitrhil Frag Bomb",
+    "description": "Start of your Dice Pool step : Discard this card to choose an enemy participating character. That character receives 2 stun token and loses 2 Health.",
+    "level": "5",
+    "price": "17",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/circle_mithril_frag_bomb.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_nightfall_drape",
+    "name": "Nightfall Drap",
+    "description": "Start of your Dice Pool step : For every 2 Energy you have available, add one green dice to your dice pool.",
+    "level": "5",
+    "price": "18",
+    "energy": "0",
+    "trait": "Cloth",
+    "image": "/assets/reference/circle_nightfall_drape.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_opulent_tunic_of_the_whale",
+    "name": "Opulent Tunic of the Whale",
+    "description": "Add 3 green dices to your dice pool. Reroll +1.",
+    "level": "4",
+    "price": "13",
+    "energy": "0",
+    "trait": "Cloth",
+    "image": "/assets/reference/circle_opulent_tunic_of_the_whale.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_orb_of_draconic_energy",
+    "name": "Orb of Draconic Energy",
+    "description": "During your Rest action : For each Energy that you regain, you may instead place the Energy token this card. Start of your Dice Pool step : Spend up to 2 Energy tokens from this card. Regain 1 Energy for each Energy token you spend.",
+    "level": "4",
+    "price": "15",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/circle_orb_of_draconic_energy.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_potion_of_berserking",
+    "name": "Potion of Berserking",
+    "description": "Does not count towards your Bag limit. Start of your Dice Pool step : Discard this card to add 3 red dices to your dice pool, but you may not roll any green dice during this Dice Pool step. You may only use one Potion per combat round.",
+    "level": "4",
+    "price": "15",
+    "energy": "0",
+    "trait": "Potion",
+    "image": "/assets/reference/circle_potion_of_berserking.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_rapid_fire_gloves",
+    "name": "Rapid Fire Gloves",
+    "description": "Start of your Dice Pool step : If you have a bow or Gun equipped, add 1 blue dice to your dice pool. Reroll +2.",
+    "level": "4",
+    "price": "14",
+    "energy": "0",
+    "trait": "Gauntlet - Leather",
+    "image": "/assets/reference/circle_rapid_fire_gloves.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_royal_highmark_vestments",
+    "name": "Royal Highmark Vestments",
+    "description": "Add 3 green dices to your dice pool. Reroll +2.",
+    "level": "5",
+    "price": "17",
+    "energy": "0",
+    "trait": "Leather",
+    "image": "/assets/reference/circle_royal_highmark_vestments.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_satyrs_bow",
+    "name": "Satyr's Bow",
+    "description": "Add 3 blue dices to your dice pool. End of your Reroll step : Change the result of up to two separate blue dices, so that each dice's new value is one number higher (to a maximum value of 8).",
+    "level": "4",
+    "price": "13",
+    "energy": "0",
+    "trait": "Bow",
+    "image": "/assets/reference/circle_satyrs_bow.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_screeching_bow",
+    "name": "Screeching Bow",
+    "description": "Add 3 blue dices to your dice pool. Reroll +2.",
+    "level": "4",
+    "price": "14",
+    "energy": "0",
+    "trait": "Bow",
+    "image": "/assets/reference/circle_screeching_bow.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_sniper_scope",
+    "name": "Sniper Scope",
+    "description": "If you have a Bow or Gun equipped, gain Reroll +3.",
+    "level": "4",
+    "price": "14",
+    "energy": "0",
+    "trait": "Scope - Bow or Gun",
+    "image": "/assets/reference/circle_sniper_scope.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_soul_harvester",
+    "name": "Soul Harvester",
+    "description": "Add 3 red dices to your dice pool. End of your Reroll Step : Remove two 8 red dices from your dice pool to place 3 hit tokens in the damage box.",
+    "level": "4",
+    "price": "13",
+    "energy": "0",
+    "trait": "Staff",
+    "image": "/assets/reference/circle_soul_harvester.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_spire_of_hakkar",
+    "name": "Spire of Hakkar",
+    "description": "Add 3 red dices to your dice pool. End of your Dice Pool step : Spot one 8  red dice to roll an additional 3 green dices.",
+    "level": "4",
+    "price": "15",
+    "energy": "0",
+    "trait": "Staff",
+    "image": "/assets/reference/circle_spire_of_hakkar.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_staff_of_hale_magefire",
+    "name": "Staff of the Hale Magefire",
+    "description": "Add 1 red dice to your dice pool. During your Place Tokens step : For each hit token you place in the defense box, you may also place 1 hit token in the damage box.",
+    "level": "5",
+    "price": "17",
+    "energy": "0",
+    "trait": "Staff",
+    "image": "/assets/reference/circle_staff_of_hale_magefire.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_staff_of_protection",
+    "name": "Staff of Protection",
+    "description": "Add 3 red dices to your dice pool. End of your Reroll step : Place 1 armor token in the defense box for each 8 red dice you spot.",
+    "level": "4",
+    "price": "14",
+    "energy": "0",
+    "trait": "Staff",
+    "image": "/assets/reference/circle_staff_of_protection.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_swiftness_potion",
+    "name": "Swiftness Potion",
+    "description": "Does not count towards your Bag limit. Start of your Travel action : Discard this card to move one additional region.",
+    "level": "4",
+    "price": "13",
+    "energy": "0",
+    "trait": "Potion",
+    "image": "/assets/reference/circle_swiftness_potion.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_taran_smasher",
+    "name": "Taran Smasher",
+    "description": "Add 4 red dices to your dice pool. End of your Dice Pool step : You may spend X Energy to gain Reroll +X.",
+    "level": "5",
+    "price": "19",
+    "energy": "0",
+    "trait": "Mace",
+    "image": "/assets/reference/circle_taran_smasher.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_tenderloin",
+    "name": "Tenderloin",
+    "description": "Does not count towards your Bag limit. Start of your Travel action : Discard this card to regain Health and Energy up to your capacity. You may only move one region during this Travel action.",
+    "level": "5",
+    "price": "16",
+    "energy": "0",
+    "trait": "Food",
+    "image": "/assets/reference/circle_tenderloin.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_touch_of_chaos",
+    "name": "Touch of Chaos",
+    "description": "Add 3 blue dices to your dice pool. End of your Dice Pool step : For each _ blue dice you spot, you may  spend 1 Energy to roll an additional red dice.",
+    "level": "4",
+    "price": "14",
+    "energy": "0",
+    "trait": "Wand",
+    "image": "/assets/reference/circle_touch_of_chaos.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "circle_war_maul",
+    "name": "War Maul",
+    "description": "Add 3 red dices to your dice pool. End of your Reroll step : Spot one 8 red dice to place 2 armor tokens in the defense box.",
+    "level": "4",
+    "price": "16",
+    "energy": "0",
+    "trait": "Mace",
+    "image": "/assets/reference/circle_war_maul.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_aurastone_hammer",
+    "name": "Aurastone Hammer",
+    "description": "Add 3 red dices to your dice pool. End of your Reroll step : Spot up to three 8 red dice. Regain 1 Energy for each 8 red dice you spot.",
+    "level": "3",
+    "price": "12",
+    "energy": "0",
+    "trait": "Mace",
+    "image": "/assets/reference/square_aurastone_hammer.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_battlesmasher_of_the_bear",
+    "name": "Battlesmasher of the Bear",
+    "description": "Add 2 red dices to your dice pool. End of your Reroll step : Spot one 7+ red dice to place 1 hit token in the damage box.",
+    "level": "3",
+    "price": "9",
+    "energy": "0",
+    "trait": "Mace",
+    "image": "/assets/reference/square_battlesmasher_of_the_bear.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_bloodlords_defender",
+    "name": "Bloodlord's Defender",
+    "description": "Add 1 red dice and 3 green dices to your dice pool.",
+    "level": "3",
+    "price": "11",
+    "energy": "0",
+    "trait": "Sword",
+    "image": "/assets/reference/square_bloodlords_defender.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_bludgeon_of_the_grinning_dog",
+    "name": "Bludgeon of the Grinning Dog",
+    "description": "Add 3 red dices to your dice pool. End of your Reroll step : Spot one 8 red dice to place 2 stun tokens on an enemy participating character.",
+    "level": "3",
+    "price": "13",
+    "energy": "0",
+    "trait": "Staff",
+    "image": "/assets/reference/square_bludgeon_of_the_grinning_dog.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_bone_studded_leather",
+    "name": "Bone-Studded Leather",
+    "description": "Add 3 green dices to your dice pool.",
+    "level": "3",
+    "price": "10",
+    "energy": "0",
+    "trait": "Leather",
+    "image": "/assets/reference/square_bone_studded_leather.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_cloak_o_veiled_shadows",
+    "name": "Cloak of Vailed Shadow",
+    "description": "Add 1 green dices to your dice pool. Start of your action : You may choose to take a Travel action even if your character is in a region containing one or more independent creatures.",
+    "level": "3",
+    "price": "10",
+    "energy": "0",
+    "trait": "Cloth",
+    "image": "/assets/reference/square_cloak_o_veiled_shadows.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_cobalt_crusher",
+    "name": "Cobalt Crusher",
+    "description": "Add 2 red dices to your dice pool. End of your Reroll step : Spot one 8 red dice to place 1 hit token in the damage box for each participating opponent.",
+    "level": "3",
+    "price": "10",
+    "energy": "0",
+    "trait": "Mace",
+    "image": "/assets/reference/square_cobalt_crusher.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_commanders_crown",
+    "name": "Commander's Crown",
+    "description": "Add 1 blue dice to your dice pool. Reroll +1.",
+    "level": "3",
+    "price": "11",
+    "energy": "0",
+    "trait": "Helmet - Cloth",
+    "image": "/assets/reference/square_commanders_crown.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_darkwater_talwar",
+    "name": "Darkwater Talwar",
+    "description": "Add 3 red dices to your dice pool. End of your Reroll step : You may change one 3+ red dice into a 6 red dice.",
+    "level": "3",
+    "price": "10",
+    "energy": "0",
+    "trait": "Sword",
+    "image": "/assets/reference/square_darkwater_talwar.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_decapitating_sword",
+    "name": "Decapitating Sword",
+    "description": "Add 3 red dices to your dice pool. Reroll +1.",
+    "level": "3",
+    "price": "12",
+    "energy": "0",
+    "trait": "Sword",
+    "image": "/assets/reference/square_decapitating_sword.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_drake_fang_talisman",
+    "name": "Drake Fang Talisman",
+    "description": "Add 1 red dice and 1 green dice to your dice pool.",
+    "level": "3",
+    "price": "12",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/square_drake_fang_talisman.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_dustfall_robes",
+    "name": "Dustfall Robes",
+    "description": "Add 2 green dices to your dice pool. Reroll +1.",
+    "level": "3",
+    "price": "8",
+    "energy": "0",
+    "trait": "Cloth",
+    "image": "/assets/reference/square_dustfall_robes.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_enchanted_gold_bloodrobe",
+    "name": "Enchanted Gold Bloodrobe",
+    "description": "Add 2 green dices to your dice pool. Reroll +2.",
+    "level": "3",
+    "price": "12",
+    "energy": "0",
+    "trait": "Leather",
+    "image": "/assets/reference/square_enchanted_gold_bloodrobe.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_explorers_knapsack",
+    "name": "Explorer's Knapsack",
+    "description": "You may store 9 additional items in your bag.",
+    "level": "3",
+    "price": "10",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/square_explorers_knapsack.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_firestarter",
+    "name": "Firestarter",
+    "description": "Add 1 blue dice and 1 red dice to your dice pool. End of your Dice Pool step : Spot one 7+ red or blue dice to roll an additional blue dice and red dice.",
+    "level": "3",
+    "price": "11",
+    "energy": "0",
+    "trait": "Wand",
+    "image": "/assets/reference/square_firestarter.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_glyphed_helm",
+    "name": "Glyphed Helm",
+    "description": "Reroll +1. End of your Dice pool step : Spot one 7+ green dice to roll an additional green dice.",
+    "level": "3",
+    "price": "7",
+    "energy": "0",
+    "trait": "Helmet - Leather",
+    "image": "/assets/reference/square_glyphed_helm.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_gnarled_staff",
+    "name": "Advisor's Gnarled Staff",
+    "description": "Add 2 red dices and 1 green dice to your dice pool. Start of your Dice Pool step : You may spend up to 3 Health. Regain 1 Energy for each Health you spend.",
+    "level": "3",
+    "price": "10",
+    "energy": "0",
+    "trait": "Staff",
+    "image": "/assets/reference/square_gnarled_staff.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_greater_agility_potion",
+    "name": "Greater Agility Potion",
+    "description": "Does not count towards your Bag limit. End of your Dice Pool step : Discard this card to gain Reroll +3. You may only use one Potion per combat round.",
+    "level": "4",
+    "price": "11",
+    "energy": "0",
+    "trait": "Potion",
+    "image": "/assets/reference/square_greater_agility_potion.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_greater_healing_potion",
+    "name": "Greater Healing Potion",
+    "description": "Does not count towards your Bag limit. After you lose a Health : Discard this card to regain up to 3 Health. You may only use one Potion per combat round.",
+    "level": "4",
+    "price": "1",
+    "energy": "0",
+    "trait": "Potion",
+    "image": "/assets/reference/square_greater_healing_potion.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_greater_mana_potion",
+    "name": "Greater Mana Potion",
+    "description": "Does not count towards your Bag limit. After you spend an Energy : Discard this card to regain up to 3 Energy. You may only use one Potion per combat round.",
+    "level": "4",
+    "price": "10",
+    "energy": "0",
+    "trait": "Leather",
+    "image": "/assets/reference/square_greater_mana_potion.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_lesser_agility_potion",
+    "name": "Lesser Agility Potion",
+    "description": "Does not count towards your Bag limit. End of your Dice Pool step : Discard this card to gain Reroll +2. You may only use one Potion per combat round.",
+    "level": "3",
+    "price": "7",
+    "energy": "0",
+    "trait": "Leather",
+    "image": "/assets/reference/square_lesser_agility_potion.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_lesser_healing_potion",
+    "name": "Lesser Healing Potion",
+    "description": "Does not count towards your Bag limit. After you lose a Health : Discard this card to regain up to 2 Health. You may only use one Potion per combat round.",
+    "level": "3",
+    "price": "7",
+    "energy": "0",
+    "trait": "Leather",
+    "image": "/assets/reference/square_lesser_healing_potion.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_lesser_mana_potion",
+    "name": "Lesser Mana Potion",
+    "description": "Does not count towards your Bag limit. After you spend an Energy : Discard this card to regain up to 2 Energy. You may only use one Potion per combat round.",
+    "level": "3",
+    "price": "7",
+    "energy": "0",
+    "trait": "Leather",
+    "image": "/assets/reference/square_lesser_mana_potion.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_oblivions_touch",
+    "name": "Oblivion's Touch",
+    "description": "Add 3 blue dices to your dice pool. Start to your Resolution step : Gain 1 Energy for each opponent that is defeated this round.",
+    "level": "3",
+    "price": "9",
+    "energy": "0",
+    "trait": "Wand",
+    "image": "/assets/reference/square_oblivions_touch.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_obsidian_edged_blade",
+    "name": "Obsidian Edged Blade",
+    "description": "Add 2 red dices to your dice pool. End of your Dice Pool step : Place 1 hit token in the damage box for each 8 red dice you spot, then lise 1 Health for each 1 red dice in your dice pool.",
+    "level": "3",
+    "price": "12",
+    "energy": "0",
+    "trait": "Sword",
+    "image": "/assets/reference/square_obsidian_edged_blade.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_ornate_blunderbuss",
+    "name": "Ornate Blunderbuss",
+    "description": "Add 3 blue dices and 1 red dice to your dice pool. End of your Dice Pool step : If you hace more 1 blue dice than 8 blue dice in your dice pool, you must discard this card and lose 2 Health.",
+    "level": "3",
+    "price": "8",
+    "energy": "0",
+    "trait": "Gun",
+    "image": "/assets/reference/square_ornate_blunderbuss.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_pestilent_wand",
+    "name": "Pestilent Wand",
+    "description": "Add 2 blue dices to your dice pool. End of your Reroll step : Spot one 9 blue dice to lower the Threat value of all opponents by 1 until the end of your Attack phase.",
+    "level": "3",
+    "price": "13",
+    "energy": "0",
+    "trait": "Wandr",
+    "image": "/assets/reference/square_pestilent_wand.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_ravenwood_bow",
+    "name": "Ravenwood Bow",
+    "description": "Add 3 blue dices to your dice pool. Reroll +1.",
+    "level": "3",
+    "price": "12",
+    "energy": "0",
+    "trait": "Bow",
+    "image": "/assets/reference/square_ravenwood_bow.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_ring_of_eternal_justice",
+    "name": "Ring of Eternal Justice",
+    "description": "Add 2 blue dices to your dice pool.",
+    "level": "3",
+    "price": "13",
+    "energy": "0",
+    "trait": "Leather",
+    "image": "/assets/reference/square_ring_of_eternal_justice.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_rod_of_corrosion",
+    "name": "Rod of Corrosion",
+    "description": "Add 2 blue dices to your dice pool. Start of each combat round : Place 1 hit token on this card. You gain Attrition +1 for each hit token on this card. At the end of combat, lose all hit token on this card.",
+    "level": "3",
+    "price": "11",
+    "energy": "0",
+    "trait": "Wand",
+    "image": "/assets/reference/square_rod_of_corrosion.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_scroll_of_great_spirit",
+    "name": "Scroll of Great Spirit",
+    "description": "Start of your Dice Pool step : Discard this card to add 3 blue dice to your dice pool. You may only use on Scroll per combat round.",
+    "level": "3",
+    "price": "8",
+    "energy": "0",
+    "trait": "Scroll",
+    "image": "/assets/reference/square_scroll_of_great_spirit.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_scroll_of_great_strength",
+    "name": "Scroll of Great Strength",
+    "description": "Start of your Dice Pool step : Discard this card to add 3 red dice to your dice pool. You may only use on Scroll per combat round.",
+    "level": "3",
+    "price": "7",
+    "energy": "0",
+    "trait": "Scroll",
+    "image": "/assets/reference/square_scroll_of_great_strength.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_shrapnel_blaster",
+    "name": "Shrapnel Blaster",
+    "description": "Add 4 blue dices to your dice pool, but you may not reroll any blue dice during this Reroll step.",
+    "level": "3",
+    "price": "10",
+    "energy": "0",
+    "trait": "Gun",
+    "image": "/assets/reference/square_shrapnel_blaster.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_skullance_shield",
+    "name": "Skullance Shield",
+    "description": "Add 1 green dice to your dice pool. End of your Dice Pool step : Spot one 8 green dice to roll and additional green dice.",
+    "level": "3",
+    "price": "11",
+    "energy": "0",
+    "trait": "Shield - Mail",
+    "image": "/assets/reference/square_skullance_shield.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_skullsplitting_crossbow",
+    "name": "Skullsplitting Crossbow",
+    "description": "Add 2 blue dices to your dice pool. End of your Dice Pool step : Spot one 7+ blue dice to roll an additional 2 blue dices.",
+    "level": "3",
+    "price": "11",
+    "energy": "0",
+    "trait": "Bow",
+    "image": "/assets/reference/square_skullsplitting_crossbow.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_solid_iron_maul",
+    "name": "Solid Iron Maul",
+    "description": "Add 3 red dices to your dice pool. Attrition +1.",
+    "level": "3",
+    "price": "13",
+    "energy": "0",
+    "trait": "Mace",
+    "image": "/assets/reference/square_solid_iron_maul.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_talisman_of_binding_shard",
+    "name": "Talisman of Binding Shard",
+    "description": "During the Defense phase : If you lose at least 1 Health, place 1 hit token in the damage box.",
+    "level": "3",
+    "price": "11",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/square_talisman_of_binding_shard.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_tortoise_armor",
+    "name": "Tortoise Armor",
+    "description": "Add 4 green dices to your dice pool. While equipped, you may only take one Travel action during each of your faction turns.",
+    "level": "3",
+    "price": "10",
+    "energy": "0",
+    "trait": "Mail",
+    "image": "/assets/reference/square_tortoise_armor.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_wand_of_eventide",
+    "name": "Wand of Eventide",
+    "description": "Add 3 blue dices to your dice pool.",
+    "level": "3",
+    "price": "12",
+    "energy": "0",
+    "trait": "Wand",
+    "image": "/assets/reference/square_wand_of_eventide.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_warhorn_of_dread",
+    "name": "Warhorn fDread",
+    "description": "Start of your Dice Pool step : Remove one red or blue dice from your dice pool to lower the Threat value of all opponents by 1 until the end of your Attack phase.",
+    "level": "3",
+    "price": "13",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/square_warhorn_of_dread.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "square_witch_doctors_cane",
+    "name": "Witch Doctor's Cane",
+    "description": "Add 3 red dices to your dice pool. Reroll +1.",
+    "level": "3",
+    "price": "12",
+    "energy": "0",
+    "trait": "Staff",
+    "image": "/assets/reference/square_witch_doctors_cane.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_1xp01",
+    "name": "One Experience Point",
+    "description": "You must immediately discard this card and receive 1 XP.",
+    "level": " ",
+    "price": " ",
+    "energy": " ",
+    "trait": " ",
+    "image": "/assets/reference/star_1xp01.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_2xp01",
+    "name": "Two Experience Point",
+    "description": "You must immediately discard this card and receive 2 XP.",
+    "level": " ",
+    "price": " ",
+    "energy": " ",
+    "trait": " ",
+    "image": "/assets/reference/star_2xp01.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_accurate_slugs",
+    "name": "Accurate Slugs",
+    "description": "Start of your Reroll step : If you have a Gun equipped, discard this card to gain Reroll +2. YOu can only use one Ammo per combat round.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Ammo",
+    "image": "/assets/reference/star_accurate_slugs.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_advanced_target_dummy",
+    "name": "Advanced Target Dummy",
+    "description": "When you equip this card, place 3 Health token on it. During the Defense phase : Instead of taking a wound, you may spend a Health token from this card. You must discard this card at the end of combat.",
+    "level": "3",
+    "price": "10",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_advanced_target_dummy.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_amulet_of_fortune",
+    "name": "Amulet of Fortune",
+    "description": "Add 2 blue dices to your dice pool. End of your Dice Pool step : Spot one 7+ blue dice to roll an additional 2 blue dices.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_amulet_of_fortune.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_animists_caress",
+    "name": "Animist's Caress",
+    "description": "Increase your Energy capacity and Health capacity by 1 each. When you equip this item, immediately gain 1 Energy and 1 Health. Discard this card at the end of combat.",
+    "level": "3",
+    "price": "8",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_animists_caress.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_arcane_bomb",
+    "name": "Arcane Bomb",
+    "description": "Start of your Dice Pool step : Discard this card and choose an enemy participating character. That character must lose 2 energy and 1 Health.",
+    "level": "3",
+    "price": "9",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_arcane_bomb.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_arcanite_dragonling",
+    "name": "Arcanite Dragonling",
+    "description": "When you equip this card, place 2 Health tokens on it. Add 2 red dices to your dice pool. During the Defense phase : Instead of taking a wound, you may spend a Health token from this card. You must discard this card at the end of combat.",
+    "level": "4",
+    "price": "16",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_arcanite_dragonling.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_bag_of_3gold01",
+    "name": "Bag of Gold",
+    "description": "Start of your Action : Discard this card to receive 3 gold.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_bag_of_3gold01.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_bag_of_5gold01",
+    "name": "Bag of Gold",
+    "description": "Start of your Action : Discard this card to receive 5 gold.",
+    "level": "1",
+    "price": "5",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_bag_of_5gold01.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_bag_of_7gold01",
+    "name": "Bag of Gold",
+    "description": "Start of your Action : Discard this card to receive 7 gold.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_bag_of_7gold01.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_band_of_rumination",
+    "name": "Band of Rumination",
+    "description": "Reroll +1. End of combat : Regain 1 Energy.",
+    "level": "2",
+    "price": "5",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_band_of_rumination.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_band_of_the_penitent",
+    "name": "Band of the Penitent",
+    "description": "End of your Dice Pool step : Change one 1 red or blue dice into a 8 green.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_band_of_the_penitent.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_blazefury_medallion",
+    "name": "Blazefury Medaillon",
+    "description": "End of your Reroll step : Spot one 7+ red dice to gain Attrition +1.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_blazefury_medallion.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_book_of_alchemy",
+    "name": "Book of Alchemy",
+    "description": "When you use a Potion, you may immediately pay its gold cost to place the card back into your Bag instead of discarding it. Then unequip this card.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_book_of_alchemy.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_bottle_of_poison",
+    "name": "Bottle of Poison",
+    "description": "Start of your Place Tokens step : Discard this card to gain Attrition +1. You may only use one Potion per combat round.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Potion",
+    "image": "/assets/reference/star_bottle_of_poison.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_celestial_orb",
+    "name": "Celestial Orb",
+    "description": "End of your Reroll step : Discard this card and spot one 7+ blue dice to roll an additional blue dice.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_celestial_orb.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_chimaerok_chops",
+    "name": "Chimaerok Chops",
+    "description": "Start of your action : Discard this card to regain any mic up to 4 Health and/or Energy.",
+    "level": "4",
+    "price": "13",
+    "energy": "0",
+    "trait": "Food",
+    "image": "/assets/reference/star_chimaerok_chops.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_coarse_weightstone",
+    "name": "Coarse Weightstone",
+    "description": "Start of your Dice Pool step : If you have a Mace equipped, discard this card to add a red dice to your dice pool.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_coarse_weightstone.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_cold_basilisk_eye",
+    "name": "Cold Basilisk Eye",
+    "description": "Start of your Dice Pool step : Discard this card to lower the Threat value of each opponent by 1 until the end of your Attack phase.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_cold_basilisk_eye.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_counterattack_lodestone",
+    "name": "Counterattack Lodestone",
+    "description": "End of your Reroll step : Discard this card and spot one 7+ green dice to roll an additional red dice.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_counterattack_lodestone.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_crude_map",
+    "name": "Crude Map",
+    "description": "Start of your action : Discard this card to reveal the top card on your red Quest deck. place 6 gold and your character token in the region that you would have placed your quest creatures, then discard red Quest card. You may take this gold if you end a Travel action in that region.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_crude_map.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_cursed_eye_of_paleth",
+    "name": "Cursed Eye of Paleth",
+    "description": "End of your Dice Pool step : If you have at least one 1 blue dice in your dice pool, lose 1 Health and place 1 hit token in the defense box",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_cursed_eye_of_paleth.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_dark_rune",
+    "name": "Dark Rune",
+    "description": "Start of your Action : Discard this card to regain 2 Energy but you must lose 1 Health.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_dark_rune.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_defilers_talisman",
+    "name": "Defiler's Talisman",
+    "description": "Add 1 green dice to your dice pool.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_defilers_talisman.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_dimensional_ripper",
+    "name": "Dimensional Ripper",
+    "description": "Using this card counts as an action. Roll a blue dice. If you roll a 1 or a 2, discard this card and the enemy faction places your character on any legal region. If you roll a 3+, place your character on any region with at least one of your faction's quest creatures.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_dimensional_ripper.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_dragonslayers_ring",
+    "name": "Dragonslayer's Ring",
+    "description": "Add 1 red dices to your dice pool. Reroll +1.",
+    "level": "3",
+    "price": "10",
+    "energy": "0",
+    "trait": "Gun",
+    "image": "/assets/reference/star_dragonslayers_ring.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_dreamless_sleep_potion",
+    "name": "Dreamless Sleep Potion",
+    "description": "Using this card counts as an action. Discard this card to regain Health and Energy up to your capacity.",
+    "level": "2",
+    "price": "4",
+    "energy": "0",
+    "trait": "Potion",
+    "image": "/assets/reference/star_dreamless_sleep_potion.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_emberfury_talisman",
+    "name": "Emberfury Talisman",
+    "description": "End of your Reroll step : Discard this card to change the result of up to two separate red dice and blue dice, so that each dice's new value is one number higher (to a maximum value of 8).",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_emberfury_talisman.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_ez_thro_dynamite",
+    "name": "Ez-Thro Dynamite",
+    "description": "Start of the first combat round : Discard this card and roll a blue dice. If you roll a 1 or 2, lose 2 Health. If you roll a 3+, place 2 hit tokens in the damage box.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_ez_thro_dynamite.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_fire_ruby",
+    "name": "Fire Ruby",
+    "description": "Start of your Dice Pool step : Discard this card to add 1 blue dice to your dice pooland regain 1 Energy.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_fire_ruby.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_friendly_gift",
+    "name": "Friendly Gift",
+    "description": "Start of your action : If you are in a region with another friendly character, you may discard this card to have him or her draw a card from the Triangle Item deck. He or she may either take the item or discard it.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_friendly_gift.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_frostwolf_battle_standard",
+    "name": "Frostwolf Battle Standard",
+    "description": "Each friendly participating character gains Reroll +1. You must discard this card at the end of combat.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_frostwolf_battle_standard.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_furbolg_medicine_pouch",
+    "name": "Furbolg Medicine Pouch",
+    "description": "Using Furbolg Medicine Pouch counts as an action. Discard this card to regain Health equal to the to three times your level.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_furbolg_medicine_pouch.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_gem_of_protection",
+    "name": "Gem of Protection",
+    "description": "End of your Reroll step : Discard this card to place 1 armor token in defense box for each friendly participating character.",
+    "level": "3",
+    "price": "8",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_gem_of_protection.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_gnomish_net_o_matic_projector",
+    "name": "Gnomish Net-o-Matic Projector",
+    "description": "Start of your Dice Pool step : Discard this card to add 1 green dice to your dice pool.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_gnomish_net_o_matic_projector.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_goblin_dragon_gun",
+    "name": "Goblin Dragon Gun",
+    "description": "Start of your Dice Pool step : Discard this card to add 3 blue dice to your dice pool. End of your Dice Pool step : If you have more than one 1 blue dice in your dice pool, you must lose 2 Health.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_goblin_dragon_gun.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_goblin_land_mine",
+    "name": "Goblin Land Mine",
+    "description": "Start of the first combat round : Roll a red dice. If you roll a 1 or a 2, discard this card.If you roll a 3 or a 4, nothing happens. If you roll a 5+, discard this card and place 2 hit tokens in the damage box.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_goblin_land_mine.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_goblin_sapper_charge",
+    "name": "Goblin Sapper Charge",
+    "description": "Start of the first combat round : Roll a red dice. If you roll a 1 or a 2, discard this card and lose 1 Health.If you roll a 3+, place 3 hit tokens in the damage box and lose 1 Health.",
+    "level": "3",
+    "price": "7",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_goblin_sapper_charge.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_great_rage_potion",
+    "name": "Great Rage Potion",
+    "description": "Start of your Dice Pool step : Discard this card and remove 1 green dice from your dice pool to add 1 red dice to your dice pool and regain 1 Energy. You may only use one Potion per combat round.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Potion",
+    "image": "/assets/reference/star_great_rage_potion.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_greater_protection_potion",
+    "name": "Greater Protection Potion",
+    "description": "Start of your Dice Pool step : Discard this card to add 1 green dice to your dice pool and gain Reroll +1. You may only use one Potion per combat round.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Potion",
+    "image": "/assets/reference/star_greater_protection_potion.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_hand_of_justice",
+    "name": "Hand of Justice",
+    "description": "End of your Reroll step : Discard this card and spot one 7+ red dice to roll an additional red dice.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_hand_of_justice.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_heart_of_noxxion",
+    "name": "Heart of Noxxion",
+    "description": "Start of the combat round : Discard this card to remove all stun tokens from a friendly participating character.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_heart_of_noxxion.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_ice_threaded_arrow",
+    "name": "Ice Threaded Arrow",
+    "description": "Start of your Dice Pool step : If you have a Bow equipped, discard this card and remove a blue dice from your dice pool to lower the Threat value of each opponent by 1 until the end of your Attack phase. You may only use one Ammo per combat round.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Ammo",
+    "image": "/assets/reference/star_ice_threaded_arrow.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_ice_threaded_bullet",
+    "name": "IceThreadedBullet",
+    "description": "Start of your Dice Pool step : If you have a Gun equipped, discard this card to add a red dice to your dice pool. You may only use one Ammo per combat round.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Ammo",
+    "image": "/assets/reference/star_ice_threaded_bullet.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_inferno_potion",
+    "name": "Inferno Potion",
+    "description": "Start of your Dice Pool step : Discard this card to place 1 hit token in the damage box. You may only use one Potion per combat round.",
+    "level": "3",
+    "price": "8",
+    "energy": "0",
+    "trait": "Potion",
+    "image": "/assets/reference/star_inferno_potion.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_iron_counterweight",
+    "name": "Iron Counterweight",
+    "description": "Start of your Reroll step : If you have a Mace or a Sword equipped, discard this card to gain Reroll +2.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_iron_counterweight.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_iron_shield_spike",
+    "name": "Iron Shield Spike",
+    "description": "Add 3 red dices to your dice pool. Attrition +1.",
+    "level": "3",
+    "price": "8",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_iron_shield_spike.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_jagged_arrow",
+    "name": "Jagged Arrow",
+    "description": ">Start of your Dice Pool step : If you have a Bow equipped, discard this card to add a blue dice to your dice pool. You may only use one Ammo per combat round.",
+    "level": "3",
+    "price": "8",
+    "energy": "0",
+    "trait": "Ammo",
+    "image": "/assets/reference/star_jagged_arrow.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_libram_of_focus",
+    "name": "Libram of Focus",
+    "description": "You may use a Scroll or Potion even if the item has a higher level than your character.",
+    "level": "2",
+    "price": "5",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_libram_of_focus.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_linkens_boomerang",
+    "name": "Linken's Boomerang",
+    "description": "Start of the combat round : Roll a green dice. If the result is higher than your level, discard this card. If the results is equal to or lower than your level, place 1 armor token in the defense box.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_linkens_boomerang.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_lion_horn_of_stormwind",
+    "name": "Lion Horn of Stormwind",
+    "description": "Each friendly participating character may add 2 green dices to his dice pool. You must discard this card at the end of combat.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_lion_horn_of_stormwind.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_mark_of_the_chosen",
+    "name": "Mark of the Chosen",
+    "description": "Start of your Reroll step : Discard this card to gain Reroll +X. X is equal to the number of participating opponents.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_mark_of_the_chosen.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_medallion_of_steadfast_might",
+    "name": "Medallion of Steadfast Might",
+    "description": "Add 1 green dice to your dice pool. Reroll +1.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_medallion_of_steadfast_might.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_mindtap_talisman",
+    "name": "Mindtap Talisman",
+    "description": "Start of your Dice Pool step : Discard this card to remove up to 3 blue dices from your pool. For each blue dice you remove, regain 1 Energy.",
+    "level": "3",
+    "price": "9",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_mindtap_talisman.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_necromantic_band",
+    "name": "Necromantic Band",
+    "description": "Start of your action : Regain 1 Health.",
+    "level": "2",
+    "price": "3",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_necromantic_band.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_nifty_stopwatch",
+    "name": "Nifty Stopwatch",
+    "description": "During your Travel action : Discard this card to move one additional region.",
+    "level": "3",
+    "price": "12",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_nifty_stopwatch.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_onyxia_blood_talisman",
+    "name": "Onyxia Blood Talisman",
+    "description": "Start of your Dice Pool step : Discard this card to add a green dice to your dice pool and regain 1 Health.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_onyxia_blood_talisman.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_onyxia_tooth_pendant",
+    "name": "Onyxia Tooth Pendant",
+    "description": "Start of your Reroll step : Discard this card to gain Reroll +1 and change one 4+ blue dice into a 8 blue dice.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_onyxia_tooth_pendant.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_orb_of_deception",
+    "name": "Orb of Deception",
+    "description": "Start of your first Dice Pool step : Add a number of blue dice to your dice pool equal to the number of enemy participating characters.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_orb_of_deception.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_orb_of_the_darkmoon",
+    "name": "Orb of the Darkmoon",
+    "description": "Add 1 blue dice to your dice pool.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_orb_of_the_darkmoon.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_overlords_onyx_band",
+    "name": "Overlord's Onyx Band",
+    "description": "During you Reroll step : You may reroll a number of green dice equal to the level of your equipped Shield. This ability is separate from your Reroll value.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_overlords_onyx_band.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_pendant_of_the_fallen_dragon",
+    "name": "Pendant of the Fallen Dragon",
+    "description": "Start of your faction turn : Regain 1 Health.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_pendant_of_the_fallen_dragon.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_pendant_of_the_qiraji_guardian",
+    "name": "Pendant of the Qiraji Guardian",
+    "description": "End of your Reroll step : Discard this card to change one dice into a 8 grenn dice.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_pendant_of_the_qiraji_guardian.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_piccolo_of_the_flaming_fire",
+    "name": "Piccolo of the Flaming Fire",
+    "description": "Start of an enemy participating character's Dice Pool step : Discard this card to remove up to two red or blue dices from that character's dice pool.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_piccolo_of_the_flaming_fire.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_poison_arrow",
+    "name": "Precision Arrow",
+    "description": "Start of your Dice Pool step : If you have a Bow equipped, discard this card to change one blue dice into a 8 blue dice. You may only use one Ammo per combat round.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Ammo",
+    "image": "/assets/reference/star_poison_arrow.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_poisoned_spider_fang",
+    "name": "Poisoned Spider Fang",
+    "description": "Attrition +1. You must discard this card at the end of combat.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_poisoned_spider_fang.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_potion_of_darkness",
+    "name": "Potion of Darkness",
+    "description": "End of your Dice Pool step : Discard this card to escape from combat. Your character remains in the same region but is no longer participating in the combat. You may not use this card during PvP combat. You may only use one Potion per combat round.",
+    "level": "2",
+    "price": "4",
+    "energy": "0",
+    "trait": "Potion",
+    "image": "/assets/reference/star_potion_of_darkness.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_powers_of_the_void",
+    "name": "Powers of the Void",
+    "description": "Start of the first combat round : Roll 3 blue dices. If you roll more than one 1 blue dice, lose 3 Health and discard this card. If you spot at least one 8 blue card, instantly defeat one participating independent creature.",
+    "level": "2",
+    "price": "5",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_powers_of_the_void.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_purification_potion",
+    "name": "Purification Potion",
+    "description": "End of your Resolution step : Discard this card to remove all curse tokens from a friendly participating character. You may only use one Potion per combat round.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Potion",
+    "image": "/assets/reference/star_purification_potion.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_quick_strike_ring",
+    "name": "Quick Strike Ring",
+    "description": "Add 1 blue dice to your dice pool. Reroll +1.",
+    "level": "3",
+    "price": "10",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_quick_strike_ring.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_ragged_johns_neverending_cup",
+    "name": "Ragged John's Neverending Cup",
+    "description": "Start of your Dice Pool step : Regain 2 Health and add 1 green dice to your dice pool. Increase the Threat value of each opponent by 2 until the end of your Attack phase. Then unequip this card.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Food",
+    "image": "/assets/reference/star_ragged_johns_neverending_cup.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_ramsteins_lightning_bolts",
+    "name": "Ramstein's Lightning Bolts",
+    "description": "Start of your Dice Pool step : Discard this card to add a number of blue dice to your dice pool equal to the number of participating opponents.",
+    "level": "2",
+    "price": "6",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_ramsteins_lightning_bolts.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_raw_sagefish",
+    "name": "Raw Sagefish",
+    "description": "Start of your action : Discard this card to regain 1 Health and 1 Energy.",
+    "level": "3",
+    "price": "7",
+    "energy": "0",
+    "trait": "Food",
+    "image": "/assets/reference/star_raw_sagefish.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_reinforced_locked_chest",
+    "name": "Reinforced Locked Chest",
+    "description": "If your faction is defeated in a PvP combat you participated in, you may choose which items the winning faction takes from each friendly participating character.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_reinforced_locked_chest.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_ring_of_fury",
+    "name": "Ring of Fury",
+    "description": "Reroll +2.",
+    "level": "2",
+    "price": "6",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_ring_of_fury.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_ring_of_saviors",
+    "name": "Ring of Saviors",
+    "description": "Add 1 green dice to your dice pool. Reroll +2.",
+    "level": "3",
+    "price": "8",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_ring_of_saviors.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_ring_of_the_bronze_dragonflight",
+    "name": "Ring of the Bronze Dragonflight",
+    "description": "Start of your action : Regain 1 Energy.",
+    "level": "2",
+    "price": "3",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_ring_of_the_bronze_dragonflight.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_rumsey_rum",
+    "name": "Rumsey Rum",
+    "description": "Start of your Dice Pool step : Discard this card to add 2 green dice to your dice pool. Reroll -2.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Food",
+    "image": "/assets/reference/star_rumsey_rum.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_runecloth_bag",
+    "name": "Runecloth Bag",
+    "description": "You may store 3 additional items in your Bag.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_runecloth_bag.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_sanctified_orb",
+    "name": "Sanctified Orb",
+    "description": "During your Dice Pool step : If you used an instant power that adds blue dice to your dice pool, you gain Reroll +2 until the end of your Reroll step.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_sanctified_orb.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_scroll_of_madness",
+    "name": "Scroll of Madness",
+    "description": "Start of the combat round : Discard this card to roll 3 blue dices. Regain 1 Energy for each 3+ you roll. Then lose 1 Health for each 1 you roll. You ma only use one Scroll per combat round.",
+    "level": "2",
+    "price": "4",
+    "energy": "0",
+    "trait": "Scroll",
+    "image": "/assets/reference/star_scroll_of_madness.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_seal_of_the_archmagus",
+    "name": "Seal of  The Archmagus",
+    "description": "Start of eachcombat round : Regain 1 Energy. You must discard this card at the end of combat.",
+    "level": "3",
+    "price": "8",
+    "energy": "0",
+    "trait": "Bow",
+    "image": "/assets/reference/star_seal_of_the_archmagus.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_shard_of_the_flame",
+    "name": "Shard of the Flame",
+    "description": "Start of each combat round : Regain 1 Health. You must discard this card at the end of combat.",
+    "level": "2",
+    "price": "3",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_shard_of_the_flame.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_sharpening_stone",
+    "name": "Sharpening Stone",
+    "description": "Start of your Dice Pool step : if you have a Sword equipped, discard this card to add a red dice to your dice pool.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_sharpening_stone.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_smolderwebs_eye",
+    "name": "Smolderweb's Eye",
+    "description": "Start of each combat round : place 1 hit token on this card. During your Place Tokens step : Gain Attrition +1 for each hit token on this card. At the end of combat, you must lose all hit tokens on this card.",
+    "level": "3",
+    "price": "9",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_smolderwebs_eye.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_strong_ale",
+    "name": "Strong Ale",
+    "description": "Start of your action : Discard this card to roll 3 red dices. If you rolled at least one 1 red dice, your action immediately ends. Otherwise regain 4 Health.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Food",
+    "image": "/assets/reference/star_strong_ale.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_testament_of_hope",
+    "name": "Testament of Hope",
+    "description": "You may only use Testament of Hope if you have less than 3 remaining Health. Start of the combat round : Discard this card to regain Health tokens equal to your level.",
+    "level": "2",
+    "price": "6",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_testament_of_hope.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_thunder_ale",
+    "name": "Thunder Ale",
+    "description": "End of your Dice Pool step : Roll an additional 3 red dices. You must remove one 8 red dice from your dice pool, if able. Then discard this card.",
+    "level": "3",
+    "price": "12",
+    "energy": "0",
+    "trait": "Food",
+    "image": "/assets/reference/star_thunder_ale.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_tome_of_arcane_domination",
+    "name": "Tome of Arcane Domination",
+    "description": "immediately before you use an instant power : Lower the Energy cost of your instant power by 1 (minimum of 0). Then unequip this card.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_tome_of_arcane_domination.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_travelers_belt",
+    "name": "Traveler's Belt",
+    "description": "End of your Travel action : If you only moved 1 region this Travel action, you may regain 1 Energy and 1 Health.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Scroll",
+    "image": "/assets/reference/star_travelers_belt.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "star_treasure_map",
+    "name": "Treasure Map",
+    "description": "Immediately after you complete a quest : Discard this card to add one additional Square Item card to the quest's reward..",
+    "level": "3",
+    "price": "7",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/star_treasure_map.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_amethyst_war_staff",
+    "name": "Amethyst War Staff",
+    "description": "Add 1 red dice to your dice pool.End of Your Reroll step : Spot one 7+ red dice and spend 1 Energy to place 2 hit tokens in the damage box.",
+    "level": "2",
+    "price": "6",
+    "energy": "0",
+    "trait": "Staff",
+    "image": "/assets/reference/triangle_amethyst_war_staff.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_ancestral_tunic",
+    "name": "Ancestral Tunic",
+    "description": "Add 1 green dice to your dice pool. End of your Dice Pool step : You may spend 1 Energy to gain Reroll +2.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Cloth",
+    "image": "/assets/reference/triangle_ancestral_tunic.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_archers_buckler",
+    "name": "Archer's Buckler",
+    "description": "Add 1 green dice to your dice pool.",
+    "level": "2",
+    "price": "4",
+    "energy": "0",
+    "trait": "Shield - Leather",
+    "image": "/assets/reference/triangle_archers_buckler.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_ardent_custodian",
+    "name": "Ardent Custodian",
+    "description": "Add 2 red dices to your dice pool. End of your Reroll step : Spot one 8 red dice to place 1 armor token in the defense box.",
+    "level": "2",
+    "price": "6",
+    "energy": "0",
+    "trait": "Mace",
+    "image": "/assets/reference/triangle_ardent_custodian.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_band_of_accuria",
+    "name": "Band of Accuria",
+    "description": "Reroll +1.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/triangle_band_of_accuria.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_bastard_sword",
+    "name": "Bastard Sword",
+    "description": "Add 2 red dices to your dice pool. End of your Reroll step : Spot one 7+ red dice to gain Attrition +1.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Sword",
+    "image": "/assets/reference/triangle_bastard_sword.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_bent_staff",
+    "name": "Bent Staff",
+    "description": "Add 1 red dice to your dice pool. Reroll +1.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Staff",
+    "image": "/assets/reference/triangle_bent_staff.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_brilliant_wizard_oil",
+    "name": "Brilliant Wizard Oil",
+    "description": "Does not count towards your Bag limit. Start of your Dice Pool step : If you have a Staff or Sword equipped, discard this card to add 1 blue dice to your dice pool. You may only use on Potion per combat round.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Potion",
+    "image": "/assets/reference/triangle_brilliant_wizard_oil.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_cadet_vest",
+    "name": "Cadet Vest",
+    "description": "Add 2 green dices to your dice pool.",
+    "level": "1",
+    "price": "5",
+    "energy": "0",
+    "trait": "Mail",
+    "image": "/assets/reference/triangle_cadet_vest.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_charged_lightning_rod",
+    "name": "Charged Lighting Rod",
+    "description": "Add 1 blue dice to your dice pool. End of your Dice Pool step : You may change one blue dice into a 3 red, blue or red dice.",
+    "level": "2",
+    "price": "6",
+    "energy": "0",
+    "trait": "Wand",
+    "image": "/assets/reference/triangle_charged_lightning_rod.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_cobalt_buckler",
+    "name": "Cobalt Buckler",
+    "description": "Add 1 green dice to your dice pool. Reroll +1.",
+    "level": "2",
+    "price": "5",
+    "energy": "0",
+    "trait": "Shield-Mail",
+    "image": "/assets/reference/triangle_cobalt_buckler.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_crocolisk_steak",
+    "name": "Crocolisk Steak",
+    "description": "Does not count towards your Bag limit. When you take a Rest action : You may Discard this card to regain Health and Energy up to your capacity.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Food",
+    "image": "/assets/reference/triangle_crocolisk_steak.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_cured_leather_armor",
+    "name": "Cured Leather Armor",
+    "description": "Add 2 green dices to your dice pool. Reroll +1.",
+    "level": "2",
+    "price": "6",
+    "energy": "0",
+    "trait": "Leather",
+    "image": "/assets/reference/triangle_cured_leather_armor.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_dragonbreath_hand_cannon",
+    "name": "Dragonbreath Hand Cannon",
+    "description": "Add 3 blue dices to your dice pool. End of your Dice Pool step : You must spot one 8 blue dice or you lose 1 Health and discard this card.",
+    "level": "2",
+    "price": "5",
+    "energy": "0",
+    "trait": "Gun",
+    "image": "/assets/reference/triangle_dragonbreath_hand_cannon.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_dull_blade",
+    "name": "Dull Blade",
+    "description": "Add 1 red dice to your dice pool. Reroll +1.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Sword",
+    "image": "/assets/reference/triangle_dull_blade.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_fine_longbow",
+    "name": "Fine Longbow",
+    "description": "Add 2 blue dices to your dice pool. Reroll +1.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Bow",
+    "image": "/assets/reference/triangle_fine_longbow.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_footman_tunic",
+    "name": "Footman Tunic",
+    "description": "Add 2 green dices to your dice pool.",
+    "level": "1",
+    "price": "4",
+    "energy": "0",
+    "trait": "Leather",
+    "image": "/assets/reference/triangle_footman_tunic.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_freezing_shard",
+    "name": "FreezingShard",
+    "description": "Add 2 blue dices to your dice pool. End of your Dice Pool step : Spot one 6+ blue dice to roll an additional green dice.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Wand",
+    "image": "/assets/reference/triangle_freezing_shard.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_gnarled_staff",
+    "name": "Gnarled Staff",
+    "description": "Add 2 red dices to your dice pool. End of your Dice Pool step : You may spend 1 Energy to gain Reroll +1.",
+    "level": "2",
+    "price": "6",
+    "energy": "0",
+    "trait": "Staff",
+    "image": "/assets/reference/triangle_gnarled_staff.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_gustweald_cloak",
+    "name": "Gustweald Cloak",
+    "description": "Add 1 green dice to your dice pool. End of your Reroll step : You may change one 1 or 2 red, blue, green dice into a 3 green dice.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Cloth",
+    "image": "/assets/reference/triangle_gustweald_cloak.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_headmasters_charge",
+    "name": "Headmaster's Charge",
+    "description": "Add 2 red dices to your dice pool. Start of the first combat round : Increase the Energy capacity of each friendly participating characters by 3 until the end of this combat. At the end of the combat, all friendly participating characters lose any Energy in excess of their capacity.",
+    "level": "2",
+    "price": "6",
+    "energy": "0",
+    "trait": "Staff",
+    "image": "/assets/reference/triangle_headmasters_charge.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_hearthstone",
+    "name": "Hearthstone",
+    "description": "using this card counts as an action. Relocate to your faction's starting region (Brill for the Hord, or Southshore for the Alliance).",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/triangle_hearthstone.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_helm_of_vengeance",
+    "name": "Helm of Vengeance",
+    "description": "If you are defending against an enemy faction in PvP combat, add 1 red, blue and green dices to your dice pool.",
+    "level": "2",
+    "price": "4",
+    "energy": "0",
+    "trait": "Helmet - Cloth",
+    "image": "/assets/reference/triangle_helm_of_vengeance.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_invisibility_potion",
+    "name": "Invisibility Potion",
+    "description": "Does not count towards your Bag limit. Start of your action : Discard this card. You may choose to take a Travel action even if your character is in a region containing one or more independent creatures.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Potion",
+    "image": "/assets/reference/triangle_invisibility_potion.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_iridescent_hammer",
+    "name": "Iridescent Hammer",
+    "description": "Add 2 red dices to your dice pool. Attrition +1.",
+    "level": "2",
+    "price": "8",
+    "energy": "0",
+    "trait": "Mace",
+    "image": "/assets/reference/triangle_iridescent_hammer.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_laminated_recurve_bow",
+    "name": "Laminated Recurve Bow",
+    "description": "Add 1 green dice to your dice pool. End of your Dice Pool step : Spot one 8 green dice to roll and additional green dice.",
+    "level": "3",
+    "price": "11",
+    "energy": "0",
+    "trait": "Shield - Mail",
+    "image": "/assets/reference/triangle_laminated_recurve_bow.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_ley_staff",
+    "name": "Ley Staff",
+    "description": "Add 3 red dices to your dice pool. Attrition +1.",
+    "level": "2",
+    "price": "8",
+    "energy": "0",
+    "trait": "Staff",
+    "image": "/assets/reference/triangle_ley_staff.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_mark_of_the_dragon_lord",
+    "name": "Mark of the Dragon Lord",
+    "description": "Start of the first combat round : Spend 3 Energy to place 3 armor tokens on this card. Start of FIce Pool step : Add a number of green dice to your dice poolt equal to the number of armor tokens on this card. Then lose 1 armor token from this card. At the end of combat, lose all armor tokens on this card.",
+    "level": "2",
+    "price": "5",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/triangle_mark_of_the_dragon_lord.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_minor_agility_potion",
+    "name": "Minor Agility Potion",
+    "description": "Does not count towards your Bag limit. End of your Dice Pool step : Discard this card to gain Reroll +1. You may only use one Potion per combat round.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Potion",
+    "image": "/assets/reference/triangle_minor_agility_potion.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_minor_healing_potion",
+    "name": "Minor Healing Potion",
+    "description": "Does not count towards your Bag limit. After you lose a Health : Discard this card to regain 1 Health. You may only use one Potion per combat round.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Pootion",
+    "image": "/assets/reference/triangle_minor_healing_potion.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_minor_mana_potion",
+    "name": "Minor Mana Potion",
+    "description": "Does not count towards your Bag limit. After you spend an Energy : Discard this card to regain 1 Energy. You may only use one Potion per combat round.",
+    "level": "3",
+    "price": "10",
+    "energy": "0",
+    "trait": "Gun",
+    "image": "/assets/reference/triangle_minor_mana_potion.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_moonsight_rifle",
+    "name": "Moonsight Rifle",
+    "description": "Add 2 blue dices to your dice pool. Reroll +2.",
+    "level": "2",
+    "price": "5",
+    "energy": "0",
+    "trait": "Gun",
+    "image": "/assets/reference/triangle_moonsight_rifle.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_neophytes_robe",
+    "name": "Neophyte's Robe",
+    "description": "Add 1 green dice to your dice pool. Reroll +1.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Cloth",
+    "image": "/assets/reference/triangle_neophytes_robe.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_ornate_spyglass",
+    "name": "Ornate Spyglass",
+    "description": "Start of your action : Look at the top card on any faction's quest deck, then unequip this card.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/triangle_ornate_spyglass.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_painweaver_band",
+    "name": "Painweaver Band",
+    "description": "During your Reroll step : You may reroll a number of red dice equal to the level of your equipped Mace, Staff or Sword. This ability is separate from your Reroll value.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/triangle_painweaver_band.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_ragehammer",
+    "name": "Ragehammer",
+    "description": "Add 1 red dice to your dice pool. If you do not roll any green dice, you may add an additional 2 red dices to your dice pool.",
+    "level": "2",
+    "price": "5",
+    "energy": "0",
+    "trait": "Mace",
+    "image": "/assets/reference/triangle_ragehammer.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_rakzur_club",
+    "name": "Rakzur Club",
+    "description": "Add 2 red dices to your dice pool. End of your Dice Pool step : Spot one 7+ red dice to gain Reroll +1.",
+    "level": "2",
+    "price": "6",
+    "energy": "0",
+    "trait": "Mace",
+    "image": "/assets/reference/triangle_rakzur_club.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_ring_of_infinite_wisdom",
+    "name": "Ring of Infinite Wisdom",
+    "description": "Your Energy capacity is increased by 1. When you equip this card, immediately regain 1 Energy.",
+    "level": "2",
+    "price": "6",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/triangle_ring_of_infinite_wisdom.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_robe_of_apprenticeship",
+    "name": "Robe of Apprenticeship",
+    "description": "Add 1 green dice to your dice pool. Reroll +2.",
+    "level": "2",
+    "price": "6",
+    "energy": "0",
+    "trait": "Cloth",
+    "image": "/assets/reference/triangle_robe_of_apprenticeship.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_scimitar",
+    "name": "Scimitar",
+    "description": "Add 2 red dices to your dice pool. Reroll +1.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Sword",
+    "image": "/assets/reference/triangle_scimitar.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_scroll_of_lesser_strength",
+    "name": "Scroll of Lesser Strength",
+    "description": "Does not count towards your Bag limit. Start of your Dice Pool step : Discard this card to add 2 blue dice to your dice pool. You may only use on Scroll per combat round.",
+    "level": "1",
+    "price": "7",
+    "energy": "0",
+    "trait": "Scroll",
+    "image": "/assets/reference/triangle_scroll_of_lesser_strength.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_shadow_wand",
+    "name": "Shadow Hand",
+    "description": "Add 1 blue dice to your dice pool. Attrition +1.",
+    "level": "1",
+    "price": "4",
+    "energy": "0",
+    "trait": "Wand",
+    "image": "/assets/reference/triangle_shadow_wand.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_shard_of_afrasa",
+    "name": "Shard of Afrasa",
+    "description": "End of your Rest action : Regain an additional combination of Energy and Health equal to your level.",
+    "level": "1",
+    "price": "2",
+    "energy": "0",
+    "trait": "Trinket",
+    "image": "/assets/reference/triangle_shard_of_afrasa.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_skycaller",
+    "name": "Skycaller",
+    "description": "Add 2 blue dices to your dice pool. Attrition +1.",
+    "level": "2",
+    "price": "8",
+    "energy": "0",
+    "trait": "Wand",
+    "image": "/assets/reference/triangle_skycaller.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_soldiers_armor",
+    "name": "Soldier's Armor",
+    "description": "Add 3 green dices to your dice pool.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Mail",
+    "image": "/assets/reference/triangle_soldiers_armor.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_staff_of_the_qiraji_prophets",
+    "name": "Staff of the Qiraji Prophets",
+    "description": "Add 2 red dices or 2 blue dices to your dice pool.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Staff",
+    "image": "/assets/reference/triangle_staff_of_the_qiraji_prophets.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_thrash_blade",
+    "name": "Thrash Blade",
+    "description": "Add 2 red dices to your dice pool. End of your Dice Pool step : Spot one 6+ red dice to roll an additional red dice.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Sword",
+    "image": "/assets/reference/triangle_thrash_blade.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_trogg_club",
+    "name": "Trogg Club",
+    "description": "Add 1 red dice to your dice pool. End of your Dice Pool step : Spot one 7+ red dice to roll an additional red dice.",
+    "level": "1",
+    "price": "3",
+    "energy": "0",
+    "trait": "Mace",
+    "image": "/assets/reference/triangle_trogg_club.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "triangle_trueshot_bow",
+    "name": "Trueshot Bow",
+    "description": "Add 2 blue dices to your dice pool. Start of your Rerolll step : You may gain Reroll +3, but then you may only reroll blue dice.",
+    "level": "2",
+    "price": "7",
+    "energy": "0",
+    "trait": "Bow",
+    "image": "/assets/reference/triangle_trueshot_bow.jpg",
+    "edition": "unverified",
+    "scripted": false,
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  }
+]

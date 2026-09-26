@@ -1,0 +1,14 @@
+.git/
+.local-data/
+.env
+.env.*
+node_modules/
+dist/
+docs/
+screenshots/
+tests/
+scripts/
+*.local.*
+*.tsbuildinfo
+dev-server.log
+dev-server.err

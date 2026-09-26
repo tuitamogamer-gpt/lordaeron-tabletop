@@ -1,0 +1,454 @@
+{
+  "Alliance": [
+    {
+      "name": "Artumnis Moondream",
+      "class": "Druid",
+      "iconName": "druid",
+      "faction": "Alliance",
+      "levelCaps": [
+        {
+          "health": 2,
+          "energy": 4
+        },
+        {
+          "health": 3,
+          "energy": 6
+        },
+        {
+          "health": 4,
+          "energy": 9
+        },
+        {
+          "health": 6,
+          "energy": 11
+        },
+        {
+          "health": 8,
+          "energy": 12
+        }
+      ]
+    },
+    {
+      "name": "Alissi Quicksting",
+      "class": "Rogue",
+      "iconName": "rogue",
+      "faction": "Alliance",
+      "levelCaps": [
+        {
+          "health": 3,
+          "energy": 3
+        },
+        {
+          "health": 5,
+          "energy": 4
+        },
+        {
+          "health": 6,
+          "energy": 6
+        },
+        {
+          "health": 8,
+          "energy": 8
+        },
+        {
+          "health": 10,
+          "energy": 10
+        }
+      ]
+    },
+    {
+      "name": "Shailara Whitherblade",
+      "class": "Warrior",
+      "iconName": "warrior",
+      "faction": "Alliance",
+      "levelCaps": [
+        {
+          "health": 4,
+          "energy": 1
+        },
+        {
+          "health": 6,
+          "energy": 2
+        },
+        {
+          "health": 8,
+          "energy": 3
+        },
+        {
+          "health": 11,
+          "energy": 4
+        },
+        {
+          "health": 14,
+          "energy": 5
+        }
+      ]
+    },
+    {
+      "name": "Brebo Bigshot",
+      "class": "Mage",
+      "iconName": "mage",
+      "faction": "Alliance",
+      "levelCaps": [
+        {
+          "health": 2,
+          "energy": 4
+        },
+        {
+          "health": 3,
+          "energy": 6
+        },
+        {
+          "health": 4,
+          "energy": 9
+        },
+        {
+          "health": 6,
+          "energy": 11
+        },
+        {
+          "health": 8,
+          "energy": 12
+        }
+      ]
+    },
+    {
+      "name": "Burbon Fang",
+      "class": "Hunter",
+      "iconName": "hunter",
+      "faction": "Alliance",
+      "levelCaps": [
+        {
+          "health": 3,
+          "energy": 3
+        },
+        {
+          "health": 4,
+          "energy": 5
+        },
+        {
+          "health": 6,
+          "energy": 6
+        },
+        {
+          "health": 8,
+          "energy": 8
+        },
+        {
+          "health": 10,
+          "energy": 10
+        }
+      ]
+    },
+    {
+      "name": "Weefla Sorrowfall",
+      "class": "Priest",
+      "iconName": "priest",
+      "faction": "Alliance",
+      "levelCaps": [
+        {
+          "health": 2,
+          "energy": 4
+        },
+        {
+          "health": 3,
+          "energy": 6
+        },
+        {
+          "health": 4,
+          "energy": 9
+        },
+        {
+          "health": 6,
+          "energy": 11
+        },
+        {
+          "health": 8,
+          "energy": 12
+        }
+      ]
+    },
+    {
+      "name": "Sandrai Darkshine",
+      "class": "Warlock",
+      "iconName": "warlock",
+      "faction": "Alliance",
+      "levelCaps": [
+        {
+          "health": 2,
+          "energy": 4
+        },
+        {
+          "health": 3,
+          "energy": 6
+        },
+        {
+          "health": 4,
+          "energy": 9
+        },
+        {
+          "health": 6,
+          "energy": 11
+        },
+        {
+          "health": 8,
+          "energy": 12
+        }
+      ]
+    },
+    {
+      "name": "Brandon Lightstone",
+      "class": "Paladin",
+      "iconName": "paladin",
+      "faction": "Alliance",
+      "levelCaps": [
+        {
+          "health": 3,
+          "energy": 2
+        },
+        {
+          "health": 5,
+          "energy": 4
+        },
+        {
+          "health": 7,
+          "energy": 5
+        },
+        {
+          "health": 9,
+          "energy": 6
+        },
+        {
+          "health": 12,
+          "energy": 8
+        }
+      ]
+    }
+  ],
+  "Horde": [
+    {
+      "name": "Meadowfrey",
+      "class": "Druid",
+      "iconName": "druid",
+      "faction": "Horde",
+      "levelCaps": [
+        {
+          "health": 2,
+          "energy": 4
+        },
+        {
+          "health": 3,
+          "energy": 6
+        },
+        {
+          "health": 4,
+          "energy": 9
+        },
+        {
+          "health": 6,
+          "energy": 11
+        },
+        {
+          "health": 8,
+          "energy": 12
+        }
+      ]
+    },
+    {
+      "name": "Dongon Swiftblade",
+      "class": "Rogue",
+      "iconName": "rogue",
+      "faction": "Horde",
+      "levelCaps": [
+        {
+          "health": 3,
+          "energy": 3
+        },
+        {
+          "health": 5,
+          "energy": 4
+        },
+        {
+          "health": 6,
+          "energy": 6
+        },
+        {
+          "health": 8,
+          "energy": 8
+        },
+        {
+          "health": 10,
+          "energy": 10
+        }
+      ]
+    },
+    {
+      "name": "Grumbaz Crowsblood",
+      "class": "Warrior",
+      "iconName": "warrior",
+      "faction": "Horde",
+      "levelCaps": [
+        {
+          "health": 4,
+          "energy": 1
+        },
+        {
+          "health": 6,
+          "energy": 2
+        },
+        {
+          "health": 8,
+          "energy": 3
+        },
+        {
+          "health": 11,
+          "energy": 4
+        },
+        {
+          "health": 14,
+          "energy": 5
+        }
+      ]
+    },
+    {
+      "name": "Sofeea Icecall",
+      "class": "Mage",
+      "iconName": "mage",
+      "faction": "Horde",
+      "levelCaps": [
+        {
+          "health": 2,
+          "energy": 4
+        },
+        {
+          "health": 3,
+          "energy": 6
+        },
+        {
+          "health": 4,
+          "energy": 9
+        },
+        {
+          "health": 6,
+          "energy": 11
+        },
+        {
+          "health": 8,
+          "energy": 12
+        }
+      ]
+    },
+    {
+      "name": "Thundershot",
+      "class": "Hunter",
+      "iconName": "hunter",
+      "faction": "Horde",
+      "levelCaps": [
+        {
+          "health": 3,
+          "energy": 3
+        },
+        {
+          "health": 4,
+          "energy": 5
+        },
+        {
+          "health": 6,
+          "energy": 6
+        },
+        {
+          "health": 8,
+          "energy": 8
+        },
+        {
+          "health": 10,
+          "energy": 10
+        }
+      ]
+    },
+    {
+      "name": "Wennu Bloodsinger",
+      "class": "Priest",
+      "iconName": "priest",
+      "faction": "Horde",
+      "levelCaps": [
+        {
+          "health": 2,
+          "energy": 4
+        },
+        {
+          "health": 3,
+          "energy": 6
+        },
+        {
+          "health": 4,
+          "energy": 9
+        },
+        {
+          "health": 6,
+          "energy": 11
+        },
+        {
+          "health": 8,
+          "energy": 12
+        }
+      ]
+    },
+    {
+      "name": "Leeam Sagewind",
+      "class": "Warlock",
+      "iconName": "warlock",
+      "faction": "Horde",
+      "levelCaps": [
+        {
+          "health": 2,
+          "energy": 4
+        },
+        {
+          "health": 3,
+          "energy": 6
+        },
+        {
+          "health": 4,
+          "energy": 9
+        },
+        {
+          "health": 6,
+          "energy": 11
+        },
+        {
+          "health": 8,
+          "energy": 12
+        }
+      ]
+    },
+    {
+      "name": "Zowka Shattertusk",
+      "class": "Shaman",
+      "iconName": "shaman",
+      "faction": "Horde",
+      "levelCaps": [
+        {
+          "health": 3,
+          "energy": 3
+        },
+        {
+          "health": 4,
+          "energy": 5
+        },
+        {
+          "health": 5,
+          "energy": 7
+        },
+        {
+          "health": 7,
+          "energy": 9
+        },
+        {
+          "health": 9,
+          "energy": 11
+        }
+      ]
+    }
+  ]
+}

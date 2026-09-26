@@ -1,0 +1,51 @@
+/* Desktop is the only supported play surface. Keep the table and its controls visible. */
+.campaign-app{min-width:1180px}
+.campaign-app .topbar{height:64px;gap:28px;padding:0 24px;position:sticky;top:0;z-index:8}
+.campaign-app .wordmark{min-width:240px}.campaign-app .wordmark strong{font-size:17px}
+.campaign-app .topnav{display:flex;gap:25px;margin-left:0}.campaign-app .header-right{gap:14px}
+.campaign-app .rail{width:62px;position:sticky;top:64px;height:calc(100vh - 64px);padding:22px 0 18px;flex-direction:column;gap:16px}
+.campaign-app .rail-bottom{flex-direction:column;margin-top:auto}
+.campaign-shell{min-height:calc(100vh - 64px)}
+.campaign-main{padding:20px 26px 24px;width:100%;max-width:none}
+.campaign-title{margin-bottom:12px}.campaign-title h1{font-size:27px}.campaign-title h1 span{font-size:12px;margin-left:16px}
+.development-banner{margin-bottom:15px;padding:8px 12px;font-size:10px}
+.campaign-play{grid-template-columns:minmax(0,1fr) 326px;gap:20px;align-items:stretch}
+.campaign-board-column{display:flex;flex-direction:column;min-height:0}
+.campaign-map{display:flex;flex-direction:column;flex:1;min-height:0}
+.campaign-map-scroll{height:100%;min-height:0;max-height:none;aspect-ratio:auto;position:relative;overflow:hidden;flex:1;cursor:grab;outline:none;background:radial-gradient(ellipse,#35432e80,#0b1511 75%);touch-action:none}
+.campaign-map-scroll:focus-visible{box-shadow:inset 0 0 0 2px var(--atlas-gold)}
+.campaign-map-scroll.dragging{cursor:grabbing}.campaign-map-scroll.dragging .map-region{cursor:grabbing}
+.campaign-map-scroll>svg{position:absolute;inset:0;width:100%;height:100%;transform-origin:center;user-select:none}
+.map-toolbar{min-height:39px;padding:4px 12px;flex-shrink:0}.map-toolbar>span{font-size:10px}.map-toolbar>div{gap:5px}
+.map-toolbar .map-jump{width:170px;font-size:10px;min-height:28px;padding:5px 8px;margin-right:9px}
+.map-toolbar .map-hint{font-size:8px;letter-spacing:0;color:#91a087;margin:0 12px}
+.map-toolbar .icon-button{width:28px;height:28px}.map-toolbar>div>span{min-width:33px;text-align:center;font-size:10px}
+.campaign-destination{padding:10px 16px;min-height:70px;flex-shrink:0}.campaign-destination h3{font-size:19px;margin:3px 0 4px}.campaign-destination .eyebrow{font-size:8px}
+.campaign-destination .gold-button{min-height:41px;font-size:10px;gap:8px;padding:7px 14px}.campaign-destination small{font-size:8px}
+.action-dock{margin-top:10px;flex-shrink:0}.action-dock button{min-height:44px;font-size:11px}.action-dock kbd{font-size:8px}
+.campaign-sidebar{overflow:auto;min-height:0;padding-right:5px;gap:13px;scrollbar-gutter:stable}
+.party-tabs{position:sticky;top:0;z-index:2;background:#111913f5;padding:4px 0 12px;flex-shrink:0}
+.character-sheet{padding:14px}.character-title{margin-bottom:14px}.character-title h2{font-size:18px}.character-title>.portrait{width:50px;height:50px}
+.hero-counters{padding:10px 0;margin-top:12px}.sheet-inventory{margin-top:11px}.sheet-inventory>.quiet-button{margin-top:7px;min-height:31px}
+.quest-panel{padding-top:12px}.quest-row{padding:9px 0}.quest-row small{margin-top:4px}.quest-row strong{font-size:11px}.overlord-summary{margin-top:0}
+.campaign-bottom{grid-template-columns:minmax(0,1fr) 265px;gap:20px;margin-top:14px;min-height:0}
+.equipped-panel>.section-row{margin-bottom:8px}.equipped-panel>.section-row h3{font-size:12px}
+.equipped-cards{gap:10px;padding:2px 2px 8px}.equipped-cards .folio-card{flex-basis:166px;min-height:169px;max-height:169px}
+.equipped-cards .folio-top{padding:5px 10px;font-size:7px}.equipped-cards .folio-top b{font-size:14px}
+.equipped-cards .folio-art{height:29px;flex-shrink:0}.equipped-cards .folio-art>svg{width:25px;height:25px}.equipped-cards .folio-art>i{width:35px;height:35px}
+.equipped-cards .folio-title{padding:3px 10px 5px}.equipped-cards .folio-title>strong{font-size:12px;line-height:1.35}.equipped-cards .folio-title>small{display:none}
+.equipped-cards .folio-rules{padding:5px 10px;gap:5px;font-size:10px;overflow:auto}.equipped-cards .folio-effect b{margin-bottom:3px;font-size:7px}.equipped-cards .folio-footer{padding:6px 10px;font-size:8px}
+.ai-panel{padding:13px 16px}.ai-panel .eyebrow{font-size:7px}.ai-panel h3{font-size:17px;margin:6px 0 8px}.ai-panel p{font-size:10px;line-height:1.6;min-height:0}.bot-control{margin-top:10px}.ai-panel>small{margin-top:7px}
+.turn-track-v2{margin-top:10px;padding-top:11px;gap:14px}.turn-track-v2>div{gap:5px}.turn-track-v2>span{font-size:7px;max-width:80px}.turn-track-v2>div>span{height:23px;flex:1;max-width:38px;font-size:9px}.turn-track-v2 i{font-size:7px;bottom:-11px}
+.desktop-tabletop .campaign-main{display:flex;flex-direction:column;height:calc(100vh - 64px);min-height:740px;padding-bottom:25px}
+.desktop-tabletop .campaign-play{flex:1;min-height:300px;overflow:hidden}
+.desktop-tabletop .campaign-title,.desktop-tabletop .development-banner,.desktop-tabletop .campaign-bottom,.desktop-tabletop .turn-track-v2,.desktop-tabletop .lobby-strip{flex-shrink:0}
+.campaign-app .modal.wide{width:min(1200px,calc(100vw - 90px))}.campaign-app .modal-head{padding:20px 28px}.campaign-app .modal .dialog-content{padding:24px 28px}
+.style-gallery{max-width:none}.style-gallery .encounter-grid{grid-template-columns:repeat(auto-fit,minmax(235px,1fr))}.style-gallery>p{max-width:1000px}
+.character-gallery{grid-template-columns:repeat(auto-fill,minmax(285px,1fr))}
+@media(min-width:1600px){.campaign-play{grid-template-columns:minmax(0,1fr) 365px;gap:24px}.campaign-main{padding-left:32px;padding-right:32px}.campaign-bottom{grid-template-columns:minmax(0,1fr) 310px;gap:24px}.equipped-cards .folio-card{flex-basis:184px}.character-title h2{font-size:21px}.campaign-sidebar{gap:17px}.quest-row{padding:11px 0}.map-toolbar .map-jump{width:215px}}
+@media(max-height:850px){.desktop-tabletop .campaign-main{min-height:680px}.campaign-title h1{font-size:24px}.campaign-title .eyebrow{font-size:8px}.development-banner{font-size:9px;margin-bottom:10px}.campaign-bottom{margin-top:10px}.equipped-cards .folio-card{min-height:154px;max-height:154px}.equipped-cards .folio-art{height:22px}.equipped-cards .folio-rules{font-size:9px}.campaign-title{margin-bottom:9px}.campaign-main{padding-top:14px}.map-toolbar .map-hint{display:none}}
+
+.campaign-app .sheet-inventory>.quiet-button{min-height:28px;padding:6px 10px;font-size:9px}.character-sheet .resource{margin-bottom:9px}.character-title p{font-size:9px}.hero-counters>span{font-size:14px}.hero-counters svg{width:15px;height:15px}
+
+.desktop-tabletop.map-focus .campaign-bottom{display:none}.desktop-tabletop.map-focus .campaign-main{min-height:680px}

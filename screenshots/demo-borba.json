@@ -1,0 +1,53 @@
+{
+  "format": "lordaeron-save",
+  "version": 1,
+  "seed": 2005,
+  "roster": [
+    "grom",
+    "lyra",
+    "karn",
+    "aldric",
+    "brann",
+    "elyra"
+  ],
+  "commands": [
+    {
+      "type": "travel",
+      "heroId": "grom",
+      "destination": "monastery"
+    },
+    {
+      "type": "travel",
+      "heroId": "lyra",
+      "destination": "monastery"
+    },
+    {
+      "type": "travel",
+      "heroId": "karn",
+      "destination": "monastery"
+    },
+    {
+      "type": "challenge",
+      "heroId": "karn",
+      "enemyId": "scarlet",
+      "allies": [
+        "grom",
+        "lyra"
+      ]
+    },
+    {
+      "type": "roll",
+      "powers": {
+        "karn": [
+          "lightning"
+        ],
+        "grom": [
+          "heroic-strike"
+        ],
+        "lyra": [
+          "frostbolt"
+        ]
+      }
+    }
+  ]
+}

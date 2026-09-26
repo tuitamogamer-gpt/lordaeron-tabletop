@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.local.*
+*.tsbuildinfo
+docs/wowrules-reference.pdf
+dev-server.log
+dev-server.err
+.local-data/
+.env
+.env.*
+!.env.example
+.vercel/

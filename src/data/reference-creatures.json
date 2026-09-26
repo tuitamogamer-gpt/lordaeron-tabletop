@@ -1,0 +1,444 @@
+[
+  {
+    "id": "murloc",
+    "name": "Murloc",
+    "rule": "murloc",
+    "stats": {
+      "red": {
+        "threat": 5,
+        "attack": 5,
+        "health": 4
+      },
+      "blue": {
+        "threat": 6,
+        "attack": 4,
+        "health": 2
+      },
+      "green": {
+        "threat": 5,
+        "attack": 3,
+        "health": 2
+      }
+    },
+    "stock": {
+      "green": 8,
+      "red": 4,
+      "blue": 4
+    },
+    "description": "End of each Reroll step : The active  character must lose 1 Health for each 1 red and blue dice result.",
+    "image": "/assets/reference/murloc_green.png",
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "gnoll",
+    "name": "Gnoll",
+    "rule": "gnoll",
+    "stats": {
+      "red": {
+        "threat": 4,
+        "attack": 5,
+        "health": 5
+      },
+      "blue": {
+        "threat": 5,
+        "attack": 4,
+        "health": 4
+      },
+      "green": {
+        "threat": 4,
+        "attack": 3,
+        "health": 3
+      }
+    },
+    "stock": {
+      "green": 8,
+      "red": 4,
+      "blue": 4
+    },
+    "description": "End of each Reroll step : The active character must lose 1 Energy for each 1 and 2 red or blue dice result.",
+    "image": "/assets/reference/gnoll_green.png",
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "ghoul",
+    "name": "Ghoul",
+    "rule": "ghoul",
+    "stats": {
+      "red": {
+        "threat": 6,
+        "attack": 5,
+        "health": 4
+      },
+      "blue": {
+        "threat": 6,
+        "attack": 4,
+        "health": 3
+      },
+      "green": {
+        "threat": 6,
+        "attack": 3,
+        "health": 2
+      }
+    },
+    "stock": {
+      "green": 6,
+      "red": 3,
+      "blue": 3
+    },
+    "description": "Characters may not reroll dice using their Reroll values.",
+    "image": "/assets/reference/ghoul_green.png",
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "crusader",
+    "name": "Crusader",
+    "rule": "crusader",
+    "stats": {
+      "red": {
+        "threat": 5,
+        "attack": 5,
+        "health": 5
+      },
+      "blue": {
+        "threat": 6,
+        "attack": 4,
+        "health": 4
+      },
+      "green": {
+        "threat": 5,
+        "attack": 4,
+        "health": 3
+      }
+    },
+    "stock": {
+      "green": 8,
+      "red": 4,
+      "blue": 4
+    },
+    "description": "End of each Resolution step : Remove 1 hit token from the damage box for each Scarlet Crusader remaining in combat.",
+    "image": "/assets/reference/crusader_green.png",
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "naga",
+    "name": "Naga",
+    "rule": "naga",
+    "stats": {
+      "red": {
+        "threat": 4,
+        "attack": 6,
+        "health": 8
+      },
+      "blue": {
+        "threat": 5,
+        "attack": 5,
+        "health": 7
+      },
+      "green": {
+        "threat": 4,
+        "attack": 5,
+        "health": 6
+      }
+    },
+    "stock": {
+      "green": 4,
+      "red": 2,
+      "blue": 2
+    },
+    "description": "End of each Reroll step : The active character must lose 1 Health for each 1 and 2 red or blue dice result.",
+    "image": "/assets/reference/naga_green.png",
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "spider",
+    "name": "Spider",
+    "rule": "spider",
+    "stats": {
+      "red": {
+        "threat": 4,
+        "attack": 5,
+        "health": 10
+      },
+      "blue": {
+        "threat": 5,
+        "attack": 4,
+        "health": 9
+      },
+      "green": {
+        "threat": 4,
+        "attack": 4,
+        "health": 8
+      }
+    },
+    "stock": {
+      "green": 4,
+      "red": 2,
+      "blue": 2
+    },
+    "description": "Characters may not apply Attrition hits against Spiders. End of each Reroll step : The active character receives 1 Stun tkoken for each 1 and 2 dice.",
+    "image": "/assets/reference/spider_green.png",
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "worgen",
+    "name": "Worgen",
+    "rule": "worgen",
+    "stats": {
+      "red": {
+        "threat": 5,
+        "attack": 9,
+        "health": 9
+      },
+      "blue": {
+        "threat": 6,
+        "attack": 7,
+        "health": 8
+      },
+      "green": {
+        "threat": 5,
+        "attack": 7,
+        "health": 8
+      }
+    },
+    "stock": {
+      "green": 4,
+      "red": 2,
+      "blue": 2
+    },
+    "description": "End of each Resolution step : Remove 2 hit tokens from the damage box for each Worgen remaining in combat",
+    "image": "/assets/reference/worgen_green.png",
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "wildkin",
+    "name": "Wildkin",
+    "rule": "wildkin",
+    "stats": {
+      "red": {
+        "threat": 5,
+        "attack": 9,
+        "health": 12
+      },
+      "blue": {
+        "threat": 6,
+        "attack": 8,
+        "health": 11
+      },
+      "green": {
+        "threat": 5,
+        "attack": 8,
+        "health": 10
+      }
+    },
+    "stock": {
+      "green": 4,
+      "red": 1,
+      "blue": 1
+    },
+    "description": "End of each Reroll step : The active character must unequip one power card for each 1 dice result.",
+    "image": "/assets/reference/wildkin_green.png",
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "ogre",
+    "name": "Ogre",
+    "rule": "ogre",
+    "stats": {
+      "red": {
+        "threat": 4,
+        "attack": 11,
+        "health": 11
+      },
+      "blue": {
+        "threat": 5,
+        "attack": 10,
+        "health": 10
+      },
+      "green": {
+        "threat": 4,
+        "attack": 9,
+        "health": 10
+      }
+    },
+    "stock": {
+      "green": 4,
+      "red": 1,
+      "blue": 1
+    },
+    "description": "End of each Reroll step : The active character must lose 2 Health for each 1 and 2 dice result.",
+    "image": "/assets/reference/ogre_green.png",
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "wraith",
+    "name": "Wraith",
+    "rule": "wraith",
+    "stats": {
+      "red": {
+        "threat": 6,
+        "attack": 7,
+        "health": 9
+      },
+      "blue": {
+        "threat": 7,
+        "attack": 6,
+        "health": 8
+      },
+      "green": {
+        "threat": 6,
+        "attack": 5,
+        "health": 8
+      }
+    },
+    "stock": {
+      "green": 6,
+      "red": 3,
+      "blue": 3
+    },
+    "description": "Characters may not apply Attrition hits against Wraiths. End of each Reroll step : The active character receives 1 Curse token for each 1 dice result",
+    "image": "/assets/reference/wraith_green.png",
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "doomguard",
+    "name": "Doomguard",
+    "rule": "doomguard",
+    "stats": {
+      "red": {
+        "threat": 7,
+        "attack": 12,
+        "health": 14
+      },
+      "blue": {
+        "threat": 7,
+        "attack": 11,
+        "health": 13
+      },
+      "green": {
+        "threat": 7,
+        "attack": 10,
+        "health": 12
+      }
+    },
+    "stock": {
+      "green": 2,
+      "red": 1,
+      "blue": 1
+    },
+    "description": "End of each Reroll step : The active character must lose 1 Health for each 1 and 2 red or blue dice result. Dice showing such results are placed aside and may not be rolled again this combat by any character.",
+    "image": "/assets/reference/doom_guard_green.png",
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "drake",
+    "name": "Drake",
+    "rule": "drake",
+    "stats": {
+      "red": {
+        "threat": 6,
+        "attack": 11,
+        "health": 15
+      },
+      "blue": {
+        "threat": 7,
+        "attack": 10,
+        "health": 14
+      },
+      "green": {
+        "threat": 6,
+        "attack": 9,
+        "health": 13
+      }
+    },
+    "stock": {
+      "green": 2,
+      "red": 1,
+      "blue": 1
+    },
+    "description": "Characters may not place any armor tokens in the defense box, except for those generated 8 green dice results.",
+    "image": "/assets/reference/drake_green.png",
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  },
+  {
+    "id": "infernal",
+    "name": "Infernal",
+    "rule": "infernal",
+    "stats": {
+      "red": {
+        "threat": 7,
+        "attack": 12,
+        "health": 16
+      },
+      "blue": {
+        "threat": 7,
+        "attack": 12,
+        "health": 14
+      },
+      "green": {
+        "threat": 7,
+        "attack": 11,
+        "health": 13
+      }
+    },
+    "stock": {
+      "green": 2,
+      "red": 1,
+      "blue": 1
+    },
+    "description": "End of each Reroll step : The active character must lose 2 Energy and 2 Health for each 1 blue dice and each 1 red dice result. End of each Resolutions step : Remove 3 hit tokens from the damage box",
+    "image": "/assets/reference/infernal_green.png",
+    "source": {
+      "url": "https://github.com/eidonia/WowBGAssist/tree/a68e639528069028a98de490602f93a93020a061",
+      "reference": "app/src/main/res/values/strings.xml; independent review pending",
+      "status": "community"
+    }
+  }
+]

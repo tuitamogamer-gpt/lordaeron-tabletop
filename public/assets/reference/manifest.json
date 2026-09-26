@@ -1,0 +1,3178 @@
+{
+  "source": "https://github.com/eidonia/WowBGAssist",
+  "commit": "a68e639528069028a98de490602f93a93020a061",
+  "retrieved": "2026-09-26",
+  "license": "No repository license detected; third-party artwork is not covered by project code.",
+  "entries": [
+    {
+      "id": "chalice_amulet_of_protection",
+      "name": "Amulet Of Protection",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_amulet_of_protection.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_amulet_of_protection.jpg",
+      "sha256": "985f5daad1e64297f4e4fa3bb7cb2d7423a3859a2af3f592fa00ab3bf5811e7e",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_ankh_of_life",
+      "name": "Ankh Of Life",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_ankh_of_life.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_ankh_of_life.jpg",
+      "sha256": "7f5e137155ede44141c92577410057e4f06c400aeb2b98acc02d111aa28f8977",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_archeus",
+      "name": "Archeus",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_archeus.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_archeus.jpg",
+      "sha256": "b47e9fa908f163a26321efda55bd3068bffcee528c8307a85f06da7679a6564a",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_avengers_breastplate",
+      "name": "Avengers Breastplate",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_avengers_breastplate.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_avengers_breastplate.jpg",
+      "sha256": "930018e7a976e9859db4644a60bf8e692e77f0e967c692bd1a0a381738549985",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_back",
+      "name": "Back",
+      "category": "chalice",
+      "back": true,
+      "image": "/assets/reference/chalice_back.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_back.jpg",
+      "sha256": "7fdc0ac092e894b988163c5c119165a9f937ac596deaf7b56683d8312422911e",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_bad_mojo_mask",
+      "name": "Bad Mojo Mask",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_bad_mojo_mask.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_bad_mojo_mask.jpg",
+      "sha256": "8b53afea6363c924145a760f663a77047f4aea0f541490c59bcac7075b95ac5c",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_biznicks_accurascope",
+      "name": "Biznicks Accurascope",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_biznicks_accurascope.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_biznicks_accurascope.jpg",
+      "sha256": "207da310394ca83d4abea0856e976de23f812d4addbf12771bb6f423a27a4d03",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_bloodrazor",
+      "name": "Bloodrazor",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_bloodrazor.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_bloodrazor.jpg",
+      "sha256": "5eca2dc3ad5313bcf8218907d547a8158c91a6712336891486f37859aa60afe7",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_cannonball_runner",
+      "name": "Cannonball Runner",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_cannonball_runner.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_cannonball_runner.jpg",
+      "sha256": "1200c0964a842038d44fba06900bfdd876607ad5cdabbf6bacfe167a1f6109f3",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_colossal_bag_of_loot",
+      "name": "Colossal Bag Of Loot",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_colossal_bag_of_loot.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_colossal_bag_of_loot.jpg",
+      "sha256": "bca578728e787f0b9f130da5771a3ce9fa0cfe148c2aab805e5abaa65324bfce",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_cowl_of_heroes",
+      "name": "Cowl Of Heroes",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_cowl_of_heroes.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_cowl_of_heroes.jpg",
+      "sha256": "1d7b77bfdd5cc17dbe54d50418ce8f92a031df0b0b85cec548a0fb13bb2b3cab",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_crest_of_retribution",
+      "name": "Crest Of Retribution",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_crest_of_retribution.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_crest_of_retribution.jpg",
+      "sha256": "683deca0d84d97719382a143218152588e72c6247e67adb039da6a728fe21f22",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_cursed_ooze_jar",
+      "name": "Cursed Ooze Jar",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_cursed_ooze_jar.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_cursed_ooze_jar.jpg",
+      "sha256": "7bea05d4dda95174469d60db6b8891290410fc109aa3f7a7fb43c9863b107640",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_doomshot",
+      "name": "Doomshot",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_doomshot.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_doomshot.jpg",
+      "sha256": "9c321dd742f3b275c635a79347137dea15efa3e11e52adc6e3c4f933308f652f",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_electrocutioner_leg",
+      "name": "Electrocutioner Leg",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_electrocutioner_leg.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_electrocutioner_leg.jpg",
+      "sha256": "b046b7d85697e49704960af6fb7d61d210f1c09f1565c89471bdeb72f04a7b2f",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_feathered_breastplate",
+      "name": "Feathered Breastplate",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_feathered_breastplate.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_feathered_breastplate.jpg",
+      "sha256": "e2e04038e24dc8cbf90dfdfcebf185f20d8c9503ee08773bf535ac753be0d5ad",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_fellstone_good_luck_charm",
+      "name": "Fellstone Good Luck Charm",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_fellstone_good_luck_charm.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_fellstone_good_luck_charm.jpg",
+      "sha256": "3f4f621f56ebae6dfd32ddc0c85e3ddba067ca03cce40c9303654417932c0a91",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_fist_of_stone",
+      "name": "Fist Of Stone",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_fist_of_stone.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_fist_of_stone.jpg",
+      "sha256": "5ccc60494a988b6e01928d9a32d645da3dcd011b472d7afad56e01ad7827f091",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_fist_of_the_peoples_militia",
+      "name": "Fist Of The Peoples Militia",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_fist_of_the_peoples_militia.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_fist_of_the_peoples_militia.jpg",
+      "sha256": "b255625745c877584c5b1974db713695db649142284026fed748dde614fea8c3",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_gnomish_shrink_ray",
+      "name": "Gnomish Shrink Ray",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_gnomish_shrink_ray.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_gnomish_shrink_ray.jpg",
+      "sha256": "d20625fef22e10fcb5612d9bff0b70fa9c0597e7fe5e9eeb5408bc1bdab74aa2",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_greater_firestone",
+      "name": "Greater Firestone",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_greater_firestone.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_greater_firestone.jpg",
+      "sha256": "00b57650e1561e9b493c5982fac512aba3821c3240da5c2dd3dd6a1ca675b6d4",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_head_of_grimhal_duuc",
+      "name": "Head Of Grimhal Duuc",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_head_of_grimhal_duuc.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_head_of_grimhal_duuc.jpg",
+      "sha256": "f76942b934737ac9f0262749ceea0315f05bf3b53a42519fd427285b7b9879e3",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_heartseeking_crossbow",
+      "name": "Heartseeking Crossbow",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_heartseeking_crossbow.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_heartseeking_crossbow.jpg",
+      "sha256": "0db56f0c28dc6d5997214fc82d4726714016499e895cf7648467a9341151c3e4",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_icicle_rod",
+      "name": "Icicle Rod",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_icicle_rod.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_icicle_rod.jpg",
+      "sha256": "1c02d9ce34d2a05ab22d36b4645591736930d7f122ad36c9cf248d7e5532278d",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_ironfoe",
+      "name": "Ironfoe",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_ironfoe.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_ironfoe.jpg",
+      "sha256": "70b1ca85a7c239a7b5bd557430f14f85bb1f43e0c3a81dc98b8ede81c03313d6",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_jade_breastplate_of_power",
+      "name": "Jade Breastplate Of Power",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_jade_breastplate_of_power.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_jade_breastplate_of_power.jpg",
+      "sha256": "39df11c74414c662a261162a824de6e00cd56b73e1628e9591b234db138f198c",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_lorekeepers_ring",
+      "name": "Lorekeepers Ring",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_lorekeepers_ring.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_lorekeepers_ring.jpg",
+      "sha256": "f3f1e59be0a19ca806ee3cbcfb4d65ad402cc7e4ba498517852dab245e08643f",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_lunar_wand_of_arcane_wrath",
+      "name": "Lunar Wand Of Arcane Wrath",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_lunar_wand_of_arcane_wrath.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_lunar_wand_of_arcane_wrath.jpg",
+      "sha256": "58f8da60c0e76f8b842bd1280d1ed4e92dfbbd4f3bf033c5b1d8f6f8f66db7f3",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_outriders_bow",
+      "name": "Outriders Bow",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_outriders_bow.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_outriders_bow.jpg",
+      "sha256": "1c2609ae66126b386db88a74f0ceb4bae707e0f99a8350445c722381b97fc1a3",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_pyric_caduceus",
+      "name": "Pyric Caduceus",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_pyric_caduceus.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_pyric_caduceus.jpg",
+      "sha256": "1db71a387efc118be6e0b515f8cecdff8fc29433f073dbe53510fe01129e70ca",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_quelserrar",
+      "name": "Quelserrar",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_quelserrar.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_quelserrar.jpg",
+      "sha256": "38fa1dffa3ae7b8d16df2a7d4f8a1753346c66969319c45929f375e553ec0f19",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_rageclaw_helm",
+      "name": "Rageclaw Helm",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_rageclaw_helm.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_rageclaw_helm.jpg",
+      "sha256": "f34e3b3d91ae2cc88463da159e01a76b4c0104579ee80ff4773f13165f69fb59",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_robe_of_power",
+      "name": "Robe Of Power",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_robe_of_power.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_robe_of_power.jpg",
+      "sha256": "448771d17f1fb87a13cb5fd3005ddf637679c68576f3be0ef751d5280f411c32",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_robes_of_the_west",
+      "name": "Robes Of The West",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_robes_of_the_west.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_robes_of_the_west.jpg",
+      "sha256": "94d4b452867ae789b5c6fe844d74242b8f8b9431cb31fb2819799a4cb2d1308a",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_runeblade_of_baron_rivendare",
+      "name": "Runeblade Of Baron Rivendare",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_runeblade_of_baron_rivendare.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_runeblade_of_baron_rivendare.jpg",
+      "sha256": "08fe554e9c503d36fe99ce568f5a06f1f6242192984d6f71147f1f458933ccc9",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_scroll_of_teleportation",
+      "name": "Scroll Of Teleportation",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_scroll_of_teleportation.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_scroll_of_teleportation.jpg",
+      "sha256": "615a53669506813cc6f5c98fb66741394e809d91710b0c15d250688e7cb2b270",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_scroll_of_the_whale",
+      "name": "Scroll Of The Whale",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_scroll_of_the_whale.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_scroll_of_the_whale.jpg",
+      "sha256": "1e58cc48d794a79818d534f8557d3090aea6148ccb02458c6a5f64639551f0ec",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_scrying_orb",
+      "name": "Scrying Orb",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_scrying_orb.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_scrying_orb.jpg",
+      "sha256": "a661bede036ad27dca4404755d99b9f50154af30d30fb6328ff7cfbe23d29cf3",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_seal_of_ascension",
+      "name": "Seal Of Ascension",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_seal_of_ascension.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_seal_of_ascension.jpg",
+      "sha256": "a1d57e7cfed6acb49c4e14a9ff2451f70202aceb5f2e5f6a0e354b2f25b42fa6",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_shadowforge_bushmaster",
+      "name": "Shadowforge Bushmaster",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_shadowforge_bushmaster.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_shadowforge_bushmaster.jpg",
+      "sha256": "3b3c3bd43f1a01a32e411a7bad214ce9ffa91b0bd3696a203748c1b018d1e5c0",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_skullflame_shield",
+      "name": "Skullflame Shield",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_skullflame_shield.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_skullflame_shield.jpg",
+      "sha256": "2d6e3be0a20ea531d4250011afe8ace6b8e9daaa2e3c50cf1e74f4163aa2d1c9",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_staff_of_rampant_growth",
+      "name": "Staff Of Rampant Growth",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_staff_of_rampant_growth.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_staff_of_rampant_growth.jpg",
+      "sha256": "6e36776c60ff8b9a1f62d8a889793f3b59cc3c9358e1e0090ce5796943a0d3f0",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_stormrager",
+      "name": "Stormrager",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_stormrager.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_stormrager.jpg",
+      "sha256": "2397a241fe673699d29bdfe809b34b97e1e492506554fa1dfbb63984623cef5f",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_takierthan_songblade",
+      "name": "Takierthan Songblade",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_takierthan_songblade.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_takierthan_songblade.jpg",
+      "sha256": "6598c5865d30a19487f57349771b28d956b592b6fd1a61681f923e3f669c01bc",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_the_unstoppable_force",
+      "name": "The Unstoppable Force",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_the_unstoppable_force.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_the_unstoppable_force.jpg",
+      "sha256": "eb42523c7dc7bf1f351239ba5869ad9cac7f3d5093de4f76e31b1ec1bd76bc4d",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_thorium_helm",
+      "name": "Thorium Helm",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_thorium_helm.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_thorium_helm.jpg",
+      "sha256": "7f84e578338743743276dcb8a1fc995a8831d80e897bc5480cba33e86a9e8bb0",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_token_of_good_fortune",
+      "name": "Token Of Good Fortune",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_token_of_good_fortune.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_token_of_good_fortune.jpg",
+      "sha256": "8023084bfafb6859dbc5970c0b47252935839b710ed8b548bd59ca9560e112b7",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_tome_of_wisdom",
+      "name": "Tome Of Wisdom",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_tome_of_wisdom.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_tome_of_wisdom.jpg",
+      "sha256": "227ca62171c987386e0a208f55ee9000149c9c84daa44d337adde59262b114f6",
+      "status": "reference-only"
+    },
+    {
+      "id": "chalice_viskag_the_bloodletter",
+      "name": "Viskag The Bloodletter",
+      "category": "chalice",
+      "back": false,
+      "image": "/assets/reference/chalice_viskag_the_bloodletter.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/chalice_viskag_the_bloodletter.jpg",
+      "sha256": "40f46fdbbf24e48b34220cf893112ff7b2b1aa3f5766f97b0df09b58b481d573",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_arcanist_bindings",
+      "name": "Arcanist Bindings",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_arcanist_bindings.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_arcanist_bindings.jpg",
+      "sha256": "746fcf0d280f947ba16a89bb41421394856ebc8fcf5ca9890b206ff9e69f7a93",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_back",
+      "name": "Back",
+      "category": "circle",
+      "back": true,
+      "image": "/assets/reference/circle_back.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_back.jpg",
+      "sha256": "61153a88ac565109ff7fbe81dacd417c55efc1548b5709f92c96e78191f5c30d",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_basilisk_crackling_staff",
+      "name": "Basilisk Crackling Staff",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_basilisk_crackling_staff.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_basilisk_crackling_staff.jpg",
+      "sha256": "397db8696827fc0cf9434fa78a1e71b97a4869e5dea537c87207645f39781c28",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_basilisk_venom",
+      "name": "Basilisk Venom",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_basilisk_venom.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_basilisk_venom.jpg",
+      "sha256": "27bfb5f60000ec53cffb56c1dea05048e3c45154ca046739b3d8c1fc16dd2d43",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_blade_of_the_titans",
+      "name": "Blade Of The Titans",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_blade_of_the_titans.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_blade_of_the_titans.jpg",
+      "sha256": "81b15d6d3a411f240766b287cc1f2e970946f643da1cbdeae1d8131f6d5e4b1b",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_bone_of_the_infernal",
+      "name": "Bone Of The Infernal",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_bone_of_the_infernal.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_bone_of_the_infernal.jpg",
+      "sha256": "6d8e8439e1177d526b8f680f529f4f7c9cc333fda3d4d36dea67eb7de3c1c645",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_burst_of_knowledge",
+      "name": "Burst Of Knowledge",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_burst_of_knowledge.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_burst_of_knowledge.jpg",
+      "sha256": "f0a991c6bcd5d2d4078b26ce3b8a609edf5d0800ff8d007ac287642818535e5d",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_cadaverous_armor",
+      "name": "Cadaverous Armor",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_cadaverous_armor.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_cadaverous_armor.jpg",
+      "sha256": "fb5fe0b92fca1095ea55aac40c542f876e8d6efc5a82e2176671cc9db1149120",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_chained_essence_of_eranikus",
+      "name": "Chained Essence Of Eranikus",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_chained_essence_of_eranikus.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_chained_essence_of_eranikus.jpg",
+      "sha256": "c7526508cb4122e36463457c76633ed58a4b4f573393d61c2c38c440b45b5fcb",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_deathblow",
+      "name": "Deathblow",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_deathblow.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_deathblow.jpg",
+      "sha256": "9a56f8e6dc7e44ae36742cabb0454a53f45191f1a53cf06c3412539dce183fa8",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_deathchill_armor",
+      "name": "Deathchill Armor",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_deathchill_armor.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_deathchill_armor.jpg",
+      "sha256": "bafca4efac9a9d1360a3d4814674456cc6b5b11602ed8bee356f651b9b398c4b",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_dragonscale_armor",
+      "name": "Dragonscale Armor",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_dragonscale_armor.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_dragonscale_armor.jpg",
+      "sha256": "469e0207497acb1152dd5b04a328868fe42a2bb01af2c1c41b8b1487271f9d67",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_earthen_rod",
+      "name": "Earthen Rod",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_earthen_rod.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_earthen_rod.jpg",
+      "sha256": "bdae02f7c02f4685c810b0c1803e41ac525532d719920994b42d0cb32e8d5718",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_flamestrider_robes",
+      "name": "Flamestrider Robes",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_flamestrider_robes.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_flamestrider_robes.jpg",
+      "sha256": "dc78649347d3c2455bc11e7f1eac54b2bebd88d721684ba9d3090c109f8c1dc5",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_flaming_incinerator",
+      "name": "Flaming Incinerator",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_flaming_incinerator.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_flaming_incinerator.jpg",
+      "sha256": "e94a628f5257848f870fe6f0eee44a6d8b24288cddff02d8b513766cfb64e785",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_free_action_potion",
+      "name": "Free Action Potion",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_free_action_potion.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_free_action_potion.jpg",
+      "sha256": "799b21019f4606632d5ca5666786a5dcd7ef5fade9d8d5d931e5d434aeba9743",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_gorewood_bow",
+      "name": "Gorewood Bow",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_gorewood_bow.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_gorewood_bow.jpg",
+      "sha256": "60c3c4dc9635755b72add005b8989ad62c49b2a5c45349832076545c37ca4931",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_grand_marshals_punisher",
+      "name": "Grand Marshals Punisher",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_grand_marshals_punisher.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_grand_marshals_punisher.jpg",
+      "sha256": "cfc71c5fe32afad2e3930f415bd801955309a08272bde7186729fae184ab6515",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_hameyas_slayer",
+      "name": "Hameyas Slayer",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_hameyas_slayer.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_hameyas_slayer.jpg",
+      "sha256": "03dacfd378490f774f4068f86d76d21bde3b4a5e048395f62d65a6a6b9041540",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_hammer_of_the_north_wind",
+      "name": "Hammer Of The North Wind",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_hammer_of_the_north_wind.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_hammer_of_the_north_wind.jpg",
+      "sha256": "01c41b435c745d95786902ed315000b34318918ab0477574d57d548585e7ba79",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_lost_kris_of_zedd",
+      "name": "Lost Kris Of Zedd",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_lost_kris_of_zedd.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_lost_kris_of_zedd.jpg",
+      "sha256": "5f07de64fb463e2b0f30d8a3ed3772e8be7c36cf688958f7480c459b28706be3",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_lucky_charm",
+      "name": "Lucky Charm",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_lucky_charm.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_lucky_charm.jpg",
+      "sha256": "6279d374e33328c2a36b1c605f9922a9763cadb9f781204197e37ac0595baf52",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_martin_thunder",
+      "name": "Martin Thunder",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_martin_thunder.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_martin_thunder.jpg",
+      "sha256": "ab9d386dcb19cc5cd220de4f2f833d76385ad79b0ce84ae0854918846f0683fa",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_mithril_frag_bomb",
+      "name": "Mithril Frag Bomb",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_mithril_frag_bomb.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_mithril_frag_bomb.jpg",
+      "sha256": "11d0cb5e078ed39d71663867e13d49445b2229061f44b4de9d7f9ba7327a3f9b",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_nightfall_drape",
+      "name": "Nightfall Drape",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_nightfall_drape.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_nightfall_drape.jpg",
+      "sha256": "5080fd2e99f0e04a66fc1040d9534f14af1d684ffa4d753a979f7217adab26e1",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_opulent_tunic_of_the_whale",
+      "name": "Opulent Tunic Of The Whale",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_opulent_tunic_of_the_whale.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_opulent_tunic_of_the_whale.jpg",
+      "sha256": "18ab590157fc3f657488f14ec8d88c279ee6cfa69436f19e1e0513ba8421bd35",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_orb_of_draconic_energy",
+      "name": "Orb Of Draconic Energy",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_orb_of_draconic_energy.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_orb_of_draconic_energy.jpg",
+      "sha256": "fdd3f902ca7d998de2e4f7e82c34f0217797dcf2885d4675f5433f82c35b42fd",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_potion_of_berserking",
+      "name": "Potion Of Berserking",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_potion_of_berserking.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_potion_of_berserking.jpg",
+      "sha256": "457f8309d7391b0d2b5dcc5cd63d6b5a319d042bcabd14bc70dede776b64d6e8",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_rapid_fire_gloves",
+      "name": "Rapid Fire Gloves",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_rapid_fire_gloves.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_rapid_fire_gloves.jpg",
+      "sha256": "a2e17147a9297396402468fefea83fcfec190ebd02ed641009f54a57ecbe7576",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_royal_highmark_vestments",
+      "name": "Royal Highmark Vestments",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_royal_highmark_vestments.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_royal_highmark_vestments.jpg",
+      "sha256": "554244895f45777e9cf3afd81fd34c3efa6031e37b00aa1802e70c89c1d2c211",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_satyrs_bow",
+      "name": "Satyrs Bow",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_satyrs_bow.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_satyrs_bow.jpg",
+      "sha256": "c55d53cea0c07fb1d2251424424c438494d4c8f9dd97dee53c77bbf27502a9f8",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_screeching_bow",
+      "name": "Screeching Bow",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_screeching_bow.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_screeching_bow.jpg",
+      "sha256": "d4454a952acdf8da4728ad94bf4c9583be6a56ff37c08a137630357e886652d4",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_sniper_scope",
+      "name": "Sniper Scope",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_sniper_scope.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_sniper_scope.jpg",
+      "sha256": "730197beacd597c0bb08351f7a56999c29b30d154a90e0cd896eb049558e83a1",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_soul_harvester",
+      "name": "Soul Harvester",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_soul_harvester.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_soul_harvester.jpg",
+      "sha256": "26f08a6f8db25b980ecefdf9cb6fe1e00ae5521a8a4be26e9472cf37bcd08aba",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_spire_of_hakkar",
+      "name": "Spire Of Hakkar",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_spire_of_hakkar.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_spire_of_hakkar.jpg",
+      "sha256": "42120ac8170903f96eb4a6a9ff350a6e37f92611df765832391035cbfaac347a",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_staff_of_hale_magefire",
+      "name": "Staff Of Hale Magefire",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_staff_of_hale_magefire.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_staff_of_hale_magefire.jpg",
+      "sha256": "2cd34b2c76522bafa613a4caec609603eaa76116b2c8b828851bb11dea6d391a",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_staff_of_protection",
+      "name": "Staff Of Protection",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_staff_of_protection.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_staff_of_protection.jpg",
+      "sha256": "99dd296cbb8c287fa451e0b8567f9a2d5f781367f8c2383cac4a6bdab4d964b0",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_swiftness_potion",
+      "name": "Swiftness Potion",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_swiftness_potion.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_swiftness_potion.jpg",
+      "sha256": "7860570c6743ee7953c43957e22c75908f824bcc35fe81b31ac34dc70c7428f0",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_taran_smasher",
+      "name": "Taran Smasher",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_taran_smasher.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_taran_smasher.jpg",
+      "sha256": "62a2a23386e9f2b4475d4de645abc9d59df8df73cbbb4d359830a7d26b4333b1",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_tenderloin",
+      "name": "Tenderloin",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_tenderloin.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_tenderloin.jpg",
+      "sha256": "42f3e664cdd7a4491fb4c91ee5bea869df028031f65d1dd773cee5bfee9b7e6e",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_touch_of_chaos",
+      "name": "Touch Of Chaos",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_touch_of_chaos.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_touch_of_chaos.jpg",
+      "sha256": "34975b2f795ad9b9b585a89cd98c2e931da84434630260a784d763fa0168ac37",
+      "status": "reference-only"
+    },
+    {
+      "id": "circle_war_maul",
+      "name": "War Maul",
+      "category": "circle",
+      "back": false,
+      "image": "/assets/reference/circle_war_maul.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/circle_war_maul.jpg",
+      "sha256": "089de75b29867a6d0921654127d2943498e0c0b6b8a5ebd71412a70bf915ae1d",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_aurastone_hammer",
+      "name": "Aurastone Hammer",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_aurastone_hammer.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_aurastone_hammer.jpg",
+      "sha256": "dac966f05be677d86887bf7464ac760806fc1658b97200d9c41125a033326506",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_back",
+      "name": "Back",
+      "category": "square",
+      "back": true,
+      "image": "/assets/reference/square_back.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_back.jpg",
+      "sha256": "f3ab18daccfc450a4faae89a2c9e178ae6892291dbd4db1e8aa21e694bf370e0",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_battlesmasher_of_the_bear",
+      "name": "Battlesmasher Of The Bear",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_battlesmasher_of_the_bear.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_battlesmasher_of_the_bear.jpg",
+      "sha256": "e5b1d15a65deffd7507cef3fc560c80b62628755cc8606a5c294328feb01840e",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_bloodlords_defender",
+      "name": "Bloodlords Defender",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_bloodlords_defender.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_bloodlords_defender.jpg",
+      "sha256": "7f51cf796a83ae935017224fe36bb04cb69f4aaef30c54335e1da21a3f2697e6",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_bludgeon_of_the_grinning_dog",
+      "name": "Bludgeon Of The Grinning Dog",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_bludgeon_of_the_grinning_dog.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_bludgeon_of_the_grinning_dog.jpg",
+      "sha256": "203acba3113c9a9cadee6fab0ac97c3162b60dc1a71bd8cb4310e2d9fad1d35c",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_bone_studded_leather",
+      "name": "Bone Studded Leather",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_bone_studded_leather.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_bone_studded_leather.jpg",
+      "sha256": "a9f26e830892ace7542bf1963622f3d21804e8723781e559abab5d0eda3c5f56",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_cloak_o_veiled_shadows",
+      "name": "Cloak O Veiled Shadows",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_cloak_o_veiled_shadows.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_cloak_o_veiled_shadows.jpg",
+      "sha256": "a7d29b46daa51411979ae136144c2313e135cef428d06a3c2f96b58c5c9eb464",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_cobalt_crusher",
+      "name": "Cobalt Crusher",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_cobalt_crusher.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_cobalt_crusher.jpg",
+      "sha256": "8e8af02d9f97d0b628f8f182def2eb10440a8013865ad48394c18adc21f2bab9",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_commanders_crown",
+      "name": "Commanders Crown",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_commanders_crown.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_commanders_crown.jpg",
+      "sha256": "78ef6935dc298299611d5dc37832c6408d43420601af2f8fbb12b9c9ea9ed372",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_darkwater_talwar",
+      "name": "Darkwater Talwar",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_darkwater_talwar.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_darkwater_talwar.jpg",
+      "sha256": "365e3a4ce7590dc0c1d87501d4fb623eef02ac525400aac9c6b42beb7471c778",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_decapitating_sword",
+      "name": "Decapitating Sword",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_decapitating_sword.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_decapitating_sword.jpg",
+      "sha256": "fd3521be54e434d4c2c2b9d84139550f4b843e8f5e1d7edbfd1badb19a98c5d0",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_drake_fang_talisman",
+      "name": "Drake Fang Talisman",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_drake_fang_talisman.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_drake_fang_talisman.jpg",
+      "sha256": "55591840fbb716ac5503000cc865ebddcd7389b086757dc9eaf77306e0fa81a8",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_dustfall_robes",
+      "name": "Dustfall Robes",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_dustfall_robes.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_dustfall_robes.jpg",
+      "sha256": "9460f70388eff6edb36d40380f9c3c92cfb6b2b784789136aafdc9d82f8168ba",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_enchanted_gold_bloodrobe",
+      "name": "Enchanted Gold Bloodrobe",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_enchanted_gold_bloodrobe.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_enchanted_gold_bloodrobe.jpg",
+      "sha256": "eea21ba08ac05bf7061310cab9ee639fc5fdf7b5122dc56cc4cfa3e01af3bc43",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_explorers_knapsack",
+      "name": "Explorers Knapsack",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_explorers_knapsack.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_explorers_knapsack.jpg",
+      "sha256": "17fb884af6f0ad6cb49a782c7ab503440f902b655d7d01e51627368e910937ea",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_firestarter",
+      "name": "Firestarter",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_firestarter.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_firestarter.jpg",
+      "sha256": "225825bdc2415b54d87b78506ddb03694342b2cada60e372987ce18865a4ad84",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_glyphed_helm",
+      "name": "Glyphed Helm",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_glyphed_helm.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_glyphed_helm.jpg",
+      "sha256": "28369829fb7a931bc5d5bebf042bb49e907e4a3b91b506fe5ae7fbf2bb067a37",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_gnarled_staff",
+      "name": "Gnarled Staff",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_gnarled_staff.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_gnarled_staff.jpg",
+      "sha256": "72c8a790aceabd45782a3841220343b941a65c94eab7cb98e53ca1ff2a707d7e",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_greater_agility_potion",
+      "name": "Greater Agility Potion",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_greater_agility_potion.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_greater_agility_potion.jpg",
+      "sha256": "a7dc3f25c423b8aa081dee5479789bdb6e4ddb4d7b557cc29c7f982c0a6d43e8",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_greater_healing_potion",
+      "name": "Greater Healing Potion",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_greater_healing_potion.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_greater_healing_potion.jpg",
+      "sha256": "e15092d8e69d81305f8a3999ba86b0fa3270b27414122d235ba89bdaa2100f12",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_greater_mana_potion",
+      "name": "Greater Mana Potion",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_greater_mana_potion.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_greater_mana_potion.jpg",
+      "sha256": "2265cd274cf2a59ee5886ff2248695ba9b7eafa9ef9aa3d2344883337b3b6305",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_lesser_agility_potion",
+      "name": "Lesser Agility Potion",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_lesser_agility_potion.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_lesser_agility_potion.jpg",
+      "sha256": "e076403688f5a47f93ee304bb3c9e180b9c6133ea41121dfe03e9c4e56d3b7bd",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_lesser_healing_potion",
+      "name": "Lesser Healing Potion",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_lesser_healing_potion.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_lesser_healing_potion.jpg",
+      "sha256": "d21453d17cc91d3b52eee6b18834476566e813076ad83931cda8ced62a08422b",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_lesser_mana_potion",
+      "name": "Lesser Mana Potion",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_lesser_mana_potion.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_lesser_mana_potion.jpg",
+      "sha256": "6cb7eecf8fbc5a606bb03b26c3b3b8fc2b41f61aa834247285f50c5d5e61f67a",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_oblivions_touch",
+      "name": "Oblivions Touch",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_oblivions_touch.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_oblivions_touch.jpg",
+      "sha256": "e19018f76ec53f0d6e51840949e05d16799e1ade998f29650d74cbc7b63a1d3e",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_obsidian_edged_blade",
+      "name": "Obsidian Edged Blade",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_obsidian_edged_blade.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_obsidian_edged_blade.jpg",
+      "sha256": "62db18c70360f0d141e7dbd9d93c94e449b41e0a4099184bc47043d55c45bd7b",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_ornate_blunderbuss",
+      "name": "Ornate Blunderbuss",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_ornate_blunderbuss.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_ornate_blunderbuss.jpg",
+      "sha256": "3d5c3a6b428f705ff8b799f14f407e43c88457b7cbf6bc89b5726448669ebf16",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_pestilent_wand",
+      "name": "Pestilent Wand",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_pestilent_wand.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_pestilent_wand.jpg",
+      "sha256": "e5b623ac23c402ebef048ace5e60ffcc95b37397b7533fab84de3c7b47f53a59",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_ravenwood_bow",
+      "name": "Ravenwood Bow",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_ravenwood_bow.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_ravenwood_bow.jpg",
+      "sha256": "d75cce078b9b84fad4c91b3ab4a7489f918563652ca4241786ed6da03fc5e559",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_ring_of_eternal_justice",
+      "name": "Ring Of Eternal Justice",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_ring_of_eternal_justice.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_ring_of_eternal_justice.jpg",
+      "sha256": "ae23ebc47a2845a9b15547391ef172506fae355aa291dd5787684358129628bb",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_rod_of_corrosion",
+      "name": "Rod Of Corrosion",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_rod_of_corrosion.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_rod_of_corrosion.jpg",
+      "sha256": "e7bf25d30b6faed33a5bbd5371d2bd287f0a983c9c58a320bb0a03ff08a14401",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_scroll_of_great_spirit",
+      "name": "Scroll Of Great Spirit",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_scroll_of_great_spirit.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_scroll_of_great_spirit.jpg",
+      "sha256": "f07ff3f176d809b9c570a6c28750b2b3ea758e37edcc981ea8572639bd15d9ae",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_scroll_of_great_strength",
+      "name": "Scroll Of Great Strength",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_scroll_of_great_strength.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_scroll_of_great_strength.jpg",
+      "sha256": "572a229a6261ea9d460955339c4955be24daa6996b9e910edb7d298591d9c5dc",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_shrapnel_blaster",
+      "name": "Shrapnel Blaster",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_shrapnel_blaster.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_shrapnel_blaster.jpg",
+      "sha256": "84b8ff13cb73632cd305bd036cf9525a2f07fba8ebfc874b805d14eca854bcc5",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_skullance_shield",
+      "name": "Skullance Shield",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_skullance_shield.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_skullance_shield.jpg",
+      "sha256": "9a04ee88148343b0381faa1ba4408d12f986ae9b487623b4635912a35b03cd38",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_skullsplitting_crossbow",
+      "name": "Skullsplitting Crossbow",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_skullsplitting_crossbow.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_skullsplitting_crossbow.jpg",
+      "sha256": "147dc724b69beebf24378de5e72cd6899762867d49bd15bf4928b64e94c08b82",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_solid_iron_maul",
+      "name": "Solid Iron Maul",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_solid_iron_maul.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_solid_iron_maul.jpg",
+      "sha256": "32a3fb8a6f47247b3e7ac029e5c8c41b7756bed1525e891388a11b80b50748a7",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_talisman_of_binding_shard",
+      "name": "Talisman Of Binding Shard",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_talisman_of_binding_shard.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_talisman_of_binding_shard.jpg",
+      "sha256": "181b697ed9235607f87eb4b2de472b0c02c3769cc96bb4b7d2e47d88093fc445",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_talisman_of_protection",
+      "name": "Talisman Of Protection",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_talisman_of_protection.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_talisman_of_protection.jpg",
+      "sha256": "162463fc213628eee362d772286745c6f15810d57b7825edf7be2afa04ca21f1",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_tortoise_armor",
+      "name": "Tortoise Armor",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_tortoise_armor.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_tortoise_armor.jpg",
+      "sha256": "5ce86f100c50b8c18377e53319efb41d01b168cff5c340c98b14801296c1359e",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_wand_of_eventide",
+      "name": "Wand Of Eventide",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_wand_of_eventide.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_wand_of_eventide.jpg",
+      "sha256": "79701d95e72181cfad32018916468350d2486b0303625669032c4c070f0603d0",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_warhorn_of_dread",
+      "name": "Warhorn Of Dread",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_warhorn_of_dread.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_warhorn_of_dread.jpg",
+      "sha256": "6c1ad88311add1f9f27ca7428813fe9b399d554262f69dd7985547cb39495eef",
+      "status": "reference-only"
+    },
+    {
+      "id": "square_witch_doctors_cane",
+      "name": "Witch Doctors Cane",
+      "category": "square",
+      "back": false,
+      "image": "/assets/reference/square_witch_doctors_cane.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/square_witch_doctors_cane.jpg",
+      "sha256": "d8182ac1e68ec855bf8d859e3bb509815747daf03b6a703a85fd596e31045ef4",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_1xp01",
+      "name": "1Xp01",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_1xp01.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_1xp01.jpg",
+      "sha256": "0b05ce6657e2444e6638df808462ec1f03c7e0d5b291f3ec0a57480c5d61de3f",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_2xp01",
+      "name": "2Xp01",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_2xp01.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_2xp01.jpg",
+      "sha256": "e6bcd792ffe30061662badcb8370e38cc761686aaee3b7261c668b540cd2d805",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_accurate_slugs",
+      "name": "Accurate Slugs",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_accurate_slugs.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_accurate_slugs.jpg",
+      "sha256": "2ac5d110cbce0c958a559c845c42aa0baa80c00875153ce54d87effda0001db9",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_advanced_target_dummy",
+      "name": "Advanced Target Dummy",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_advanced_target_dummy.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_advanced_target_dummy.jpg",
+      "sha256": "79c9a50bf9a4f7e784f51fc4e22911adc8b7d0f9a95bc3781889ce660851917e",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_amulet_of_fortune",
+      "name": "Amulet Of Fortune",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_amulet_of_fortune.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_amulet_of_fortune.jpg",
+      "sha256": "52757c90a55edd5420f3a49f63856a524d5deebdfc8206cb89ad2f3c90dedad8",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_animists_caress",
+      "name": "Animists Caress",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_animists_caress.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_animists_caress.jpg",
+      "sha256": "9455c5c02b7a0d9012af37bfaa7ed78c7983eff174515a1ea17c697d0ebcd55b",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_arcane_bomb",
+      "name": "Arcane Bomb",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_arcane_bomb.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_arcane_bomb.jpg",
+      "sha256": "0ac0fe81f4e4e320d8892b4fb9502d40b957715b74ec9523b5f0d0b98034deb3",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_arcanite_dragonling",
+      "name": "Arcanite Dragonling",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_arcanite_dragonling.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_arcanite_dragonling.jpg",
+      "sha256": "6b0a45894b8aa5a3d3578e366994cc20d13d0ce305491ded46c29abd2b0d8c66",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_back",
+      "name": "Back",
+      "category": "star",
+      "back": true,
+      "image": "/assets/reference/star_back.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_back.jpg",
+      "sha256": "16f17be6552435c9d635f2b175d590966a7c9abaf934a31c213448c0784ac169",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_bag_of_3gold01",
+      "name": "Bag Of 3Gold01",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_bag_of_3gold01.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_bag_of_3gold01.jpg",
+      "sha256": "91874e7c1b623bfc36b937cb9bf64e91f43065155e82b8c05a693e2c3c799245",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_bag_of_5gold01",
+      "name": "Bag Of 5Gold01",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_bag_of_5gold01.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_bag_of_5gold01.jpg",
+      "sha256": "bb53526c0ce423e9a05f8e0aa9790fabd0409518f00349fae8188bbb4dc9d77b",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_bag_of_7gold01",
+      "name": "Bag Of 7Gold01",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_bag_of_7gold01.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_bag_of_7gold01.jpg",
+      "sha256": "a72b3b5acb27a013f61c746f04e5867e23df92b2ccdb05eac71088449e2beb05",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_bag_of_7gold02",
+      "name": "Bag Of 7Gold02",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_bag_of_7gold02.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_bag_of_7gold02.jpg",
+      "sha256": "2021576542910611448bc5cd8bd4326039316e419a235dac736c570128fc0c33",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_band_of_rumination",
+      "name": "Band Of Rumination",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_band_of_rumination.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_band_of_rumination.jpg",
+      "sha256": "5fffd43a1aefd1da397ba6f5d6952728245749f1bbe8cfa9fa03625f2e6f6b84",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_band_of_the_penitent",
+      "name": "Band Of The Penitent",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_band_of_the_penitent.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_band_of_the_penitent.jpg",
+      "sha256": "60620e316f568cb0354e71f1d52313a5326db85eb3be8b9b1912c83d0e63ad61",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_blazefury_medallion",
+      "name": "Blazefury Medallion",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_blazefury_medallion.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_blazefury_medallion.jpg",
+      "sha256": "9f92370132a06ea262906d3477993c22af081b6c49cfb27feb5770832b38b30d",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_book_of_alchemy",
+      "name": "Book Of Alchemy",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_book_of_alchemy.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_book_of_alchemy.jpg",
+      "sha256": "bd31204b8649f53ac82ae33d86f31151e0baf4bbe76c353aa78d996861b7b6d4",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_bottle_of_poison",
+      "name": "Bottle Of Poison",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_bottle_of_poison.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_bottle_of_poison.jpg",
+      "sha256": "89a3bf2ba8a3096fbf61cfb96be361cc85e6059146725ee5714c3207b2c45944",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_celestial_orb",
+      "name": "Celestial Orb",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_celestial_orb.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_celestial_orb.jpg",
+      "sha256": "6821a3e8ea11015dd5c3dbb2e66b5841fac9637cbcd119b4618da87a9bf82100",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_chimaerok_chops",
+      "name": "Chimaerok Chops",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_chimaerok_chops.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_chimaerok_chops.jpg",
+      "sha256": "2fb8dd572a17b9ff5b370ab5f988072a2d2c5888dc59cc0bede1f6c72969bf39",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_coarse_weightstone",
+      "name": "Coarse Weightstone",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_coarse_weightstone.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_coarse_weightstone.jpg",
+      "sha256": "a009f1c8de806cdd741612db37fa62005c8edfd4428533640e0be381b334d72d",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_cold_basilisk_eye",
+      "name": "Cold Basilisk Eye",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_cold_basilisk_eye.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_cold_basilisk_eye.jpg",
+      "sha256": "97b8ccf42232e8c3937cab82eeab81b46cdc4254aba658571a7e7ea26bbaeaa5",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_counterattack_lodestone",
+      "name": "Counterattack Lodestone",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_counterattack_lodestone.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_counterattack_lodestone.jpg",
+      "sha256": "ff02af4a18c917865921b072f793c38b1e280836e2aa2646d31c20ab0218b2d7",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_crude_map",
+      "name": "Crude Map",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_crude_map.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_crude_map.jpg",
+      "sha256": "c65aa6d3ee48a3d375fc477458409a10d899e15fe5a1d2cc5b88273d1b2a542a",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_cursed_eye_of_paleth",
+      "name": "Cursed Eye Of Paleth",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_cursed_eye_of_paleth.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_cursed_eye_of_paleth.jpg",
+      "sha256": "5eabf8105f3c3a98f007bd75373614f445b5234537d3312f0fd4089f76d42bc9",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_dark_rune",
+      "name": "Dark Rune",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_dark_rune.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_dark_rune.jpg",
+      "sha256": "3a0e2a13fd11b4b7ab3c7ba8c08599266732f202cc989c41017f2f7040f529e4",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_defilers_talisman",
+      "name": "Defilers Talisman",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_defilers_talisman.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_defilers_talisman.jpg",
+      "sha256": "b1777f952c20660fb2a44dfa6f0945e1d6f9cc2333697a98821597fb5299c9f9",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_dimensional_ripper",
+      "name": "Dimensional Ripper",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_dimensional_ripper.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_dimensional_ripper.jpg",
+      "sha256": "e25a9fd37c592651c408c66a9762bcc50db2a6ce796241d0d325552ebfd14e4b",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_dragonslayers_ring",
+      "name": "Dragonslayers Ring",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_dragonslayers_ring.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_dragonslayers_ring.jpg",
+      "sha256": "73e8d44ac523fbc495a63fe5d72a1c7fd2498fccf10e50edd8c8dfa5e906d63d",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_dreamless_sleep_potion",
+      "name": "Dreamless Sleep Potion",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_dreamless_sleep_potion.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_dreamless_sleep_potion.jpg",
+      "sha256": "7cde677d7056b51c1cab9c52d03b1524f30051eba19484be0f0b2be4ce7bed63",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_emberfury_talisman",
+      "name": "Emberfury Talisman",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_emberfury_talisman.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_emberfury_talisman.jpg",
+      "sha256": "3910db3f50866a958479b6d4c1dfc92f9fcec164f7cba3e88fa29f44822e425b",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_ez_thro_dynamite",
+      "name": "Ez Thro Dynamite",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_ez_thro_dynamite.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_ez_thro_dynamite.jpg",
+      "sha256": "dc050d2c223169a4bdf1f3bfff324314f04c242dde9a274f649b03c3b0d1c8bd",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_fire_ruby",
+      "name": "Fire Ruby",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_fire_ruby.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_fire_ruby.jpg",
+      "sha256": "d0de98bc00aee9761de22c30e946ef52832e3cde55eacbe6b9d38207d6a0d82e",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_friendly_gift",
+      "name": "Friendly Gift",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_friendly_gift.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_friendly_gift.jpg",
+      "sha256": "bc0ef617de56ee50963a1cf639c728228d71d494a5cdc9a8695160875ff17192",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_frostwolf_battle_standard",
+      "name": "Frostwolf Battle Standard",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_frostwolf_battle_standard.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_frostwolf_battle_standard.jpg",
+      "sha256": "b629a31e52657104711dd9963aa95593bd2cb289eadbe8360db289cf964c3ed4",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_furbolg_medicine_pouch",
+      "name": "Furbolg Medicine Pouch",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_furbolg_medicine_pouch.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_furbolg_medicine_pouch.jpg",
+      "sha256": "0eff629c0aa198deabceb171dcb20a95f114a5f82766fed4df58a1c36a23353f",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_gem_of_protection",
+      "name": "Gem Of Protection",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_gem_of_protection.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_gem_of_protection.jpg",
+      "sha256": "f136080a4358f4b30f3b10d7158ca2527850fb224cad7c0fbd8d46b11c703702",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_gnomish_net_o_matic_projector",
+      "name": "Gnomish Net O Matic Projector",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_gnomish_net_o_matic_projector.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_gnomish_net_o_matic_projector.jpg",
+      "sha256": "60d1586481778007cdec1116f3ab4badfa8333d5d9103c439671035728973acd",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_goblin_dragon_gun",
+      "name": "Goblin Dragon Gun",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_goblin_dragon_gun.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_goblin_dragon_gun.jpg",
+      "sha256": "f4154e9e3f7551d3ed8e40c8b05e5ea389a665a11308a2f4f383a60bb779dabb",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_goblin_land_mine",
+      "name": "Goblin Land Mine",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_goblin_land_mine.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_goblin_land_mine.jpg",
+      "sha256": "bf70590fd7ea480eb09c6a8a6e8d8ad0aa4524ecde1a98b60368fb5f7905b1fc",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_goblin_sapper_charge",
+      "name": "Goblin Sapper Charge",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_goblin_sapper_charge.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_goblin_sapper_charge.jpg",
+      "sha256": "c2409d75031a7be98abaf8c6ff783a0fd3afda407e9d8cadeb44bde9a6144e8f",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_great_rage_potion",
+      "name": "Great Rage Potion",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_great_rage_potion.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_great_rage_potion.jpg",
+      "sha256": "7e6b06c6c5b0f3d230e9b9e48b8b3fe2af24d3513a6674ecd4fe505addc8c9aa",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_greater_protection_potion",
+      "name": "Greater Protection Potion",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_greater_protection_potion.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_greater_protection_potion.jpg",
+      "sha256": "6bd8ab57538322210dcb86f1e299062244e68a543b007da7b466357092d3e5b1",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_hand_of_justice",
+      "name": "Hand Of Justice",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_hand_of_justice.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_hand_of_justice.jpg",
+      "sha256": "da12fda8a781761cff2230b67d2364ae809d551e3c067de368246e7dbb899edf",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_heart_of_noxxion",
+      "name": "Heart Of Noxxion",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_heart_of_noxxion.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_heart_of_noxxion.jpg",
+      "sha256": "f3bf323f7a2c99261fcbded1c2de55aa54da501b19f7e852965cabc8eae9478d",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_ice_threaded_arrow",
+      "name": "Ice Threaded Arrow",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_ice_threaded_arrow.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_ice_threaded_arrow.jpg",
+      "sha256": "0c1d3478d9db8d37b9f30009f59769a32fcd4f91eeebde0d994b76696701d2a8",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_ice_threaded_bullet",
+      "name": "Ice Threaded Bullet",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_ice_threaded_bullet.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_ice_threaded_bullet.jpg",
+      "sha256": "8e2b3763c5d7e500d1935de63ba7bb469f7063a40b7385bbd764f0a788ea749b",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_inferno_potion",
+      "name": "Inferno Potion",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_inferno_potion.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_inferno_potion.jpg",
+      "sha256": "781c41d27e7c49cb03dc0f8d38f862d9cd8052b23a2eef3e2c90db8be542f153",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_iron_counterweight",
+      "name": "Iron Counterweight",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_iron_counterweight.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_iron_counterweight.jpg",
+      "sha256": "79f6e71c0d114c78bf730a4754d0728782b44bf210e6063dfb77464b09a58ba0",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_iron_shield_spike",
+      "name": "Iron Shield Spike",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_iron_shield_spike.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_iron_shield_spike.jpg",
+      "sha256": "539f3d958ac5946e6e2477620e2dbe978e5169355fa8d30d18dc75d6d16f1ec3",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_jagged_arrow",
+      "name": "Jagged Arrow",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_jagged_arrow.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_jagged_arrow.jpg",
+      "sha256": "8510b77d2c535b43b74901c857afbe83a4d4f181abd0b1b3ac51ae094b453a67",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_libram_of_focus",
+      "name": "Libram Of Focus",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_libram_of_focus.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_libram_of_focus.jpg",
+      "sha256": "322a6e18f36111e35937d0073547f5b86adf60e843c29ce3f9bae4b72c697187",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_linkens_boomerang",
+      "name": "Linkens Boomerang",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_linkens_boomerang.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_linkens_boomerang.jpg",
+      "sha256": "2e34f10538b306b287c0421a4fd9a246edee323edb126de3aa810d8f6a8f4427",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_lion_horn_of_stormwind",
+      "name": "Lion Horn Of Stormwind",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_lion_horn_of_stormwind.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_lion_horn_of_stormwind.jpg",
+      "sha256": "1fa26bf97ce762398de21b08e46272b9a2cf795a8a61e0e8b652c3c83421d27b",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_mark_of_the_chosen",
+      "name": "Mark Of The Chosen",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_mark_of_the_chosen.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_mark_of_the_chosen.jpg",
+      "sha256": "5870467852b7f4462eb230f30e54587e93fa56a2139a30fe95fe9821f29e91be",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_medallion_of_steadfast_might",
+      "name": "Medallion Of Steadfast Might",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_medallion_of_steadfast_might.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_medallion_of_steadfast_might.jpg",
+      "sha256": "b909a165424cef64c4860e4926abc017d816e93f61edd2a9165fcaeb9fa6b43f",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_mindtap_talisman",
+      "name": "Mindtap Talisman",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_mindtap_talisman.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_mindtap_talisman.jpg",
+      "sha256": "0de4fe455b476311206d108734901487ac669359b4854b7b20838c50a572b667",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_necromantic_band",
+      "name": "Necromantic Band",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_necromantic_band.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_necromantic_band.jpg",
+      "sha256": "9bf1796f345f49b4eea39c1205fa6063a8c9676550b51a7744f35a9f64aa038f",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_nifty_stopwatch",
+      "name": "Nifty Stopwatch",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_nifty_stopwatch.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_nifty_stopwatch.jpg",
+      "sha256": "c6af68bee261d1fbb499fbaaa99a7a1530a6e3b86da1971fd7d3807083c54a89",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_onyxia_blood_talisman",
+      "name": "Onyxia Blood Talisman",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_onyxia_blood_talisman.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_onyxia_blood_talisman.jpg",
+      "sha256": "efd5e48e07acd1d744135ed1a27a2a7044bd9c422b9b10c6c53be3a67363174d",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_onyxia_tooth_pendant",
+      "name": "Onyxia Tooth Pendant",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_onyxia_tooth_pendant.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_onyxia_tooth_pendant.jpg",
+      "sha256": "70f8863a8e2c2b2777d9c9768f5db0cf21006401625aad130123cdb39db7c82f",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_orb_of_deception",
+      "name": "Orb Of Deception",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_orb_of_deception.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_orb_of_deception.jpg",
+      "sha256": "4104b47f13ad7dc1277d4c1075918dfd9793ddd5b520d3353ebdb480f8683252",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_orb_of_the_darkmoon",
+      "name": "Orb Of The Darkmoon",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_orb_of_the_darkmoon.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_orb_of_the_darkmoon.jpg",
+      "sha256": "0bd2b92bc1f6f6c952ca5e8fe9787d66a481c336d817f867964f90bf40f87d92",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_overlords_onyx_band",
+      "name": "Overlords Onyx Band",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_overlords_onyx_band.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_overlords_onyx_band.jpg",
+      "sha256": "e4cae8524c1793217bf0a8bc1bb885ed479ef4c7a8d7fa24c72b62c5aa5a1233",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_pendant_of_the_fallen_dragon",
+      "name": "Pendant Of The Fallen Dragon",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_pendant_of_the_fallen_dragon.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_pendant_of_the_fallen_dragon.jpg",
+      "sha256": "f4b54265c8c95130e01796cfb984cd5c1b1590b4c1a89e301c3b9c85b3a77e2c",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_pendant_of_the_qiraji_guardian",
+      "name": "Pendant Of The Qiraji Guardian",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_pendant_of_the_qiraji_guardian.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_pendant_of_the_qiraji_guardian.jpg",
+      "sha256": "085dd7591420366e03965b9ad230cf69639f990a89655c5c2b4aada615e65f3b",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_piccolo_of_the_flaming_fire",
+      "name": "Piccolo Of The Flaming Fire",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_piccolo_of_the_flaming_fire.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_piccolo_of_the_flaming_fire.jpg",
+      "sha256": "34a3199cf6a3cdc06951be3141476ccb2b362276b3f9c2ec2849e1a34c772f55",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_poison_arrow",
+      "name": "Poison Arrow",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_poison_arrow.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_poison_arrow.jpg",
+      "sha256": "e628970652b0a6aa2ed1ce6e843fb0a98b9f0871b69de9487ca7c59d7cec713a",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_poisoned_spider_fang",
+      "name": "Poisoned Spider Fang",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_poisoned_spider_fang.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_poisoned_spider_fang.jpg",
+      "sha256": "19c2cfd4eb6b96d27ae2e52c7ddeac89c123e032334740c447327d01e329ba56",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_potion_of_darkness",
+      "name": "Potion Of Darkness",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_potion_of_darkness.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_potion_of_darkness.jpg",
+      "sha256": "52461b654b667e71a4ccd1482f81bab56f82910d48ff2a371112f6d8160f10a4",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_powers_of_the_void",
+      "name": "Powers Of The Void",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_powers_of_the_void.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_powers_of_the_void.jpg",
+      "sha256": "d05e1bc44b81084edda4f0a6ee59de326378659bd7ea1e6bb8fb565a061ed71f",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_purification_potion",
+      "name": "Purification Potion",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_purification_potion.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_purification_potion.jpg",
+      "sha256": "77cd2181d1302be67e15441e73870346da844e7a720c23376d9df9e33bcc512a",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_quick_strike_ring",
+      "name": "Quick Strike Ring",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_quick_strike_ring.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_quick_strike_ring.jpg",
+      "sha256": "5f4521d462394516c68bd6ec68555606328a3af3526c58488321edc83cd41367",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_ragged_johns_neverending_cup",
+      "name": "Ragged Johns Neverending Cup",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_ragged_johns_neverending_cup.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_ragged_johns_neverending_cup.jpg",
+      "sha256": "45b4c1f51e864fedf01abe171652f3077f5172c357b38710f70b35ab4cb5427f",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_ramsteins_lightning_bolts",
+      "name": "Ramsteins Lightning Bolts",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_ramsteins_lightning_bolts.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_ramsteins_lightning_bolts.jpg",
+      "sha256": "00e4e1770c2081af85425a9c0ac50652c06af583e4f70e1a3c57046793350b7a",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_raw_sagefish",
+      "name": "Raw Sagefish",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_raw_sagefish.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_raw_sagefish.jpg",
+      "sha256": "daedc014727ccb4fe8025425f8b10e55387f59dc59beaa6291d4f94edd5c75ba",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_reinforced_locked_chest",
+      "name": "Reinforced Locked Chest",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_reinforced_locked_chest.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_reinforced_locked_chest.jpg",
+      "sha256": "2a1e1f8a0b95b12a5cb3e0b4680e46fe024915ffc0c4235cc159312ae6f13d61",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_ring_of_fury",
+      "name": "Ring Of Fury",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_ring_of_fury.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_ring_of_fury.jpg",
+      "sha256": "dc2e82110921346545f3457d22d1359d46e07482f84abafb76ca4c37556d904f",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_ring_of_saviors",
+      "name": "Ring Of Saviors",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_ring_of_saviors.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_ring_of_saviors.jpg",
+      "sha256": "d90a669dfedfe3e4dec5b8a25faa2524ec1e2d13939dd86e49fed0e3dce6f0ef",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_ring_of_the_bronze_dragonflight",
+      "name": "Ring Of The Bronze Dragonflight",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_ring_of_the_bronze_dragonflight.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_ring_of_the_bronze_dragonflight.jpg",
+      "sha256": "7e32143a5d65dc3ad126c301a690fa6f6afd7e9cc8f4e9331dd738dbbcb878ff",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_rumsey_rum",
+      "name": "Rumsey Rum",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_rumsey_rum.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_rumsey_rum.jpg",
+      "sha256": "5955fb88cb561fde6a0d4c7a5e064160636ac65fcf9f56c78a5e5018dbb00417",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_runecloth_bag",
+      "name": "Runecloth Bag",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_runecloth_bag.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_runecloth_bag.jpg",
+      "sha256": "3997729554f41a0c34fba763f2429ec6045d528632f5bcefcbeeb048bec67d60",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_sanctified_orb",
+      "name": "Sanctified Orb",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_sanctified_orb.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_sanctified_orb.jpg",
+      "sha256": "9b07b0b2913f7b41cfc5675ee53733c79b846b5bc75d8916cd74521d487544da",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_scroll_of_madness",
+      "name": "Scroll Of Madness",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_scroll_of_madness.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_scroll_of_madness.jpg",
+      "sha256": "8863d7e73736c65d939fbed53d60450f54c5994caac6167538057253e3b994ad",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_seal_of_the_archmagus",
+      "name": "Seal Of The Archmagus",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_seal_of_the_archmagus.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_seal_of_the_archmagus.jpg",
+      "sha256": "d92f9bd24ea17b9f9506df8ab4c7e3857f5a0d79a938a5c9e65dc52517b3bb14",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_shard_of_the_flame",
+      "name": "Shard Of The Flame",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_shard_of_the_flame.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_shard_of_the_flame.jpg",
+      "sha256": "a0779c90855b820207db1fb1cf5491494bf006a2b430becbdb868fa3011f7545",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_sharpening_stone",
+      "name": "Sharpening Stone",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_sharpening_stone.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_sharpening_stone.jpg",
+      "sha256": "8648466e6a019f20735a942dbe3277919e091d5d07800bf565e2b2d90bafbbb6",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_smolderwebs_eye",
+      "name": "Smolderwebs Eye",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_smolderwebs_eye.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_smolderwebs_eye.jpg",
+      "sha256": "3499f43d3aea0fa5cfca038f7950a8de907545d1f2676fc401dd5b37c6fe43fc",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_strong_ale",
+      "name": "Strong Ale",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_strong_ale.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_strong_ale.jpg",
+      "sha256": "08166f34dd85d6e2d022c58f2a93b68fbb03d2146bccb203aefd2239a7c95008",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_testament_of_hope",
+      "name": "Testament Of Hope",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_testament_of_hope.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_testament_of_hope.jpg",
+      "sha256": "62c57fbd13c1f6c3f83c60f173feb77fb27737fc31824fa94255a1296a039e8d",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_thunder_ale",
+      "name": "Thunder Ale",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_thunder_ale.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_thunder_ale.jpg",
+      "sha256": "18d02a5be22495e487b3c5076bc0da68a10f9fefb7328c9414ad8d5796466f2a",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_tome_of_arcane_domination",
+      "name": "Tome Of Arcane Domination",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_tome_of_arcane_domination.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_tome_of_arcane_domination.jpg",
+      "sha256": "9b730723fab6379bed0de715c04cdcd86026fceb3acea115a1f83c7033c9873e",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_travelers_belt",
+      "name": "Travelers Belt",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_travelers_belt.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_travelers_belt.jpg",
+      "sha256": "993a8b29c9c7be5eaf8c536d5991a1ed6a1a13da32a359b3e9462118e9909702",
+      "status": "reference-only"
+    },
+    {
+      "id": "star_treasure_map",
+      "name": "Treasure Map",
+      "category": "star",
+      "back": false,
+      "image": "/assets/reference/star_treasure_map.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/star_treasure_map.jpg",
+      "sha256": "b66132d4dc3286ad8ce90f053a5929bb059ebd7e9beae9a949659a0fbcf8cfc4",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_amethyst_war_staff",
+      "name": "Amethyst War Staff",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_amethyst_war_staff.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_amethyst_war_staff.jpg",
+      "sha256": "106b567a061affa8ea787b838cce9534861c3dc20680b8b139fba5bcae4e957a",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_ancestral_tunic",
+      "name": "Ancestral Tunic",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_ancestral_tunic.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_ancestral_tunic.jpg",
+      "sha256": "0680db3754bc5e65ba26932db3f9a4c21729b4c5bc1da186e33fa53008fe1449",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_archers_buckler",
+      "name": "Archers Buckler",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_archers_buckler.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_archers_buckler.jpg",
+      "sha256": "e93d81357e25389cfdc329ff9e33fc82a0d28a57b33547fab58f5419eb76a3f4",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_ardent_custodian",
+      "name": "Ardent Custodian",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_ardent_custodian.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_ardent_custodian.jpg",
+      "sha256": "1b35695e78f8369e7c9acc999b7cdc87e8a653a0338a1bd192d42e844999c259",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_back",
+      "name": "Back",
+      "category": "triangle",
+      "back": true,
+      "image": "/assets/reference/triangle_back.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_back.jpg",
+      "sha256": "c907c1b2c600c2502f274a535166015e8ec4eeb8e7cf518501600f523aab5421",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_band_of_accuria",
+      "name": "Band Of Accuria",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_band_of_accuria.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_band_of_accuria.jpg",
+      "sha256": "31dd1340d6de2235be45928582f3adfa9c101d9372bd8e23dc41f82b04669e34",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_bastard_sword",
+      "name": "Bastard Sword",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_bastard_sword.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_bastard_sword.jpg",
+      "sha256": "bf8b216f9f8eb1b906d4fb34d9c7c068d600081eab8b859b667411c0e1bb3c9d",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_bent_staff",
+      "name": "Bent Staff",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_bent_staff.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_bent_staff.jpg",
+      "sha256": "d0603c443f87ccb321196e223a3e752a81e7f6a610d87f9817b1687e7836975e",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_brilliant_wizard_oil",
+      "name": "Brilliant Wizard Oil",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_brilliant_wizard_oil.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_brilliant_wizard_oil.jpg",
+      "sha256": "f4b887ac08ff867019b89153f73c6fe9cf70fd9964092d384cdcb9b897f88ec4",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_cadet_vest",
+      "name": "Cadet Vest",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_cadet_vest.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_cadet_vest.jpg",
+      "sha256": "672cb4d5cbb021c261272577931beea868be3938ee3b0b2efd085d99f42bfca4",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_charged_lightning_rod",
+      "name": "Charged Lightning Rod",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_charged_lightning_rod.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_charged_lightning_rod.jpg",
+      "sha256": "dc3dc85d5c2bf097182e7603fd920d5339b4e6d49b4f4ffafcd8282c1e275540",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_cobalt_buckler",
+      "name": "Cobalt Buckler",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_cobalt_buckler.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_cobalt_buckler.jpg",
+      "sha256": "7051c1aa156dd2b1bde585729dd6859d20041f1a9694d8aa870f1c0fe6cdac74",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_crocolisk_steak",
+      "name": "Crocolisk Steak",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_crocolisk_steak.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_crocolisk_steak.jpg",
+      "sha256": "391029d9c8f3f2c430c1198c118dc1c7af40140fe971343bc00b942c2fc9b302",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_cured_leather_armor",
+      "name": "Cured Leather Armor",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_cured_leather_armor.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_cured_leather_armor.jpg",
+      "sha256": "df9d9e323d174f011050b73e96d3dadfbe6f3c63a01c1b4e400479af2df11f57",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_dragonbreath_hand_cannon",
+      "name": "Dragonbreath Hand Cannon",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_dragonbreath_hand_cannon.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_dragonbreath_hand_cannon.jpg",
+      "sha256": "ffda790aa75f0dbcbc0db614562cdc2fd37496290f489b2219d030f79345183b",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_dull_blade",
+      "name": "Dull Blade",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_dull_blade.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_dull_blade.jpg",
+      "sha256": "afd545bf76b85da9fcaae8e93465e08c6c575b6f9bf94ba00afb7676ae92d90c",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_fine_longbow",
+      "name": "Fine Longbow",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_fine_longbow.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_fine_longbow.jpg",
+      "sha256": "9c21f163677ad428cf47dd0a454f88206870819a6af4c7f4ffdd6da935b672e0",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_footman_tunic",
+      "name": "Footman Tunic",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_footman_tunic.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_footman_tunic.jpg",
+      "sha256": "e5339c92f089913b2963153ffcb3615616ba609d6457dec6a8978bc31cc53d58",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_freezing_shard",
+      "name": "Freezing Shard",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_freezing_shard.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_freezing_shard.jpg",
+      "sha256": "271d6c44345e1e5cf27060cfb8ece7ad5ed383b25ede4388172ce4215d2aab64",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_gnarled_staff",
+      "name": "Gnarled Staff",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_gnarled_staff.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_gnarled_staff.jpg",
+      "sha256": "10f18543bf79419e551289593250cee34e11468b05ecccee426aa8c07dd564fa",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_gustweald_cloak",
+      "name": "Gustweald Cloak",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_gustweald_cloak.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_gustweald_cloak.jpg",
+      "sha256": "f58173f3d2b491a496c2a4840024a1e57783a40194fc1ba241b7e1a02e3e615a",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_headmasters_charge",
+      "name": "Headmasters Charge",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_headmasters_charge.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_headmasters_charge.jpg",
+      "sha256": "546bed2857fc90a8f1caffc962b71476e0a183c151e96b23916abd376abbc569",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_hearthstone",
+      "name": "Hearthstone",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_hearthstone.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_hearthstone.jpg",
+      "sha256": "e0f2dbbab48fd86d1ed9905d6c066001fa4547463f2450c2402841edbb55b6c2",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_helm_of_vengeance",
+      "name": "Helm Of Vengeance",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_helm_of_vengeance.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_helm_of_vengeance.jpg",
+      "sha256": "c2be42e96061554df538eced4c994345094d109f93d12cb687e475203a0c8550",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_invisibility_potion",
+      "name": "Invisibility Potion",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_invisibility_potion.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_invisibility_potion.jpg",
+      "sha256": "650115bdc4b38ea2c9da7ed66c32e0ad5871ae188a9e1c90335f17452a2962a5",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_iridescent_hammer",
+      "name": "Iridescent Hammer",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_iridescent_hammer.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_iridescent_hammer.jpg",
+      "sha256": "4a924fcfb5b1b91807b460a967864fd99b234ca0d33096358cc657d328856152",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_laminated_recurve_bow",
+      "name": "Laminated Recurve Bow",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_laminated_recurve_bow.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_laminated_recurve_bow.jpg",
+      "sha256": "11ee9fccd0e3d289b2afed3d38ede511c0ce5740c62a0b190451b3c759e6e780",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_ley_staff",
+      "name": "Ley Staff",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_ley_staff.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_ley_staff.jpg",
+      "sha256": "e56e00c7226c46a4916f8bbbb916f42a3c337bc547bfe643311b543bd70b5d72",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_mark_of_the_dragon_lord",
+      "name": "Mark Of The Dragon Lord",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_mark_of_the_dragon_lord.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_mark_of_the_dragon_lord.jpg",
+      "sha256": "c45feb60795915bc225e2561a39bf8155f164ffee436729f74521cb91edf5a0c",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_minor_agility_potion",
+      "name": "Minor Agility Potion",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_minor_agility_potion.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_minor_agility_potion.jpg",
+      "sha256": "5b5ee95e41328e5684982b232918716ed65a4b122642445fe752230af5beb935",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_minor_healing_potion",
+      "name": "Minor Healing Potion",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_minor_healing_potion.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_minor_healing_potion.jpg",
+      "sha256": "b3a875f71df70f08637b434a93bc1ee8c5b509ba10814622f002d225dc94c4c0",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_minor_mana_potion",
+      "name": "Minor Mana Potion",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_minor_mana_potion.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_minor_mana_potion.jpg",
+      "sha256": "aad220bb9ad724b406fa65612be5be42b05f9cce60753394ff2247152df2567e",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_moonsight_rifle",
+      "name": "Moonsight Rifle",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_moonsight_rifle.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_moonsight_rifle.jpg",
+      "sha256": "0a599212ffa010c62e4d9bb3c9ea5b36eeb40e686e6cdb0877ef4250d6e54fdc",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_neophytes_robe",
+      "name": "Neophytes Robe",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_neophytes_robe.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_neophytes_robe.jpg",
+      "sha256": "28be471b6d3bad4b9c0ac4e0e8f07336b4ceb07f4e58de394e899460d8db82a6",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_ornate_spyglass",
+      "name": "Ornate Spyglass",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_ornate_spyglass.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_ornate_spyglass.jpg",
+      "sha256": "6d3a866c5a2b352f939434accfdb552af687541052fffa41561687b2fe3b153d",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_painweaver_band",
+      "name": "Painweaver Band",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_painweaver_band.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_painweaver_band.jpg",
+      "sha256": "99b1d895562f1f44633f103480bbae342af886271b1bb4f41a21c5fb93172809",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_ragehammer",
+      "name": "Ragehammer",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_ragehammer.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_ragehammer.jpg",
+      "sha256": "dfab0e7ddf106b4dda7220283af549329764ebdfe436d0faed6210dd78b0df45",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_rakzur_club",
+      "name": "Rakzur Club",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_rakzur_club.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_rakzur_club.jpg",
+      "sha256": "9f1668421820ce1e9ccbfa1ad87d4e781c7a58721566054493f2197411bebfc0",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_ring_of_infinite_wisdom",
+      "name": "Ring Of Infinite Wisdom",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_ring_of_infinite_wisdom.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_ring_of_infinite_wisdom.jpg",
+      "sha256": "e37e6c2d02d0a64ae8a4dc48b617eaf0001a5bf46717152665ab2d5089430e71",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_robe_of_apprenticeship",
+      "name": "Robe Of Apprenticeship",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_robe_of_apprenticeship.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_robe_of_apprenticeship.jpg",
+      "sha256": "3be9a6d8b710dd7afd526482b8675dd11a995e14c6cf27c66067978d80bae183",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_scimitar",
+      "name": "Scimitar",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_scimitar.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_scimitar.jpg",
+      "sha256": "344ce158306b77995427ac3864a7d7a02e1bf1c46705a46ee1247d27a1a7f7e6",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_scroll_of_lesser_strength",
+      "name": "Scroll Of Lesser Strength",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_scroll_of_lesser_strength.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_scroll_of_lesser_strength.jpg",
+      "sha256": "7f5091df5dde25ec0b40e35258b2c70dd09af93e44356b8fdef4ed6dbf754965",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_shadow_wand",
+      "name": "Shadow Wand",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_shadow_wand.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_shadow_wand.jpg",
+      "sha256": "d6093ede9d18d3119419d41a9cdedbbc28919e3887fdc2021eb97243915d01e5",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_shard_of_afrasa",
+      "name": "Shard Of Afrasa",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_shard_of_afrasa.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_shard_of_afrasa.jpg",
+      "sha256": "1a3622659af61835c9061117b8483ab14661d0d1307a36c299ee165a17134a94",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_skycaller",
+      "name": "Skycaller",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_skycaller.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_skycaller.jpg",
+      "sha256": "1f2bb02c7a79609ef27826a959d1643b3b546735c66eb1d04bddb4378d29c0b5",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_soldiers_armor",
+      "name": "Soldiers Armor",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_soldiers_armor.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_soldiers_armor.jpg",
+      "sha256": "59ad3796f077b32f02c9d51c3cdb65e25e03573e4731084f5330abb0e1863ef2",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_staff_of_the_qiraji_prophets",
+      "name": "Staff Of The Qiraji Prophets",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_staff_of_the_qiraji_prophets.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_staff_of_the_qiraji_prophets.jpg",
+      "sha256": "bc7281f6c1abcf1fa121b222bf0dba1e0bfab3040e11ffdd6a56523006653687",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_thrash_blade",
+      "name": "Thrash Blade",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_thrash_blade.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_thrash_blade.jpg",
+      "sha256": "d3d4fe3ae2b5f87474f61fd95482621ef654b229a9ad77e720365e496b661b2f",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_trogg_club",
+      "name": "Trogg Club",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_trogg_club.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_trogg_club.jpg",
+      "sha256": "5a7e465fcf02f5a5df8fda43b743e40680b6add8c11f537dc67d977e46dba45b",
+      "status": "reference-only"
+    },
+    {
+      "id": "triangle_trueshot_bow",
+      "name": "Trueshot Bow",
+      "category": "triangle",
+      "back": false,
+      "image": "/assets/reference/triangle_trueshot_bow.jpg",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable-v24/triangle_trueshot_bow.jpg",
+      "sha256": "56413e12b484aa2756041d7f32e9ddf68a22d9d799260d16d2aaa952a3d9295a",
+      "status": "reference-only"
+    },
+    {
+      "id": "crusader_blue",
+      "name": "Crusader Blue",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/crusader_blue.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/crusader_blue.png",
+      "sha256": "e1a4ead35cce82e172aee5dbca385a730f786e412816da097fb32c8b5438d365",
+      "status": "reference-only"
+    },
+    {
+      "id": "crusader_green",
+      "name": "Crusader Green",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/crusader_green.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/crusader_green.png",
+      "sha256": "3120886b1519d795fed92af88109290559b00ac3f88e320598d09d28e6a1a524",
+      "status": "reference-only"
+    },
+    {
+      "id": "crusader_red",
+      "name": "Crusader Red",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/crusader_red.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/crusader_red.png",
+      "sha256": "c159d997200782f60028b8cbe89796d2943f1335eff793da197fad7660c6ddfa",
+      "status": "reference-only"
+    },
+    {
+      "id": "doom_guard_blue",
+      "name": "Doom Guard Blue",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/doom_guard_blue.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/doom_guard_blue.png",
+      "sha256": "ddcdbebdfae19de5e63e16ca4cd4b404cd573c06e88a684654849ae825e1b6e1",
+      "status": "reference-only"
+    },
+    {
+      "id": "doom_guard_green",
+      "name": "Doom Guard Green",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/doom_guard_green.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/doom_guard_green.png",
+      "sha256": "336396d5f918c19044686f3f414a2a57e0edfe4e3da0e478ab7948c8cf417166",
+      "status": "reference-only"
+    },
+    {
+      "id": "doom_guard_red",
+      "name": "Doom Guard Red",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/doom_guard_red.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/doom_guard_red.png",
+      "sha256": "bd86df448041e51912db00a1b684467c93c63065abe29f4e1a35aa75ece19317",
+      "status": "reference-only"
+    },
+    {
+      "id": "drake_blue",
+      "name": "Drake Blue",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/drake_blue.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/drake_blue.png",
+      "sha256": "1ad64b9640903f0f05fd1e65a5df32391fd44b427c241605b957c09c5ecdb35e",
+      "status": "reference-only"
+    },
+    {
+      "id": "drake_green",
+      "name": "Drake Green",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/drake_green.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/drake_green.png",
+      "sha256": "7059a151963642dc7c10eaf5080dc6c060472a6e9cac30412e77eee16ec3d69c",
+      "status": "reference-only"
+    },
+    {
+      "id": "drake_red",
+      "name": "Drake Red",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/drake_red.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/drake_red.png",
+      "sha256": "e59259b27eb2b5c8afcd7616f9b0c6689d1344fb1446925183a0dbd5f797f58b",
+      "status": "reference-only"
+    },
+    {
+      "id": "ghoul_blue",
+      "name": "Ghoul Blue",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/ghoul_blue.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/ghoul_blue.png",
+      "sha256": "36c32938457c2be9b22baf3ffd78e3276b8572a075bbe4a15f86380661f53afc",
+      "status": "reference-only"
+    },
+    {
+      "id": "ghoul_green",
+      "name": "Ghoul Green",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/ghoul_green.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/ghoul_green.png",
+      "sha256": "59ca4aaff43acdafec2ed916aea2682f360a176d2885acaa58034e866f3173ac",
+      "status": "reference-only"
+    },
+    {
+      "id": "ghoul_red",
+      "name": "Ghoul Red",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/ghoul_red.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/ghoul_red.png",
+      "sha256": "a058d820673b9d142b1ecbade910e5810ed6762932c6677b245d00533df0dabc",
+      "status": "reference-only"
+    },
+    {
+      "id": "gnoll_blue",
+      "name": "Gnoll Blue",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/gnoll_blue.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/gnoll_blue.png",
+      "sha256": "feb3cc1f7d0c415fc29d5a1cfbc7ebbd1f82a0576a0820e539e62e644e063517",
+      "status": "reference-only"
+    },
+    {
+      "id": "gnoll_green",
+      "name": "Gnoll Green",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/gnoll_green.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/gnoll_green.png",
+      "sha256": "c2c6c2fc1323871e6825a42dc88b58eab766891acac274f0577ed975092ff067",
+      "status": "reference-only"
+    },
+    {
+      "id": "gnoll_red",
+      "name": "Gnoll Red",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/gnoll_red.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/gnoll_red.png",
+      "sha256": "e5aa662fa22e5d3fd9629545c45fdd86887d8b148c74fa4d3ea1297046b9b5aa",
+      "status": "reference-only"
+    },
+    {
+      "id": "infernal_blue",
+      "name": "Infernal Blue",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/infernal_blue.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/infernal_blue.png",
+      "sha256": "2066962f7d6cb12f94996fd0e5907b9da19d9417dde07cf8c0ed931cb2616fae",
+      "status": "reference-only"
+    },
+    {
+      "id": "infernal_green",
+      "name": "Infernal Green",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/infernal_green.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/infernal_green.png",
+      "sha256": "694074a8ace5b5f05617a21a6e6e3ecfd9603137e16f436d0ccecd7a031e6348",
+      "status": "reference-only"
+    },
+    {
+      "id": "infernal_red",
+      "name": "Infernal Red",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/infernal_red.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/infernal_red.png",
+      "sha256": "3a7ffd4f60a22c386a3be19193597b9c342f8dcf9cf3adaf720da106f7f783b3",
+      "status": "reference-only"
+    },
+    {
+      "id": "murloc_blue",
+      "name": "Murloc Blue",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/murloc_blue.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/murloc_blue.png",
+      "sha256": "8147b2a093351b2cc8d8d0e81b08495f9745ab5b6c308362120406ced1f9c844",
+      "status": "reference-only"
+    },
+    {
+      "id": "murloc_green",
+      "name": "Murloc Green",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/murloc_green.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/murloc_green.png",
+      "sha256": "7f85670537fb62ed709b908ccc7367e4e620501b9314a94e78bd82c8b2cbdf3f",
+      "status": "reference-only"
+    },
+    {
+      "id": "murloc_red",
+      "name": "Murloc Red",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/murloc_red.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/murloc_red.png",
+      "sha256": "64e1eb59789d150d18add27a9b802c883954d6c355b052d42738d824b6c8c3f7",
+      "status": "reference-only"
+    },
+    {
+      "id": "naga_blue",
+      "name": "Naga Blue",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/naga_blue.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/naga_blue.png",
+      "sha256": "ee0f33d0cfd49960632ff10268da932c4ff9e1b195d624fe11348540de6a850d",
+      "status": "reference-only"
+    },
+    {
+      "id": "naga_green",
+      "name": "Naga Green",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/naga_green.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/naga_green.png",
+      "sha256": "5fba0e4fdb1c82e74c1a055c8743ea76d4eeb8a569508147e9be8edd0512c050",
+      "status": "reference-only"
+    },
+    {
+      "id": "naga_red",
+      "name": "Naga Red",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/naga_red.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/naga_red.png",
+      "sha256": "3a5186c68826474284ae39f2d736c100aace308c026f2d9809824defd445f7a3",
+      "status": "reference-only"
+    },
+    {
+      "id": "ogre_blue",
+      "name": "Ogre Blue",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/ogre_blue.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/ogre_blue.png",
+      "sha256": "23ae7af4cc1da3df2d351194aac72866293a4a37ae09c38b79f6a63ffb236163",
+      "status": "reference-only"
+    },
+    {
+      "id": "ogre_green",
+      "name": "Ogre Green",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/ogre_green.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/ogre_green.png",
+      "sha256": "60039f85efd55e2221cf98bcf9705b733682a3e7f748d0a5bb0395478f850bd9",
+      "status": "reference-only"
+    },
+    {
+      "id": "ogre_red",
+      "name": "Ogre Red",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/ogre_red.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/ogre_red.png",
+      "sha256": "7e2e08c8f1f8d60098d270f2d240f32e2a1a80932b2cf77d4e7af6b18c1dd48d",
+      "status": "reference-only"
+    },
+    {
+      "id": "spider_blue",
+      "name": "Spider Blue",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/spider_blue.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/spider_blue.png",
+      "sha256": "9df05406af0bf01c9ce90da167b0c1892ac1ac55adde759dfc90fd08bd329555",
+      "status": "reference-only"
+    },
+    {
+      "id": "spider_green",
+      "name": "Spider Green",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/spider_green.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/spider_green.png",
+      "sha256": "15d45c4827fc119ed350dd7a13a4122d8e189396fa796173145b93f436e3c07b",
+      "status": "reference-only"
+    },
+    {
+      "id": "spider_red",
+      "name": "Spider Red",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/spider_red.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/spider_red.png",
+      "sha256": "60bace941a3b6e6a6d222fe820794a1afd44c626bb480d31cf0c656fd4158e75",
+      "status": "reference-only"
+    },
+    {
+      "id": "wildkin_blue",
+      "name": "Wildkin Blue",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/wildkin_blue.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/wildkin_blue.png",
+      "sha256": "eb930f911de0d05b94f712ba1ff50f8f16348df8574b7732152c7227a901aa52",
+      "status": "reference-only"
+    },
+    {
+      "id": "wildkin_green",
+      "name": "Wildkin Green",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/wildkin_green.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/wildkin_green.png",
+      "sha256": "2036943fde62ca6ea47beb9698745584f9b08c41036e4907b4f8f6f5bc220d68",
+      "status": "reference-only"
+    },
+    {
+      "id": "wildkin_red",
+      "name": "Wildkin Red",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/wildkin_red.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/wildkin_red.png",
+      "sha256": "183159fccbd941af1d3389381f959920b928bd645a878d72c14f58e439b8c737",
+      "status": "reference-only"
+    },
+    {
+      "id": "worgen_blue",
+      "name": "Worgen Blue",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/worgen_blue.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/worgen_blue.png",
+      "sha256": "683f1a4963ab05fafa4873880fc1678eb7a2435d4cc35f44d61d6445d38a4d69",
+      "status": "reference-only"
+    },
+    {
+      "id": "worgen_green",
+      "name": "Worgen Green",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/worgen_green.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/worgen_green.png",
+      "sha256": "f69bc9fa5ee3239f6cdff43e52b2c41158a25fc08b1d323a296484acd337e1a0",
+      "status": "reference-only"
+    },
+    {
+      "id": "worgen_red",
+      "name": "Worgen Red",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/worgen_red.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/worgen_red.png",
+      "sha256": "e0a6fef0ce2c2485ae47789641784a4251c54e0ed54b8f5af2f26a6647d5ac85",
+      "status": "reference-only"
+    },
+    {
+      "id": "wraith_blue",
+      "name": "Wraith Blue",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/wraith_blue.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/wraith_blue.png",
+      "sha256": "7e0a6562ff045d7c11532231c7fdc4030ad07ab75fcfdbdd70762f51df254459",
+      "status": "reference-only"
+    },
+    {
+      "id": "wraith_green",
+      "name": "Wraith Green",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/wraith_green.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/wraith_green.png",
+      "sha256": "ab35ae6c42e674406a15bb2777d880001338f4332bf59d499f343f7be36e46fa",
+      "status": "reference-only"
+    },
+    {
+      "id": "wraith_red",
+      "name": "Wraith Red",
+      "category": "creature",
+      "back": false,
+      "image": "/assets/reference/wraith_red.png",
+      "source": "https://raw.githubusercontent.com/eidonia/WowBGAssist/a68e639528069028a98de490602f93a93020a061/app/src/main/res/drawable/wraith_red.png",
+      "sha256": "2e4a3ad39248f618848bdb947b5da9ce62907bc58a4f9cad1768348fe7d2241d",
+      "status": "reference-only"
+    }
+  ]
+}
