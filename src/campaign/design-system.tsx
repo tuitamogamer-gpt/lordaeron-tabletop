@@ -2,11 +2,12 @@ import type { CSSProperties, ReactNode } from 'react';
 import { Icon } from '../components';
 import type { Card, Creature, EventCard, Overlord, Quest } from '../rules/model';
 import { DEVELOPMENT_PACK as p } from '../data/development-pack';
+import { AbilityArt, PaintedArt, cardIllustration, creatureIcons } from './Art';
 
 /** Presentation never reads an imported scan. A scan can supply verified content, not layout. */
 export const DESIGN = {
- name:'Lordaeron · Gilded Atlas',
- colors:{ink:'#0c1515',surface:'#182522',ivory:'#eee4ca',gold:'#d8ba7b',horde:'#d38d7d',alliance:'#89bddd',energy:'#8ec6df',nature:'#a8be84',arcane:'#baa0db'},
+ name:'Lordaeron · Warforged Chronicles',
+ colors:{ink:'#101316',surface:'#252729',ivory:'#f4e4bf',gold:'#e2b969',horde:'#df6654',alliance:'#77bce8',energy:'#69bdf1',nature:'#a9cb6a',arcane:'#c79ef0'},
 } as const;
 export const triggerLabels:Record<string,string>={pool:'Priprema', 'after-pool':'Poslije bacanja',reroll:'Reroll','after-reroll':'Poslije rerolla',tokens:'Pogoci',defense:'Odbrana',wound:'Prije poraza','round-end':'Kraj runde',action:'Tokom akcije',equip:'Opremanje'};
 export function CardFrame({kind,title,subtitle,rank,art,children,footer,accent='gold',onClick,disabled,selected=false}:{kind:string;title:string;subtitle?:string;rank?:string|number;art:ReactNode;children:ReactNode;footer:ReactNode;accent?:string;onClick?:()=>void;disabled?:boolean;selected?:boolean}) {
@@ -47,20 +48,21 @@ export const creatureRules:Record<Creature['rule'],string>={
  none:'Nema posebne sposobnosti.',
 };
 export function CreatureGlyph({type,name,className=''}:{type:string;name?:string;className?:string}) {
+ if (type in creatureIcons) return <PaintedArt index={creatureIcons[type]} atlas="bestiary" name={name??type} className={`creature-glyph ${className}`}/>;
  return <svg viewBox="0 0 100 100" className={`creature-glyph ${className}`} role="img" aria-label={name??type}><circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="40"/>{(glyphPaths[type]??glyphPaths.doomguard).map((d,i)=><path key={i} d={d} className={i===0?'glyph-body':''}/>)}</svg>;
 }
 export function CreatureCard({creature:c}:{creature:Creature}) {
  return <CardFrame kind="STVORENJE" title={c.name} subtitle="Bestijarij Lordaerona" art={<CreatureGlyph type={c.rule}/>} accent={['ghoul','wraith','doomguard'].includes(c.rule)?'arcane':'nature'} footer={<span>Prijetnja / napad / zdravlje</span>}><span className="folio-effect"><b>KONTAKT S NEPRIJATELJEM</b>{creatureRules[c.rule]}</span><span className="folio-stat-row">{(['green','blue','red'] as const).map(color=><span key={color} className={color}><i/>{c.stats[color].threat}+ / {c.stats[color].attack} / {c.stats[color].health}</span>)}</span></CardFrame>;
 }
 export function QuestCard({quest:q,onClick}:{quest:Quest;onClick?:()=>void}) {
- return <CardFrame kind="QUEST" title={q.name.replace(' · probni quest','')} subtitle={q.faction==='horde'?'Horda':'Alijansa'} rank={q.level} accent={q.faction} art={<Icon name="scroll" size={48}/>} onClick={onClick} footer={<><span>{q.reward.xp} XP</span><span>{q.reward.gold} zlata</span></>}><span className="folio-effect"><b>CILJ</b>{q.spawns.filter(s=>s.color!=='blue').map(s=>`${s.count} × ${p.creatures.find(c=>c.id===s.creature)?.name} · ${p.regions.find(r=>r.id===s.region)?.name}`).join(' / ')}</span></CardFrame>;
+ return <CardFrame kind="QUEST" title={q.name.replace(' · probni quest','')} subtitle={q.faction==='horde'?'Horda':'Alijansa'} rank={q.level} accent={q.faction} art={<CreatureGlyph type={q.spawns[0]?.creature??'murloc'}/>} onClick={onClick} footer={<><span>{q.reward.xp} XP</span><span>{q.reward.gold} zlata</span></>}><span className="folio-effect"><b>CILJ</b>{q.spawns.filter(s=>s.color!=='blue').map(s=>`${s.count} × ${p.creatures.find(c=>c.id===s.creature)?.name} · ${p.regions.find(r=>r.id===s.region)?.name}`).join(' / ')}</span></CardFrame>;
 }
 export function EventCardView({event:e}:{event:EventCard}) {
- return <CardFrame kind="DOGAĐAJ" title={e.name.replace(' · probno','')} subtitle={e.bonus?'Bonus događaj':'Kampanja'} rank={e.fate} accent="arcane" art={<Icon name="spark" size={48}/>} footer={<><span>Sudbina {e.fate}</span><span>{e.bonus?'Povuci još jedan':'Kraj događaja'}</span></>}><span className="folio-effect"><b>PO IZVLAČENJU</b>{e.effects.map(a=>a.op==='gold'?`${a.amount} zlata · ${a.faction==='all'?'svi likovi':a.faction==='stronger'?'jača frakcija':'slabija frakcija'}`:a.op==='merchant'?`${a.count} novih predmeta kod trgovca`:a.op==='auction'?'Tajne ponude svih igrača. Najviša dobiva kartu.':a.op==='war'?'Zauzmi obje regije i zadrži ih do kraja protivničkog poteza.':a.op==='spawn'?'Postavi označena nezavisna stvorenja.':'Promjena snage Overlorda').join(' · ')}</span></CardFrame>;
+ return <CardFrame kind="DOGAĐAJ" title={e.name.replace(' · probno','')} subtitle={e.bonus?'Bonus događaj':'Kampanja'} rank={e.fate} accent="arcane" art={<PaintedArt index={14} atlas="bestiary"/>} footer={<><span>Sudbina {e.fate}</span><span>{e.bonus?'Povuci još jedan':'Kraj događaja'}</span></>}><span className="folio-effect"><b>PO IZVLAČENJU</b>{e.effects.map(a=>a.op==='gold'?`${a.amount} zlata · ${a.faction==='all'?'svi likovi':a.faction==='stronger'?'jača frakcija':'slabija frakcija'}`:a.op==='merchant'?`${a.count} novih predmeta kod trgovca`:a.op==='auction'?'Tajne ponude svih igrača. Najviša dobiva kartu.':a.op==='war'?'Zauzmi obje regije i zadrži ih do kraja protivničkog poteza.':a.op==='spawn'?'Postavi označena nezavisna stvorenja.':'Promjena snage Overlorda').join(' · ')}</span></CardFrame>;
 }
 export function OverlordCard({overlord:o,count=6}:{overlord:Overlord;count?:4|6}) {
- const s=o.stats[count];return <CardFrame kind="OVERLORD" title={o.name} subtitle={p.regions.find(r=>r.id===o.region)?.name} accent="arcane" rank="V" art={<Icon name="crown" size={54}/>} footer={<span>Porazi ga za pobjedu svoje frakcije</span>}><span className="overlord-values"><b>{s.threat}+<small>PRIJETNJA</small></b><b>{s.attack}<small>NAPAD</small></b><b>{s.health}<small>ZDRAVLJE</small></b></span><span className="folio-effect">{o.source.status==='fixture'?'Razvojni protivnik za test pobjede i grupne borbe.':'Cilj kampanje.'}</span></CardFrame>;
+ const s=o.stats[count];return <CardFrame kind="OVERLORD" title={o.name} subtitle={p.regions.find(r=>r.id===o.region)?.name} accent="arcane" rank="V" art={<PaintedArt index={13} atlas="bestiary"/>} footer={<span>Porazi ga za pobjedu svoje frakcije</span>}><span className="overlord-values"><b>{s.threat}+<small>PRIJETNJA</small></b><b>{s.attack}<small>NAPAD</small></b><b>{s.health}<small>ZDRAVLJE</small></b></span><span className="folio-effect">{o.source.status==='fixture'?'Razvojni protivnik za test pobjede i grupne borbe.':'Cilj kampanje.'}</span></CardFrame>;
 }
 export function AbilityCard({card:c,children,footer,onClick,disabled,selected}:{card:Card;children:ReactNode;footer?:string;onClick?:()=>void;disabled?:boolean;selected?:boolean}) {
- return <CardFrame kind={c.kind==='talent'?'TALENT':c.kind==='power'?'MOĆ':c.type==='bag'?'POTROŠNI PREDMET':'OPREMA'} title={c.name.replace(/ · probn[oi]( quest)?/g,'')} subtitle={c.classId??c.type} rank={c.level} accent={c.type==='instant'||c.type==='ranged'?'energy':c.type==='active'?'nature':'gold'} art={<Icon size={43} name={c.type==='armor'?'shield':c.type==='melee'?'sword':c.type==='bag'?'flask':c.kind==='talent'?'spark':'bolt'}/>} onClick={onClick} disabled={disabled} selected={selected} footer={<><span><Icon name="bolt" size={13}/>{c.energy}</span><span>{footer??`${c.price} zlata`}</span></>}>{children}</CardFrame>;
+ return <CardFrame kind={c.kind==='talent'?'TALENT':c.kind==='power'?'MOĆ':c.type==='bag'?'POTROŠNI PREDMET':'OPREMA'} title={c.name.replace(/ · probn[oi]( quest)?/g,'')} subtitle={c.classId??c.type} rank={c.level} accent={c.type==='instant'||c.type==='ranged'?'energy':c.type==='active'?'nature':'gold'} art={<AbilityArt icon={cardIllustration(c)}/>} onClick={onClick} disabled={disabled} selected={selected} footer={<><span><Icon name="bolt" size={13}/>{c.energy}</span><span>{footer??`${c.price} zlata`}</span></>}>{children}</CardFrame>;
 }

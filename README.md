@@ -2,7 +2,7 @@
 
 Razvojna adaptacija osnovne igre iz 2005. + službenog FAQ-a 1.4. React sučelje, nezavisan TypeScript engine, lokalni hotseat, AI igrači i multiplayer server pripremljen za Vercel.
 
-**Originalni set još nije kompletan.** Igriva kampanja koristi jasno označene probne karte. Skenove ćemo naknadno koristiti za tekst, vrijednosti i mehanike; mapa, karte i drugi elementi imaju vlastiti dizajn sistem **Gilded Atlas**.
+**Originalni set još nije kompletan.** Igriva kampanja koristi jasno označene probne karte. Skenove ćemo naknadno koristiti za tekst, vrijednosti i mehanike; mapa, karte i drugi elementi imaju vlastiti dizajn sistem **Warforged Chronicles**.
 
 ## Pokretanje
 
@@ -46,7 +46,7 @@ U početnoj partiji upravljaš Grumbazom; ostali su botovi. Pokreni ih dugmetom 
 
 Probni set ima 80 questova, sedam događaja i razvojne moći/predmete. To nisu transkripcije originalnih špilova. Postoje imena i kapaciteti 16 originalnih likova i community podaci za 13 vrsta stvorenja.
 
-Referentna zbirka sadrži 273 skena predmeta, 39 prikaza stvorenja i pet poleđina; uključuje proširenja. Njena izdanja i pravila nisu automatski prihvaćena u osnovni set. Igrivi renderer koristi nove predloške, ilustraciju mape, portrete i 13 vlastitih vektorskih simbola miniona. Pregled predložaka je u **Dizajn sistem**.
+Referentna zbirka sadrži 273 skena predmeta, 39 prikaza stvorenja i pet poleđina; uključuje proširenja. Njena izdanja i pravila nisu automatski prihvaćena u osnovni set. Igrivi renderer koristi vlastite predloške, novu oslikanu mapu, bronzane okvire, frakcijske grbove, pergament i imagegen atlase sposobnosti i stvorenja. Pregled predložaka je u **Dizajn sistem**, a promptovi i izvori u [IMAGEGEN-WARCRAFT.md](docs/IMAGEGEN-WARCRAFT.md).
 
 Preostaju originalni Power/Talent i rasni efekti, stvarni questovi, događaji i predmeti, tri originalna Overlord profila i njihove posebne interakcije. Postojeći mehanizmi imaju testove, ali cijeli originalni ruleset još nije potvrđen kao kompletan.
 

@@ -1,32 +1,32 @@
-# Gilded Atlas · dizajn sistem v1
+# Warforged Chronicles · dizajn sistem v2
 
 Skenovi služe za tekst i mehanike. Sve igrive komponente imaju novi dizajn. Fotografija ploče i originalni skenovi nisu lica igrivih komponenti.
 
 ## Vizuelni jezik
 
-Tamna zelena i plava podloga, patinirano zlato, svijetli tekst i diskretni geometrijski ornamenti. Cinzel za imena i naslove; Inter za pravila, brojke i kontrole. Fokus je na trenutku aktivacije i odluci igrača.
+Warcraft inspirisana ratna dvorana, klesani kamen, reljefna bronza, crveni i plavi frakcijski grbovi, pergamentni questovi i oslikane sposobnosti. Cinzel za imena i naslove; Inter za pravila, brojke i kontrole. Fokus je na trenutku aktivacije i odluci igrača. Sva slova i brojke ostaju HTML/SVG; ilustracije ne sadrže tekst.
 
 | Token | Vrijednost | Primjena |
 | --- | --- | --- |
-| Ink | `#0c1515` | Pozadina |
-| Surface | `#182522` | Paneli |
-| Ivory | `#eee4ca` | Naslovi |
-| Gold | `#d8ba7b` | Izbor i glavna akcija |
-| Horde | `#d38d7d` | Frakcija |
-| Alliance | `#89bddd` | Frakcija |
-| Energy | `#8ec6df` | Energija i daljinske moći |
-| Nature | `#a8be84` | Aktivne moći i stvorenja |
-| Arcane | `#baa0db` | Događaji i Overlordi |
+| Ink | `#101316` | Pozadina |
+| Surface | `#252729` | Paneli |
+| Ivory | `#f4e4bf` | Naslovi |
+| Gold | `#e2b969` | Izbor i glavna akcija |
+| Horde | `#df6654` | Frakcija |
+| Alliance | `#77bce8` | Frakcija |
+| Energy | `#69bdf1` | Energija i daljinske moći |
+| Nature | `#a9cb6a` | Aktivne moći i stvorenja |
+| Arcane | `#c79ef0` | Događaji i Overlordi |
 
-Implementacija: `src/campaign/design-system.tsx` i `design-system.css`. Živi pregled: **Dizajn sistem** u navigaciji.
+Implementacija: `src/campaign/design-system.tsx`, `Art.tsx` i `warcraft.css`, uz zajedničku osnovu `design-system.css`. Živi pregled: **Dizajn sistem** u navigaciji. Tačni imagegen promptovi i putanje svih sedam novih slikovnih datoteka nalaze se u [IMAGEGEN-WARCRAFT.md](IMAGEGEN-WARCRAFT.md).
 
 ## Predlošci
 
 `CardFrame` daje isti redoslijed informacija: vrsta/nivo, nova ilustracija ili simbol, ime/klasa/frakcija, trenutak aktivacije i efekat, cijena/nagrada/vrijednosti.
 
-Na njemu su `AbilityCard`, `CharacterCard`, `QuestCard`, `EventCardView`, `CreatureCard` i `OverlordCard`. Stvorenja imaju 13 novih vektorskih simbola. Prototipski portreti koriste generirani atlas; likovi iste klase trenutno dijele ilustraciju. To još nisu 16 finalnih individualnih ilustracija.
+Na njemu su `AbilityCard`, `CharacterCard`, `QuestCard`, `EventCardView`, `CreatureCard` i `OverlordCard`. Oslikani atlas obuhvata 13 stvorenja, razvojnog Overlorda, događaj i plijen; drugi atlas daje 16 ikona klasa, opreme i akcija. SVG isječci čuvaju proporcije ilustracija. Prototipski portreti junaka koriste raniji generirani atlas; likovi iste klase trenutno dijele ilustraciju. To još nisu 16 finalnih individualnih ilustracija.
 
-Mapa koristi `lordaeron.png` i interaktivni SVG sloj. Kretanje čita iz grafa, ne iz piksela. Promjena pozadine ne mijenja legalne poteze. Čvorovi imaju naziv i pristup tastaturom; desktop alatna traka ima pretragu regije i centriranje na junaka.
+Mapa koristi novu sliku `public/assets/warcraft/lordaeron.webp` i interaktivni SVG sloj. Imagegen je promijenio slikarski tretman prethodne ilustracije uz zadržavanje rasporeda krajolika. Kretanje čita iz postojećeg grafa, ne iz piksela. Promjena pozadine ne mijenja legalne poteze. Čvorovi imaju naziv i pristup tastaturom; desktop alatna traka ima pretragu regije i centriranje na junaka. Detalji odabrane regije lebde u donjem dijelu mape.
 
 ## Kasniji uvoz
 
@@ -36,7 +36,7 @@ Sken / izvorni tekst
   → identifikacija osnovnog seta + FAQ ispravke
   → strukturirana karta + tipizirani efekti + test primjera
   → provjera podataka
-  → postojeći Gilded Atlas renderer
+  → Warforged Chronicles renderer
 ```
 
 Karta čuva `id`, `name`, `description`, `source`, nivo, cijenu, energiju, tip, osobine i `abilities`. Izvor bilježi URL, stranicu/kartu i status `community`, `fixture` ili `verified`. Referentna `image` putanja može ostati radi poređenja; novi renderer je ne koristi kao izgled karte.

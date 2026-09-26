@@ -32,6 +32,13 @@ Simulacije koriste probne karte. One pokazuju prolaz kroz cijeli tok kampanje za
 
 ## Granice provjere
 
+### Warforged Chronicles, 27. 9. 2026.
+
+- `npm test`: 86/86; `npm run build` uključujući NodeNext serversku provjeru prolazi. Izmjene ne mijenjaju reducer, podatke pravila, legalne poteze ni format snimljene partije.
+- Prvi lokalni pregled potvrđuje prikaz nove mape, oslikanih akcija/karata, grba, portreta, pergamenta i ukrasnog okvira. Svih sedam WebP putanja vraća HTTP 200 i `image/webp`; ukupno 3.45 MB.
+- DOM provjera na 1280 × 800 i 1920 × 1080 potvrđuje da su širina i visina dokumenta jednake viewportu. Tracker i bočni panel ostaju unutar radne površine. Privremena promjena viewporta vraćena je na početnu vrijednost.
+- Završna provjera otvaranja dijaloga nije dovršena: ugrađeni preglednik je nakon promjene viewporta prestao prihvatati ulaz i snimke. To je ograničenje ovog prolaza provjere; ne predstavlja potvrđen kvar aplikacije. Glavni ekran je pregledan prije tog prekida, bez grešaka u konzoli.
+
 Vercel produkcija je objavljena; frontend i slika mape vraćaju HTTP 200. Node 24 provjera kompajliranih API modula potvrđuje uspješan ESM import. Provjera produkcijskih endpointa potvrđuje kontrolisani JSON HTTP 503 kada nedostaje trajno spremište, HTTP 426 za običan zahtjev prema WebSocket endpointu i uspješan WebSocket handshake sa zatvaranjem kodom 1000. Online sobe su na holdu; nisu provjereni Upstash Redis, prekid više cloud instanci ili dugotrajna partija preko javnog interneta. Originalni tekstovi karata, sve posebne FAQ interakcije i konačna topologija mape čekaju provjeru izvora. Tačan pregled je u [RULES-COVERAGE.md](RULES-COVERAGE.md).
 
 Stariji `docs/sample-save.json` pripada prototipu v0.1. Novi engine koristi vlastiti format sesije v2 i provjerava verziju sadržaja prije replaya.

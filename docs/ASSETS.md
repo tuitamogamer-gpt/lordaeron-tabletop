@@ -8,7 +8,7 @@
 | `public/assets/original-characters.json` | [WoW-BG-app Classes.json](https://github.com/WarHatch/WoW-BG-app/blob/9a6a70d916a02182edcc7b261739a36bd0555d3d/constants/Classes/Classes.json) | 16 originalnih likova; prikazani kao referenca |
 | `public/assets/original-board.jpg` | [JudgeHype fotografija](https://worldofwarcraft.judgehype.com/image/16487/), [direktna slika](https://worldofwarcraft.judgehype.com/screenshots/images/divers/boardgame4.jpg) | 1600 × 1108; fotografija fizičke ploče, nije čist sken |
 
-Za preuzete repozitorije nije utvrđena licenca koja pokriva originalne slike. Izvori i nosioci prava ostaju odvojeni od vlastitog koda. Preuzimanje je za lokalni razvoj i istraživanje; dostupnost materijala na webu nije licenca za njihovo javno objavljivanje. Ništa nije objavljeno na javni hosting.
+Za preuzete repozitorije nije utvrđena licenca koja pokriva originalne slike. Izvori i nosioci prava ostaju odvojeni od vlastitog koda. Dostupnost materijala na webu nije licenca za njihovo javno objavljivanje. Produkcijska verzija i status hostinga navedeni su u README-u.
 
 ## Generirane ilustracije
 
@@ -34,8 +34,8 @@ Use case: stylized-concept. Asset type: single 3 by 3 hero portrait atlas textur
 Cinzel i Inter fontovi dolaze iz lokalnih `@fontsource` paketa, s licencama isporučenim u tim paketima. Ikone su iz `lucide-react`. Favicon, SVG putanje, CSS efekti i sintetizirani zvuk poteza nastali su za ovaj projekt. Za rad aplikacije nije potreban vanjski CDN.
 
 
-## Dizajn sistem v0.2
+## Warforged Chronicles · dizajn sistem v2
 
-Igriva kampanja koristi novu ilustraciju mape i portrete, ne referentnu fotografiju ploče. Karte opreme, moći, talenata, questova, događaja, stvorenja i Overlorda prikazuje kodirani Gilded Atlas predložak. `src/campaign/design-system.tsx` sadrži 13 novih vektorskih simbola stvorenja. Te ilustracije ne mijenjaju skriptirana pravila.
+Igriva kampanja koristi novu ilustraciju mape i portrete, ne referentnu fotografiju ploče. Karte opreme, moći, talenata, questova, događaja, stvorenja i Overlorda prikazuje kodirani Warforged Chronicles predložak. Sedam novih imagegen WebP datoteka u `public/assets/warcraft/` obuhvata mapu, dvoranu, okvir, pergament, dva grba, 16 ikona akcija/sposobnosti i 16 polja atlasa stvorenja/Overlorda/događaja/plijena. Sve su generirane za projekt; tačni promptovi su u [IMAGEGEN-WARCRAFT.md](IMAGEGEN-WARCRAFT.md). Te ilustracije ne mijenjaju skriptirana pravila.
 
 `public/assets/reference-text.json` čuva 271 transkripciju item tekstova iz community baze. Izdanje je neprovjereno, `scripted: false`; tekst nije automatski ušao u igrivi set. `src/data/reference-creatures.json` je izvor community vrijednosti za 13 vrsta i tri boje. `src/data/original-characters.json` je radna kopija kapaciteta likova.

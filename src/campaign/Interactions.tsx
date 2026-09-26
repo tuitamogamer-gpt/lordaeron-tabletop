@@ -4,6 +4,7 @@ import { capacity, card, character, faction } from '../rules/common';
 import { bagSize, manage, townOperations } from '../rules/inventory';
 import type { Command, Hero, TownOperation } from '../rules/model';
 import { pretty } from './parts';
+import { AbilityArt, cardIllustration } from './Art';
 type Submit = (c: Command) => void;
 
 export function TownEditor({hero,merchant,send,busy}:{hero:Hero;merchant:string[];send:Submit;busy:boolean}) {
@@ -15,7 +16,7 @@ export function TownEditor({hero,merchant,send,busy}:{hero:Hero;merchant:string[
  return <div className="dialog-content"><p>Sastavi transakciju redom: prodaj, kupi i nauči više moći za jednu gradsku akciju. Nova oprema ide u torbu.</p>
   <label className="rest-slider">Oporavak zdravlja: {health} / {hero.level}<input type="range" min={0} max={Math.max(0,Math.min(hero.level,capacity(p,hero).health-hero.health))} value={health} onChange={e=>setHealth(Number(e.target.value))}/></label>
   <div className="transaction-summary"><strong>{preview.gold} zlata nakon transakcije</strong><span>Torba {bagSize(p,preview.bag)} / 3</span></div>
-  <div className="transaction-columns"><section><h3>Kupi</h3>{market.merchant.map(id=>{const c=card(p,id),discard=bagSize(p,[...preview.bag,id])>3?[...preview.bag,id].filter(v=>!card(p,v).bagExempt):[undefined];return <div className="transaction-item" key={id}><strong>{pretty(c.name)}</strong><small>Nivo {c.level} · {c.price} zlata</small>{discard.map((d,i)=><button key={i} className="quiet-button" disabled={busy||preview.gold<c.price} onClick={()=>add({op:'buy',card:id,discard:d})}>{d?`Kupi, odbaci ${pretty(card(p,d).name)}`:'Dodaj kupovinu'}</button>)}</div>;})}</section>
+  <div className="transaction-columns"><section><h3>Kupi</h3>{market.merchant.map(id=>{const c=card(p,id),discard=bagSize(p,[...preview.bag,id])>3?[...preview.bag,id].filter(v=>!card(p,v).bagExempt):[undefined];return <div className="transaction-item" key={id}><AbilityArt icon={cardIllustration(c)}/><strong>{pretty(c.name)}</strong><small>Nivo {c.level} · {c.price} zlata</small>{discard.map((d,i)=><button key={i} className="quiet-button" disabled={busy||preview.gold<c.price} onClick={()=>add({op:'buy',card:id,discard:d})}>{d?`Kupi, odbaci ${pretty(card(p,d).name)}`:'Dodaj kupovinu'}</button>)}</div>;})}</section>
   <section><h3>Prodaj</h3>{selling.length?selling.map(id=><button key={id} className="quiet-button full-width" disabled={busy} onClick={()=>add({op:'sell',card:id})}>{pretty(card(p,id).name)} · +{Math.ceil(card(p,id).price/2)} zlata</button>):<p>Nema predmeta za prodaju.</p>}<h3>Nauči moć</h3>{p.cards.filter(c=>c.kind==='power'&&!c.printed&&c.classId===character(p,hero.id).classId&&!preview.learned.includes(c.id)&&c.level<=hero.level).map(c=><button key={c.id} className="quiet-button full-width" disabled={busy||preview.gold<c.price} onClick={()=>add({op:'train',card:c.id})}>{pretty(c.name)} · {c.price} zlata</button>)}</section></div>
   <ol className="transaction-receipt">{operations.map((op,i)=><li key={i}>{op.op==='buy'?'Kupi':op.op==='sell'?'Prodaj':'Nauči'}: {pretty(card(p,op.card).name)}</li>)}</ol>
   {(error||invalid)&&<p role="status" className="combat-warning">{error||invalid}</p>}

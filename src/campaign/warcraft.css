@@ -1,0 +1,306 @@
+/* Warforged Chronicles — painted assets, carved stone, bronze, cloth and parchment. */
+.campaign-app {
+  --atlas-ink:#101316; --atlas-surface:#252729; --atlas-ivory:#f4e4bf;
+  --atlas-gold:#e2b969; --atlas-horde:#df6654; --atlas-alliance:#77bce8;
+  --atlas-energy:#69bdf1; --atlas-nature:#a9cb6a; --atlas-arcane:#c79ef0;
+  --gold:#e2b969; --bright:#ffdc8e; --muted:#b1a48d;
+  --bronze:#957348; --paper:#ead0a0;
+  color:#e9dcc3;
+  background:linear-gradient(90deg,#090b10aa,#090c1090 55%,#090b10ad),url('/assets/warcraft/warhall.webp') center top / cover fixed;
+  min-height:100vh;
+}
+.campaign-app button:focus-visible,.campaign-app select:focus-visible,.campaign-app summary:focus-visible {
+  outline:2px solid #ffe29d; outline-offset:3px;
+}
+.campaign-app button:disabled {opacity:.44; filter:saturate(.45)}
+.campaign-app .topbar {
+  height:72px; padding:0 25px 0 20px; gap:30px;
+  background:linear-gradient(#363431e8,#191b1bed),url('/assets/warcraft/warhall.webp') 50% 30% / cover;
+  border-bottom:3px ridge #927244; box-shadow:0 4px 18px #000b,inset 0 1px #b9a07555;
+}
+.campaign-app .wordmark {gap:12px;min-width:275px;filter:drop-shadow(0 2px 1px #000)}
+.campaign-app .wordmark strong {font-size:20px;font-weight:700;color:#efcd82;letter-spacing:.6px}
+.campaign-app .wordmark em {font-size:8px;letter-spacing:3px;color:#bd9b5e;margin-top:5px}
+.campaign-app .brand-crest {
+  width:43px;height:47px;display:grid;place-items:center;color:#ffe3a2;
+  border:3px ridge #ba9157;border-radius:5px 5px 16px 16px;
+  background:radial-gradient(ellipse at top,#d57743,#772a22 45%,#281713);
+  box-shadow:0 0 0 2px #111,0 3px 8px #0009,inset 0 0 9px #140904;
+}
+.campaign-app .topnav {gap:7px;height:100%;align-items:center}
+.campaign-app .topnav button {
+  height:39px;padding:0 15px;font:600 11px var(--serif);color:#c6bca8;
+  border:1px solid transparent;border-radius:2px;letter-spacing:.3px;
+}
+.campaign-app .topnav button.active {
+  color:#ffe6a9;border:1px solid #9d7946;background:linear-gradient(#763329,#3c1d1a);
+  box-shadow:inset 0 1px #eaaa6177,inset 0 -2px #190b08,0 2px 5px #0008;
+}
+.campaign-app .topnav button.active:after {display:none}
+.campaign-app .topnav button:hover {color:#ffe4a0;background-color:#58442d44}
+.campaign-app .session-badge {font-size:8px;letter-spacing:1.1px;color:#d0b990}
+.campaign-app .session-badge>i {background:#d9aa51;box-shadow:0 0 6px #d9aa5180}
+.campaign-app .header-right {margin-left:auto;gap:10px}
+.campaign-shell {min-height:calc(100vh - 72px)}
+.campaign-app .rail {
+  top:72px;height:calc(100vh - 72px);width:61px;padding-top:19px;gap:16px;
+  background:linear-gradient(90deg,#11161adb,#2c2a25b8,#111418e8);
+  border-right:2px ridge #6b5434;box-shadow:3px 0 12px #0006;
+}
+.campaign-app .rail>button,.campaign-app .rail-bottom>button {
+  width:40px;height:43px;border:1px solid #5e513c;border-radius:3px;
+  background:linear-gradient(145deg,#383833,#131719);color:#ae9b79;
+  box-shadow:inset 0 1px #d0b48322,0 2px 3px #0009;
+}
+.campaign-app .rail>button.active {border-color:#cea15a;color:#f9d68b;background:linear-gradient(145deg,#74452b,#2f201a);box-shadow:inset 0 0 12px #d08c422f,0 0 11px #e9ab3923}
+.campaign-app .rail>button.active:before {display:none}
+.campaign-main {padding:18px 24px 20px;max-width:none}
+.campaign-title {margin:0 0 9px;min-height:51px}
+.campaign-title h1 {font-size:29px;line-height:1.25;font-weight:600;letter-spacing:.7px;color:#f4dc9f;text-shadow:0 2px 3px #000}
+.campaign-title h1>span {font:italic 12px Georgia,serif;color:#bfae8a;margin-left:18px;letter-spacing:0}
+.campaign-title .eyebrow {font-size:8px;letter-spacing:2px;color:#bea77b;margin-bottom:6px}
+.campaign-turn {gap:12px;align-items:center}
+.campaign-turn>b {font-size:29px;color:#f1d49b}
+.campaign-turn>b>small {font-size:12px;color:#ad9f89}
+.campaign-turn>span:not(.faction-crest) {font:600 15px var(--serif);text-shadow:0 2px 3px #000}
+.faction-crest {display:inline-block;flex-shrink:0;width:49px;height:49px;background:url('/assets/warcraft/factions.webp') 0 0 / 200% 100% no-repeat;filter:drop-shadow(0 3px 3px #000b)}
+.faction-crest.alliance {background-position:100% 0}
+.campaign-app .horde {color:#e28b6b}.campaign-app .alliance {color:#8fc9ed}
+.development-banner {padding:5px 10px;margin:0 0 9px;background:#100f0bc4;border:1px solid #6f583746;color:#b5a282;font-size:9px;min-height:26px;border-radius:0}
+.development-banner button {color:#dcc08e}
+
+/* The right column spans both the board and the hand, giving the map its height back. */
+.desktop-tabletop .campaign-main {
+  display:grid;grid-template-columns:minmax(0,1fr) 325px;
+  grid-template-rows:auto auto minmax(310px,1fr) 139px 40px;
+  column-gap:20px;row-gap:0;height:calc(100vh - 72px);min-height:680px;
+}
+.desktop-tabletop .campaign-title {grid-column:1/-1;grid-row:1}
+.desktop-tabletop .development-banner {grid-column:1/-1;grid-row:2}
+.desktop-tabletop .campaign-play {display:contents}
+.desktop-tabletop .campaign-board-column {grid-column:1;grid-row:3;min-height:0;min-width:0}
+.desktop-tabletop .campaign-sidebar {grid-column:2;grid-row:3/5;gap:12px;padding:2px 5px 5px 1px;overflow:auto;scrollbar-color:#977546 #171a1c;scrollbar-gutter:stable}
+.desktop-tabletop .campaign-bottom {grid-column:1;grid-row:4;display:block;margin-top:12px;min-width:0}
+.desktop-tabletop .turn-track-v2 {grid-column:1/-1;grid-row:5;align-self:end}
+.desktop-tabletop .lobby-strip {grid-column:1/-1}
+.campaign-map {
+  position:relative;
+  border:17px solid transparent;border-image:url('/assets/warcraft/frame.webp') 210 stretch;
+  border-radius:0;box-shadow:0 10px 24px #000a;background:#14191c;overflow:hidden;
+}
+.map-toolbar {min-height:33px;padding:1px 6px 6px;background:linear-gradient(#282b29,#151c1d);border-bottom:1px solid #b08a4b;gap:5px}
+.map-toolbar>span {font:600 10px var(--serif);letter-spacing:1.3px;color:#e7c486;gap:6px;white-space:nowrap}
+.map-toolbar small {color:#a19884;font:9px Inter;margin-left:2px;letter-spacing:0}
+.map-toolbar .map-hint {display:none}
+.map-toolbar .map-jump {width:150px;min-height:25px!important;padding:4px 7px!important;font-size:10px;margin-right:4px}
+.map-toolbar .icon-button {width:25px;height:25px;color:#d6bc8b}
+.map-toolbar .icon-button:hover {color:#fff0bf;background:#7f633944}
+.map-toolbar .icon-button svg {width:15px;height:15px}
+.map-toolbar>div {gap:3px}
+.map-toolbar>div>span {font-size:9px;min-width:32px;color:#c8ba9b}
+.campaign-map-scroll {background:#172421;min-height:100px;box-shadow:inset 0 0 15px #000a}
+.atlas-map-art {filter:saturate(.9) brightness(.91)}
+.atlas-region-name {fill:#fff3c7;stroke:#192015;stroke-width:4.5px;font-weight:600}
+.atlas-zone-name {fill:#ffe9b9;stroke:#34251bbb;opacity:.9;letter-spacing:4px}
+.campaign-destination {position:absolute;z-index:2;bottom:27px;left:28px;right:28px;min-height:0;padding:0;border:0;background:none;pointer-events:none;align-items:flex-end}
+.campaign-destination>div {pointer-events:auto;padding:9px 13px;max-width:64%;border:1px solid #b39358;background:linear-gradient(110deg,#29291df5,#141e20ee);box-shadow:0 3px 12px #0009,inset 0 1px #d4b77844}
+.campaign-destination>.gold-button {pointer-events:auto;box-shadow:0 3px 12px #000b}
+.campaign-destination h3 {font-size:21px;font-weight:600;color:#f8d894;margin:2px 0}
+.campaign-destination p {font-size:9px;color:#b9b099}
+.campaign-destination .eyebrow {font-size:7px;letter-spacing:1.7px;color:#c5a879}
+.campaign-destination .gold-button {min-height:38px;padding:5px 15px!important;font-size:10px!important}
+.action-dock {margin-top:9px;min-height:56px;gap:5px;padding:4px;border:2px ridge #88724c;border-radius:2px;overflow:visible;background:linear-gradient(#2d2e2b,#13191b);box-shadow:0 3px 8px #000a,inset 0 1px #e9c68933}
+.action-dock>button {min-height:44px;gap:9px;justify-content:flex-start;padding:3px 9px 3px 5px;border:1px solid #715a3a!important;border-radius:2px;background:linear-gradient(#41413a,#242728);box-shadow:inset 0 1px #e6c89022,0 1px 2px #000;font:600 11px var(--serif);color:#f0d49e;white-space:nowrap}
+.action-dock>button:hover:not(:disabled) {background:linear-gradient(#685335,#3e2d1d);border-color:#e4bb73!important;box-shadow:0 0 12px #dbb45433}
+.action-dock kbd {top:auto;left:auto;right:4px;bottom:3px;font:8px Inter;color:#d2b582}
+.painted-art {display:block;width:54px;height:54px;flex-shrink:0;overflow:hidden;background:#12171d}
+.action-dock .painted-art {width:36px;height:36px;border:1px solid #b3955a;box-shadow:inset 0 0 4px #000,0 1px 4px #000;border-radius:2px}
+
+/* Forged frames for the party, warm parchment for the quest journal. */
+.party-tabs {position:static;background:linear-gradient(#262a2aee,#13191bf0);border:1px solid #735c39;padding:7px 6px 9px;gap:3px;box-shadow:inset 0 1px #ddba7844,0 3px 8px #0006}
+.party-tabs .campaign-portrait.small {width:37px;height:37px;border:2px ridge #a28b65;box-shadow:0 2px 5px #000}
+.party-tabs>button.active {border-color:#f6d17a;box-shadow:0 0 8px #efb53966}
+.party-tabs>button.horde .portrait {border-color:#b16c44}.party-tabs>button.alliance .portrait {border-color:#6d9db1}
+.party-tabs>button>span:last-of-type {background:#242422;border-color:#bda26d;color:#fff0c5;font-size:9px;width:16px;height:16px}
+.party-tabs i {background:#1e3441;border-color:#688a95;color:#c4e5ee}
+.character-sheet {padding:16px 14px 10px;border:2px ridge #9c794b;border-radius:2px;background:linear-gradient(120deg,#352a20ee,#192026f5 60%),url('/assets/warcraft/warhall.webp') center / cover;box-shadow:inset 0 0 0 2px #0b1013,0 5px 12px #0007}
+.character-sheet.alliance {background:linear-gradient(120deg,#1e3544ed,#192026f5 70%),url('/assets/warcraft/warhall.webp') center / cover}
+.character-title {margin-bottom:14px;gap:11px}
+.character-title>.portrait {width:66px;height:66px;border:3px ridge #bb934f;box-shadow:0 0 0 2px #1b1410,0 4px 10px #000b}
+.character-title h2 {font-size:19px;font-weight:600;line-height:1.3;color:#f1d697;text-shadow:0 2px 2px #000;margin:5px 0}
+.character-title .eyebrow {font-size:8px;letter-spacing:.6px}
+.character-title p {font:italic 11px Georgia,serif;color:#bcaf92}
+.level-coin {width:23px;height:23px;font-size:13px;top:-10px;right:-8px;border:2px ridge #b79953;background:radial-gradient(ellipse at top,#c4a468,#534325);box-shadow:0 2px 5px #000;color:#fff0b9}
+.character-sheet .resource {margin-bottom:10px}
+.character-sheet .resource-heading {font-size:10px;color:#d9cdb5;margin-bottom:5px}
+.character-sheet .resource-heading b {font-size:11px;color:#f7e8c6}
+.character-sheet .resource-track {height:13px;border:2px groove #a18355;border-radius:2px;background:#101417;box-shadow:0 1px 3px #000}
+.character-sheet .health .resource-track>div {background:linear-gradient(#bf5244,#7a2220 55%,#b33227);box-shadow:inset 0 1px #f2b39c55,0 0 9px #9f342d44}
+.character-sheet .energy .resource-track>div {background:linear-gradient(#6db6f2,#245487 55%,#387bcc);box-shadow:inset 0 1px #c2e6ff77,0 0 9px #2873bf33}
+.hero-counters {margin-top:11px;padding:8px 2px;border-color:#8f714740}
+.hero-counters>span {font-size:15px;color:#f0cc7e}.hero-counters small {font-size:7px;color:#b0a181}
+.sheet-inventory {margin-top:9px;color:#ccb890;font-size:10px}
+.sheet-inventory>summary {display:flex;align-items:center;gap:7px;cursor:pointer;list-style:none;padding:2px 0}
+.sheet-inventory>summary:after {content:'▾';color:#c5a466;margin-left:5px}.sheet-inventory[open]>summary:after {content:'▴'}
+.sheet-inventory>summary>span {margin-left:auto;border:1px solid #826940;padding:2px 6px;background:#151919}
+.sheet-inventory>p {color:#9b937f}.sheet-inventory[open] {padding-bottom:5px}
+.quest-panel {padding:15px 12px 9px;border:2px ridge #a1814b;border-radius:1px;color:#493722;background:#e8cf9c url('/assets/warcraft/parchment.webp') center / 100% 100%;box-shadow:0 6px 16px #0008,inset 0 0 22px #8c531b33}
+.quest-panel .section-row {margin-bottom:9px;padding-bottom:9px;border-bottom:1px solid #8f622b75}
+.quest-panel .section-row h3 {font-size:14px;font-weight:700;color:#4f3018;gap:7px;text-shadow:0 1px #fff3cb}
+.quest-panel .section-row>span {font:700 12px var(--serif);color:#7e4b20}
+.quest-row {padding:8px 2px;border-color:#96622d40;gap:9px;min-height:51px}
+.quest-row:hover {background:#8c551214}
+.quest-row>span:nth-child(2) {min-width:0}
+.quest-row strong {color:#442b15;font-size:11px;font-weight:700;line-height:1.35}
+.quest-row small {color:#79512d;font-size:9px;line-height:1.4;margin-top:3px}
+.quest-portrait {position:relative;display:block;flex-shrink:0}
+.quest-portrait .creature-glyph {width:34px;height:34px;border:2px ridge #92733f;border-radius:2px;filter:drop-shadow(0 1px 2px #40280d66)}
+.quest-portrait>b {position:absolute;bottom:-3px;right:-4px;border:1px solid #bc9a61;background:#403424;color:#f5db9f;border-radius:50%;width:14px;height:14px;text-align:center;line-height:13px;font:9px Inter}
+.quest-reward {color:#6a401d;font-size:9px;font-weight:600}.quest-reward small {font-size:8px}
+
+/* Equipped powers read like an illustrated action bar, with the full card in its dialog. */
+.equipped-panel>.section-row {margin-bottom:5px}
+.equipped-panel>.section-row h3 {font:600 11px var(--serif);letter-spacing:1px;color:#e6c58a}
+.equipped-panel>.section-row>span {font-size:9px;color:#b7a784}
+.equipped-cards {gap:10px;padding:2px 2px 7px}
+.folio-card {border:2px ridge #a88954;border-radius:3px;background:linear-gradient(135deg,#444037,#202526);box-shadow:0 3px 7px #0009,inset 0 0 0 2px #111;transition:transform .18s,border-color .18s,box-shadow .18s;color:#f6e5bd}
+.folio-card:hover {box-shadow:0 4px 15px #000b,0 0 12px #d1a34f44}
+.folio-top {background:linear-gradient(#494338,#262923);border-bottom:1px solid #a6854e;color:var(--card-accent);padding:8px 12px;font-size:8px}
+.folio-top b {color:#f6d496;text-shadow:0 1px 3px #000}
+.folio-art {height:130px;background:radial-gradient(ellipse,#67523355,#0d141ad9);border-bottom:1px solid #a58a5870}
+.folio-art>i {display:none}
+.folio-art>.painted-art {width:100%;height:100%;max-width:none;filter:none;border-radius:0}
+.folio-art>.portrait {width:94px;height:94px;border:3px ridge #d3b177;box-shadow:0 4px 12px #000}
+.folio-title {padding:11px 13px 9px;background:linear-gradient(#38332b,#202528)}
+.folio-title>strong {font:600 15px/1.35 var(--serif);color:#f4d99e;text-shadow:0 1px #000}
+.folio-title>small {color:#c1ad86;font-size:8px}
+.folio-rules {color:#49371f;background:#e6c994 url('/assets/warcraft/parchment.webp') center / 100% 100%;font-size:11px;line-height:1.65;padding:15px 13px}
+.folio-effect {color:#51391f}.folio-effect b {color:#83552c;font-size:8px;letter-spacing:.8px}
+.folio-footer {background:linear-gradient(#37342b,#171d20);border-color:#ad8e5070;color:#c9b996;padding:8px 12px}
+.folio-stat-row {border-color:#9b6e324d}.folio-stat-row .green {color:#456332}.folio-stat-row .blue {color:#285d87}.folio-stat-row .red {color:#963d28}
+.overlord-values b {color:#5b3521}.overlord-values small {color:#835d37}
+.equipped-cards .folio-card {
+  display:grid;grid-template-columns:58px minmax(0,1fr);grid-template-rows:20px 30px 26px 18px;
+  flex:1 0 176px;min-width:176px;max-width:260px;min-height:98px;max-height:98px;padding:0;overflow:hidden;
+}
+.equipped-cards .folio-top {grid-column:1/-1;grid-row:1;padding:2px 8px;font-size:6px;line-height:13px;letter-spacing:1px}
+.equipped-cards .folio-top b {font-size:11px}
+.equipped-cards .folio-art {grid-column:1;grid-row:2/4;height:56px;width:58px;border:0;border-right:1px solid #997647;overflow:hidden}
+.equipped-cards .folio-art>.painted-art {width:58px;height:56px}
+.equipped-cards .folio-title {grid-column:2;grid-row:2;padding:5px 7px 0;background:#242829;display:flex;align-items:center}
+.equipped-cards .folio-title>strong {font-size:10px;line-height:1.2;font-weight:600}
+.equipped-cards .folio-title>small {display:none}
+.equipped-cards .folio-rules {grid-column:2;grid-row:3;padding:3px 7px;gap:1px;font-size:8px;line-height:1.3;background:#242829;overflow:auto}
+.equipped-cards .folio-effect {color:#b7c1b9}
+.equipped-cards .folio-effect b {display:none}
+.equipped-cards .folio-footer {grid-column:1/-1;grid-row:4;padding:1px 7px;font-size:7px;border-top:1px solid #8d744749}
+.equipped-cards .folio-footer svg {width:9px;height:9px}
+.ai-panel {padding:13px;border:1px solid #917144;background:linear-gradient(130deg,#39332adb,#192024ed);box-shadow:inset 0 1px #d8b47833,0 3px 8px #0005;flex-shrink:0}
+.ai-panel h3 {font:600 17px var(--serif);color:#e2c18b;margin:7px 0}
+.ai-panel .eyebrow {font-size:6px;letter-spacing:1.6px;color:#a49275}.ai-panel p {font-size:10px;color:#b0aa98;line-height:1.7}
+.ai-panel>small {color:#a39579;font-size:8px}
+.overlord-summary>summary {padding:12px;border:1px solid #8e7046;background:linear-gradient(#343135,#1b1f25);border-radius:2px;color:#dec195;font-size:10px}
+.overlord-summary .folio-art {height:130px}.overlord-summary .folio-rules {padding-top:12px}
+.turn-track-v2 {border-top:1px solid #a183494f;margin-top:0;padding-top:6px;gap:14px;padding-bottom:10px}
+.turn-track-v2>span {font-size:7px;letter-spacing:1.2px;color:#b5a385;max-width:76px}
+.turn-track-v2>div {gap:5px;align-items:center}
+.turn-track-v2>div>span {height:22px;max-width:none;border:1px solid #746343;background:linear-gradient(#3a3b33,#192326);color:#b7aa89;border-radius:2px;box-shadow:inset 0 1px #d0bd7c22;font-size:9px}
+.turn-track-v2>div>span.current {border-color:#f6d38c;color:#fff3cc;background:linear-gradient(#b48743,#5f3b1b);box-shadow:0 0 10px #eec47540,inset 0 1px #ffe9a777;font-weight:700}
+.turn-track-v2>div>span.past {background:#191e1d;color:#746c58;border-color:#49432f}
+.turn-track-v2 i {color:#aa8a55}.turn-track-v2>div>b {color:#ddba7e}
+
+/* Every interaction belongs to the same physical game table. */
+.campaign-app .gold-button {border:2px ridge #b89550;border-radius:2px;background:linear-gradient(#8b3a2c,#5e211d 55%,#401611);color:#ffe5a1;box-shadow:inset 0 1px #e9a26d55,0 2px 5px #0009;font-weight:600;text-shadow:0 1px 2px #200700}
+.campaign-app .gold-button:hover:not(:disabled) {background:linear-gradient(#b25032,#742b1f);border-color:#efc775}
+.campaign-app .quiet-button {border:1px solid #8c7349;border-radius:2px;background:linear-gradient(#3d3d34,#202628);box-shadow:inset 0 1px #e3c28622,0 2px 3px #0006;color:#dfc792;font-size:11px}
+.campaign-app .quiet-button:hover:not(:disabled) {border-color:#d4b16d;background:linear-gradient(#61513b,#322c22)}
+.campaign-app input:not([type=checkbox]):not([type=range]),.campaign-app select {background:#11191d;border:2px groove #8c714c;color:#e4d2b0;border-radius:2px;font-size:12px}
+.campaign-app input[type=checkbox],.campaign-app input[type=range] {accent-color:#be8e46}
+.campaign-app .modal {
+  border:22px solid transparent;border-image:url('/assets/warcraft/frame.webp') 210 stretch;
+  background:linear-gradient(#202629ef,#171e24f7),url('/assets/warcraft/warhall.webp') center / cover;
+  border-radius:0;padding:0;color:#e6d5b4;max-height:90vh;box-shadow:0 20px 120px #000d;
+}
+.campaign-app .modal::backdrop {background:#03090bc9;backdrop-filter:blur(5px)}
+.campaign-app .modal-head {padding:20px 24px;border-bottom:2px ridge #957446;background:linear-gradient(#494033,#20252a)}
+.campaign-app .modal-head h2 {font-size:27px;color:#f6d694;text-shadow:0 2px 3px #000;font-weight:600}
+.campaign-app .modal-head .eyebrow {color:#bbaa83;font-size:8px;letter-spacing:2.4px}
+.campaign-app .modal-head .icon-button {color:#f3d8a2;border:2px ridge #ae8a50;background:linear-gradient(#7e392e,#3f1d19);width:30px;height:30px;border-radius:3px}
+.campaign-app .modal .dialog-content {padding:23px 24px}
+.campaign-app .dialog-content>p {color:#bdb298;line-height:1.8;font-size:12px}
+.setup-count>button {background:linear-gradient(#474333,#23282b);border:2px ridge #937346;padding:9px 20px;color:#e9cd94}
+.setup-roster {gap:24px}
+.setup-roster>section {border:1px solid #916744;padding:12px;background:linear-gradient(#52262199,#141d2199)}
+.setup-roster>section:last-child {background:linear-gradient(#1d436499,#141d2199);border-color:#54717e}
+.setup-roster h3 {display:flex;align-items:center;gap:12px;font-size:25px;font-weight:600;padding-bottom:12px;border-bottom:1px solid #a4814c55}
+.setup-roster h3 .faction-crest {width:66px;height:66px}
+.setup-roster button {background:#14191eb8;border:1px solid #7a6948;padding:8px;color:#e3d2ad;box-shadow:inset 0 1px #ccb2791c}
+.setup-roster button.selected {background:#67502b7a!important;border-color:#e0b05c!important}
+.setup-roster button .portrait {border:2px ridge #b99458;box-shadow:0 2px 5px #0008}
+.setup-roster small {color:#b7a57d}.setup-count label,.seed-label {color:#c6b594}
+.card-detail {padding:24px;gap:25px;background:#141d2180}.card-detail>.folio-card {min-width:230px}
+.card-detail h3 {color:#e7c387}.card-detail p {color:#c3b699;line-height:1.85}
+.card-detail .muted {font-size:10px;color:#948c7c}
+.merchant-row {background:linear-gradient(#363931,#202729);border:1px solid #8f764b;box-shadow:inset 0 1px #ecd39119;color:#ddc99f}
+.merchant-row:hover {background:#504530;border-color:#caab68}.merchant-row strong {color:#eed6a5}.merchant-row small {color:#b2a687}
+.merchant-row>.creature-glyph {border:2px ridge #b39155;border-radius:3px}
+.v2-combat {background:linear-gradient(#181c22b5,#11191f);padding:22px 26px}
+.combat-stage h3 {color:#f0cd91}.combat-stage>span:last-child {color:#b5a788}
+.combat-progress {border-color:#8b713f66}.combat-progress>span {color:#8e8877}.combat-progress .active {color:#f7d995;text-shadow:0 0 8px #e2b96366}
+.combat-members>div {background:#212a30;border:2px ridge #8d7951;border-radius:2px}.combat-members>div.active {background:#523b2b;border-color:#d7ad66}
+.creature-rule {background:linear-gradient(100deg,#442c2499,#1c2430);border:2px ridge #9c794b;border-radius:2px;padding:13px}
+.creature-rule>.creature-glyph {width:85px;height:85px;border:2px ridge #a9905e;border-radius:3px;filter:drop-shadow(0 4px 5px #000a)}
+.creature-rule strong {font-weight:600;color:#ecc888}.creature-rule p {color:#c1b498}
+.v2-dice {background:radial-gradient(ellipse,#364451,#101b22);border:3px ridge #8b7349;border-radius:2px;box-shadow:inset 0 5px 15px #0008;min-height:110px;justify-content:center}
+.v2-die {width:53px;height:53px;border:3px ridge #c88152;border-radius:6px;box-shadow:inset 0 2px 5px #ffb77933,0 6px 0 #211310,0 7px 10px #0008;background:linear-gradient(135deg,#b64934,#592124);color:#ffe3b6;font-size:24px}
+.v2-die.blue {background:linear-gradient(135deg,#438fce,#20426a);border-color:#90bdd7;color:#e3f4ff}.v2-die.green {background:linear-gradient(135deg,#7b9c44,#2d562c);border-color:#b5c67d;color:#edf6cb}
+.combat-boxes>div {border:2px ridge #8b7549;background:linear-gradient(#343932,#1d272b);border-radius:2px}
+.combat-skill-list>button {border:2px ridge #8e764b;background:linear-gradient(#3b3730,#1d272c);border-radius:2px;color:#e4cfab}
+.combat-skill-list>button:hover {background:#55432c;border-color:#d6b168}.combat-skill-list strong {color:#f0d6a4}.combat-skill-list small {color:#b3aa94}
+.combat-skill-list .painted-art {width:43px;height:43px;border:2px ridge #bda167;border-radius:2px}
+.combat-boxes>div>span {display:flex;align-items:center;gap:9px}.combat-boxes .faction-crest {width:30px;height:30px}
+.transaction-item {position:relative;padding:13px 12px 13px 69px;min-height:92px;border-bottom:1px solid #89744466;background:#111d222b}
+.transaction-item>.painted-art {position:absolute;left:5px;top:13px;width:51px;height:51px;border:2px ridge #af8d55}
+.transaction-item>strong {color:#e8c790;font:600 12px var(--serif)}.transaction-item>small {color:#b9a986}
+.combat-warning {border-color:#a6774c;background:#592b2399;color:#efc997}
+.combat-footnote {color:#a5967c;border-color:#80664255}
+.decision-overlay>section,.victory-strip {border:20px solid transparent;border-image:url('/assets/warcraft/frame.webp') 210 stretch;border-radius:0;background:linear-gradient(#31322ce8,#101a20ef),url('/assets/warcraft/warhall.webp') center / cover;box-shadow:0 15px 60px #000d}
+.decision-overlay h2,.victory-strip h2 {color:#f3d493;font-weight:600}.decision-overlay p,.victory-strip p {color:#bfb292}
+.decision-options>.quiet-button {color:#f1d8a6}.decision-overlay .eyebrow {color:#c3aa77}
+.catalog-page> .section-row h2,.catalog-tools h3,.encounter-display>h3,.style-gallery h2,.journal-page>h2 {color:#f0d397;text-shadow:0 2px 3px #000;font-weight:600}
+.bestiary-grid .folio-card {min-height:345px;background:linear-gradient(#44372a,#1e292d)}
+.bestiary-grid .folio-art {height:160px}.bestiary-grid .folio-art .creature-glyph {width:100%;height:100%;border:0;border-radius:0}
+.bestiary-grid .folio-title>strong {font-size:21px}
+.character-gallery>.folio-card {padding:0;background:linear-gradient(#35404a,#1a242c);min-height:360px}
+.character-gallery .folio-art {height:135px;background:linear-gradient(110deg,#172739aa,#4b3b28bb),url('/assets/warcraft/warhall.webp') center / cover}
+.character-cap-grid>span>b {color:#805427;border-color:#93673455}.character-cap-grid>span>span:nth-child(2) {color:#934232}.character-cap-grid>span>span:nth-child(3) {color:#2b607f}
+.style-gallery>p,.journal-page>p {color:#c0b198}.style-gallery .eyebrow {color:#c6aa75}.style-colors b {color:#efd4a3}.style-colors>span {color:#b6a785}
+.coverage-page {background:#151c22e8;border:1px solid #826b46;padding:30px;max-width:1160px;box-shadow:0 7px 25px #0006}
+.coverage-page h2 {color:#f1d39a}.coverage-page>p,.coverage-page td {color:#baaf99}.coverage-page td:first-child {color:#ebd7ae}
+.coverage-page .rules-grid article {background:#293034;border-color:#826c43}.coverage-page .rules-grid h3 {color:#e5c28a}.coverage-page .rules-grid p {color:#baaf99}
+.journal-page {background:#141c23e8;border:1px solid #806644;padding:28px}
+.journal-page article {border-color:#73634255}.journal-page article>p {color:#d0c2a7}.journal-page article>span {color:#d3b274}
+.campaign-app .toast {background:linear-gradient(#473b2b,#24272a);border:2px ridge #d0a965;color:#f4deb2;box-shadow:0 5px 30px #0009;font-size:12px}
+.desktop-tabletop.map-focus .campaign-main {grid-template-rows:auto auto minmax(450px,1fr) 0 40px;min-height:680px}
+.desktop-tabletop.map-focus .campaign-bottom {display:none}
+
+@media(min-width:1600px) {
+  .campaign-main {padding:22px 32px 23px}
+  .desktop-tabletop .campaign-main {grid-template-columns:minmax(0,1fr) 360px;column-gap:26px;grid-template-rows:auto auto minmax(380px,1fr) 156px 45px}
+  .campaign-title {min-height:66px;margin-bottom:12px}.campaign-title h1 {font-size:36px}
+  .campaign-title .eyebrow {font-size:9px}.development-banner {font-size:10px;margin-bottom:14px}
+  .campaign-map {border-width:22px}.map-toolbar {min-height:38px}.map-toolbar .map-jump {width:205px}
+  .campaign-destination {min-height:0;bottom:34px;left:36px;right:36px}.campaign-destination h3 {font-size:23px}
+  .action-dock {min-height:64px}.action-dock>button {font-size:13px;gap:13px;padding-left:9px}
+  .action-dock .painted-art {width:43px;height:43px}.action-dock kbd {font-size:9px;right:8px;bottom:6px}
+  .party-tabs .campaign-portrait.small {width:42px;height:42px}
+  .character-sheet {padding:21px 17px 13px}.character-title h2 {font-size:21px}.character-title>.portrait {width:74px;height:74px}
+  .character-sheet .resource-track {height:15px}.character-sheet .resource-heading {font-size:11px}
+  .quest-panel {padding:19px 15px 12px}.quest-row {min-height:57px}.quest-row strong {font-size:12px}.quest-row small {font-size:10px}.quest-portrait .creature-glyph {width:39px;height:39px}
+  .equipped-cards .folio-card {grid-template-columns:76px minmax(0,1fr);grid-template-rows:22px 38px 32px 20px;min-height:116px;max-height:116px;flex-basis:210px}
+  .equipped-cards .folio-art,.equipped-cards .folio-art>.painted-art {width:76px;height:70px}
+  .equipped-cards .folio-title>strong {font-size:12px}.equipped-cards .folio-rules {font-size:10px}.equipped-cards .folio-top {font-size:7px;padding:3px 9px}.equipped-cards .folio-footer {font-size:8px}
+  .ai-panel {padding:16px}.ai-panel p {font-size:11px}.ai-panel h3 {font-size:20px}
+  .turn-track-v2>div>span {height:25px;font-size:10px}
+}
+@media(prefers-reduced-motion:reduce) {.campaign-app button,.folio-card {transition:none}}
