@@ -1,5 +1,7 @@
 # Multiplayer i Vercel
 
+**Status: online sobe su na holdu po odluci korisnika.** Ne provisionirati Redis niti povezivati postojeće spremište dok korisnik ne nastavi rad na online sobama. Produkcijska lokalna igra i AI botovi ostaju dostupni bez servera.
+
 Klijenti šalju odluke; server izvršava zajednički engine. Nijedan klijent ne šalje novo stanje, rezultate bacanja ili poredak špila.
 
 ## API
