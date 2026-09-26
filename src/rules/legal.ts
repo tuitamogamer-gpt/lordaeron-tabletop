@@ -1,10 +1,10 @@
-import { capacity, card, character, faction, hero, other } from './common';
-import { eligibleAttackers, living } from './combat';
-import { availableCards, matches, timing } from './effects';
-import { apply } from './game';
-import { bagSize, equipped } from './inventory';
-import { reachable, respawnRegions } from './movement';
-import type { AbilityArgs, Command, ContentPack, Effect, Hero, State } from './model';
+import { capacity, card, character, faction, hero, other } from './common.js';
+import { eligibleAttackers, living } from './combat.js';
+import { availableCards, matches, timing } from './effects.js';
+import { apply } from './game.js';
+import { bagSize, equipped } from './inventory.js';
+import { reachable, respawnRegions } from './movement.js';
+import type { AbilityArgs, Command, ContentPack, Effect, Hero, State } from './model.js';
 
 export function combinations<T>(values: T[], count: number, limit = 64): T[][] {
  const result: T[][] = [];

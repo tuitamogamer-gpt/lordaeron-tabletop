@@ -1,5 +1,5 @@
-import { assert, character, faction, hero, region } from './common';
-import type { ContentPack, Hero, State } from './model';
+import { assert, character, faction, hero, region } from './common.js';
+import type { ContentPack, Hero, State } from './model.js';
 export const independents = (s: State, at: string) => s.enemies.filter(e => e.region === at && e.color === 'blue');
 export function steps(p: ContentPack, h: Hero, from: string): string[] {
  const r = region(p, from), f = faction(p, h.id);

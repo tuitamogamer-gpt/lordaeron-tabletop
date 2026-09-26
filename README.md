@@ -54,7 +54,7 @@ Preostaju originalni Power/Talent i rasni efekti, stvarni questovi, događaji i 
 
 Dodani su `api/game.ts`, `api/ws.ts` i `vercel.json`. Za cloud multiplayer potrebne su serverske varijable `UPSTASH_REDIS_REST_URL` i `UPSTASH_REDIS_REST_TOKEN`. Sobe koriste atomsku Redis provjeru revizije. Produkcija bez trajnog spremišta odbija mrežni zahtjev.
 
-**Nije obavljen Vercel deploy niti provjera sa stvarnim Redis servisom.** Upute su u [MULTIPLAYER.md](docs/MULTIPLAYER.md).
+Produkcija: [lordaeron-tabletop.vercel.app](https://lordaeron-tabletop.vercel.app). GitHub `main` je povezan s Vercel projektom `lordaeron-tabletop`. **Stvarni Redis servis još nije povezan niti testiran; lokalna igra i botovi su dostupni.** Upute su u [MULTIPLAYER.md](docs/MULTIPLAYER.md).
 
 ## Dokumentacija
 

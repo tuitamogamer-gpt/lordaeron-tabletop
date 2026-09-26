@@ -1,4 +1,4 @@
-import type { ContentPack, Faction, Hero, State } from './model';
+import type { ContentPack, Faction, Hero, State } from './model.js';
 export class RuleError extends Error { constructor(message: string) { super(message); this.name = 'RuleError'; } }
 export const assert: (condition: unknown, message: string) => asserts condition = (condition, message) => { if (!condition) throw new RuleError(message); };
 export const integer = (n: number, min = 0, max = 10000) => Number.isSafeInteger(n) && n >= min && n <= max;

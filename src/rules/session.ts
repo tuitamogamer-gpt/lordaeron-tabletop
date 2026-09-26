@@ -1,7 +1,7 @@
-import { assert } from './common';
-import { apply, createGame } from './game';
-import { commandSchema, setupSchema } from '../multiplayer/protocol';
-import type { Command, ContentPack, Setup } from './model';
+import { assert } from './common.js';
+import { apply, createGame } from './game.js';
+import { commandSchema, setupSchema } from '../multiplayer/protocol.js';
+import type { Command, ContentPack, Setup } from './model.js';
 export interface Session { format:'lordaeron-rules-session';version:2;pack:string;contentHash:string;setup:Setup;commands:Command[]; }
 export function contentHash(p:ContentPack){let hash=2166136261;for(const c of JSON.stringify(p)){hash^=c.charCodeAt(0);hash=Math.imul(hash,16777619);}return(hash>>>0).toString(16);}
 export const newSession=(p:ContentPack,setup:Setup):Session=>({format:'lordaeron-rules-session',version:2,pack:p.id,contentHash:contentHash(p),setup,commands:[]});

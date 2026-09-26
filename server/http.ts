@@ -1,8 +1,8 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import { requestSchema } from '../src/multiplayer/protocol';
-import { RuleError } from '../src/rules/common';
-import { handleRoom, readRoom, RoomError } from './rooms';
-import { getStore, type RoomStore } from './store';
+import { requestSchema } from '../src/multiplayer/protocol.js';
+import { RuleError } from '../src/rules/common.js';
+import { handleRoom, readRoom, RoomError } from './rooms.js';
+import { getStore, type RoomStore } from './store.js';
 export const allowedOrigin=(req:IncomingMessage)=>{
  const origin=req.headers.origin;if(!origin)return true;
  try { const u=new URL(origin),host=req.headers['x-forwarded-host']??req.headers.host;

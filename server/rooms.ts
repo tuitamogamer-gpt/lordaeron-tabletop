@@ -1,14 +1,14 @@
 import { createHash, randomBytes, randomInt, randomUUID, timingSafeEqual } from 'node:crypto';
-import { decide } from '../src/ai/planner';
-import { DEVELOPMENT_PACK as pack } from '../src/data/development-pack';
-import { assert, faction, unique } from '../src/rules/common';
-import { apply, createGame } from '../src/rules/game';
-import { decisionOwners } from '../src/multiplayer/ownership';
-import { legalActions } from '../src/rules/legal';
-import type { Command, Setup, State } from '../src/rules/model';
-import { view } from '../src/rules/view';
-import type { RoomRequest } from '../src/multiplayer/protocol';
-import type { RoomStore } from './store';
+import { decide } from '../src/ai/planner.js';
+import { DEVELOPMENT_PACK as pack } from '../src/data/development-pack.js';
+import { assert, faction, unique } from '../src/rules/common.js';
+import { apply, createGame } from '../src/rules/game.js';
+import { decisionOwners } from '../src/multiplayer/ownership.js';
+import { legalActions } from '../src/rules/legal.js';
+import type { Command, Setup, State } from '../src/rules/model.js';
+import { view } from '../src/rules/view.js';
+import type { RoomRequest } from '../src/multiplayer/protocol.js';
+import type { RoomStore } from './store.js';
 export class RoomError extends Error { constructor(message:string,public status=400){super(message);} }
 interface Member { id:string; name:string; heroes:string[]; tokenHash:string; }
 export interface Room { id:string; revision:number; host:string; started:boolean; setup:Setup; state:State; members:Member[]; bots:string[]; receipts: {id:string;by:string;hash:string}[]; pending?:{command:Command;requestId:string;by:string;approvals:string[];required:string[]}; commands:Command[]; updatedAt:number; }

@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && npm run check:server && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "test": "vitest run",
     "dev:server": "tsx watch server/dev.ts",
-    "simulate": "tsx scripts/simulate.ts"
+    "simulate": "tsx scripts/simulate.ts",
+    "check:server": "tsc -p tsconfig.server.json"
   },
   "dependencies": {
     "@fontsource/cinzel": "^5.2.0",
@@ -32,6 +33,6 @@
     "vitest": "^5.0.2"
   },
   "engines": {
-    "node": ">=22"
+    "node": "24.x"
   }
 }

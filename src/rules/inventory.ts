@@ -1,5 +1,5 @@
-import { assert, capacity, card, character, integer, unique } from './common';
-import type { ContentPack, Equipped, Hero, State, TownOperation } from './model';
+import { assert, capacity, card, character, integer, unique } from './common.js';
+import type { ContentPack, Equipped, Hero, State, TownOperation } from './model.js';
 type Market = Pick<State, 'merchant'>;
 export function equipped(p: ContentPack, h: Hero): string[] {
  return h.slots.flatMap((slot, i) => [slot.card ?? character(p, h.id).slots[i].printed, ...slot.addons].filter((id): id is string => !!id));

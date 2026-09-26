@@ -1,6 +1,6 @@
-import { assert, faction, hero, note, other, random } from './common';
-import { drawQuest, rewards, stronger } from './rewards';
-import type { ContentPack, State } from './model';
+import { assert, faction, hero, note, other, random } from './common.js';
+import { drawQuest, rewards, stronger } from './rewards.js';
+import type { ContentPack, State } from './model.js';
 export function finishEvent(s: State) {
  s.eventSeen = []; s.faction = other(s.faction); s.phase = 'actions'; s.tradeWindow = false;
 }

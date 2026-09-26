@@ -2,7 +2,7 @@ import { Redis } from '@upstash/redis';
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { randomUUID } from 'node:crypto';
-import type { Room } from './rooms';
+import type { Room } from './rooms.js';
 export interface RoomStore { get(id:string):Promise<Room|null>; create(room:Room):Promise<boolean>; compareSwap(id:string,revision:number,room:Room):Promise<boolean>; }
 export class MemoryStore implements RoomStore {
  private rooms = new Map<string, Room>();

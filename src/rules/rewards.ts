@@ -1,5 +1,5 @@
-import { assert, capacity, faction, hero, note, random, shuffle } from './common';
-import type { ContentPack, Faction, Hero, Quest, Reward, State, Tier } from './model';
+import { assert, capacity, faction, hero, note, random, shuffle } from './common.js';
+import type { ContentPack, Faction, Hero, Quest, Reward, State, Tier } from './model.js';
 export function awardXP(p: ContentPack, h: Hero, amount: number) {
  h.xp = Math.min(p.xp[4], h.xp + Math.max(0, amount));
  while (h.level < 5 && h.xp >= p.xp[h.level]) { h.level++; h.talentChoices.push(h.level); const cap = capacity(p, h); h.health = cap.health; h.energy = cap.energy; }

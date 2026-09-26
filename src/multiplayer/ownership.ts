@@ -1,5 +1,5 @@
-import { faction } from '../rules/common';
-import type { Command, ContentPack, State } from '../rules/model';
+import { faction } from '../rules/common.js';
+import type { Command, ContentPack, State } from '../rules/model.js';
 type DecisionState=Pick<State,'heroes'|'faction'|'phase'|'battle'|'reward'>;
 export function decisionOwners(p:ContentPack,s:DecisionState,c:Command):string[]{
  const team=(f=s.faction)=>s.heroes.filter(h=>faction(p,h.id)===f).map(h=>h.id);

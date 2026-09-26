@@ -1,11 +1,11 @@
-import { assert, capacity, card, character, faction, hero, integer, note, other, region, shuffle, unique } from './common';
-import { activate } from './effects';
-import { beginBattle, chooseAttacker, continueWounds, creatureRule, defeat, defense, enforceDicePenalties, living, monsterEffect, nextRound, omitDice, placeTokens, removePenalty, reroll, resolution, wound } from './combat';
-import { bid, checkWars, drawEvents, finishEvent, replacement } from './events';
-import { bagSize, manage, receiveItem, rest, townOperations, train } from './inventory';
-import { independents, respawnRegions, travel } from './movement';
-import { drawQuest, finalAttacker, nextItem, rewards } from './rewards';
-import type { Command, ContentPack, Hero, ItemDeck, Setup, State, Tier } from './model';
+import { assert, capacity, card, character, faction, hero, integer, note, other, region, shuffle, unique } from './common.js';
+import { activate } from './effects.js';
+import { beginBattle, chooseAttacker, continueWounds, creatureRule, defeat, defense, enforceDicePenalties, living, monsterEffect, nextRound, omitDice, placeTokens, removePenalty, reroll, resolution, wound } from './combat.js';
+import { bid, checkWars, drawEvents, finishEvent, replacement } from './events.js';
+import { bagSize, manage, receiveItem, rest, townOperations, train } from './inventory.js';
+import { independents, respawnRegions, travel } from './movement.js';
+import { drawQuest, finalAttacker, nextItem, rewards } from './rewards.js';
+import type { Command, ContentPack, Hero, ItemDeck, Setup, State, Tier } from './model.js';
 
 export function validatePack(p: ContentPack): string[] {
  const errors: string[] = [];

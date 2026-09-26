@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { Command, Setup } from '../rules/model';
+import type { Command, Setup } from '../rules/model.js';
 export const id = z.string().min(1).max(100).regex(/^[a-zA-Z0-9:-]+$/);
 const ids = z.array(id).max(40);
 const n = z.number().int().min(0).max(10000);

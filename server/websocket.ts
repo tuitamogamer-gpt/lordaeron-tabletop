@@ -1,8 +1,8 @@
 import { createServer, type Server } from 'node:http';
 import { WebSocketServer, type WebSocket } from 'ws';
-import { allowedOrigin } from './http';
-import { authenticate, readRoom, snapshot as roomSnapshot } from './rooms';
-import { getStore, type RoomStore } from './store';
+import { allowedOrigin } from './http.js';
+import { authenticate, readRoom, snapshot as roomSnapshot } from './rooms.js';
+import { getStore, type RoomStore } from './store.js';
 interface Subscription { room:string;token:string;revision:number;busy:boolean; }
 /** The socket is an ephemeral delivery channel; authoritative room state lives in Redis. */
 export function attachWebSockets(server:Server,storeProvider:()=>RoomStore=getStore){

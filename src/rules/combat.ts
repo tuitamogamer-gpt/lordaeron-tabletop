@@ -1,7 +1,7 @@
-import { assert, character, colors, emptyBoxes, emptyPool, faction, hero, note, other, random } from './common';
-import { healthLoss, matches } from './effects';
-import { equipped, unequip } from './inventory';
-import type { Battle, ContentPack, CreatureRule, Faction, State } from './model';
+import { assert, character, colors, emptyBoxes, emptyPool, faction, hero, note, other, random } from './common.js';
+import { healthLoss, matches } from './effects.js';
+import { equipped, unequip } from './inventory.js';
+import type { Battle, ContentPack, CreatureRule, Faction, State } from './model.js';
 export const living = (_s: State, b: Battle, f?: Faction, p?: ContentPack) => b.participants.filter(id => !b.defeated.includes(id) && (!f || faction(p!, id) === f));
 export const creatureRule = (p: ContentPack, s: State): CreatureRule => { const e = s.enemies.find(e => e.id === s.battle?.enemies[0]); return p.creatures.find(c => c.id === e?.creature)?.rule ?? 'none'; };
 export function stats(p: ContentPack, s: State, enemyId?: string) {

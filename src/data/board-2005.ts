@@ -1,4 +1,4 @@
-import type { Region, Source } from '../rules/model';
+import type { Region, Source } from '../rules/model.js';
 export const BOARD_SOURCE: Source = { url: 'https://worldofwarcraft.judgehype.com/image/16487/', reference: 'Board photograph; manually traced topology, pending flat-scan review', status: 'community' };
 // Coordinates are percentages of the reference photograph, not the decorative prototype map.
 const rows: [string, string, string, number, number][] = [

@@ -32,6 +32,6 @@ Simulacije koriste probne karte. One pokazuju prolaz kroz cijeli tok kampanje za
 
 ## Granice provjere
 
-Nisu provjereni stvarni Vercel deployment, Upstash Redis, prekid više cloud instanci ili dugotrajna partija preko javnog interneta. Originalni tekstovi karata, sve posebne FAQ interakcije i konačna topologija mape čekaju provjeru izvora. Tačan pregled je u [RULES-COVERAGE.md](RULES-COVERAGE.md).
+Vercel produkcija je objavljena; frontend i slika mape vraćaju HTTP 200. Node 24 provjera kompajliranih API modula potvrđuje uspješan ESM import i kontrolisani HTTP 503 kada nedostaje trajno spremište. Nisu provjereni Upstash Redis, prekid više cloud instanci ili dugotrajna partija preko javnog interneta. Originalni tekstovi karata, sve posebne FAQ interakcije i konačna topologija mape čekaju provjeru izvora. Tačan pregled je u [RULES-COVERAGE.md](RULES-COVERAGE.md).
 
 Stariji `docs/sample-save.json` pripada prototipu v0.1. Novi engine koristi vlastiti format sesije v2 i provjerava verziju sadržaja prije replaya.

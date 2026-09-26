@@ -18,7 +18,7 @@ Host dodjeljuje slobodna mjesta botovima i pokreće partiju. Čovjek upravlja sa
 
 Veza se obnavlja prije isteka životnog vijeka funkcije. Browser se ponovo spaja s odgodom 1–15 s; ako WebSocket nije dostupan, koristi HTTP osvježavanje svake 4 s. Klijent ne pretpostavlja da je lokalna kopija autoritet.
 
-Vercelova [WebSocket podrška za Functions](https://vercel.com/docs/functions/websockets) je beta; `api/ws.ts` izvozi `http.Server`. Maksimalna dužina veze zavisi od funkcije, pa reconnect ostaje obavezan. Provjereno prema službenoj dokumentaciji 26. 9. 2026; stvarni Vercel deployment još nije testiran.
+Vercelova [WebSocket podrška za Functions](https://vercel.com/docs/functions/websockets) je beta; `api/ws.ts` izvozi `http.Server`. Maksimalna dužina veze zavisi od funkcije, pa reconnect ostaje obavezan. Provjereno prema službenoj dokumentaciji 26. 9. 2026; partija preko stvarnog Redis servisa još nije testirana.
 
 ## Spremište
 
@@ -36,6 +36,8 @@ Vercelova [WebSocket podrška za Functions](https://vercel.com/docs/functions/we
 4. Omogući odgovarajući Functions/Fluid compute runtime prema aktuelnoj Vercel WebSocket dokumentaciji. Ako socket endpoint nije dostupan, HTTP fallback ostaje funkcionalan.
 5. Provjeri sobu iz dva browser profila: pridruživanje, istovremene poteze, refresh, ponovno spajanje i nastavak poslije funkcijskog reconnecta.
 
-**Deployment, provisioniranje servisa i stvarni Redis CAS nisu izvršeni.** Testirana je HTTP + WebSocket komunikacija kroz lokalni server i konkurentni CAS u testnom spremištu. Za cloud treba ponoviti provjeru sa pravim servisima.
+Produkcija je objavljena na [lordaeron-tabletop.vercel.app](https://lordaeron-tabletop.vercel.app), povezana s GitHub granom `main`. **Redis još nije povezan i stvarni Redis CAS nije testiran.** Testirana je HTTP + WebSocket komunikacija kroz lokalni server i konkurentni CAS u testnom spremištu. Za cloud partije treba ponoviti provjeru sa pravim servisom.
+
+Server koristi Node 24 i eksplicitne `.js` putanje za ESM importe. `npm run build` uključuje `npm run check:server` s NodeNext rezolucijom, kako bundler ne bi prikrio putanje koje produkcijski Node ne može učitati.
 
 Ograničenja ove verzije: botovi napreduju dok je povezan klijent koji traži njihove poteze; nema background joba kad svi izađu. Socket polling troši Redis operacije. Rate limit je lokalni po instanci, nije globalna zaštita od zloupotrebe. Zapis je ograničen na 20.000 naredbi. Ovo je MVP za partije s pozivnicom, ne kompletna javna platforma s matchmakingom i takmičarskom zaštitom.

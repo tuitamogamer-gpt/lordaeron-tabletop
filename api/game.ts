@@ -1,2 +1,2 @@
-import { handler } from '../server/http';
+import { handler } from '../server/http.js';
 export default handler;

@@ -1,6 +1,6 @@
-import { assert, capacity, card, character, colors, faction, hero, integer, random } from './common';
-import { equipped, unequip } from './inventory';
-import type { AbilityArgs, Condition, ContentPack, DiceFilter, Die, Effect, Hero, State, Timing } from './model';
+import { assert, capacity, card, character, colors, faction, hero, integer, random } from './common.js';
+import { equipped, unequip } from './inventory.js';
+import type { AbilityArgs, Condition, ContentPack, DiceFilter, Die, Effect, Hero, State, Timing } from './model.js';
 export const matches = (die: Die, filter: DiceFilter) => !die.removed && (!filter.colors || filter.colors.includes(die.color)) && (!filter.values || filter.values.includes(die.value)) && (filter.min === undefined || die.value >= filter.min);
 export function availableCards(p: ContentPack, h: Hero) {
  return [...new Set([...equipped(p, h), ...h.talents, ...h.auctionItems, ...h.bag.filter(id => card(p, id).type === 'bag'), ...[character(p, h.id).racial].filter((id): id is string => !!id)])];

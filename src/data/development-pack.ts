@@ -1,10 +1,10 @@
 /** Playable integration fixtures. NOT a transcription of the 2005 card decks.
  * User explicitly deferred scans. Keep this pack distinct from a future verified base pack.
  */
-import original from './original-characters.json';
-import creatureData from './reference-creatures.json';
-import { BOARD_REGIONS } from './board-2005';
-import type { Card, Character, ClassId, ContentPack, Creature, Effect, EventCard, Faction, Quest, Source, Tier } from '../rules/model';
+import original from './original-characters.json' with { type: 'json' };
+import creatureData from './reference-creatures.json' with { type: 'json' };
+import { BOARD_REGIONS } from './board-2005.js';
+import type { Card, Character, ClassId, ContentPack, Creature, Effect, EventCard, Faction, Quest, Source, Tier } from '../rules/model.js';
 export const FIXTURE: Source = { url: 'local:development-pack', reference: 'Integration fixture; not an original card', status: 'fixture' };
 const originalSource: Source = { url: 'https://github.com/WarHatch/WoW-BG-app/tree/9a6a70d916a02182edcc7b261739a36bd0555d3d', reference: 'Character names and level capacities only; slots and starting cards are fixtures', status: 'community' };
 const classes: ClassId[] = ['warrior','mage','hunter','druid','paladin','priest','rogue','shaman','warlock'];

@@ -1,4 +1,4 @@
-import type { State } from './model';
+import type { State } from './model.js';
 /** No RNG state, deck order or opponents' sealed auction bids crosses this boundary. */
 export type GameView = Omit<State, 'rng' | 'questDecks' | 'itemDecks' | 'eventDeck' | 'auction'> & {
  deckCounts: { quests: Record<string, Record<string, number>>; items: Record<string, number>; events: number };

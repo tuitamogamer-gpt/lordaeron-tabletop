@@ -1,2 +1,2 @@
-import { websocketServer } from '../server/websocket';
+import { websocketServer } from '../server/websocket.js';
 export default websocketServer();

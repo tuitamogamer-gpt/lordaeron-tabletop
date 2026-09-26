@@ -1,7 +1,7 @@
-import { capacity, card, faction } from '../rules/common';
-import type { Command, ContentPack, Hero, Pool } from '../rules/model';
-import type { GameView } from '../rules/view';
-import { availableCards } from '../rules/effects';
+import { capacity, card, faction } from '../rules/common.js';
+import type { Command, ContentPack, Hero, Pool } from '../rules/model.js';
+import type { GameView } from '../rules/view.js';
+import { availableCards } from '../rules/effects.js';
 export type Difficulty = 'cautious' | 'balanced' | 'aggressive';
 export interface Decision { command: Command; score: number; reason: string; alternatives: number; }
 /** Pure policy module: receives public information + legal moves, never the hidden server State. */
