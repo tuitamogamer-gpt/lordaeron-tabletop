@@ -3,7 +3,7 @@ import { botOwns } from '../multiplayer/ownership';
 import type { BattleStage, Command, ContentPack } from '../rules/model';
 import type { GameView } from '../rules/view';
 
-export const DICE_SETTLE_MS = 1250;
+export const DICE_SETTLE_MS = 1350;
 export const COMBAT_STEP_MS = 750;
 
 export const combatSteps = ['Prepare', 'Roll & abilities', 'Ranged & defense', 'Melee & attrition', 'Outcome'];

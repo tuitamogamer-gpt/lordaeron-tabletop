@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { BASE_PACK as p } from '../data/base';
 import { capacity, card, character, faction } from '../rules/common';
-import { bagSize, equipped, fitsSlot, heroSlots, manage, petCapacity, townOperations } from '../rules/inventory';
+import { bagSize, townOperations } from '../rules/inventory';
 import type { Command, Hero, TownOperation } from '../rules/model';
 import { GameCard, pretty } from './parts';
 import { CardArt } from './Art';
-import { CardRules, slotLabel } from './CharacterSheet';
+
 type Submit = (c: Command) => void;
 
 export function TownEditor({hero,merchant,send,busy}:{hero:Hero;merchant:string[];send:Submit;busy:boolean}) {
@@ -28,18 +28,7 @@ export function TownEditor({hero,merchant,send,busy}:{hero:Hero;merchant:string[
  </div>;
 }
 
-export function EquipmentEditor({hero,send,busy}:{hero:Hero;send:Submit;busy:boolean}) {
- const [slots,setSlots]=useState(structuredClone(hero.slots)),[discard,setDiscard]=useState<string[]>([]),[reEquip,setReEquip]=useState<string[]>([]),def={...character(p,hero.id),slots:heroSlots(p,hero)};
- const owned=[...new Set([...hero.bag,...hero.learned,...hero.slots.flatMap(s=>[s.card,...s.addons].filter((id):id is string=>!!id))])];
- const next=slots.flatMap(s=>[s.card,...s.addons].filter((id):id is string=>!!id));
- const bag=owned.filter(id=>card(p,id).kind==='item'&&!next.includes(id)),excess=Math.max(0,bagSize(p,bag)-3);
- let error='';const preview=structuredClone(hero);try{manage(p,{merchant:[]},preview,slots,discard,reEquip);}catch(e){error=(e as Error).message;}
- return <div className="dialog-content"><p>Manage equipment and attachments. Instant powers are free to equip and cost energy when used. Active powers pay when equipped and give a constant benefit. Add-ons must match the slot’s type and item traits; only one of each add-on function is allowed. Excess bag items go to the merchant.</p><div className="equipment-editor">{slots.map((slot,i)=>{const area=def.slots[i],compatible=owned.filter(id=>fitsSlot(p,hero,card(p,id),area));return <section key={i}><label><span>Slot {i+1} · {slotLabel(area)} · {area.traits.join(' / ')}</span><select value={slot.card??''} onChange={e=>{const id=e.target.value||undefined;setSlots(v=>v.map((s,j)=>i===j?{...s,card:id}:s.card===id?{...s,card:undefined}:s));setDiscard([]);setReEquip([]);}}><option value="">{def.slots[i].printed?pretty(card(p,def.slots[i].printed!).name):"Empty slot"}</option>{compatible.filter(id=>!card(p,id).addon).map(id=><option key={id} value={id}>{pretty(card(p,id).name)} · level {card(p,id).level}{card(p,id).type==='active'?` · ${card(p,id).energy} energy to equip`:card(p,id).type==='instant'?' · free to equip':''}</option>)}</select></label>{(slot.card??area.printed)&&<div className="management-preview"><CardArt card={card(p,(slot.card??area.printed)!)}/><CardRules value={card(p,(slot.card??area.printed)!)}/></div>}{compatible.filter(id=>card(p,id).addon).map(id=><label className="addon-choice" key={id}><input type="checkbox" checked={slot.addons.includes(id)} onChange={e=>{setSlots(v=>v.map((s,j)=>i===j?{...s,addons:e.target.checked?[...s.addons,id]:s.addons.filter(a=>a!==id)}:s));setDiscard([]);}}/>{pretty(card(p,id).name)}</label>)}</section>;})}</div>
-  <div className="equipment-refresh">{equipped(p,hero).filter(id=>card(p,id).kind==='power'&&card(p,id).petHealth&&next.includes(id)).map(id=><label className="addon-choice" key={id}><input type="checkbox" checked={reEquip.includes(id)} onChange={e=>setReEquip(v=>e.target.checked?[...v,id]:v.filter(x=>x!==id))}/><span>Re-equip {card(p,id).name} · restore pet health ({hero.pets[id]??0} / {petCapacity(p,hero,id)}) · pay equip cost again</span></label>)}</div>
-  <p>Bag after selection: {bagSize(p,bag)} / 3. {excess>0?`Choose ${excess} to discard.`:"No excess items."}</p>{excess>0&&<div className="discard-options">{bag.filter(id=>!card(p,id).bagExempt).map(id=><label key={id}><input type="checkbox" checked={discard.includes(id)} onChange={e=>setDiscard(v=>e.target.checked?[...v,id]:v.filter(a=>a!==id))}/>{pretty(card(p,id).name)}</label>)}</div>}
-  {error?<p role="status" className="combat-warning">{error}</p>:<p>Energy: {hero.energy} → {preview.energy} · {hero.energy-preview.energy} spent equipping.</p>}<button className="gold-button full-width" disabled={!!error||busy} onClick={()=>send({type:'manage',hero:hero.id,slots,discard,reEquip})}>Confirm equipment</button>
- </div>;
-}
+export { default as EquipmentEditor } from './EquipmentEditor';
 
 export function TradeEditor({hero,heroes,send,busy}:{hero:Hero;heroes:Hero[];send:Submit;busy:boolean}) {
  const others=heroes.filter(h=>h.id!==hero.id&&h.location===hero.location&&faction(p,h.id)===faction(p,hero.id));

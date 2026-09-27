@@ -1,5 +1,5 @@
 import { faction, region } from './common.js';
-import type { ContentPack, EventScript, State } from './model.js';
+import type { Battle, ContentPack, EventScript, State } from './model.js';
 export const worldEvent=(s:State,id:string)=>s.world?.find(e=>e.id===id);
 export const activeEvent=(p:ContentPack,s:Pick<State,'world'>,script:EventScript)=>s.world?.find(e=>p.events.find(c=>c.id===e.id)?.script===script);
 export const eventBoss=(p:ContentPack,s:Pick<State,'battle'>)=>p.events.find(e=>e.id===s.battle?.boss)?.boss;
@@ -12,7 +12,7 @@ export function nefarianDestinations(p:ContentPack,s:State,steps:number){
  let choices=[s.overlord.region];for(let i=0;i<steps;i++)choices=[...new Set(choices.flatMap(id=>region(p,id).neighbors))];
  const closest=Math.min(...choices.map(id=>toGoal[id]??Infinity));return choices.filter(id=>toGoal[id]===closest);
 }
-export function worldAttack(p:ContentPack,s:Pick<State,'world'|'battle'>,at:string){
+export function worldAttack(p:ContentPack,s:Pick<State,'world'>&{battle?:Pick<Battle,'boss'|'first'>},at:string){
  let attack=activeEvent(p,s,'plague')&&plagued(p,at)?2:0;
  if(s.battle?.boss==='kelthuzad'){
   const cauldrons=s.world?.find(e=>p.events.find(c=>c.id===e.id)?.boss?.combat==='cauldrons');
