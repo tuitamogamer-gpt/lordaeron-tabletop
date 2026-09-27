@@ -7,7 +7,7 @@ import type { Command, Equipped, Hero } from '../rules/model';
 import { CardArt } from './Art';
 import { CardRules, slotLabel } from './CharacterSheet';
 import { energyLabel } from './ClassDeck';
-import { HeroPortrait } from './parts';
+import { GameCard, HeroPortrait } from './parts';
 
 export default function EquipmentEditor({ hero, send, busy }: { hero: Hero; send: (c: Command) => void; busy: boolean }) {
  const [slots, setSlots] = useState(() => structuredClone(hero.slots));
@@ -71,7 +71,7 @@ export default function EquipmentEditor({ hero, send, busy }: { hero: Hero; send
     </div>
     {!compatible.filter(id => !card(p, id).addon).length && <p className="loadout-empty-note">No other compatible cards. Learn powers with Train, or collect items from quests and the merchant.</p>}
     {compatible.some(id => card(p, id).addon) && <div className="loadout-attachments"><h4>Attachments</h4>{compatible.filter(id => card(p, id).addon).map(id => <label key={id}><input type="checkbox" disabled={busy} checked={slots[selected].addons.includes(id)} onChange={() => attachment(id)} /><CardArt card={card(p, id)} /><span>{card(p, id).name}<small>{card(p, id).functionTrait} · one per function</small></span></label>)}</div>}
-    {selectedId && <details className="loadout-card-rules" open><summary>Selected card · rules</summary><CardRules key={selectedId} value={card(p, selectedId)} /></details>}
+    {selectedId && <section className="loadout-card-preview" aria-label="Selected card preview"><GameCard key={selectedId} card={card(p, selectedId)} footer={card(p, selectedId).printed ? 'Starting equipment · free' : energyLabel(card(p, selectedId))} /><details className="loadout-card-rules"><summary>All rules & strength options</summary><CardRules value={card(p, selectedId)} /></details></section>}
    </aside>
   </div>
   <div className="loadout-announcement" role="status"><Icon name={dirty ? 'spark' : 'shield'} size={15} />{announcement}</div>

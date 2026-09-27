@@ -4,7 +4,7 @@ const names=new Map(BASE_PACK.cards.map(c=>[c.id,c.name]));
 const readable=(text:string)=>text.replace(/\b[a-z]+(?:-[a-z0-9]+)+\b/g,id=>names.get(id)??id);
 export const colorName={red:"red",blue:"blue",green:"green"};
 export const boxName={damage:"ranged hits",defense:"melee hits",attrition:"attrition",armor:"armor"};
-export function filterText(f:DiceFilter){return `${f.colors?.map(c=>colorName[c]).join('/')??"any color"}${f.values?` · ${f.values.join('/')}`:f.min?` · ${f.min}+`:''}`;}
+export function filterText(f:DiceFilter){return `${f.colors?.map(c=>colorName[c]).join('/')??"any color"} dice${f.values?` · ${f.values.join('/')}`:f.min?` · ${f.min}+`:''}`;}
 export const conditionText=(c:Condition):string=>readable(rawConditionText(c));
 function rawConditionText(c:Condition):string{
  switch(c.kind){
@@ -30,7 +30,7 @@ function rawEffectText(e:Effect):string{
   case 'resource':return `${e.amount<0?"Spend":e.gain?"Gain":"Recover"} ${Math.abs(e.amount)} ${e.resource==='health'?"health":e.resource==='energy'?"energy":"gold"}${e.target==='friendly'?" for an ally":''}${e.gain?" (may exceed capacity)":''}`;
   case 'spot':return `Spot ${e.count} (${filterText(e.filter)}) → ${e.effects.map(effectText).join('; ')}`;
   case 'remove':return `Remove ${e.count} (${filterText(e.filter)}) → ${e.effects.map(effectText).join('; ')}`;
-  case 'change':return `Change ${e.count} (${filterText(e.filter)}) → ${e.delta?`value +${e.delta}, up to 8`:e.value??"same value"}${e.colorChoice?', any available color':e.color?`, ${colorName[e.color]}`:''}`;
+  case 'change':return `Change ${e.count} (${filterText(e.filter)}) → ${e.delta?`value +${e.delta}, up to 8`:e.value??"same value"}${e.colorChoice?', any available color':e.color?`, ${colorName[e.color]} dice`:''}`;
   case 'discard-self':return "Discard this card";case 'condition':return `${e.amount>=0?'+':''}${e.amount} ${e.condition}`;
   case 'heal-pet':return `Pet: recover ${e.amount} health`;
   case 'if':return `If ${conditionText(e.condition)}: ${e.then.map(effectText).join('; ')}${e.otherwise?`; otherwise ${e.otherwise.map(effectText).join('; ')}`:''}`;
@@ -96,7 +96,7 @@ export function staticCardText(c:Card):string[]{
  if(c.travelLimit)result.push(`At most ${c.travelLimit} Travel actions per faction turn.`);
  if(c.immune)result.push(`Immune to special ability: ${c.immune.join(', ')}.`);
  if(c.equipOverride)result.push(`The ${c.equipOverride.slot} slot accepts ${c.equipOverride.traits.join('/')} up to level ${c.equipOverride.maxLevel}.`);
- if(c.poolPenalty)result.push(`Before rolling, remove if possible: ${Object.entries(c.poolPenalty).map(([c,n])=>`${n} ${c}`).join(', ')}.`);
+ if(c.poolPenalty)result.push(`Before rolling, remove if possible: ${Object.entries(c.poolPenalty).map(([c,n])=>`${n} ${c} dice`).join(', ')}.`);
  if(c.intercept)result.push("Challenge in an adjacent region: move there immediately. You may leave blue creatures; allies at your destination may join.");
  if(c.actionPower==='teleport')result.push("One action: spend X energy to move through X adjacent regions, without stopping when entering regions with blue creatures.");
  if(c.actionPower==='portal')result.push("Immediately before your action: you and chosen allies in your region return to your faction’s starting region.");

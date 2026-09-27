@@ -20,4 +20,5 @@ import './campaign/combat.css';
 import './campaign/full-cards.css';
 import './campaign/upgrade.css';
 import './campaign/ui-polish.css';
+import './campaign/rules-text.css';
 createRoot(document.getElementById('root')!).render(<React.StrictMode><App /></React.StrictMode>);

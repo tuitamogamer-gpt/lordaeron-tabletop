@@ -75,6 +75,22 @@
 .loadout-error{grid-column:1/-1;display:flex;gap:8px;align-items:center;font:12px/1.6 var(--sans);color:#ffbaa0;background:#79453533;padding:10px 12px;border-radius:4px;order:2}
 .loadout-confirm{display:flex;align-items:center;justify-content:flex-end;gap:10px}.loadout-confirm button{font:600 11px var(--sans);min-height:42px;white-space:nowrap}
 
+/* The equipped scene matches the new face in the spellbook and card detail. */
+.loadout-slot-card>.card-illustration{width:100%;height:100px;border-radius:5px}
+.loadout-choice>.card-illustration{width:52px;height:48px}
+.loadout-card-preview{margin-top:18px}
+.loadout-card-preview>.full-image-card{width:min(100%,285px);height:430px;min-height:430px;margin:0 auto}
+.loadout-card-preview .folio-rules{font-size:13px}
+.loadout-card-preview .loadout-card-rules{margin-top:13px}
+.full-character-sheet .character-slot .equipped-heading{grid-template-columns:minmax(0,1fr) 14px;padding:0 0 14px;gap:12px;align-items:center}
+.full-character-sheet .character-slot .equipped-heading>.card-illustration{grid-column:1/-1;width:100%;height:180px;border:0;border-bottom:1px solid #a78b5380;border-radius:0;box-shadow:none;background:radial-gradient(ellipse,#3a3d2b,#111b16)}
+.full-character-sheet .character-slot .equipped-heading>span{padding-left:14px}
+.full-character-sheet .character-slot .equipped-heading>.icon{margin-right:12px}
+.card-detail>.full-image-card{align-self:flex-start}
+.card-detail>div{min-width:0}
+.card-detail .inscribed-rules{border:1px solid #9d804b;border-radius:5px}
+.card-detail .inscribed-rules p{font-size:15px}
+
 /* Battle cues stay brief enough to finish before the next automatic step. */
 .combat-threat-bar{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:12px 14px;margin:0 0 14px;border:1px solid #8b8d624f;border-radius:6px;background:#152328}
 .combat-threat-bar>span:last-child:not(.threat-level){font:500 10px/1.5 var(--sans);color:#c0c9bb;text-align:right}.combat-threat-bar>span:last-child>small{display:block;font:9px/1.6 var(--sans);color:#8ca39e;margin-top:3px}

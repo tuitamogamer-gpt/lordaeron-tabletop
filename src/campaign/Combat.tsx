@@ -10,6 +10,7 @@ import type { GameView } from '../rules/view';
 import { FactionCrest } from './Art';
 import CombatAbilities, { type AbilityCommand } from './CombatAbilities';
 import D8 from './D8';
+import RulesText from './RulesText';
 import CombatScene from './CombatScene';
 import { AnimatedValue, ThreatLevel } from './feedback';
 import { combatStep, combatSteps } from './combat-flow';
@@ -150,7 +151,7 @@ export default function CampaignCombat({ state, legal, send, busy, botStep, botR
      const h = state.heroes.find(h => h.id === id)!, max = capacity(p, h);
      return <div key={id} className={`${a?.heroId === id ? 'active' : ''} ${b.defeated.includes(id) ? 'defeated' : ''}`}><HeroPortrait id={id} small /><span><strong>{character(p, id).name.split(' ')[0]}</strong><small>{factionLabel(faction(p, id))} · {bots.includes(id) ? 'BOT' : 'PLAYER'}{b.defeated.includes(id) ? ' · defeated' : b.acted.includes(id) ? ' · rolled' : ''}</small><span className="combat-hero-vitals"><i><Icon name="heart" size={11} /><AnimatedValue value={h.health} />/{max.health}</i><i><Icon name="bolt" size={11} /><AnimatedValue value={h.energy} /></i>{h.curse > 0 && <i>Curse {h.curse}</i>}{h.stun > 0 && <i>Stun {h.stun}</i>}</span></span>{a?.heroId === id && <i className="combat-turn-dot" />}</div>;
     })}</div>
-    {rule && <details className="combat-enemy-rule"><summary>Encounter rule <Icon name="help" size={14} /></summary><p>{rule}</p></details>}
+    {rule && <details className="combat-enemy-rule"><summary>Encounter rule <Icon name="help" size={14} /></summary><p><RulesText>{rule}</RulesText></p></details>}
     {!!history.length && <details className="combat-roll-history"><summary>Roll history · {history.length}</summary>{[...history].reverse().map(r => <div key={`${r.round}:${r.attack.heroId}`}><strong>R{r.round} · {character(p, r.attack.heroId).name.split(' ')[0]}</strong><span>{r.attack.dice.map(d => <i key={d.id} className={`${d.color} ${d.removed ? 'removed' : ''}`}>{d.value || '—'}</i>)}</span></div>)}</details>}
    </aside>
   </div>

@@ -16,3 +16,11 @@ Validation:
 - Chrome desktop inspection: training two powers, management entry, equipping active/instant powers, energy preview, confirmation, travel and challenge preview, AI combat, manual ability activation and D8 roll. Checked the compact desktop window at 1536 × 695.
 
 Existing build notices remain: Vite's bundle-size advisory and dependency PURE-comment warnings. This pass adds no dependencies and does not change save format or combat rules.
+
+## Consistent card art and graphical dice
+
+Equipment slots, card choices, character sheets, talents, attachments and combat powers now reuse the illustration from the new full card face. Printed starting equipment and racial abilities follow the same path. The management picker includes a full selected-card preview with expandable complete rules; larger character-sheet scenes contain the artwork so their subjects remain visible.
+
+Card rules display colored D8 symbols for explicit dice references, including Spot filters, conditions, talent enhancements and equipment penalties. Quantities and thresholds stay as live text. Each symbol group has an accessible color label and hover description. Creature colors remain ordinary text, and native ability menus retain plain-text options with a graphical explanation of the selected choice alongside them. Detailed card dialogs share the character sheet's complete rules renderer.
+
+Validation for this update: 315 passing tests across 20 files, 621 render checks and the production build. The presentation regressions cover every playable card's art source, replacing/restoring starting equipment, nested dice conditions, talent effects and unchanged creature descriptions. Chrome checks cover training Fireball and Arcane Intellect, the new loadout art, selected-card rules and starting equipment.
