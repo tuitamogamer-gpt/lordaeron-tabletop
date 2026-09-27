@@ -6,7 +6,13 @@ export const other = (f: Faction): Faction => f === 'horde' ? 'alliance' : 'hord
 export const hero = (s: State, id: string) => { const h = s.heroes.find(h => h.id === id); assert(h, "Unknown hero."); return h; };
 export const character = (p: ContentPack, id: string) => { const h = p.characters.find(h => h.id === id); assert(h, "Unknown character."); return h; };
 export const faction = (p: ContentPack, id: string) => character(p, id).faction;
-export const card = (p: ContentPack, id: string) => { const c = p.cards.find(c => c.id === id); assert(c, `Unknown card: ${id}`); return c; };
+// Content arrays are immutable during a game. Rule previews query the same
+// catalogue thousands of times; retain references, without caching game state.
+const cardIndexes=new WeakMap<ContentPack['cards'],Map<string,ContentPack['cards'][number]>>();
+export const card = (p: ContentPack, id: string) => {
+ let index=cardIndexes.get(p.cards);if(!index||index.size!==p.cards.length){index=new Map(p.cards.map(c=>[c.id,c]));cardIndexes.set(p.cards,index);}
+ const c=index.get(id);assert(c, `Unknown card: ${id}`);return c;
+};
 export const region = (p: ContentPack, id: string) => { const r = p.regions.find(r => r.id === id); assert(r, "Unknown region."); return r; };
 export const capacity = (p: ContentPack, h: Hero) => {
  const def=character(p,h.id),base={...def.capacities[h.level-1]};

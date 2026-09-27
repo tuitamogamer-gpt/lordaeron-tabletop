@@ -19,7 +19,7 @@ Aktivni paket `base-2005-faq-1.4-v6` ima sve komponente osnovnog seta. `official
 | Overlordi | Oba profila svakog bossa; pet Kazzakovih tragova, Nefarian Fate i Bulwark, Kel’Thuzadove sposobnosti i događaji | Tumačenje izbora Spot kockica za Kel’Thuzadov Attrition u složenim kombinacijama |
 | Završnica | Pobjeda nad Overlordom, završni PvP, prisilni Nefarian obračun, remi | Dodatna igranja do pobjede nad svakim bossom |
 | Varijante | Deadly PvP i Defeat the Overlord sa str. 37; izbor u setupu, obostrane rane i drugi krug trake | Duge kampanje koje prelaze više krugova trake |
-| AI | Zaseban planer, legalni kandidati, tri stila, procjena borbe, potpuna kombinacija opreme, zajednički trening i kretanje prema cilju | Dublji planovi ekipe, razmjena, dugoročni razvoj likova |
+| AI | [Procjena prema stanju](AI-ENGINE.md), grupni ciljevi i putanje, potpune kombinacije opreme, trening, korisna razmjena, pregled efekata i rerolla, Web Worker | Šire mjerenje kvaliteta strategije; iscrpno planiranje kasnijih rundi i protivničkih odgovora |
 | Autosave | Poseban ključ v6, hash sadržaja, strogi import i deterministički replay; stari zapis ostaje sačuvan | Import različitih verzija namjerno nije podržan |
 | Online | Server i regresijski testovi sačuvani, UI isključen | Na čekanju po korisnikovoj odluci |
 

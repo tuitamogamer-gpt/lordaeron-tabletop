@@ -24,19 +24,23 @@ export function bookkeepingCommand(state: GameView, legal: Command[]): Command |
  if (['attacker', 'advance', 'tokens', 'monster', 'wound', 'armor', 'penalty'].includes(command.type)) return command;
 }
 
-export function combatAutomation(p: ContentPack, state: GameView, legal: Command[], bots: string[], options: {
+export function combatCandidates(p: ContentPack, state: GameView, legal: Command[], bots: string[], options: {
  resolve: boolean; play: boolean; campaignAuto: boolean; difficulty: Difficulty;
-}): Command | undefined {
- if (state.phase !== 'combat' || !state.battle) return;
+}): Command[] {
+ if (state.phase !== 'combat' || !state.battle) return [];
  // Hold the result until acknowledged. Campaign-wide AI may continue an all-bot battle.
  if (state.battle.stage === 'over') {
-  return options.campaignAuto ? decide(p, state, legal.filter(c => botOwns(p, state, c, bots)), options.difficulty)?.command : undefined;
+  return options.campaignAuto ? legal.filter(c => botOwns(p, state, c, bots)) : [];
  }
- if (options.play) return decide(p, state, legal, options.difficulty)?.command;
- if (!options.resolve) return;
+ if (options.play) return legal;
+ if (!options.resolve) return [];
  const human = legal.filter(c => !botOwns(p, state, c, bots));
- if (human.length) return bookkeepingCommand(state, human);
- return decide(p, state, legal, options.difficulty)?.command;
+ if (human.length) {const command=bookkeepingCommand(state,human);return command?[command]:[];}
+ return legal;
+}
+export function combatAutomation(p:ContentPack,state:GameView,legal:Command[],bots:string[],options:{resolve:boolean;play:boolean;campaignAuto:boolean;difficulty:Difficulty}):Command|undefined{
+ const candidates=combatCandidates(p,state,legal,bots,options);
+ return candidates.length===1?candidates[0]:decide(p,state,candidates,options.difficulty)?.command;
 }
 
 /** A reroll that lands on the same value still has a new signature. Removal/Spot does not roll again. */

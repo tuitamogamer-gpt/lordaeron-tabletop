@@ -77,9 +77,11 @@ export function legalActions(p: ContentPack, s: State): Command[] {
    }
    if(equipped(p,h).some(id=>card(p,id).actionPower==='summon'))for(const t of s.heroes.filter(t=>t.id!==h.id&&faction(p,t.id)===s.faction))list.push({type:'summon',hero:h.id,target:t.id});
    list.push({ type: 'travel', hero: h.id, path: [] });
-   for(const food of h.bag.filter(id=>card(p,id).trait==='Food'))list.push({type:'rest',hero:h.id,health:0,food});
    const town = p.regions.find(r => r.id === h.location)?.town;
-   for (let health = 0; health <= Math.min(h.level * (town === s.faction || town === 'both' ? 3 : 2), Math.max(0, capacity(p, h).health - h.health)); health++) list.push({ type: 'rest', hero: h.id, health });
+   for (let health = 0; health <= Math.min(h.level * (town === s.faction || town === 'both' ? 3 : 2), Math.max(0, capacity(p, h).health - h.health)); health++) {
+    list.push({ type: 'rest', hero: h.id, health });
+    for(const food of h.bag.filter(id=>card(p,id).trait==='Food'))list.push({type:'rest',hero:h.id,health,food});
+   }
    const training=classDeck(p,h).powers.filter(c=>c.level<=h.level&&c.price<=h.gold);
    const bundles=Array.from({length:Math.min(3,training.length)},(_,i)=>combinations(training,i+1,40)).flat().filter(cs=>cs.reduce((n,c)=>n+c.price,0)<=h.gold);
    for(const bundle of bundles)list.push({type:'train',hero:h.id,cards:bundle.map(c=>c.id)});
@@ -98,6 +100,9 @@ export function legalActions(p: ContentPack, s: State): Command[] {
     const allies=s.heroes.filter(a=>a.id!==h.id&&a.location===region&&faction(p,a.id)===s.faction&&a.actions>0).map(a=>a.id);
     for(const target of [...s.enemies.filter(e=>e.region===region).map(e=>e.id),'pvp',s.overlord.id,...(s.world??[]).filter(e=>p.events.find(c=>c.id===e.id)?.boss).map(e=>e.id)])for(let n=0;n<=allies.length;n++)for(const group of combinations(allies,n))list.push({type:'challenge',hero:h.id,target,allies:group,region});
    }
+  }
+  if(s.tradeWindow)for(const h of s.heroes.filter(h=>faction(p,h.id)===s.faction))for(const to of s.heroes.filter(a=>a.id!==h.id&&faction(p,a.id)===s.faction&&a.location===h.location)){
+   for(const id of h.bag.filter(id=>!card(p,id).soulbound))list.push({type:'trade',hero:h.id,to:to.id,items:[id],receiveItems:[],gold:0,receiveGold:0});
   }
   list.push({ type: 'endActions' });
  } else if (s.phase === 'management' || s.phase === 'final-management') {

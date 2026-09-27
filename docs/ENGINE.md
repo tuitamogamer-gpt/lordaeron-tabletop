@@ -68,7 +68,9 @@ Oba profila tri Overlorda koriste originalne statistike. Kazzak skriva pravi ide
 
 `Setup.variants` uključuje opcione varijante iz pravilnika. `State.lap` prati ponavljanje turn tracka u Defeat the Overlord režimu. Town komanda koristi opcioni `recoverAfter` indeks za oporavak između transakcija (`-1` preskače oporavak); izostavljen indeks zadržava raniji redoslijed. Management komanda može navesti `reEquip` za izričito ponovno opremanje već aktivne moći.
 
-Ne koristi LLM, vanjski API ni skriveni seed. U mreži server odlučuje za botove, klijent samo traži sljedeći potez. Heuristika nema duboko pretraživanje niti garanciju optimalne igre. Mrežni stil je uravnotežen; lokalno postoje oprezan, uravnotežen i agresivan stil.
+Novi planer ciljeva i borbe opisan je u [AI-ENGINE.md](AI-ENGINE.md), zajedno s izvorima i granicama procjena. Koristi planove putovanja i sastava ekipe, procjene borbe kroz više rundi, stvarne efekte sposobnosti i ograničeno pretraživanje dvije povezane sposobnosti. Class deck je katalog za trening; samo opremljene i pravilima dostupne sposobnosti ulaze u borbene odluke.
+
+Ne koristi LLM, vanjski API ni skriveni seed. U browseru planiranje radi u Web Workeru, a server koristi istu politiku. Bounded search nema garanciju matematički optimalne igre. Mrežni stil je uravnotežen; lokalno postoje oprezan, uravnotežen i agresivan stil.
 
 ## Replay
 

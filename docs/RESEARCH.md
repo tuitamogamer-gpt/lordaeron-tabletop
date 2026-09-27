@@ -1,5 +1,9 @@
 # Izvori i mogućnosti
 
+## AI engine · 27. 9. 2026.
+
+Novi taktički izvori, status pristupa i njihov odnos prema implementaciji dokumentirani su u [AI-ENGINE.md](AI-ENGINE.md#research-and-interpretation). Posebno je potvrđeno da su class karte opcije za kupovinu/trening, uz obavezno opremanje prije korištenja; botovi ih ne tretiraju kao igrivi špil.
+
 ## Dopuna 27. 9. 2026. · pravila i način igre
 
 Pravilnik i FAQ ponovo su korišteni za provjeru setupa, slotova, Class decka, vremena plaćanja energije i obje službene varijante. Rezultati su u [RULES-AUDIT-V6.md](RULES-AUDIT-V6.md).

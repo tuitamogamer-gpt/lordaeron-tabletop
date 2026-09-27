@@ -6,7 +6,8 @@ import { legalActions } from './rules/legal';
 import { importSession, newSession } from './rules/session';
 import { view } from './rules/view';
 import type { Command, Setup } from './rules/model';
-import { decide, type Difficulty } from './ai/planner';
+import { type Difficulty } from './ai/planner';
+import { PlannerClient } from './ai/client';
 import { botOwns, decisionOwners } from './multiplayer/ownership';
 import { Icon, Modal } from './components';
 import { TownEditor, EquipmentEditor, TradeEditor } from './campaign/Interactions';
@@ -21,7 +22,7 @@ import ClassDeck from './campaign/ClassDeck';
 import WorldDecision from './campaign/WorldDecision';
 import CampaignSetup from './campaign/CampaignSetup';
 import CharacterSheet, { startingHero } from './campaign/CharacterSheet';
-import { combatAutomation, COMBAT_STEP_MS, DICE_SETTLE_MS, rollSignature } from './campaign/combat-flow';
+import { combatCandidates, COMBAT_STEP_MS, DICE_SETTLE_MS, rollSignature } from './campaign/combat-flow';
 const CampaignCombat=lazy(()=>import('./campaign/Combat'));
 const DesignGallery=lazy(()=>import('./campaign/DesignGallery'));
 const SAVE='lordaeron-base-save-v6',LEGACY_SAVE='lordaeron-base-save-v4',BOTS='lordaeron-base-bots-v3';
@@ -37,6 +38,8 @@ export default function Campaign(){
  const[restHP,setRestHP]=useState(0),[food,setFood]=useState(''),[training,setTraining]=useState<string[]>([]),[exportJSON,setExportJSON]=useState(''),[codexHero,setCodexHero]=useState(DEFAULT_SETUP.roster[0]),[mapFocus,setMapFocus]=useState(false);
  const[combatOpen,setCombatOpen]=useState(false),[combatResolve,setCombatResolve]=useState(true),[combatPlay,setCombatPlay]=useState(false),[settledRoll,setSettledRoll]=useState('');
  const file=useRef<HTMLInputElement>(null),current=useRef(game);current.current=game;
+ const planner=useRef<PlannerClient|null>(null);
+ useEffect(()=>()=>{planner.current?.dispose();planner.current=null;},[bots,difficulty]);
  const controlled=game.state.heroes.filter(h=>!bots.includes(h.id)).map(h=>h.id);
  const state=view(game.state,controlled),allLegal=useMemo(()=>legalActions(p,game.state),[game.state]);
  const legal=allLegal.filter(c=>decisionOwners(p,state,c).some(id=>controlled.includes(id)));
@@ -49,13 +52,22 @@ export default function Campaign(){
  useEffect(()=>{const next=state.heroes.find(h=>faction(p,h.id)===state.faction&&controlled.includes(h.id))??state.heroes.find(h=>faction(p,h.id)===state.faction);if(next){setHeroId(next.id);setSelected(next.location);}},[state.faction]);
  useEffect(()=>{window.scrollTo(0,0);},[page]);
  const send=(c:Command)=>{try{const before=current.current;const next={state:apply(p,before.state,c),session:{...before.session,commands:[...before.session.commands,c]}};current.current=next;setGame(next);return true;}catch(e){setToast((e as Error).message);return false;}};
- const botStep=()=>{const candidates=allLegal.filter(c=>botOwns(p,game.state,c,bots));const decision=decide(p,view(game.state,bots),candidates,difficulty);if(decision){setBotReason(decision.reason);send(decision.command);}else setToast("A human player acts next.");};
- useEffect(()=>{if(!auto||!botReady||state.phase==='combat')return;const t=setTimeout(botStep,550);return()=>clearTimeout(t);},[auto,botReady,game.state,bots,difficulty]);
+ const planMove=async(candidates:Command[],valid=()=>true)=>{
+  const source=current.current.state;
+  if(!candidates.length){setToast("A human player acts next.");return;}
+  try{
+   planner.current??=new PlannerClient();
+   const decision=await planner.current.plan(view(source,bots),candidates,difficulty);
+   if(decision&&valid()&&current.current.state===source){setBotReason(decision.reason);send(decision.command);}
+  }catch(e){if(valid()&&current.current.state===source)setToast((e as Error).message);}
+ };
+ const botStep=()=>{void planMove(allLegal.filter(c=>botOwns(p,game.state,c,bots)));};
+ useEffect(()=>{if(!auto||!botReady||state.phase==='combat')return;let cancelled=false;const t=setTimeout(()=>{void planMove(allLegal.filter(c=>botOwns(p,game.state,c,bots)),()=>!cancelled);},550);return()=>{cancelled=true;clearTimeout(t);};},[auto,botReady,game.state,bots,difficulty]);
  const rollingKey=rollSignature(state),diceRolling=!!rollingKey&&rollingKey!==settledRoll;
  useEffect(()=>{if(!rollingKey){setSettledRoll('');return;}const t=setTimeout(()=>setSettledRoll(rollingKey),DICE_SETTLE_MS);return()=>clearTimeout(t);},[rollingKey]);
  useEffect(()=>{setCombatOpen(state.phase==='combat');if(state.phase!=='combat')setCombatPlay(false);},[state.phase]);
- const automaticCombat=useMemo(()=>combatAutomation(p,state,allLegal,bots,{resolve:combatResolve,play:combatPlay,campaignAuto:auto,difficulty}),[game.state,allLegal,bots,combatResolve,combatPlay,auto,difficulty]);
- useEffect(()=>{if(!automaticCombat||diceRolling)return;const source=game.state;const t=setTimeout(()=>{if(current.current.state===source)send(automaticCombat);},COMBAT_STEP_MS);return()=>clearTimeout(t);},[automaticCombat,diceRolling,game.state]);
+ const automaticCombat=useMemo(()=>combatCandidates(p,state,allLegal,bots,{resolve:combatResolve,play:combatPlay,campaignAuto:auto,difficulty}),[game.state,allLegal,bots,combatResolve,combatPlay,auto,difficulty]);
+ useEffect(()=>{if(!automaticCombat.length||diceRolling)return;let cancelled=false;const source=game.state;const t=setTimeout(()=>{if(current.current.state!==source)return;if(automaticCombat.length===1)send(automaticCombat[0]);else void planMove(automaticCombat,()=>!cancelled);},COMBAT_STEP_MS);return()=>{cancelled=true;clearTimeout(t);};},[automaticCombat,diceRolling,game.state]);
  const chooseHero=(id:string)=>{setHeroId(id);setSelected(state.heroes.find(h=>h.id===id)!.location);};
  const open=(next:Panel)=>{if(next==='rest'){setFood('');setRestHP(Math.max(0,Math.min(cap.health-h.health,h.level*(['both',state.faction].includes(p.regions.find(r=>r.id===h.location)?.town??'')?3:2))));}if(next==='train')setTraining([]);setPanel(next);};
  const inspect=(id:string)=>{setDetailCard(id);setPanel('card');};
@@ -78,7 +90,7 @@ export default function Campaign(){
  {page==='rules'&&<section className="coverage-page"><span className="eyebrow">BASE GAME 2005 + FAQ 1.4</span><h2>Rules for your table</h2><div className="rules-grid"><article><h3>Setup before your first turn</h3><p>Use New game to choose four or six unique classes and balanced factions. The wizard previews starting resources, quests, merchant stock and Overlord setup before play.</p><button className="quiet-button" onClick={()=>open('new')}>Open setup guide</button></article><article><h3>Two actions per character</h3><p>Characters in the active faction take actions in any order: Travel, Rest, Train, Town and Challenge. Actions are followed by a shared equipment management phase.</p></article><article><h3>Combat, step by step</h3><p>Choose the attacker, prepare and roll dice, resolve rerolls and abilities, place hits, assign wounds and resolve combat. Abilities appear when they can be used.</p></article><article><h3>Victory</h3><p>Defeat the chosen Overlord or win the final PvP battle after turn 30. Nefarian can trigger the endgame early by reaching the Bulwark.</p></article><article><h3>AI and local play</h3><p>Bots follow the same rules and legal actions. They cannot see deck order, future rolls or the opposing faction’s hidden Kazzak clues. Online rooms are not yet available.</p></article></div><table><thead><tr><th>Content</th><th>Count</th><th>Verified from scans</th></tr></thead><tbody>{CONTENT_COVERAGE.map(c=><tr key={c.name}><td>{c.name}</td><td>{c.expected}</td><td>{c.note}</td></tr>)}</tbody></table><p className="coverage-note">The map contains {p.regions.length} bordered regions across seven zones. Colored shared borders allow movement; black edges mark impassable terrain. Travel allows up to two steps; a friendly flight costs one. Entering a region with a blue creature ends movement. Quest tokens track remaining objectives, with faction colors. Grey quests are used during setup; replacements come from the green, yellow or red deck.</p><div className="sources-list"><a href="https://images-cdn.fantasyflightgames.com/ffg_content/WoWBG/wowrules.pdf" target="_blank" rel="noreferrer">Official rulebook <Icon name="arrow"/></a><a href="https://images-cdn.fantasyflightgames.com/ffg_content/WoWBG/WoW_FAQ__v1_4.pdf" target="_blank" rel="noreferrer">FAQ / errata <Icon name="arrow"/></a><button className="quiet-button" onClick={()=>setPage('design')}>Design system</button></div></section>}
  </main>
  {toast&&<div className="toast" role="status"><Icon name="help"/>{toast}<button className="icon-button" aria-label="Dismiss notification" onClick={()=>setToast('')}><Icon name="x" size={14}/></button></div>}
- {!game.needsSetup&&<Suspense fallback={combatOpen?<p>Preparing combat…</p>:null}><CampaignCombat state={state} legal={combatPlay||state.battle?.stage==='over'?allLegal:legal} busy={diceRolling} send={send} botStep={botStep} botReady={botReady} auto={auto} toggleBots={()=>setAuto(v=>!v)} open={combatOpen} onClose={()=>setCombatOpen(false)} bots={bots} resolve={combatResolve} toggleResolve={()=>{setCombatResolve(v=>!v);setCombatPlay(false);}} play={combatPlay} togglePlay={()=>setCombatPlay(v=>!v)} automationPending={!!automaticCombat}/></Suspense>}
+ {!game.needsSetup&&<Suspense fallback={combatOpen?<p>Preparing combat…</p>:null}><CampaignCombat state={state} legal={combatPlay||state.battle?.stage==='over'?allLegal:legal} busy={diceRolling} send={send} botStep={botStep} botReady={botReady} auto={auto} toggleBots={()=>setAuto(v=>!v)} open={combatOpen} onClose={()=>setCombatOpen(false)} bots={bots} resolve={combatResolve} toggleResolve={()=>{setCombatResolve(v=>!v);setCombatPlay(false);}} play={combatPlay} togglePlay={()=>setCombatPlay(v=>!v)} automationPending={!!automaticCombat.length}/></Suspense>}
  {state.phase==='combat'&&!combatOpen&&<button className="combat-docked" onClick={()=>setCombatOpen(true)}><Icon name="swords"/><span>Return to combat<small>Round {state.battle?.round} · {phaseLabel[state.battle?.stage??'combat']}</small></span><Icon name="arrow" size={14}/></button>}
  {decision&&<WorldDecision key={`${state.phase}-${state.eventFlow?.event}-${state.eventFlow?.steps[0]?.hero}-${state.heroes.find(h=>h.talentChoices.length)?.id}-${state.reward?.offered.join()}`} state={state} legal={legal} send={send} inspect={inspect} botStep={botStep} botReady={botReady} auto={auto} toggleBots={()=>setAuto(v=>!v)}/>}
  {state.phase==='finished'&&<div className="victory-strip"><Icon name="trophy" size={38}/><h2>{state.winner==='draw'?"The campaign ends in a draw":`${factionLabel(state.winner??'')} wins!`}</h2><p>{state.turn} turns</p><button className="gold-button" onClick={()=>open('new')}>New campaign</button></div>}
