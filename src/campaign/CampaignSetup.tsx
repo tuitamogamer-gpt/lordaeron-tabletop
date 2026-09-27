@@ -1,0 +1,46 @@
+import { useMemo, useState } from 'react';
+import { BASE_PACK as p, DEFAULT_SETUP } from '../data/base';
+import { character } from '../rules/common';
+import { createGame } from '../rules/game';
+import type { Setup } from '../rules/model';
+import { Icon } from '../components';
+import { HeroPortrait, factionLabel } from './parts';
+import { BossPortrait } from './design-system';
+import { bossRules } from './event-text';
+import { FactionCrest } from './Art';
+
+export function setupErrors(setup:Setup,count:number):string[]{
+ const defs=setup.roster.map(id=>p.characters.find(c=>c.id===id));
+ const errors:string[]=[];
+ if(setup.roster.length!==count||![4,6].includes(count))errors.push(`Choose exactly ${count} characters.`);
+ if(defs.some(c=>!c))errors.push('Choose a valid character for every seat.');
+ if(new Set(defs.map(c=>c?.classId)).size!==defs.length)errors.push('Each class may appear only once across both factions.');
+ for(const side of ['horde','alliance'])if(defs.filter(c=>c?.faction===side).length!==count/2)errors.push(`${factionLabel(side)} needs ${count/2} characters.`);
+ if(!Number.isInteger(setup.seed)||setup.seed<1||setup.seed>0xffffffff)errors.push('Use a seed between 1 and 4294967295.');
+ if(!p.overlords.some(o=>o.id===setup.overlord))errors.push('Choose an Overlord.');
+ return errors;
+}
+export default function CampaignSetup({onStart,onCancel,existing=false}:{onStart:(setup:Setup,human:string,bots:boolean)=>void;onCancel:()=>void;existing?:boolean}){
+ const[step,setStep]=useState(0),[count,setCount]=useState<4|6>(6),[roster,setRoster]=useState(DEFAULT_SETUP.roster),[boss,setBoss]=useState(DEFAULT_SETUP.overlord),[seed,setSeed]=useState('2005'),[bots,setBots]=useState(true),[human,setHuman]=useState(DEFAULT_SETUP.roster[0]);
+ const setup={seed:Number(seed),roster,overlord:boss},errors=setupErrors(setup,count),humanId=roster.includes(human)?human:roster[0];
+ const preview=useMemo(()=>{if(setupErrors({seed:Number(seed),roster,overlord:boss},count).length)return;return createGame(p,{seed:Number(seed),roster,overlord:boss});},[seed,roster,boss,count]);
+ const setSize=(n:4|6)=>{setCount(n);setRoster(n===6?DEFAULT_SETUP.roster:[...DEFAULT_SETUP.roster.slice(0,2),...DEFAULT_SETUP.roster.slice(3,5)]);};
+ const rosterErrors=errors.filter(e=>!e.startsWith('Use a seed'));
+ return <div className="setup-wizard"><nav className="setup-steps" aria-label="Setup steps">{['Table','Characters','Overlord','Ready to play'].map((label,i)=><button key={label} aria-current={step===i?'step':undefined} disabled={i>step} onClick={()=>setStep(i)}><b>{i<step?<Icon name="check" size={14}/>:i+1}</b>{label}</button>)}</nav>
+  <div className="setup-page">
+   {step===0&&<><span className="sheet-eyebrow">01 / PREPARE YOUR TABLE</span><h3>A campaign begins with a party.</h3><p>Choose the number of characters. The base game always divides them evenly between Horde and Alliance, with no repeated classes.</p><div className="table-size-options">{([6,4] as const).map(n=><button key={n} aria-pressed={count===n} onClick={()=>setSize(n)}><Icon name="users" size={28}/><strong>{n} characters</strong><span>{n/2} Horde · {n/2} Alliance</span><small>{n===6?'Standard game · 5–6 players':'Smaller table · 2–4 players'}</small></button>)}</div><label className="setup-ai-option"><input type="checkbox" checked={bots} onChange={e=>setBots(e.target.checked)}/><span><strong>Play with AI companions</strong><small>You control one hero; the remaining seats use bots. Turn this off to control all heroes on this device.</small></span></label><div className="setup-rule-note"><Icon name="book"/><p>In a two-player game each player controls two characters. With three players, one player controls both characters of a faction. With five players, one player controls two characters. Local AI can fill those roles.</p></div></>}
+   {step===1&&<><span className="sheet-eyebrow">02 / CHOOSE DISTINCT CLASSES</span><h3>Gather your characters.</h3><p>Choose {count/2} per faction. Selecting a class reserves it for the whole game. Shaman belongs to Horde; Paladin belongs to Alliance. For a tabletop draft, randomly decide the picking order first.</p><div className="draft-factions">{(['horde','alliance'] as const).map(side=><section key={side}><header><FactionCrest faction={side}/><h4>{factionLabel(side)}</h4><b>{roster.filter(id=>character(p,id).faction===side).length} / {count/2}</b></header><div>{p.characters.filter(c=>c.faction===side).map(c=>{const chosen=roster.includes(c.id),classTaken=roster.some(id=>id!==c.id&&character(p,id).classId===c.classId),full=roster.filter(id=>character(p,id).faction===side).length>=count/2;return <button key={c.id} aria-pressed={chosen} disabled={!chosen&&(classTaken||full)} onClick={()=>setRoster(v=>chosen?v.filter(id=>id!==c.id):[...v,c.id])}><HeroPortrait id={c.id} small/><span><strong>{c.name}</strong><small>{c.classId} · {c.capacities[0].health} health / {c.capacities[0].energy} energy</small>{classTaken&&<em>Class already selected</em>}</span>{chosen&&<Icon name="check" size={16}/>}</button>;})}</div></section>)}</div>{bots&&<label className="setting-row">Your character<select value={humanId??''} onChange={e=>setHuman(e.target.value)}>{roster.map(id=><option value={id} key={id}>{character(p,id).name}</option>)}</select></label>}{rosterErrors.length>0&&<p className="setup-validation" role="status">{rosterErrors.join(' ')}</p>}</>}
+   {step===2&&<><span className="sheet-eyebrow">03 / CHOOSE YOUR ENEMY</span><h3>One Overlord. Two rival factions.</h3><p>Defeat the Overlord to win immediately, or face the opposing faction after turn 30. The correct {count}-character profile is applied automatically.</p><div className="boss-selection">{p.overlords.map(o=><button key={o.id} aria-pressed={boss===o.id} className={boss===o.id?'selected':''} onClick={()=>setBoss(o.id)}><BossPortrait id={o.id}/><strong>{o.name}</strong><small>{o.stats[count].threat}+ threat · {o.stats[count].attack} attack · {o.stats[count].health} health</small></button>)}</div><div className="setup-rule-note"><Icon name="crown"/><p>{bossRules[p.overlords.find(o=>o.id===boss)!.combat]}</p></div></>}
+   {step===3&&preview&&<><span className="sheet-eyebrow">04 / THE TABLE IS SET</span><h3>Everything in its place.</h3><p>The game applies these setup rules as soon as you begin. Your first turn belongs to Horde.</p><div className="setup-checklist">{[
+    ['characters','Characters ready',`${count} unique classes · ${count/2} per faction. Each begins at level 1, 0 XP and 5 gold, with their printed abilities and full starting health / energy.`],
+    ['map','Starting regions','Horde in Brill. Alliance in Southshore. Each hero receives two actions on their faction’s turn.'],
+    ['scroll','Quest decks',`${count/2+1} grey + 1 green quest per faction. Their creatures and quest tokens are placed automatically; unused grey quests are removed.`],
+    ['coins','Merchant ready','3 white triangle + 2 blue square + 1 purple circle items, face up. Other items remain in their separate shuffled decks.'],
+    ['layers','Event deck',`${preview.eventDeck.length} shuffled events${boss==='kelthuzad'?', including the five Kel’Thuzad events':'; the five Kel’Thuzad events are excluded'}. Events are drawn when the turn track instructs it.`],
+    ['crown','Overlord placed',`${p.overlords.find(o=>o.id===boss)!.name} · ${count}-character profile.${boss==='kazzak'?' Five hidden clue tokens are placed on the map.':''}`],
+   ].map(([icon,title,copy])=><article key={title}><Icon name={icon==='characters'?'users':icon}/><div><h4>{title}</h4><p>{copy}</p></div><Icon name="check" size={16}/></article>)}</div><div className="first-turn-guide"><b>Your first move</b><p>Choose your hero under <strong>Characters</strong>, then use <strong>Travel</strong>, <strong>Rest</strong>, <strong>Train</strong>, <strong>Town</strong> or <strong>Challenge</strong>. After every ally has used both actions, continue to <strong>Management</strong> to equip learned powers and items.</p></div>{existing&&<p className="setup-validation">Beginning this campaign replaces the current autosave. A backup of the current campaign will be kept in this browser.</p>}<details className="seed-options"><summary>Advanced · repeatable shuffle</summary><label className="seed-label">Game seed<input aria-label="Game seed" value={seed} onChange={e=>setSeed(e.target.value)} inputMode="numeric"/></label></details></>}
+   {step===3&&!preview&&<><h3>Complete the setup</h3><p role="alert">{errors.join(' ')}</p><label className="seed-label">Game seed<input aria-label="Game seed" value={seed} onChange={e=>setSeed(e.target.value)}/></label></>}
+  </div>
+  <footer className="setup-footer"><a href="https://images-cdn.fantasyflightgames.com/ffg_content/WoWBG/wowrules.pdf#page=6" target="_blank" rel="noreferrer">Official setup · pp. 6–8, 35–36 ↗</a><button className="quiet-button" onClick={()=>step?setStep(step-1):onCancel()}>{step?'Back':'Cancel'}</button>{step<3?<button className="gold-button" disabled={step===1&&rosterErrors.length>0} onClick={()=>setStep(step+1)}>Continue <Icon name="arrow" size={15}/></button>:<button className="gold-button" disabled={errors.length>0} onClick={()=>onStart(setup,humanId,bots)}>Begin campaign <Icon name="arrow" size={15}/></button>}</footer>
+ </div>;
+}

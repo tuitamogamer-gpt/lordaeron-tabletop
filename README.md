@@ -1,4 +1,4 @@
-# Lordaeron · WoW Board Game v0.4
+# Lordaeron · WoW Board Game v0.5
 
 Desktop adaptacija osnovne igre iz 2005. i službenog FAQ-a 1.4. React interfejs, zaseban TypeScript engine, lokalni hotseat i AI igrači. **Online sobe su na čekanju.**
 
@@ -31,7 +31,11 @@ Simulacija provjerava resurse nakon svakog poteza i ponavlja završenu partiju i
 
 ## Igranje
 
-Početno upravljaš Grumbazom, a ostalih pet likova vodi AI. Dugme **Pokreni botove** uključuje automatske poteze; susjedna strelica odigra jedan. U postavkama možeš preuzeti druge likove, izvesti ili uvesti partiju. Novi setup bira četiri ili šest likova, tvog junaka i jednog od tri Overlorda.
+Prvo otvaranje vodi kroz **New game → Table → Characters → Overlord → Ready to play**. Biraš četiri ili šest likova, jednako podijeljenih između frakcija, bez ponavljanja klase. Pregled prije početka objašnjava resurse, početne gradove, questove, trgovca i Overlorda prema pravilniku. Sačuvana partija se nastavlja bez ponovnog setupa; započinjanje nove čuva prethodni autosave kao backup u postavkama.
+
+Glavni ekran prikazuje mapu i akcije. **Characters**, **Quests**, **Merchant**, **Encounter deck** i **Party controls** otvaraju zasebne panele; isti toggle, Close ili Esc vraća na mapu. Characters sadrži puni sheet, Spellbook, torbu i talente. Merchant se može pregledati bilo kada; kupovina je dostupna samo uz legalnu Town akciju. Eventi se vuku automatski po traci poteza.
+
+Podrazumijevano upravljaš Grumbazom, a ostale likove vodi AI. **Run AI** pokreće botove; pojedinačni potez je u Party controls. U postavkama možeš preuzeti druge likove, izvesti ili uvesti partiju. Detalji novog interfejsa i provjera su u [UI-SETUP.md](docs/UI-SETUP.md).
 
 - Dvije akcije po liku: Travel, Rest, Train, Town i Challenge; zatim upravljanje opremom.
 - Centralna 2D mapa ima 67 omeđenih polja u sedam oblasti. Prolaz prati obojenu zajedničku granicu; crni rub i dodir u uglu nisu prolaz.

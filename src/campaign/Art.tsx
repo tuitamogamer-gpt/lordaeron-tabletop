@@ -1,4 +1,7 @@
 import type { Card } from '../rules/model';
+import illustrations from '../data/card-art.json';
+import generatedIllustrations from '../data/generated-card-art.json';
+const cardArt:Record<string,string>={...illustrations,...generatedIllustrations};
 
 const abilityIcons = {
   melee: 0, arcane: 1, armor: 2, warrior: 3,
@@ -28,6 +31,13 @@ export function PaintedArt({index, atlas='abilities', name, className=''}: {
 export function AbilityArt({icon, className=''}: {icon: PaintedIcon; className?: string}) {
   return <PaintedArt index={abilityIcons[icon]} className={`ability-art ${className}`}/>;
 }
+
+export function CardArt({card,className=''}:{card:Card;className?:string}) {
+ const src=cardArt[card.id];
+ return src?<img className={`painted-art ability-art card-illustration ${className}`} src={src} alt="" loading="lazy" width="192" height="192"/>:<AbilityArt icon={cardIllustration(card)} className={className}/>;
+}
+
+export function EventArt({script='horizons'}:{script?:string}) {return <img className="painted-art event-illustration" src={`/assets/event-art/${script}.webp`} alt="" loading="lazy" width="256" height="256"/>;}
 
 export function FactionCrest({faction, className=''}: {faction: string; className?: string}) {
   return <span aria-hidden="true" className={`faction-crest ${faction} ${className}`}/>;

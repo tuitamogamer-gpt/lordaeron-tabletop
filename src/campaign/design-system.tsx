@@ -2,7 +2,7 @@ import type { CSSProperties, ReactNode } from 'react';
 import { Icon } from '../components';
 import type { Card, Creature, EventCard, Overlord, Quest } from '../rules/model';
 import { BASE_PACK as p } from '../data/base';
-import { AbilityArt, PaintedArt, cardIllustration, creatureIcons } from './Art';
+import { CardArt, EventArt, PaintedArt, creatureIcons } from './Art';
 import { eventText, overlordText, rewardText } from './event-text';
 
 /** Presentation never reads an imported scan. A scan can supply verified content, not layout. */
@@ -59,12 +59,12 @@ export function QuestCard({quest:q,onClick}:{quest:Quest;onClick?:()=>void}) {
  return <CardFrame kind="QUEST" title={q.name} subtitle={`${q.faction==='horde'?"Horde":"Alliance"} · ${q.tier}`} rank={q.level} accent={q.faction} art={<CreatureGlyph type={q.spawns.find(s=>s.color!=='blue')?.creature??'murloc'}/>} onClick={onClick} footer={<span>{rewardText(q.reward)}</span>}><span className="folio-effect"><b>OBJECTIVE</b>{q.spawns.filter(s=>s.color!=='blue').map(s=>`${s.count} × ${p.creatures.find(c=>c.id===s.creature)?.name} (${s.color}) · ${p.regions.find(r=>r.id===s.region)?.name}`).join(' / ')}</span><span className="folio-effect"><b>INDEPENDENT CREATURES</b>{q.spawns.filter(s=>s.color==='blue').map(s=>`${s.count} × ${p.creatures.find(c=>c.id===s.creature)?.name} · ${p.regions.find(r=>r.id===s.region)?.name}`).join(' / ')||"No blue creatures."}</span></CardFrame>;
 }
 export function EventCardView({event:e}:{event:EventCard}) {
- return <CardFrame kind="EVENT" title={e.name} subtitle={e.overlord?'Kel’Thuzad':e.bonus?"Bonus event":'Lordaeron'} rank={e.fate} accent="arcane" art={<PaintedArt index={e.boss?13:14} atlas="bestiary"/>} footer={<><span>Fate {e.fate}</span><span>{e.bonus?"Draw another":"Remains until resolved"}</span></>}><span className="folio-effect">{e.boss&&<b>{e.boss.stats.threat}+ / {e.boss.stats.attack} / {e.boss.stats.health}</b>}{eventText(e)}</span></CardFrame>;
+ return <CardFrame kind="EVENT" title={e.name} subtitle={e.overlord?'Kel’Thuzad':e.bonus?"Bonus event":'Lordaeron'} rank={e.fate} accent="arcane" art={<EventArt script={e.script}/>} footer={<><span>Fate {e.fate}</span><span>{e.bonus?"Draw another":"Remains until resolved"}</span></>}><span className="folio-effect">{e.boss&&<b>{e.boss.stats.threat}+ / {e.boss.stats.attack} / {e.boss.stats.health}</b>}{eventText(e)}</span></CardFrame>;
 }
 export function OverlordCard({overlord:o,count=6}:{overlord:Overlord;count?:4|6}) {
  const s=o.stats[count];return <CardFrame kind="OVERLORD" title={o.name} subtitle={`${count} characters · ${p.regions.find(r=>r.id===o.region)?.name}`} accent="arcane" rank="V" art={<BossPortrait id={o.id}/>} footer={<span>Defeat this Overlord to win for your faction</span>}><span className="overlord-values"><b>{s.threat}+<small>THREAT</small></b><b>{s.attack}<small>ATTACK</small></b><b>{s.health}<small>HEALTH</small></b></span><span className="folio-effect">{overlordText(o)}</span></CardFrame>;
 }
-export function BossPortrait({id}:{id:string}){return <span className="boss-portrait" role="img" aria-label={p.overlords.find(o=>o.id===id)?.name??id} style={{backgroundPosition:`${['kazzak','nefarian','kelthuzad'].indexOf(id)*50}% 50%`}}/>;}
+export function BossPortrait({id}:{id:string}){return <span className="boss-portrait" role="img" aria-label={p.overlords.find(o=>o.id===id)?.name??id} style={{backgroundImage:`url(/assets/portraits/${id}.webp)`,backgroundSize:'cover',backgroundPosition:'center 30%'}}/>;}
 export function AbilityCard({card:c,children,footer,onClick,disabled,selected}:{card:Card;children:ReactNode;footer?:string;onClick?:()=>void;disabled?:boolean;selected?:boolean}) {
- return <CardFrame kind={c.kind==='talent'?'TALENT':c.kind==='power'?"POWER":c.type==='bag'?"CONSUMABLE":"EQUIPMENT"} title={c.name.replace(/ · probn[oi]( quest)?/g,'')} subtitle={c.classId??c.type} rank={c.level} accent={c.type==='instant'||c.type==='ranged'?'energy':c.type==='active'?'nature':'gold'} art={<AbilityArt icon={cardIllustration(c)}/>} onClick={onClick} disabled={disabled} selected={selected} footer={<><span><Icon name="bolt" size={13}/>{c.energy}</span><span>{footer??`${c.price} gold`}</span></>}>{children}</CardFrame>;
+ return <CardFrame kind={c.kind==='racial'?'RACIAL':c.kind==='talent'?'TALENT':c.kind==='power'?"POWER":c.type==='bag'?"CONSUMABLE":"EQUIPMENT"} title={c.name.replace(/ · probn[oi]( quest)?/g,'')} subtitle={c.classId??c.type} rank={c.level} accent={c.type==='instant'||c.type==='ranged'?'energy':c.type==='active'?'nature':'gold'} art={<CardArt card={c}/>} onClick={onClick} disabled={disabled} selected={selected} footer={<><span><Icon name="bolt" size={13}/>{c.energy}</span><span>{footer??(c.printed?'Starting ability':`${c.price} gold`)}</span></>}>{children}</CardFrame>;
 }
