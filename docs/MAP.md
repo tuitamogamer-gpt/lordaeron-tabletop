@@ -1,0 +1,40 @@
+# Lordaeron board · v0.4
+
+The central map is a 2D polygon board with all 67 named regions in the seven printed areas. The default table view fits the full board. **Interact with map** (or F) expands it beside the quest ledger, enabling wheel zoom, drag, arrow-key panning, +/−, region search, hero centering, and 0 to reset. Escape returns to the table and restores the overview.
+
+## Sources and interpretation
+
+- [FFG rules](https://images-cdn.fantasyflightgames.com/ffg_content/WoWBG/wowrules.pdf): quest tokens pp. 4, 7, 20; Travel and flight paths pp. 9–10; replacement decks pp. 20–22. The four-player setup has three grey quests plus one green per faction (p. 35); six characters use four grey plus one green.
+- [JudgeHype original-board photograph](https://worldofwarcraft.judgehype.com/image/16487/), already stored as `public/assets/original-board.jpg`, provides the 1600 × 1108 tracing coordinate space.
+- [Second full-board photograph](https://www.mandisattictoys.com/products/world-of-warcraft-the-boardgame-2005-fantasy-flight-games-unpunched), [image](https://www.mandisattictoys.com/cdn/shop/files/IMG_7419_7a13025a-e184-4c87-bbc8-913b0876e3a1.jpg?v=1689555834), cross-checks region outlines, town/flight/graveyard icons, and mountain pockets. This reference is local only.
+- The supplied 560-scan archive contains quest cards and tokens, but no main board. Quest objectives and rewards continue to come from that archive and the FAQ errata, including The Infectis Scar for Brutes in the Barrows.
+
+`src/data/board-geometry.ts` is a hand tracing, simplified to straight segments. It is a reconstruction from photographs, not an official vector or a flat scan. Existing generated terrain is a faint decorative texture clipped to the playable polygons. Polygon borders, rather than painted terrain, determine play.
+
+Each exact shared polygon segment is traversable and drawn in its area's border color. Exterior segments border impassable terrain and are black. A single shared vertex is not a connection. Both `BOARD_REGIONS.neighbors` and the displayed borders are derived from this mesh; there is no separate proximity-based graph to drift out of sync.
+
+The old graph included shortcuts across black terrain, such as Agamand–Brill, Undercity–Uplands, Pyrewood–Azurelode, Purgation–Southshore, Caer Darrow–Darrowshire, and Altar of Zul–Jintha'Alor. Those connections are removed. Walking connections now include the rulebook's Sorrow Hill–Chillwind Point example, the Fenris/Uplands passage, and the western/eastern Plaguelands passage at Marris Stead.
+
+## Travel
+
+One ordinary Travel action allows up to two steps. Adjacent regions and a flight between friendly flight icons each cost one step. There are four friendly flight regions per faction, counting Pestilent Scar for both. An enemy home region is never a legal destination.
+
+Blue creatures stop movement on entry and force the next action to be a Challenge; the existing explicitly equipped exceptions still apply. Green and red quest creatures do not stop Travel. The selected route comes from engine legal commands and is only submitted by **Putuj ovdje**. Step numbers and a textual itinerary show the cost; flight legs are blue curves and walking legs use polygon-interior visibility paths, including concave passes.
+
+## Quest cards, tokens and decks
+
+- Stable H01–H40 / A01–A40 references appear on both the active cards and faction tokens. These are UI references, not additional game rules or printed token numbers.
+- A token exists for each region containing a quest's surviving objective figures. Its location follows the actual figures, including event movement. Blue independent figures never receive a faction quest token.
+- Selecting a card selects its live region; selecting a token highlights and scrolls to its card. The details view includes rewards, remaining targets and all printed spawns, with buttons to locate each region.
+- Green, yellow and red deck stacks show public remaining counts for both factions. They use the same draw controls in the reward decision, enabled only for legal replacement commands. Deck order remains private. Grey cards are setup-only and the unused grey cards are removed from play.
+- Creature counters use their actual green/red/blue figure colors independently of faction token colors. Heroes, towns, flight icons, graveyards, Overlords, Kazzak clues and active world markers remain on the board.
+
+## Save compatibility
+
+The corrected topology changes the content fingerprint and legal replays. The pack is `base-2005-faq-1.4-map-v4`, with autosave key `lordaeron-base-save-v4`. The v0.3 key is not overwritten or deleted; settings offer its original JSON for download. Old commands are not silently replayed against changed paths. Bot ownership preferences remain shared with the previous version.
+
+## Verification
+
+`tests/board-map.test.ts` verifies the whole connected board, anchors, every walking preview, the printed flight example, impassable terrain, action costs, blue stops, quest movement/removal and replacement deck counts. `tests/map-ui.test.tsx` exercises the React controls in jsdom, including drag suppression, Escape, confirmation and both directions of quest selection. These are DOM tests, not a full browser layout test.
+
+`npm run render:map` produces `screenshots/02-map-regions.png` directly from the Map component's SVG and map CSS, with embedded artwork. An independent Shapely audit found all 67 polygons valid with zero positive-area overlaps. Browser automation had no available browser in this session; whole-page browser layout and real-device gesture review are not claimed by the SVG/DOM checks.

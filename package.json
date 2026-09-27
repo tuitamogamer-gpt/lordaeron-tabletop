@@ -1,7 +1,7 @@
 {
   "name": "lordaeron-tabletop",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.4.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
@@ -11,7 +11,8 @@
     "dev:server": "tsx watch server/dev.ts",
     "simulate": "tsx scripts/simulate.ts",
     "check:server": "tsc -p tsconfig.server.json",
-    "check:render": "tsx scripts/check-render.ts"
+    "check:render": "tsx scripts/check-render.ts",
+    "render:map": "tsx scripts/render-map.ts"
   },
   "dependencies": {
     "@fontsource/cinzel": "^5.2.0",
@@ -24,10 +25,14 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "@testing-library/react": "^16.3.3",
     "@types/node": "^26.6.3",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "@types/ws": "^8.18.1",
+    "jsdom": "^29.1.1",
+    "sharp": "^0.35.4",
     "tsx": "^4.23.15",
     "typescript": "^5.8.3",
     "vite": "^6.3.5",

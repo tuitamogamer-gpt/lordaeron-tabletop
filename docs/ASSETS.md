@@ -45,3 +45,7 @@ Cinzel i Inter fontovi dolaze iz lokalnih `@fontsource` paketa, s licencama ispo
 Igriva kampanja koristi novu ilustraciju mape i portrete, ne referentnu fotografiju ploče. Karte opreme, moći, talenata, questova, događaja, stvorenja i Overlorda prikazuje kodirani Warforged Chronicles predložak. Sedam novih imagegen WebP datoteka u `public/assets/warcraft/` obuhvata mapu, dvoranu, okvir, pergament, dva grba, 16 ikona akcija/sposobnosti i 16 polja atlasa stvorenja/Overlorda/događaja/plijena. Sve su generirane za projekt; tačni promptovi su u [IMAGEGEN-WARCRAFT.md](IMAGEGEN-WARCRAFT.md). Te ilustracije ne mijenjaju skriptirana pravila.
 
 `public/assets/reference-text.json` čuva 271 transkripciju item tekstova iz community baze. Izdanje je neprovjereno, `scripted: false`; tekst nije automatski ušao u igrivi set. `src/data/reference-creatures.json` je izvor community vrijednosti za 13 vrsta i tri boje. `src/data/original-characters.json` je radna kopija kapaciteta likova.
+
+## Poligonska mapa · v0.4
+
+Granice svih 67 polja ručno su precrtane u `src/data/board-geometry.ts`. Dvije fotografije originala i pravilnik služe provjeri; izvori i tumačenje su u [MAP.md](MAP.md). Ranija generirana ilustracija ostaje samo blaga tekstura unutar poligona. `screenshots/02-map-regions.png` je render stvarne SVG komponente, napravljen komandom `npm run render:map`; nije snimak cijelog preglednika.

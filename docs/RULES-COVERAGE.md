@@ -1,18 +1,18 @@
-# Osnovna igra + FAQ · stanje v0.3
+# Osnovna igra + FAQ · stanje v0.4
 
 Izvori: [pravilnik](https://images-cdn.fantasyflightgames.com/ffg_content/WoWBG/wowrules.pdf), [FAQ 1.4](https://images-cdn.fantasyflightgames.com/ffg_content/WoWBG/WoW_FAQ__v1_4.pdf), [dostavljeni skenovi](SCAN-INTEGRATION.md). Primjenjuju se samo odjeljci osnovne igre. Shadow of War i ostala proširenja nisu uključena.
 
-Aktivni paket `base-2005-faq-1.4-scans-v3` ima sve komponente osnovnog seta. `officialComplete` provjerava broj komponenti i zabilježene izvore; nije tvrdnja da su sve međusobne kombinacije iscrpno testirane.
+Aktivni paket `base-2005-faq-1.4-map-v4` ima sve komponente osnovnog seta. `officialComplete` provjerava broj komponenti i zabilježene izvore; nije tvrdnja da su sve međusobne kombinacije iscrpno testirane.
 
 | Sistem | Implementirano | Preostala provjera |
 | --- | --- | --- |
 | Setup | 4/6 likova, jedinstvene klase, frakcije, originalni slotovi, rasne moći, početni questovi i trgovac | Šira igranja različitih postava |
-| Mapa | 67 regija, letovi, dvije etape, plave blokade, Teleport, Portal, Summon, Intercept, posebna putovanja | Topologija i oznake prema ravnom skenu glavne ploče |
+| Mapa | 67 omeđenih polja; susjedstvo iz istih segmenata koji se crtaju; letovi, dvije etape, plave blokade i posebne moći | Konture su rekonstrukcija iz fotografija; pregled na stvarnom browseru |
 | Akcije | Svih pet; višestruke gradske transakcije, više treninga, hrana, posebne akcijske moći | Duge sekvence kroz UI |
 | Inventar | Sedam mjesta, osobine, addon funkcije, unique moći, kapaciteti, aktivni trošak, torba i razmjena | Strategija botova pri višekartnom opremanju |
 | Klase | 108 Power i 108 Talent karata iz devet klasa; automatski, uslovni i izborni efekti | Iscrpno testiranje svih kombinacija i efekata u istom vremenskom prozoru |
 | Predmeti | 46 triangle, 30 square, 16 circle, 28 special; četiri aukcijska predmeta | Balans i strategija njihovog korištenja |
-| Questovi | Svih 80, obje frakcije, spawnovi, konačne zalihe figura, nagrade i zamjene | Vrlo dugo iscrpljivanje svih zamjenskih špilova |
+| Questovi | Svih 80, obje frakcije, živi tokeni povezani s kartama, brojači špilova, spawnovi, konačne zalihe figura, nagrade i zamjene | Vrlo dugo iscrpljivanje svih zamjenskih špilova |
 | Borba | PvE/PvP, d8, fizičke zalihe boja, Spot, promjene, nezavisni reroll, Stun/Curse, pogoci, rane, ljubimci, poraz i oživljavanje | Sve konkurentne reakcije u grupnoj borbi |
 | Minioni | 13 vrsta, raspoložive boje i originalne vrijednosti iz referentnog lista | Više grupnih kombinacija u igranju |
 | Događaji | 47 + 5 Kel’Thuzad; bonusi, aukcije, kupovina, retrening, putovanja, premještanje grupa, bounty, trofeji, ratovi, kuga, sedam boss događaja | Više preklapanja trajnih događaja |

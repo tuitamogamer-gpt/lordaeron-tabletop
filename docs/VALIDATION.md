@@ -1,32 +1,47 @@
-# Provjera v0.3 · osnovni set iz skenova
+# Provjera v0.4 · centralna 2D mapa
 
-Aktivni paket: `base-2005-faq-1.4-scans-v3`. Testovi pokrivaju osnovnu igru i FAQ; proširenja nisu učitana.
+Aktivni paket: `base-2005-faq-1.4-map-v4`. Osnovni set i FAQ ostaju isti; mapa sada koristi precrtane poligone i njihove zajedničke granice.
 
-## Automatizovana provjera
+## Automatizovane provjere
 
-- `npm test`: **129/129** u pet datoteka. Od toga je 43 testa za podatke iz skenova i njihove interakcije; 86 postojećih regresija ostaje aktivno.
-- `npm run check:render`: **572 prikaza** — sve karte/listovi, kampanja i borbeni prozor — bez `undefined`, `NaN` ili React upozorenja u renderu.
-- `npm run build`: TypeScript strict, NodeNext server check i Vite produkcijski build. Zodove dvije PURE anotacije daju build upozorenja; Rollup ih uklanja. Glavni bundle prelazi preporuku od 500 kB prije gzipa.
-- Svih 560 preuzetih datoteka ima provjerenu veličinu, PNG/PDF potpis i SHA-256. Originali ostaju u ignorisanoj lokalnoj mapi.
+- `npm test`: **157/157** u sedam datoteka. Sačuvano je 129 prethodnih regresija; dodata su 23 testa mape/pravilnika/questova/kamere i pet React DOM testova korisničkih tokova.
+- `npm run check:render`: **572 prikaza** svih karata, likova, kampanje i borbe; bez `undefined`, `NaN` ili React upozorenja.
+- `npm run build`: TypeScript strict, NodeNext server check i Vite produkcijski build. Postojeća upozorenja: dvije Zod PURE anotacije i glavni JS bundle iznad 500 kB prije gzipa.
+- Nezavisna geometrijska provjera putem Shapely: svih **67 poligona validno**, bez pozitivne površine preklapanja. Svi centri su unutar svog polja i svih 67 polja pripada jednoj povezanoj mreži kretanja.
+- Za svaku dozvoljenu vezu provjereno je da prikazana pješačka putanja ostaje unutar dva povezana poligona. Time su obuhvaćeni i uski, konkavni prolazi.
 
-Posebni testovi obuhvataju FAQ korekcije, Spot i fizičku zalihu kockica, trošak/discount/ponavljanje, grupne reakcije, forme, ljubimce, Talente, Portal bez pomjeranja castera, opremanje Concentration Aure, Hood slot, čišćenje kuge nakon grupnog izazova, boss događaje, skriveni Kazzakov identitet i Nefarianovu ranu završnicu. Referencije među klasnim kartama su provjerene.
+Testovi pravilnika pokrivaju dvije regije za jednu akciju, odbijanje trećeg koraka, Southshore → Sorrow Hill → Chillwind Point, četiri letne tačke po frakciji, zabranu tuđeg početnog polja, crne granice i uglove, plave prepreke pri hodanju i letu te prolaz kroz zelene/crvene quest ciljeve.
 
-## Pune simulacije
+Quest testovi provjeravaju početne tokene i javne brojače špilova, pomjeranje tokena s preostalim figurama, uklanjanje ciljeva, stabilne reference karata i izvlačenje zamjene sa smanjenjem špila i novim spawnovima. Redoslijed špilova nije u javnom `GameView`.
 
-Svaki potez provjerava nenegativne cjelobrojne resurse, torbu i broj mjesta. Zatim se cijela partija izveze, strogo parsira i ponovi; porede se sva završna polja, nezavisno od redoslijeda JSON ključeva.
+## Interakcije i render
 
-| Naredba | Potezi enginea | Questovi | Završna smjena | Ishod | Replay |
+React DOM testovi u jsdom potvrđuju:
+
+1. World view ostaje nepomičan dok se ne uključi **Interact with map**.
+2. Zoom, povlačenje, Escape i vraćanje fokusa rade kroz stvarne event handlere komponente.
+3. Povlačenje ne odabire slučajno polje.
+4. Odabir regije daje pregled; akcija se troši tek na **Putuj ovdje**.
+5. Quest karte i tokeni koriste iste reference, a špilovi dopuštaju samo legalnu zamjenu.
+
+`npm run render:map` izrađuje **2070 × 1380** PNG iz stvarne SVG komponente i stilova mape, sa ugrađenim teksturama i portretima. `screenshots/02-map-regions.png` je vizuelno pregledan. To je render ploče, ne screenshot cijele aplikacije.
+
+**Ograničenje:** alat za preglednik vratio je prazan inventar; pokušaji otvaranja lokalne igre u IAB-u i Chromeu vratili su `Browser is not available`. Zato nije potvrđen raspored cijele stranice niti stvarne gestikulacije u pregledniku. DOM testovi i SVG pregled navedeni su odvojeno, bez pripisivanja browser provjere.
+
+## Pune kampanje na novoj mapi
+
+Svaki potez provjerava resurse, torbu i mjesta. Završena partija se ponavlja iz svih komandi i poredi završno stanje.
+
+| Naredba | Potezi | Questovi | Završna smjena | Ishod | Replay |
 | --- | ---: | ---: | ---: | --- | --- |
-| `npm run simulate -- 2005 kelthuzad` | 1.020 | 11 | 30 | Horda, završni PvP | identičan |
-| `npm run simulate -- 71 nefarian casters` | 697 | 7 | 25 | remi nakon Bulwarka | identičan |
-| `npm run simulate -- 99 kazzak casters` | 787 | 7 | 30 | Alijansa, završni PvP | identičan |
+| `npm run simulate -- 2005 kelthuzad` | 1346 | 13 | 30 | Alijansa | identičan |
+| `npm run simulate -- 71 nefarian casters` | 722 | 4 | 25 | remi | identičan |
+| `npm run simulate -- 99 kazzak casters` | 879 | 7 | 30 | Alijansa | identičan |
 
-Ove postave ukupno uključuju svih devet klasa. Simulacije potvrđuju završiv tok za navedene partije. Ne potvrđuju optimalnu strategiju botova, balans, pobjedu nad svakim Overlordom ni svaku kombinaciju karata. Boss efekti i direktne pobjede zasebno se provjeravaju scenarijskim testovima.
+Ovo potvrđuje navedene tokove, ne optimalnu strategiju botova ili sve kombinacije karata. Online sobe ostaju na čekanju.
 
-## Interfejs
+## Izvori i kompatibilnost
 
-Ugrađeni preglednik učitao je novi desktop sto i puni DOM sa stvarnim questovima, šest individualnih portreta, sedam mjesta, 30 smjena i Kel’Thuzad profilom. Nisu zabilježene JavaScript greške. DOM geometrija je provjerena na 1280 × 800, 1440 × 900 i 1920 × 1080: stranica nema horizontalno ni vertikalno prelijevanje, a questovi i lični panel po potrebi imaju vlastito skrolanje. Privremena veličina preglednika je vraćena na početnu.
+[MAP.md](MAP.md) navodi fotografije, stranice pravilnika i interpretaciju granica. Konture su pojednostavljeno ručno precrtavanje fotografija, bez tvrdnje da je korišten ravan službeni sken. Quest podaci dolaze iz prethodno provjerenog arhiva od 560 skenova.
 
-**Ograničenje ovog prolaza:** preglednički alat nije uspio priključiti svoj webview. Screenshot i ulazne naredbe završavaju timeoutom, iako čitanje DOM-a radi. Pokušani su dokumentovani screenshot, semantički i pristupačni klik te novi tab. Zato ručno odigravanje novog interfejsa i završni vizuelni screenshot pregled nisu označeni kao završeni. Render audit ne zamjenjuje takav pregled.
-
-Glavna mapa i dalje čeka ravan sken radi konačne topologije. Online sobe su na čekanju; Redis i cloud multiplayer nisu dio ove provjere. Stariji UI testovi i v0.2 rezultati nisu predstavljeni kao potvrda novog interfejsa.
+v0.4 ima odvojeni autosave. Originalna v0.3 partija ostaje na starom ključu, dostupna za preuzimanje u postavkama. Stari putevi se ne izvršavaju neprimjetno na novoj topologiji.

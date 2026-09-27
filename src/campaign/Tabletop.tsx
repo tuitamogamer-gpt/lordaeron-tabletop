@@ -7,12 +7,17 @@ import type { Command, Hero } from '../rules/model';
 import type { GameView } from '../rules/view';
 import { Icon, ResourceBar } from '../components';
 import Map from './Map';
+import QuestLedger, { QuestDetails } from './QuestLedger';
+import { questMarkers } from './map-state';
 import { AbilityArt, FactionCrest, cardIllustration } from './Art';
-import { HeroPortrait, factionLabel } from './parts';
-import { BossPortrait, CreatureGlyph } from './design-system';
-import { deckSymbol, eventText, overlordText, regionName, rewardText } from './event-text';
+import { HeroPortrait } from './parts';
+import { BossPortrait } from './design-system';
+import { deckSymbol, eventText, overlordText, regionName } from './event-text';
 export type TablePanel='rest'|'train'|'town'|'challenge'|'manage'|'trade';
 export default function Tabletop({state,h,legal,controlled,bots,auto,botReady,botReason,selectHero,selected,selectRegion,inspect,open,send,botStep,toggleBots,focused,toggleFocus,notify}:{state:GameView;h:Hero;legal:Command[];controlled:string[];bots:string[];auto:boolean;botReady:boolean;botReason:string;selectHero:(id:string)=>void;selected:string;selectRegion:(id:string)=>void;inspect:(id:string)=>void;open:(p:TablePanel)=>void;send:(c:Command)=>void;botStep:()=>void;toggleBots:()=>void;focused:boolean;toggleFocus:()=>void;notify:(s:string)=>void}){
+ const [questSelection,setQuestSelection]=useState<string>(),[questInfo,setQuestInfo]=useState<string>();
+ const selectedQuest=state.quests.includes(questSelection??'')?questSelection:undefined;
+ const chooseQuest=(id:string,region?:string)=>{setQuestSelection(id);const target=region??questMarkers(p,state).find(m=>m.quest.id===id)?.region;if(target)selectRegion(target);};
  const [inventory,setInventory]=useState<'slots'|'bag'|'talents'>('slots');
  const d=character(p,h.id),cap=capacity(p,h),boss=p.overlords.find(o=>o.id===state.overlord.id)!,stats=boss.stats[state.heroes.length as 4|6];
  const can=(type:Command['type'])=>legal.some(c=>c.type===type&&(!('hero'in c)||c.hero===h.id));
@@ -20,10 +25,11 @@ export default function Tabletop({state,h,legal,controlled,bots,auto,botReady,bo
  const world=(state.world??[]).map(w=>({w,e:p.events.find(e=>e.id===w.id)!}));
  const itemButton=(id:string,key=id)=><button className="satchel-card" key={key} onClick={()=>inspect(id)}><AbilityArt icon={cardIllustration(card(p,id))}/><span><strong>{card(p,id).name}</strong><small>{card(p,id).type} · nivo {card(p,id).level}</small></span></button>;
  return <div className="war-table">
-  <aside className="quest-ledger table-frame"><div className="ledger-heading"><Icon name="scroll"/><span>POZIV NA ORUŽJE<small>Questovi Lordaerona</small></span></div>{(['horde','alliance'] as const).map(f=><section className={`faction-quests ${f}`} key={f}><header><FactionCrest faction={f}/><h3>{factionLabel(f)}</h3><span>{state.heroes.filter(h=>faction(p,h.id)===f).reduce((n,h)=>n+h.xp,0)} XP</span></header>{state.quests.map(id=>p.quests.find(q=>q.id===id)!).filter(q=>q.faction===f).map(q=>{const objective=q.spawns.find(s=>s.color!=='blue')!;const remaining=state.enemies.filter(e=>e.quest===q.id&&e.color!=='blue').length;return <button className={`table-quest ${q.tier} ${selected===objective.region?'selected':''}`} key={q.id} title={`${q.spawns.filter(s=>s.color!=='blue').map(s=>`${s.count} × ${s.creature} — ${regionName(s.region)}`).join('\n')}\nNagrada: ${rewardText(q.reward)}`} onClick={()=>selectRegion(objective.region)}><span className="quest-seal"><CreatureGlyph type={objective.creature}/><b>{q.level}</b></span><span><strong>{q.name}</strong><small>{regionName(objective.region)} · {remaining} meta</small><em>{q.reward.xp} XP · {q.reward.gold} zlata {q.reward.items.map(i=>` · ${i.draw}${deckSymbol[i.deck]}`).join('')}{q.reward.special?.length?' · ✦':''}</em></span></button>;})}</section>)}<div className="ledger-foot"><Icon name="check" size={13}/>{state.completed.length} dovršenih questova</div></aside>
+  {questInfo&&<QuestDetails quest={p.quests.find(q=>q.id===questInfo)!} state={state} onClose={()=>setQuestInfo(undefined)} onLocate={id=>{selectRegion(id);setQuestInfo(undefined);if(!focused)toggleFocus();}}/>}
+  <QuestLedger state={state} selected={selectedQuest} onQuest={chooseQuest} onInspect={setQuestInfo}/>
   <section className="table-map-column"><button className="boss-ribbon table-frame" title={overlordText(boss)} onClick={()=>selectRegion(state.overlord.region||state.kazzak?.[0]?.region||h.location)}><BossPortrait id={boss.id}/><span><small>PRIJETNJA LORDAERONU</small><strong>{boss.name}</strong><em>{state.overlord.region?regionName(state.overlord.region):'Pet tragova. Jedan demon.'}</em></span><span className="boss-ribbon-stats"><b>{stats.threat+state.overlord.threat}+<small>PRIJETNJA</small></b><b>{stats.attack+state.overlord.attack}<small>NAPAD</small></b><b>{stats.health+state.overlord.health}<small>ZDRAVLJE</small></b></span><Icon name="crown"/></button>
-   <Map state={state} heroId={h.id} selected={selected} legal={legal} focused={focused} onToggleFocus={toggleFocus} onSelect={selectRegion} onMove={send}/>
-   <div className="action-dock">{([['travel','Putovanje','travel'],['rest','Odmor','rest'],['train','Trening','train'],['town','Grad','town'],['challenge','Izazov','melee']] as const).map(([type,label,icon],i)=><button key={type} disabled={!can(type)} onClick={()=>type==='travel'?notify('Izaberi regiju na mapi, zatim potvrdi putovanje.'):open(type)}><kbd>{i+1}</kbd><AbilityArt icon={icon}/><span>{label}</span></button>)}</div>
+   <Map state={state} heroId={h.id} selected={selected} legal={legal} focused={focused} onToggleFocus={toggleFocus} onSelect={selectRegion} onMove={send} selectedQuest={selectedQuest} onQuest={chooseQuest} onInspectQuest={setQuestInfo}/>
+   <div className="action-dock">{([['travel','Putovanje','travel'],['rest','Odmor','rest'],['train','Trening','train'],['town','Grad','town'],['challenge','Izazov','melee']] as const).map(([type,label,icon],i)=><button key={type} disabled={!can(type)} onClick={()=>type==='travel'?(!focused?toggleFocus():notify('Izaberi obojeno polje, provjeri putanju i potvrdi putovanje.')):open(type)}><kbd>{i+1}</kbd><AbilityArt icon={icon}/><span>{label}</span></button>)}</div>
    {world.length>0&&<div className="world-ribbon">{world.map(({w,e})=><button key={w.id} title={eventText(e)} onClick={()=>{if(e.boss)selectRegion(e.boss.region);else if(e.script==='plague'&&w.tokens.length)selectRegion(w.tokens[0]);else notify(eventText(e));}}><Icon name={e.boss?'skull':e.script==='plague'?'flask':'scroll'} size={13}/>{e.name}{e.boss?<b>{e.boss.stats.threat}+</b>:null}</button>)}</div>}
   </section>
   <aside className="hero-command table-frame"><div className="party-tabs">{state.heroes.map(hero=><button key={hero.id} title={`${character(p,hero.id).name} · ${bots.includes(hero.id)?'AI':'Igrač'}`} aria-label={character(p,hero.id).name} className={`${hero.id===h.id?'active':''} ${faction(p,hero.id)}`} onClick={()=>selectHero(hero.id)}><HeroPortrait id={hero.id} small/><span>{hero.actions}</span>{bots.includes(hero.id)&&<i>AI</i>}</button>)}</div>

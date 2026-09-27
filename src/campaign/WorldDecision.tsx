@@ -8,6 +8,7 @@ import { Icon } from '../components';
 import { AuctionChoices } from './Interactions';
 import { GameCard } from './parts';
 import { eventText, regionName } from './event-text';
+import { QuestDecks } from './QuestLedger';
 const choicesTypes=['talent','reward','quest','event-choice','respawn','claim-relic'];
 function Retrain({hero,send}:{hero:Hero;send:(c:Command)=>void}){
  const [talents,setTalents]=useState([...hero.talents]);
@@ -17,7 +18,7 @@ export default function WorldDecision({state,legal,send,inspect,botStep,botReady
  const [query,setQuery]=useState(''),[page,setPage]=useState(0);
  const step=state.eventFlow?.steps[0],event=state.eventFlow?p.events.find(e=>e.id===state.eventFlow!.event):undefined;
  const title=state.heroes.some(h=>h.talentChoices.length)?'Novi talent':state.respawns.length?'Povratak junaka':state.auction?'Aukcijska kuća':event?.name??'Nagrade družine';
- const choices=legal.filter(c=>choicesTypes.includes(c.type)&&!(step?.kind==='retrain'&&c.type==='event-choice'&&c.choice.mode==='talents'));
+ const choices=legal.filter(c=>choicesTypes.includes(c.type)&&c.type!=='quest'&&!(step?.kind==='retrain'&&c.type==='event-choice'&&c.choice.mode==='talents'));
  const detail=(c:Command)=>{let label=commandLabel(p,c);if(c.type==='event-choice'&&c.choice.enemy){const e=state.enemies.find(e=>e.id===c.choice.enemy)!;label=`${p.creatures.find(v=>v.id===e.creature)?.name} · ${regionName(e.region)} → ${regionName(c.choice.region!)}`;}if('discard'in c&&c.discard&&typeof c.discard==='string')label+=` · odbaci ${card(p,c.discard).name}`;if(c.type==='event-choice'&&c.choice.discard)label+=` · odbaci ${card(p,c.choice.discard).name}`;return label;};
  const filtered=choices.filter(c=>detail(c).toLowerCase().includes(query.toLowerCase()));
  const ids=[...new Set([...(state.reward?.offered??[]),...(state.auction?[state.auction.item]:[]),...legal.filter(c=>c.type==='talent').map(c=>c.card)])];
@@ -25,6 +26,7 @@ export default function WorldDecision({state,legal,send,inspect,botStep,botReady
  {state.auction&&<AuctionChoices heroes={state.heroes.filter(h=>legal.some(c=>c.type==='bid'&&c.hero===h.id))} busy={false} send={send}/>}
  {step?.kind==='retrain'&&legal.some(c=>c.type==='event-choice'&&c.hero===step.hero)&&<Retrain key={`${step.hero}-${state.revision}`} hero={state.heroes.find(h=>h.id===step.hero)!} send={send}/>}
  {choices.length>12&&<input className="choice-search" aria-label="Filtriraj odluke" placeholder="Pretraži metu, regiju ili kartu…" value={query} onChange={e=>{setQuery(e.target.value);setPage(0);}}/>}
+ {legal.some(c=>c.type==='quest')&&<section className="replacement-decks"><h3>Izaberi špil sljedećeg questa</h3><p>Nova karta odmah postavlja ciljeve i quest token na mapu.</p><QuestDecks state={state} side={state.reward?.replacementFaction??state.reward!.faction} legal={legal} send={send}/></section>}
  <div className="decision-options">{filtered.slice(page*18,page*18+18).map((c,i)=><button key={i} className="quiet-button" onClick={()=>send(c)}>{detail(c)}</button>)}</div>{filtered.length>18&&<div className="catalog-pagination"><button className="quiet-button" disabled={page===0} onClick={()=>setPage(n=>n-1)}>←</button><span>{page+1} / {Math.ceil(filtered.length/18)}</span><button className="quiet-button" disabled={(page+1)*18>=filtered.length} onClick={()=>setPage(n=>n+1)}>→</button></div>}
- {!choices.length&&!state.auction&&<p>Ovu odluku donosi drugi lik. Pokreni njegov AI potez.</p>}<div className="decision-bots"><button className="gold-button" disabled={!botReady} onClick={botStep}>Potez botova <Icon name="spark"/></button><button className="quiet-button" onClick={toggleBots}>{auto?'Pauziraj automatske poteze':'Automatski botovi'}</button></div></section></div>;
+ {!choices.length&&!state.auction&&!legal.some(c=>c.type==='quest')&&<p>Ovu odluku donosi drugi lik. Pokreni njegov AI potez.</p>}<div className="decision-bots"><button className="gold-button" disabled={!botReady} onClick={botStep}>Potez botova <Icon name="spark"/></button><button className="quiet-button" onClick={toggleBots}>{auto?'Pauziraj automatske poteze':'Automatski botovi'}</button></div></section></div>;
 }
