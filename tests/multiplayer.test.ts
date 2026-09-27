@@ -31,7 +31,7 @@ describe('authoritative multiplayer',()=>{
  it('authenticates every read and rejects a command for someone else’s hero',async()=>{
   const {store,host,guest,s}=await fixture();
   await expect(readRoom(store,s.id,'wrong-token')).rejects.toMatchObject({status:401});
-  await expect(handleRoom(store,{kind:'command',room:s.id,revision:s.revision,requestId:'unauthorized-1',command:{type:'rest',hero:mage,health:0}},host.token)).rejects.toThrow(/upravljaš/);
+  await expect(handleRoom(store,{kind:'command',room:s.id,revision:s.revision,requestId:'unauthorized-1',command:{type:'rest',hero:mage,health:0}},host.token)).rejects.toThrow(/do not control/);
   expect((await readRoom(store,s.id,guest.token)).revision).toBe(s.revision);
  });
  it('retries a request id without charging a second action and rejects reuse with a different command',async()=>{

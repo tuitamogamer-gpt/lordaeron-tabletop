@@ -57,17 +57,17 @@ describe('scanned card interactions',()=>{
   const s=fresh(),h=hero(s,warrior),food=give(s,warrior,'Crocolisk Steak');h.health=1;h.energy=0;const n=apply(p,s,{type:'rest',hero:warrior,health:0,food:food.id});expect(hero(n,warrior)).toMatchObject({...capacity(p,hero(n,warrior)),actions:1});expect(hero(n,warrior).bag).not.toContain(food.id);
  });
  it('cannot spend more Health than the hero has',()=>{
-  const s=combat(),h=hero(s,warrior);h.health=2;expect(()=>effects(p,s,h,'cost',[{op:'resource',resource:'health',amount:-3}],{})).toThrow(/zdravlja/);
+  const s=combat(),h=hero(s,warrior);h.health=2;expect(()=>effects(p,s,h,'cost',[{op:'resource',resource:'health',amount:-3}],{})).toThrow(/health/);
  });
  it('Tortoise Armor limits Travel to once per faction turn',()=>{
-  let s=fresh();give(s,warrior,'Tortoise Armor',6);s=apply(p,s,{type:'travel',hero:warrior,path:[]});expect(()=>apply(p,s,{type:'travel',hero:warrior,path:[]})).toThrow(/putovanja/);expect(()=>apply(p,s,{type:'rest',hero:warrior,health:0})).not.toThrow();
+  let s=fresh();give(s,warrior,'Tortoise Armor',6);s=apply(p,s,{type:'travel',hero:warrior,path:[]});expect(()=>apply(p,s,{type:'travel',hero:warrior,path:[]})).toThrow(/Travel/);expect(()=>apply(p,s,{type:'rest',hero:warrior,health:0})).not.toThrow();
  });
  it('Battle Shout buffs each friendly attacker and its talent requires the power',()=>{
   const s=combat();give(s,warrior,'Battle Shout');give(s,warrior,'Improved Battleshout');s.battle!.active!.reroll=0;settleAutomatic(p,s);expect(s.battle!.active!.reroll).toBe(2);settleAutomatic(p,s);expect(s.battle!.active!.reroll).toBe(2);
  });
  it('Arcane Missiles only gets its FAQ discount when used in the preceding unharmed round',()=>{
   let s=combat('ghoul',mage);const c=give(s,mage,'Arcane Missiles');hero(s,mage).energy=0;s.battle!.previous[mage]={cards:[c.id],harmed:false};s=apply(p,s,{type:'ability',hero:mage,card:c.id,ability:'pool'});expect(hero(s,mage).energy).toBe(0);
-  const t=combat('ghoul',mage);give(t,mage,'Arcane Missiles');hero(t,mage).energy=0;t.battle!.previous[mage]={cards:[c.id],harmed:true};expect(()=>apply(p,t,{type:'ability',hero:mage,card:c.id,ability:'pool'})).toThrow(/energije/);
+  const t=combat('ghoul',mage);give(t,mage,'Arcane Missiles');hero(t,mage).energy=0;t.battle!.previous[mage]={cards:[c.id],harmed:true};expect(()=>apply(p,t,{type:'ability',hero:mage,card:c.id,ability:'pool'})).toThrow(/energy/);
  });
  it('Arcane Focus rerolls independently even against a Ghoul',()=>{
   const s=combat('ghoul',mage);give(s,mage,'Arcane Focus');s.battle!.stage='reroll';s.battle!.active!.reroll=0;dice(s,[['blue',1],['red',1]]);expect(legalActions(p,s).some(c=>c.type==='ability'&&c.card==='mage-arcane-focus'&&c.args?.dice?.includes(0))).toBe(true);expect(legalActions(p,s).some(c=>c.type==='reroll')).toBe(false);

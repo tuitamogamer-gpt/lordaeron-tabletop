@@ -28,7 +28,7 @@ describe('2005 board geometry and printed movement examples',()=>{
   const s=empty(),h=s.heroes[0],c={type:'travel' as const,hero:h.id,path:['stillwater','agamand']};
   const next=apply(p,s,c);expect(next.heroes[0]).toMatchObject({location:'agamand',actions:1});
   expect(s.heroes[0]).toMatchObject({location:'brill',actions:2});
-  expect(()=>apply(p,s,{...c,path:[...c.path,'stillwater']})).toThrow(/koraka/);
+  expect(()=>apply(p,s,{...c,path:[...c.path,'stillwater']})).toThrow(/steps/);
  });
  it('matches the rulebook Southshore → Sorrow Hill flight followed by a ground step',()=>{
   const s=empty();s.faction='alliance';const h=s.heroes.find(h=>h.location==='southshore')!;
@@ -45,16 +45,16 @@ describe('2005 board geometry and printed movement examples',()=>{
  });
  it.each([['agamand','brill'],['agamand','garrens-haunt'],['undercity','uplands'],['pyrewood','azure'],['purgation','southshore'],['caer','darrowshire'],['altar','jintha'],['skulk','jintha'],['plaguewood','fungal'],['noxious','eastwall']])('does not cross black terrain or cut corners from %s to %s',(from,to)=>{
   const s=empty(),h=s.heroes[0];h.location=from;
-  expect(()=>apply(p,s,{type:'travel',hero:h.id,path:[to]})).toThrow(/povezane/);
+  expect(()=>apply(p,s,{type:'travel',hero:h.id,path:[to]})).toThrow(/connected/);
   expect(walkingLine(from,to)).toEqual([]);
  });
  it('stops on blue creatures, then requires a challenge, including blue creatures at a flight destination',()=>{
   for(const [first,second] of [['stillwater','agamand'],['caer','plaguemist']]){
    const s=empty(),h=s.heroes[0];s.enemies.push({id:'blocking-blue',creature:'gnoll',color:'blue',region:first});
-   expect(()=>apply(p,s,{type:'travel',hero:h.id,path:[first,second]})).toThrow(/zaustavlja/);
+   expect(()=>apply(p,s,{type:'travel',hero:h.id,path:[first,second]})).toThrow(/stops/);
    const next=apply(p,s,{type:'travel',hero:h.id,path:[first]});
    expect(reachable(p,next,next.heroes[0])).toEqual({});
-   expect(()=>apply(p,next,{type:'rest',hero:h.id,health:0})).toThrow(/izazov/);
+   expect(()=>apply(p,next,{type:'rest',hero:h.id,health:0})).toThrow(/Challenge/);
    expect(legalActions(p,next).some(c=>c.type==='challenge'&&c.hero===h.id)).toBe(true);
   }
  });

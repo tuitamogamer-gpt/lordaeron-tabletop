@@ -41,32 +41,32 @@ export function resolveEvent(p:ContentPack,s:State,e:EventCard){
  }
 }
 export function eventChoice(p:ContentPack,s:State,id:string,c:EventChoiceArgs){
- const flow=s.eventFlow,step=flow?.steps[0],h=hero(s,id);assert(s.phase==='event'&&flow&&step?.hero===id,'Ovaj lik nema odluku događaja.');
+ const flow=s.eventFlow,step=flow?.steps[0],h=hero(s,id);assert(s.phase==='event'&&flow&&step?.hero===id,"This character has no event decision.");
  const e=p.events.find(e=>e.id===flow.event)!;
- if(step.kind==='tribute'){assert(c.card&&h.bag.includes(c.card),'Predaj jedan predmet iz torbe.');h.bag.splice(h.bag.indexOf(c.card),1);worldEvent(s,e.id)!.items.push(c.card);}
- else if(step.kind==='nefarian'){assert(c.region&&nefarianDestinations(p,s,e.fate).includes(c.region),'Nefarian mora završiti najbliže Bulwarku.');s.overlord.region=c.region;if(c.region==='bulwark'){startNefarian(p,s,finalAttacker(p,s));return;}}
+ if(step.kind==='tribute'){assert(c.card&&h.bag.includes(c.card),"Contribute one item from your bag.");h.bag.splice(h.bag.indexOf(c.card),1);worldEvent(s,e.id)!.items.push(c.card);}
+ else if(step.kind==='nefarian'){assert(c.region&&nefarianDestinations(p,s,e.fate).includes(c.region),"Nefarian must end as close to the Bulwark as possible.");s.overlord.region=c.region;if(c.region==='bulwark'){startNefarian(p,s,finalAttacker(p,s));return;}}
  else if(c.mode!=='skip')switch(step.kind){
-  case 'professions':if(c.mode==='gold')h.gold+=h.level;else{assert(c.mode==='recover','Odaberi zlato ili oporavak.');rest(p,h,h.level,c.health??0);}break;
-  case 'zeppelin':assert(c.region&&[faction(p,id),'both'].includes(region(p,c.region).flight??'')&&!s.heroes.some(a=>a.location===c.region&&faction(p,a.id)!==faction(p,id)),'Odaberi prijateljski let bez protivnika.');h.location=c.region;break;
-  case 'merchants':{assert(c.card&&s.merchant.includes(c.card),'Odaberi predmet trgovca.');const price=Math.ceil(card(p,c.card).price/2);assert(h.gold>=price,'Nema dovoljno zlata.');h.gold-=price;s.merchant.splice(s.merchant.indexOf(c.card),1);receiveItem(p,s,h,c.card,c.discard);break;}
-  case 'sell':assert(c.card&&h.bag.includes(c.card)&&!card(p,c.card).soulbound,'Odaberi predmet iz torbe.');h.bag.splice(h.bag.indexOf(c.card),1);h.gold+=Math.floor(card(p,c.card).price/2);s.merchant.push(c.card);break;
+  case 'professions':if(c.mode==='gold')h.gold+=h.level;else{assert(c.mode==='recover',"Choose gold or recovery.");rest(p,h,h.level,c.health??0);}break;
+  case 'zeppelin':assert(c.region&&[faction(p,id),'both'].includes(region(p,c.region).flight??'')&&!s.heroes.some(a=>a.location===c.region&&faction(p,a.id)!==faction(p,id)),"Choose a friendly flight point without opponents.");h.location=c.region;break;
+  case 'merchants':{assert(c.card&&s.merchant.includes(c.card),"Choose a merchant item.");const price=Math.ceil(card(p,c.card).price/2);assert(h.gold>=price,"Not enough gold.");h.gold-=price;s.merchant.splice(s.merchant.indexOf(c.card),1);receiveItem(p,s,h,c.card,c.discard);break;}
+  case 'sell':assert(c.card&&h.bag.includes(c.card)&&!card(p,c.card).soulbound,"Choose an item from your bag.");h.bag.splice(h.bag.indexOf(c.card),1);h.gold+=Math.floor(card(p,c.card).price/2);s.merchant.push(c.card);break;
   case 'retrain':{
    if(c.mode==='gold'){h.gold+=h.level*2;break;}
-   assert(c.mode==='talents'&&c.talents&&c.talents.length===h.talents.length&&unique(c.talents),'Odaberi zamjene talenata.');
+   assert(c.mode==='talents'&&c.talents&&c.talents.length===h.talents.length&&unique(c.talents),"Choose replacement talents.");
    const old=[...h.talents],limits=old.map(id=>card(p,id).level).sort(),next=c.talents.map(id=>card(p,id)).sort((a,b)=>a.level-b.level);
-   assert(next.every((v,i)=>v.kind==='talent'&&v.classId===character(p,h.id).classId&&v.level<=limits[i]),'Novi talent mora biti istog ili nižeg nivoa.');
+   assert(next.every((v,i)=>v.kind==='talent'&&v.classId===character(p,h.id).classId&&v.level<=limits[i]),"The new talent must be the same level or lower.");
    h.talents=old.filter(id=>c.talents!.includes(id));const cap=capacity(p,h);h.health=Math.min(h.health,cap.health);h.energy=Math.min(h.energy,cap.energy);h.talents=[...c.talents];
    for(const id of h.talents.filter(id=>!old.includes(id)))for(const a of card(p,id).abilities.filter(a=>a.timing==='learn'))effects(p,s,h,id,a.effects,{});break;
   }
   case 'horizons':{
-   const q=p.quests.find(q=>q.id===c.quest);assert(q&&s.quests.includes(q.id)&&q.faction===step.faction&&c.tier,'Odaberi svoj quest i novi špil.');
-   s.quests=s.quests.filter(id=>id!==q.id);s.enemies=s.enemies.filter(v=>v.quest!==q.id);assert(drawQuest(p,s,q.faction,c.tier),'Nema dostupnog questa tog nivoa.');s.questDecks[q.faction][q.tier].push(q.id);break;
+   const q=p.quests.find(q=>q.id===c.quest);assert(q&&s.quests.includes(q.id)&&q.faction===step.faction&&c.tier,"Choose your quest and a new deck.");
+   s.quests=s.quests.filter(id=>id!==q.id);s.enemies=s.enemies.filter(v=>v.quest!==q.id);assert(drawQuest(p,s,q.faction,c.tier),"No quest of that level is available.");s.questDecks[q.faction][q.tier].push(q.id);break;
   }
   case 'beasts':{
-   const enemy=s.enemies.find(v=>v.id===c.enemy);assert(enemy&&enemy.color==='blue'&&c.region,'Odaberi plavo stvorenje i regiju.');
+   const enemy=s.enemies.find(v=>v.id===c.enemy);assert(enemy&&enemy.color==='blue'&&c.region,"Choose a blue creature and a region.");
    const group=s.enemies.filter(v=>v.color==='blue'&&v.region===enemy.region&&v.creature===enemy.creature);
-   assert(group.every(v=>!flow.moved.includes(v.id)),'Ova grupa se već pomjerila.');
-   assert(distances(p,enemy.region)[c.region]<=2&&!region(p,c.region).home&&!s.heroes.some(h=>h.location===c.region&&faction(p,h.id)!==step.faction)&&!s.enemies.some(v=>v.region===c.region&&v.color==='blue'&&v.creature===enemy.creature&&!group.includes(v)),'Grupa ne može završiti u toj regiji.');
+   assert(group.every(v=>!flow.moved.includes(v.id)),"This group has already moved.");
+   assert(distances(p,enemy.region)[c.region]<=2&&!region(p,c.region).home&&!s.heroes.some(h=>h.location===c.region&&faction(p,h.id)!==step.faction)&&!s.enemies.some(v=>v.region===c.region&&v.color==='blue'&&v.creature===enemy.creature&&!group.includes(v)),"The group cannot end in that region.");
    for(const v of group){v.region=c.region;flow.moved.push(v.id);}break;
   }
  }

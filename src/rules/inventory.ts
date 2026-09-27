@@ -8,12 +8,12 @@ export function equipped(p: ContentPack, h: Hero): string[] {
 export const petCapacity=(p:ContentPack,h:Hero,id:string)=>(card(p,id).petHealth??0)+h.talents.reduce((n,t)=>{const v=card(p,t).petCapacity;return n+(v&&v.trait===card(p,id).trait?v.amount:0);},0);
 export const bagSize = (p: ContentPack, ids: string[]) => ids.filter(id => !card(p, id).bagExempt).length;
 export function receiveItem(p: ContentPack, s: Market, h: Hero, id: string, discard?: string) {
- assert(card(p, id).kind === 'item', 'Samo predmeti mogu u torbu.');
+ assert(card(p, id).kind === 'item', "Only items can go in the bag.");
  h.bag.push(id);
  if (bagSize(p, h.bag) > 3) {
-  assert(discard && h.bag.includes(discard) && !card(p, discard).bagExempt, 'Torba je puna. Odaberi predmet za trgovca.');
+  assert(discard && h.bag.includes(discard) && !card(p, discard).bagExempt, "Your bag is full. Choose an item for the merchant.");
   h.bag.splice(h.bag.indexOf(discard), 1); s.merchant.push(discard);
- } else assert(!discard, 'Predmet se može odbaciti samo kada je torba prepuna.');
+ } else assert(!discard, "An item can only be discarded when the bag overflows.");
 }
 export function unequip(p: ContentPack, h: Hero, id: string) {
  const before=capacity(p,h);
@@ -24,29 +24,29 @@ export function unequip(p: ContentPack, h: Hero, id: string) {
 }
 export function train(p: ContentPack, h: Hero, id: string) {
  const c = card(p, id);
- assert(c.kind === 'power' && !c.printed && c.classId === character(p, h.id).classId && c.level <= h.level && !h.learned.includes(id), 'Moć nije dostupna za trening.');
- assert(h.gold >= c.price, 'Nema dovoljno zlata.'); h.gold -= c.price; h.learned.push(id);
+ assert(c.kind === 'power' && !c.printed && c.classId === character(p, h.id).classId && c.level <= h.level && !h.learned.includes(id), "This power is unavailable for training.");
+ assert(h.gold >= c.price, "Not enough gold."); h.gold -= c.price; h.learned.push(id);
 }
 export function manage(p: ContentPack, s: Market, h: Hero, slots: Equipped[], discard: string[]) {
  const def = {...character(p, h.id),slots:heroSlots(p,h)}, before = equipped(p, h);
- assert(slots.length === def.slots.length, 'Pogrešan broj mjesta za opremu.');
+ assert(slots.length === def.slots.length, "Incorrect number of equipment slots.");
  const oldItems = [...h.bag, ...h.slots.flatMap(a => [a.card, ...a.addons].filter((id): id is string => !!id && card(p, id).kind === 'item'))];
  const ids = slots.flatMap(a => [a.card, ...a.addons].filter((id): id is string => !!id));
- assert(unique(ids) && unique(discard), 'Ista karta ne može biti na dva mjesta.');
+ assert(unique(ids) && unique(discard), "The same card cannot occupy two slots.");
  const groups: string[] = []; let cost = 0;const newlyActive:string[]=[];
  slots.forEach((slot, i) => {
   const area = def.slots[i]; const functions: string[] = [];
   for (const id of [slot.card ?? area.printed, ...slot.addons].filter((x): x is string => !!x)) {
    const c = card(p, id), isPrinted = id === area.printed && !slot.card;
-   assert(isPrinted || (c.kind === 'power' ? h.learned.includes(id) : oldItems.includes(id)), 'Karta nije u tvojoj torbi ili knjizi.');
+   assert(isPrinted || (c.kind === 'power' ? h.learned.includes(id) : oldItems.includes(id)), "This card is not in your bag or spellbook.");
    const override=h.talents.map(id=>card(p,id).equipOverride).find(v=>v&&area.types.includes(v.slot)&&v.traits.includes(c.trait??'')&&c.level<=v.maxLevel&&c.kind==='item'&&!c.addon);
-   assert(c.level <= h.level && (area.types.includes(c.type)||override), 'Karta ne odgovara mjestu ili nivou junaka.');
-   assert(c.kind !== 'item' || area.traits.includes('all') || area.traits.includes(c.trait ?? '')||override, 'Osobina predmeta ne odgovara mjestu.');
-   assert(!area.stanceOnly || c.unique === 'Stance', 'Ovo mjesto je samo za Stance moći.');
-   assert(c.unique !== 'Stance' || area.stanceOnly, 'Stance mora biti u predviđenom mjestu.');
-   if (c.unique && c.kind === 'power') { assert(!groups.includes(c.unique), 'Dozvoljena je samo jedna moć jedinstvene kategorije.'); groups.push(c.unique); }
-   if (slot.addons.includes(id)) { assert(c.addon && c.functionTrait && !functions.includes(c.functionTrait), 'Add-on iste funkcije je već opremljen.'); functions.push(c.functionTrait); }
-   else assert(!c.addon, 'Add-on pripada dodatnom mjestu.');
+   assert(c.level <= h.level && (area.types.includes(c.type)||override), "This card does not fit the slot or the hero’s level.");
+   assert(c.kind !== 'item' || area.traits.includes('all') || area.traits.includes(c.trait ?? '')||override, "The item’s trait does not fit the slot.");
+   assert(!area.stanceOnly || c.unique === 'Stance', "This slot is only for Stance powers.");
+   assert(c.unique !== 'Stance' || area.stanceOnly, "A Stance must occupy its designated slot.");
+   if (c.unique && c.kind === 'power') { assert(!groups.includes(c.unique), "Only one power in a unique category is allowed."); groups.push(c.unique); }
+   if (slot.addons.includes(id)) { assert(c.addon && c.functionTrait && !functions.includes(c.functionTrait), "An add-on with this function is already equipped."); functions.push(c.functionTrait); }
+   else assert(!c.addon, "An add-on belongs in an attachment slot.");
    if (!before.includes(id) && c.type === 'active') newlyActive.push(id);
   }
  });
@@ -56,11 +56,11 @@ export function manage(p: ContentPack, s: Market, h: Hero, slots: Equipped[], di
   const free=modifiers.some(ca=>ca.equipFreeTraits?.includes(c.trait??''));
   cost+=free?0:Math.max(0,c.energy-modifiers.reduce((n,ca)=>n+(ca.powerDiscount??0),0));modifiers.push(c);
  }
- assert(h.energy >= cost, 'Nema energije za opremanje aktivnih moći.');
+ assert(h.energy >= cost, "Not enough energy to equip active powers.");
  const nextItems = ids.filter(id => card(p, id).kind === 'item');
  h.bag = oldItems.filter(id => !nextItems.includes(id));
- for (const id of discard) { assert(bagSize(p, h.bag) > 3 && h.bag.includes(id) && !card(p, id).bagExempt, 'Nevažeće odbacivanje iz torbe.'); h.bag.splice(h.bag.indexOf(id), 1); s.merchant.push(id); }
- assert(bagSize(p, h.bag) <= 3, 'Torba smije imati najviše tri predmeta.');
+ for (const id of discard) { assert(bagSize(p, h.bag) > 3 && h.bag.includes(id) && !card(p, id).bagExempt, "Invalid bag discard."); h.bag.splice(h.bag.indexOf(id), 1); s.merchant.push(id); }
+ assert(bagSize(p, h.bag) <= 3, "A bag holds at most three items.");
  h.energy -= cost; h.slots = structuredClone(slots);
  const after = equipped(p, h);
  for (const id of Object.keys(h.pets)) if (!after.includes(id)) delete h.pets[id];
@@ -69,21 +69,21 @@ export function manage(p: ContentPack, s: Market, h: Hero, slots: Equipped[], di
 }
 export function sell(p: ContentPack, s: Market, h: Hero, id: string) {
  const c = card(p, id), bag = h.bag.indexOf(id);
- assert(c.kind === 'item' && !c.soulbound && (bag >= 0 || h.slots.some(a => a.card === id || a.addons.includes(id))), 'Predmet se ne može prodati.');
+ assert(c.kind === 'item' && !c.soulbound && (bag >= 0 || h.slots.some(a => a.card === id || a.addons.includes(id))), "This item cannot be sold.");
  if (bag >= 0) h.bag.splice(bag, 1); else { unequip(p, h, id); h.bag.splice(h.bag.indexOf(id), 1); }
  h.gold += Math.ceil(c.price / 2); s.merchant.push(id);
 }
 export function rest(p: ContentPack, h: Hero, budget: number, health: number) {
  const cap = capacity(p, h);
- assert(integer(health, 0, budget) && health <= Math.max(0, cap.health - h.health), 'Neispravna raspodjela oporavka.');
+ assert(integer(health, 0, budget) && health <= Math.max(0, cap.health - h.health), "Invalid recovery distribution.");
  h.health += health; h.energy = Math.max(h.energy, Math.min(cap.energy, h.energy + budget - health));
 }
 /** Shared transaction executor also powers the UI's read-only cart preview. */
 export function townOperations(p: ContentPack, s: Market, h: Hero, health: number, operations: TownOperation[]) {
- rest(p,h,h.level,health); assert(operations.length <= 100,'Previše transakcija.');
+ rest(p,h,h.level,health); assert(operations.length <= 100,"Too many transactions.");
  for (const op of operations) {
   if (op.op === 'train') train(p,h,op.card);
   else if (op.op === 'sell') sell(p,s,h,op.card);
-  else { const item=card(p,op.card); assert(s.merchant.includes(item.id)&&h.gold>=item.price,'Predmet nije dostupan ili nema dovoljno zlata.'); h.gold-=item.price; s.merchant.splice(s.merchant.indexOf(item.id),1); receiveItem(p,s,h,item.id,op.discard); }
+  else { const item=card(p,op.card); assert(s.merchant.includes(item.id)&&h.gold>=item.price,"This item is unavailable or you lack enough gold."); h.gold-=item.price; s.merchant.splice(s.merchant.indexOf(item.id),1); receiveItem(p,s,h,item.id,op.discard); }
  }
 }

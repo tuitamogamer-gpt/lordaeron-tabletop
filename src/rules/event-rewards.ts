@@ -36,6 +36,6 @@ export function battleEvents(p:ContentPack,s:State){
  }
 }
 export function purify(p:ContentPack,s:State,id:string){
- const h=hero(s,id),plague=activeEvent(p,s,'plague');assert(s.phase==='actions'&&(s.lastActions??(s.lastAction?[s.lastAction]:[])).includes(id)&&plague&&plague.tokens.includes(h.location),'Pročišćavanje je dostupno na kraju vlastite akcije u zaraženoj regiji.');
+ const h=hero(s,id),plague=activeEvent(p,s,'plague');assert(s.phase==='actions'&&(s.lastActions??(s.lastAction?[s.lastAction]:[])).includes(id)&&plague&&plague.tokens.includes(h.location),"Cleansing is available after your own action in an infected region.");
  spendEnergy(s,h,3);plague.tokens=plague.tokens.filter(r=>r!==h.location);awardXP(p,h,1);if(!plague.tokens.length)removeWorld(s,plague.id);delete s.lastAction;s.lastActions=s.lastActions?.filter(v=>v!==id);
 }

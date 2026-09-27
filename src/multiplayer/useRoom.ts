@@ -12,12 +12,12 @@ export function useRoom(){
  const current=useRef(snapshot);current.current=snapshot;
  const cred=useRef(credentials);cred.current=credentials;
  const accept=useCallback((s:RoomSnapshot)=>setSnapshot(old=>!old||old.id!==s.id||s.revision>=old.revision?s:old),[]);
- const refresh=useCallback(async()=>{const c=cred.current;if(!c)return;const r=await fetch(`/api/game?room=${encodeURIComponent(c.room)}`,{headers:{Authorization:`Bearer ${c.token}`}});const data=await r.json();if(!r.ok)throw new Error(data.error??'Veza nije uspjela.');if(cred.current?.room===c.room)accept(data);},[accept]);
+ const refresh=useCallback(async()=>{const c=cred.current;if(!c)return;const r=await fetch(`/api/game?room=${encodeURIComponent(c.room)}`,{headers:{Authorization:`Bearer ${c.token}`}});const data=await r.json();if(!r.ok)throw new Error(data.error??"Connection failed.");if(cred.current?.room===c.room)accept(data);},[accept]);
  useEffect(()=>{if(!credentials){setSnapshot(null);setConnected(false);localStorage.removeItem(storage);return;}
   localStorage.setItem(storage,JSON.stringify(credentials));const saved={...savedCredentials(),[credentials.room]:credentials};localStorage.setItem(archiveStorage,JSON.stringify(saved));setSavedRooms(Object.keys(saved));let stopped=false,socket:WebSocket|undefined,retry:ReturnType<typeof setTimeout>|undefined,attempt=0;
   const connect=()=>{if(stopped)return;socket=new WebSocket(`${location.protocol==='https:'?'wss:':'ws:'}//${location.host}/api/ws`);
    socket.onopen=()=>{socket?.send(JSON.stringify(credentials));};
-   socket.onmessage=e=>{if(stopped)return;try{const data=JSON.parse(String(e.data)) as RoomSnapshot;accept(data);setConnected(true);setError('');attempt=0;}catch{setError('Neispravan odgovor mrežnog servisa.');}};
+   socket.onmessage=e=>{if(stopped)return;try{const data=JSON.parse(String(e.data)) as RoomSnapshot;accept(data);setConnected(true);setError('');attempt=0;}catch{setError("Invalid response from the network service.");}};
    socket.onerror=()=>setConnected(false);
    socket.onclose=()=>{setConnected(false);if(!stopped)retry=setTimeout(connect,Math.min(15000,1000*2**attempt++));};
   };
@@ -31,9 +31,9 @@ export function useRoom(){
    let response:Response;
    try{response=await fetch('/api/game',{method:'POST',headers:{'Content-Type':'application/json',...(token?{Authorization:`Bearer ${token}`}:{})},body:JSON.stringify(body)});}
    catch(e){if(body.kind!=='command')throw e;response=await fetch('/api/game',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify(body)});}
-   const data=await response.json();if(!response.ok){if(response.status===409)await refresh();throw new Error(data.error??'Zahtjev nije uspio.');}
+   const data=await response.json();if(!response.ok){if(response.status===409)await refresh();throw new Error(data.error??"Request failed.");}
    if(data.token)setCredentials({room:data.id,token:data.token});accept(data);return true;
-  }catch(e){setError(e instanceof Error?e.message:'Veza nije uspjela.');return false;}finally{setBusy(false);}
+  }catch(e){setError(e instanceof Error?e.message:"Connection failed.");return false;}finally{setBusy(false);}
  },[accept,refresh]);
  const mutate=useCallback((body:Record<string,unknown>)=>{const s=current.current;if(!s)return Promise.resolve(false);return request({...body,room:s.id,revision:s.revision});},[request]);
  return {snapshot,connected,busy,error,credentials,savedRooms,resume:(id:string)=>{const c=savedCredentials()[id];if(c)setCredentials(c);},

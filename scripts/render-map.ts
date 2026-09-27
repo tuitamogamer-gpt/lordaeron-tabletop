@@ -12,7 +12,9 @@ const state=createGame(p,DEFAULT_SETUP);
 const html=renderToStaticMarkup(React.createElement(Map,{state:view(state),selected:'stillwater',heroId:state.heroes[0].id,legal:legalActions(p,state),focused:true,onToggleFocus:()=>{},onSelect:()=>{},onMove:()=>{}}));
 let svg=html.slice(html.indexOf('<svg viewBox='),html.lastIndexOf('</svg>')+6);
 // Map icons outside the board are not part of this standalone SVG artifact.
-const end=svg.indexOf('</svg>');svg=svg.slice(0,end+6);
+let depth=0,end=0;
+for(const match of svg.matchAll(/<svg\b|<\/svg>/g)){depth+=match[0]==='</svg>'?-1:1;if(depth===0){end=match.index!+match[0].length;break;}}
+svg=svg.slice(0,end);
 svg=svg.replace('<svg ', '<svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="2070" height="1380" ');
 const css=readFileSync('src/campaign/map.css','utf8').replaceAll('var(--serif)','Georgia').replaceAll('var(--sans)','Arial');
 svg=svg.replace('><defs>',`><style>${css}</style><defs>`);

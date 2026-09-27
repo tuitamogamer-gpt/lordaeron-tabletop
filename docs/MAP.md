@@ -1,4 +1,4 @@
-# Lordaeron board · v0.4
+# Lordaeron board · v0.5
 
 The central map is a 2D polygon board with all 67 named regions in the seven printed areas. The default table view fits the full board. **Interact with map** (or F) expands it beside the quest ledger, enabling wheel zoom, drag, arrow-key panning, +/−, region search, hero centering, and 0 to reset. Escape returns to the table and restores the overview.
 
@@ -9,7 +9,7 @@ The central map is a 2D polygon board with all 67 named regions in the seven pri
 - [Second full-board photograph](https://www.mandisattictoys.com/products/world-of-warcraft-the-boardgame-2005-fantasy-flight-games-unpunched), [image](https://www.mandisattictoys.com/cdn/shop/files/IMG_7419_7a13025a-e184-4c87-bbc8-913b0876e3a1.jpg?v=1689555834), cross-checks region outlines, town/flight/graveyard icons, and mountain pockets. This reference is local only.
 - The supplied 560-scan archive contains quest cards and tokens, but no main board. Quest objectives and rewards continue to come from that archive and the FAQ errata, including The Infectis Scar for Brutes in the Barrows.
 
-`src/data/board-geometry.ts` is a hand tracing, simplified to straight segments. It is a reconstruction from photographs, not an official vector or a flat scan. Existing generated terrain is a faint decorative texture clipped to the playable polygons. Polygon borders, rather than painted terrain, determine play.
+`src/data/board-geometry.ts` is a hand tracing, simplified to straight segments. It is a reconstruction from photographs, not an official vector or a flat scan. The imagegen terrain is aligned to the traced 3:2 viewport and supplies biome illustrations. Precise SVG borders, labels, routes, references and counters sit above the artwork. Only polygon borders determine play. Quest decks and token faces also use generated art; their counts and text remain live. See [art assets and exact prompts](IMAGEGEN-MAP-V2.md).
 
 Each exact shared polygon segment is traversable and drawn in its area's border color. Exterior segments border impassable terrain and are black. A single shared vertex is not a connection. Both `BOARD_REGIONS.neighbors` and the displayed borders are derived from this mesh; there is no separate proximity-based graph to drift out of sync.
 
@@ -19,7 +19,7 @@ The old graph included shortcuts across black terrain, such as Agamand–Brill, 
 
 One ordinary Travel action allows up to two steps. Adjacent regions and a flight between friendly flight icons each cost one step. There are four friendly flight regions per faction, counting Pestilent Scar for both. An enemy home region is never a legal destination.
 
-Blue creatures stop movement on entry and force the next action to be a Challenge; the existing explicitly equipped exceptions still apply. Green and red quest creatures do not stop Travel. The selected route comes from engine legal commands and is only submitted by **Putuj ovdje**. Step numbers and a textual itinerary show the cost; flight legs are blue curves and walking legs use polygon-interior visibility paths, including concave passes.
+Blue creatures stop movement on entry and force the next action to be a Challenge; the existing explicitly equipped exceptions still apply. Green and red quest creatures do not stop Travel. The selected route comes from engine legal commands and is only submitted by **Travel here**. Step numbers and a textual itinerary show the cost; flight legs are blue curves and walking legs use polygon-interior visibility paths, including concave passes.
 
 ## Quest cards, tokens and decks
 
@@ -32,6 +32,8 @@ Blue creatures stop movement on entry and force the next action to be a Challeng
 ## Save compatibility
 
 The corrected topology changes the content fingerprint and legal replays. The pack is `base-2005-faq-1.4-map-v4`, with autosave key `lordaeron-base-save-v4`. The v0.3 key is not overwritten or deleted; settings offer its original JSON for download. Old commands are not silently replayed against changed paths. Bot ownership preferences remain shared with the previous version.
+
+The English v0.5 release translates six display-only card descriptions. The exact previous v4 fingerprint `3770cbda` is accepted only with current fingerprint `131aa8d4` and the same v4 pack. Imported saves are replayed and re-exported with the current fingerprint. Other hashes and gameplay changes remain rejected, covered by `tests/english-save.test.ts`.
 
 ## Verification
 

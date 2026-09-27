@@ -8,9 +8,9 @@ talent(4,'Thundering Strikes',3,[ability('after-reroll',[change({colors:['red','
 talent(5,'Elemental Focus',2,[],{discount:{cards:shocks,amount:1}});
 talent(6,'Elemental Fury',5,many('tokens',10,n=>[spot({values:[8]},n*2,token('damage',n))]));
 talent(7,'Parry',3,[ability('pool',[{op:'remove',filter:{colors:['red']},count:1,effects:[dice('green',3)]}])]);
-talent(8,'Improved Healing Wave',2,[],{description:'Healing Wave oporavlja 4 zdravlja umjesto 2.'});
+talent(8,'Improved Healing Wave',2,[],{description:"Healing Wave recovers 4 health instead of 2."});
 talent(9,'Improved Rockbiter',2,[ability('pool',[dice('red')],{automatic:true,condition:{kind:'equipped',cardId:'shaman-rockbiter-weapon'}})]);
-talent(10,'Improved Windfury',4,[],{description:'Windfury Weapon može Spot označiti osmice bilo koje boje; za svaku dodaj kockicu odabrane boje.'});
+talent(10,'Improved Windfury',4,[],{description:"Windfury Weapon can Spot dice showing 8 in any color; add one die in your chosen color for each."});
 talent(11,'Elemental Mastery',5,[ability('after-reroll',[{op:'unequip-choice',cards:['shaman-earth-shock','shaman-frost-shock','shaman-chain-lightning']},token('damage',3)])]);
 talent(12,'Mana Tide Totem',5,[ability('round-start',[{op:'group-resource',resource:'energy',amount:1}],{automatic:true})],{aura:[{timing:'pool',effects:[stat('reroll',1)]}]});
 talent(13,"Nature's Swiftness",4,[ability('pool',[{op:'equip-power',card:'shaman-healing-wave'}],{cost:2})],{cardRepeat:{card:'shaman-chain-lightning',uses:2}});

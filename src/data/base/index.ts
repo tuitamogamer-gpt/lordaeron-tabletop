@@ -28,11 +28,11 @@ export const BASE_PACK:ContentPack={
 };
 export const DEFAULT_SETUP:Setup={seed:2005,roster:['grumbaz-crowsblood','sofeea-icecall','zowka-shattertusk','brandon-lightstone','burbon-fang','artumnis-moondream'],overlord:'kelthuzad'};
 export const CONTENT_COVERAGE=[
- {name:'Likovi i početne karte',expected:16,note:'16 listova: rasne moći, početna oprema, kapaciteti i sedam mjesta.'},
- {name:'Power + Talent',expected:216,note:'108 moći i 108 talenata; svih devet klasa.'},
- {name:'Predmeti',expected:120,note:'46 triangle, 30 square, 16 circle i 28 special predmeta.'},
- {name:'Questovi',expected:80,note:'40 za svaku frakciju, sa spawnovima i nagradama.'},
- {name:'Događaji',expected:52,note:'47 osnovnih + 5 Kel’Thuzad događaja; izbori, aukcije i svjetski bossovi.'},
- {name:'Stvorenja',expected:13,note:'Vrijednosti i efekti provjereni na referentnom listu.'},
- {name:'Overlordi',expected:3,note:'Kazzak, Nefarian i Kel’Thuzad; profili za četiri i šest likova.'},
+ {name:"Characters and starting cards",expected:16,note:"16 character sheets: racial powers, starting equipment, capacities and seven slots."},
+ {name:'Power + Talent',expected:216,note:"108 powers and 108 talents across all nine classes."},
+ {name:"Items",expected:120,note:"46 triangle, 30 square, 16 circle and 28 special items."},
+ {name:"Quests",expected:80,note:"40 for each faction, with creature placement and rewards."},
+ {name:"Events",expected:52,note:"47 base events and 5 Kel’Thuzad events, with choices, auctions and world bosses."},
+ {name:"Creatures",expected:13,note:"Values and effects verified against the reference sheet."},
+ {name:"Overlords",expected:3,note:"Kazzak, Nefarian and Kel’Thuzad, with profiles for four and six characters."},
 ];

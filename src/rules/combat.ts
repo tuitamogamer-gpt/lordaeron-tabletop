@@ -19,7 +19,7 @@ export function eligibleAttackers(p: ContentPack, s: State): string[] {
  const next = candidates.filter(id => faction(p, id) === b.nextFaction); return next.length ? next : candidates;
 }
 export function chooseAttacker(p: ContentPack, s: State, id: string) {
- const b = s.battle!; assert(b.stage === 'attacker' && eligibleAttackers(p, s).includes(id), 'Junak sada ne može napasti.');
+ const b = s.battle!; assert(b.stage === 'attacker' && eligibleAttackers(p, s).includes(id), "This hero cannot attack now.");
  let threat: number;
  if (b.kind === 'pve') threat = Math.max(...(b.boss ? [stats(p, s).threat] : b.enemies.map(id => stats(p, s, id).threat)));
  else threat = Math.max(...living(s, b, other(faction(p, id)), p).map(id => hero(s, id).level)) + 2;
@@ -33,7 +33,7 @@ export function rollPool(s: State) {
 }
 export function monsterEffect(p: ContentPack, s: State, selected: string[] = []) {
  const b = s.battle!, a = b.active!, h = hero(s, a.heroId);
- assert(b.stage === 'after-reroll', 'Efekt čudovišta nije na redu.');
+ assert(b.stage === 'after-reroll', "The creature effect does not resolve now.");
  const rule = immune(p,h,creatureRule(p,s))?'none':creatureRule(p, s), dice = a.dice.filter(d => !d.removed);
  const low = dice.filter(d => d.value <= 2 && d.color !== 'green');
  const ones = dice.filter(d => d.value === 1 && d.color !== 'green');
@@ -50,7 +50,7 @@ export function monsterEffect(p: ContentPack, s: State, selected: string[] = [])
   case 'wraith': h.curse += allOnes.length; a.reroll -= allOnes.length; a.attrition -= allOnes.length; break;
   case 'wildkin': {
    const powers = equipped(p, h).filter(id => p.cards.find(c => c.id === id)?.kind === 'power' && h.slots.some(a => a.card === id || a.addons.includes(id)));
-   assert(selected.length === Math.min(powers.length, allOnes.length) && new Set(selected).size === selected.length && selected.every(id => powers.includes(id)), 'Odaberi moći koje Wildkin uklanja.');
+   assert(selected.length === Math.min(powers.length, allOnes.length) && new Set(selected).size === selected.length && selected.every(id => powers.includes(id)), "Choose the powers removed by the Wildkin.");
    for (const id of selected) unequip(p, h, id); break;
   }
  }
@@ -60,15 +60,15 @@ export function monsterEffect(p: ContentPack, s: State, selected: string[] = [])
 }
 export function placeTokens(p: ContentPack, s: State, toAttrition: number[] = []) {
  const b = s.battle!, a = b.active!, h = hero(s, a.heroId), box = b.boxes[faction(p, h.id)], rule = immune(p,h,creatureRule(p,s))?'none':creatureRule(p, s);
- assert(b.stage === 'tokens', 'Pogoci se ne raspoređuju u ovoj fazi.');
+ assert(b.stage === 'tokens', "Hits cannot be assigned in this phase.");
  if (!b.defeated.includes(h.id)) {
   const hits = a.dice.filter(d => !d.removed && d.value >= a.threat);
   const nefarian = p.overlords.find(o => o.id === b.boss)?.combat === 'nefarian';
-  assert(new Set(toAttrition).size === toAttrition.length && toAttrition.every(id => hits.some(d => d.id === id && d.color !== 'green')), 'Nevažeći izbor pogodaka.');
+  assert(new Set(toAttrition).size === toAttrition.length && toAttrition.every(id => hits.some(d => d.id === id && d.color !== 'green')), "Invalid hit selection.");
   if (nefarian) {
    const eights = a.dice.filter(d => matches(d, { colors: ['red', 'blue'], values: [8] })).length;
-   assert(hits.filter(d => d.color !== 'green').length - toAttrition.length + (a.placed?.damage??0)+(a.placed?.defense??0) <= eights, 'Nefarian ograničava pogotke na broj crvenih/plavih osmica.');
-  } else assert(!toAttrition.length, 'Ovdje nije dozvoljeno premještanje pogodaka.');
+   assert(hits.filter(d => d.color !== 'green').length - toAttrition.length + (a.placed?.damage??0)+(a.placed?.defense??0) <= eights, "Nefarian limits hits to the number of red or blue dice showing 8.");
+  } else assert(!toAttrition.length, "Hits cannot be moved here.");
   for (const d of hits) {
    a.placed??=emptyBoxes();
    if (toAttrition.includes(d.id)) {box.attrition++;a.placed.attrition++;}
@@ -98,7 +98,7 @@ export function finishAttack(p:ContentPack,s:State){
 function killCreatures(p: ContentPack, s: State, targets?: string[]) {
  const b = s.battle!, box = b.boxes[b.first];
  if (b.boss) { if (box.damage >= stats(p, s).health) { box.damage -= stats(p, s).health; b.winner = b.first; b.stage = 'over'; if(!eventBoss(p,s))s.winner = b.first; } return; }
- if (targets) assert(targets.length === b.enemies.length && new Set(targets).size === targets.length && targets.every(id => b.enemies.includes(id)), 'Poredaj sve preostale protivnike bez ponavljanja.');
+ if (targets) assert(targets.length === b.enemies.length && new Set(targets).size === targets.length && targets.every(id => b.enemies.includes(id)), "Order all remaining opponents without duplicates.");
  const sorted = targets ?? [...b.enemies].sort((a, z) => stats(p, s, a).health - stats(p, s, z).health);
  for (const id of sorted) {
   const health = stats(p, s, id).health;
@@ -117,14 +117,14 @@ export function checkElimination(p: ContentPack, s: State): boolean {
  b.stage = 'over'; if (b.kind === 'final') s.winner = b.winner; return true;
 }
 export function defense(p: ContentPack, s: State, targets?: string[]) {
- const b = s.battle!; assert(b.stage === 'defense', 'Nije faza odbrane.');
+ const b = s.battle!; assert(b.stage === 'defense', "This is not the defense phase.");
  if (b.kind === 'pve') {
   killCreatures(p, s, targets); if (b.winner) return;
   if(b.report.includes(`execute:${b.first}`)){const box=b.boxes[b.first];box.damage=box.defense=box.attrition=0;}
   const box = b.boxes[b.first], attack = b.boss ? stats(p, s).attack : b.enemies.reduce((n, id) => n + stats(p, s, id).attack, 0);
   b.wounds[b.first] = Math.max(0, attack - box.defense - box.armor);
  } else {
-  assert(b.armorDone.length === 2, 'Obje frakcije moraju rasporediti oklop.');
+  assert(b.armorDone.length === 2, "Both factions must assign armor.");
   for (const f of ['horde', 'alliance'] as const) { b.wounds[other(f)] = b.boxes[f].damage; b.boxes[f].damage = 0; }
   for(const f of ['horde','alliance'] as const)if(b.report.includes(`execute:${f}`)){const box=b.boxes[f];box.damage=box.defense=box.attrition=0;}
  }
@@ -132,8 +132,8 @@ export function defense(p: ContentPack, s: State, targets?: string[]) {
 }
 export function wound(p: ContentPack, s: State, id: string, pet?: string) {
  const b = s.battle!, h = hero(s, id), f = faction(p, id);
- assert(b.stage === 'wounds' && b.wounds[f] > 0 && living(s, b).includes(id) && h.health > 0, 'Ovaj junak ne može primiti ranu.');
- if (pet) { assert(h.pets[pet] > 0, 'Ljubimac nije aktivan.'); h.pets[pet]--; if (!h.pets[pet]) unequip(p, h, pet); }
+ assert(b.stage === 'wounds' && b.wounds[f] > 0 && living(s, b).includes(id) && h.health > 0, "This hero cannot receive a wound.");
+ if (pet) { assert(h.pets[pet] > 0, "The pet is not active."); h.pets[pet]--; if (!h.pets[pet]) unequip(p, h, pet); }
  else healthLoss(s, h, 1);
  b.wounds[f]--;
  if (!s.respawns.length) continueWounds(p, s);
@@ -148,13 +148,13 @@ export function defeat(p: ContentPack, s: State, id: string, destination: string
  if(b)b.defeated.push(id); h.health = 1; h.energy = 1; h.actions = 0; h.stun = 0; h.curse = 0; h.location = destination;
  for (const pet of Object.keys(h.pets)) unequip(p, h, pet);
  h.auctionItems = [];h.slots=h.slots.slice(0,character(p,h.id).slots.length); s.respawns = s.respawns.filter(x => x !== id);
- note(s, `${character(p, id).name} je poražen i vraća se u ${destination}.`);
+ note(s, `${character(p, id).name} is defeated and returns to ${destination}.`);
  if(!b)return;
  if (b.stage === 'wounds') { if (!s.respawns.length) continueWounds(p, s); }
  else if (!checkElimination(p, s) && b.active?.heroId === id) { b.stage = 'tokens'; placeTokens(p, s); }
 }
 export function resolution(p: ContentPack, s: State, targets?: string[]) {
- const b = s.battle!; assert(b.stage === 'resolution', 'Nije faza razrješenja.');
+ const b = s.battle!; assert(b.stage === 'resolution', "This is not the resolution phase.");
  if(eventBoss(p,s)?.combat==='spilskin')b.boxes[b.first].attrition=0;
  for (const f of ['horde', 'alliance'] as const) { const box = b.boxes[f]; box.damage += box.defense + box.attrition; box.defense = box.attrition = box.armor = 0; }
  if (b.kind === 'pve') {
@@ -170,7 +170,7 @@ export function resolution(p: ContentPack, s: State, targets?: string[]) {
  }
 }
 export function nextRound(s: State) {
- const b = s.battle!; assert(b.stage === 'round-end', 'Runda još nije završila.');
+ const b = s.battle!; assert(b.stage === 'round-end', "The round has not ended yet.");
  b.previous = b.current; b.current = {}; b.round++; b.acted = []; b.nextFaction = b.first; b.armorDone = []; b.stage = 'attacker';b.report=b.report.filter(v=>!v.startsWith('execute:'));
 }
 export function enforceDicePenalties(s: State) {
@@ -180,21 +180,21 @@ export function enforceDicePenalties(s: State) {
 }
 export function removePenalty(s: State, ids: number[]) {
  const b = s.battle!, a = b.active!, h = hero(s, a.heroId), dice = a.dice.filter(d => !d.removed);
- assert(b.stage === 'penalty' && ids.length === Math.min(dice.length, h.stun * 2 + h.curse) && new Set(ids).size === ids.length, 'Odaberi kockice za Stun i Curse.');
- for (const id of ids) { const d = dice.find(d => d.id === id); assert(d, 'Kockica nije dostupna.'); d.removed = true; a.removed[d.color]++; }
+ assert(b.stage === 'penalty' && ids.length === Math.min(dice.length, h.stun * 2 + h.curse) && new Set(ids).size === ids.length, "Choose dice for Stun and Curse.");
+ for (const id of ids) { const d = dice.find(d => d.id === id); assert(d, "This die is unavailable."); d.removed = true; a.removed[d.color]++; }
  rollPool(s);
 }
 export function reroll(p: ContentPack, s: State, ids: number[]) {
- const b = s.battle!, a = b.active!; assert(b.stage === 'reroll' && creatureRule(p, s) !== 'ghoul', 'Reroll nije dozvoljen.');
- assert(ids.length > 0 && new Set(ids).size === ids.length && ids.length <= a.reroll, 'Nema dovoljno ponovnih bacanja.');
- for (const id of ids) { const d = a.dice.find(d => d.id === id); assert(d && !d.removed && !d.rerolled&&!a.forbidden?.reroll?.includes(d.color), 'Ova kockica se ne može ponoviti.'); d.value = random(s, 8) + 1; d.rerolled = true; }
+ const b = s.battle!, a = b.active!; assert(b.stage === 'reroll' && creatureRule(p, s) !== 'ghoul', "Reroll is not allowed.");
+ assert(ids.length > 0 && new Set(ids).size === ids.length && ids.length <= a.reroll, "Not enough rerolls.");
+ for (const id of ids) { const d = a.dice.find(d => d.id === id); assert(d && !d.removed && !d.rerolled&&!a.forbidden?.reroll?.includes(d.color), "This die cannot be rerolled."); d.value = random(s, 8) + 1; d.rerolled = true; }
  a.reroll -= ids.length;a.rerollStarted=true;
 }
 export function omitDice(s: State, omit = emptyPool()) {
  const a = s.battle!.active!;
- for (const color of colors) { assert(Number.isSafeInteger(omit[color]) && omit[color] >= 0, 'Nevažeći broj kockica.'); const dice = a.dice.filter(d => !d.removed && d.color === color); assert(omit[color] <= dice.length, 'Nema toliko kockica.'); const ids = dice.slice(0, omit[color]).map(d => d.id); a.dice = a.dice.filter(d => !ids.includes(d.id)); }
- for(const color of colors)if(a.poolLimits?.[color]!==undefined)assert(a.dice.filter(d=>!d.removed&&d.color===color).length<=a.poolLimits[color]!, 'Moć ograničava broj kockica ove boje.');
- assert(!a.dice.some(d=>!d.removed&&a.forbidden?.pool?.includes(d.color)),'Oprema zabranjuje bacanje odabrane boje.');
+ for (const color of colors) { assert(Number.isSafeInteger(omit[color]) && omit[color] >= 0, "Invalid number of dice."); const dice = a.dice.filter(d => !d.removed && d.color === color); assert(omit[color] <= dice.length, "Not enough dice."); const ids = dice.slice(0, omit[color]).map(d => d.id); a.dice = a.dice.filter(d => !ids.includes(d.id)); }
+ for(const color of colors)if(a.poolLimits?.[color]!==undefined)assert(a.dice.filter(d=>!d.removed&&d.color===color).length<=a.poolLimits[color]!, "A power limits dice of this color.");
+ assert(!a.dice.some(d=>!d.removed&&a.forbidden?.pool?.includes(d.color)),"Equipment prevents rolling the chosen color.");
 }
 export function poolPenalties(p:ContentPack,s:State){
  const a=s.battle!.active!,h=hero(s,a.heroId);

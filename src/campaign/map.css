@@ -17,7 +17,7 @@
 .map-field:hover,.map-field:focus-visible{fill:#fff0b63a;stroke:#fff0b6;outline:none}
 .map-field.selected{fill:#ffd96b40;stroke:#ffe2a2;stroke-width:3.5}
 .field-name{font:600 12px var(--serif);fill:#fff2ce;paint-order:stroke;stroke:#25291ff0;stroke-width:2.4;stroke-linejoin:round;letter-spacing:.1px}
-.field-name.active{fill:#fff8da}.map-zone-titles text{font:600 13px var(--serif);letter-spacing:1.8px;fill:#d5c197;opacity:.78}
+.field-name.active{fill:#fff8da}.map-zone-titles text{font:600 13px var(--serif);letter-spacing:1.8px;fill:#ffe8b8;paint-order:stroke;stroke:#3c2d1e;stroke-width:3px;stroke-linejoin:round}
 .field-services{fill:#cabd8c;stroke:#1c2525;stroke-width:1.3}.field-services.horde{fill:#e29379}.field-services.alliance{fill:#a5c9ef}.field-services.both{fill:#efcf91}.field-services.neutral{fill:#adc4bb}
 .step-counter circle{fill:#334b39;stroke:#d3ddad;stroke-width:1.4}.step-counter text{font:bold 10px var(--sans);fill:#f0f8ca}
 .map-route path{fill:none;stroke:#ffdd89;stroke-width:3.5;stroke-linejoin:round;stroke-linecap:round;stroke-dasharray:7 6;filter:drop-shadow(0 1px 2px #171608)}
@@ -48,3 +48,24 @@
 @media(min-width:1650px){.quest-ledger .table-quest strong{font-size:11px}.quest-ledger .table-quest small{font-size:9px}.quest-locate{padding:11px 0}.quest-reference{font-size:10px;min-width:32px}.quest-deck>span{font-size:9px}.quest-deck small{font-size:7px}}
 @media(max-height:900px){.desktop-tabletop .war-table{grid-template-rows:minmax(410px,1fr) 124px 34px}.desktop-tabletop.map-focus .war-table{grid-template-rows:minmax(520px,1fr)}.desktop-tabletop .player-mat>header{height:28px}.desktop-tabletop .seven-slots{height:76px}.desktop-tabletop .slot-card{height:55px}.desktop-tabletop .slot-card>span{display:none}}
 .legacy-save-note{font-size:11px;line-height:1.6;color:#c1b89a;padding:12px;background:#b2913720;border:1px solid #917b493d}.legacy-save-note button{display:flex;font-size:10px;margin-top:8px}
+
+/* Imagegen artwork supplies the material; game state stays selectable live text. */
+.board-terrain{filter:saturate(.88) brightness(.92)}
+.board-token-art{overflow:hidden;display:block;pointer-events:none}
+.quest-map-token .token-hit-area{fill:transparent;stroke:transparent;stroke-width:1.5}
+.quest-map-token:hover .token-hit-area,.quest-map-token:focus-visible .token-hit-area,.quest-map-token.active .token-hit-area{stroke:#ffe6a8;fill:#f7d07920}
+.quest-map-token text{font-weight:700;font-size:10px;fill:#fff4d8;paint-order:stroke;stroke:#171719;stroke-width:1.5;stroke-linejoin:round}
+.creature-counter text{font-size:12px;stroke:#172019;stroke-width:1.8}
+.map-cartouche text{fill:#ffe1a0;paint-order:stroke;stroke:#3d2b19;stroke-width:2.4;stroke-linejoin:round}.map-cartouche .cartouche-small{fill:#f0d6a4;stroke-width:1.5}
+.quest-decks{gap:8px;padding:7px 4px 12px}
+.quest-deck,.quest-deck.yellow,.quest-deck.red{display:block;aspect-ratio:2/3;min-height:0;padding:0;border:0;border-radius:3px;background-image:url('/assets/warcraft/quest-decks-v2.webp');background-size:300% 200%;background-repeat:no-repeat;box-shadow:2px 2px #1a1710,3px 3px #ad8650,4px 4px #14120e;color:#ffebbe;isolation:isolate}
+.quest-deck b{position:absolute;top:42%;left:0;width:100%;font:700 20px/1 var(--serif);text-align:center;color:#312618;text-shadow:0 1px #fbe6b15c}
+.quest-deck>span{position:absolute;bottom:17%;left:0;width:100%;font:600 9px/1.3 var(--sans);text-align:center;color:#ffedc5;text-shadow:0 1px 3px #000;margin:0}
+.quest-deck small{font-size:6px;letter-spacing:.4px;opacity:1;color:#d7c095;margin-top:4px}
+.quest-deck:focus-visible{outline:2px solid #ffebb0;outline-offset:3px}
+.replacement-decks .quest-decks{max-width:470px;gap:24px;margin:20px auto 12px}
+.replacement-decks .quest-deck{padding:0}.replacement-decks .quest-deck b{font-size:38px}.replacement-decks .quest-deck>span{font-size:15px}.replacement-decks .quest-deck small{font-size:9px}
+.quest-reference,.quest-reference.alliance{position:relative;background:transparent;border:0;box-shadow:none;min-width:34px;height:32px;padding-top:5px;font-weight:700;color:#fff0ca;text-shadow:0 1px 2px #000;isolation:isolate}
+.quest-reference:before{content:'';position:absolute;inset:0;background-image:url('/assets/warcraft/board-tokens-v2.webp');background-size:300% 200%;background-position:0 0;z-index:-1}
+.quest-reference.alliance:before{background-position:50% 0}
+@media(max-width:1450px){.quest-deck b{font-size:17px}.quest-deck>span{font-size:8px}.quest-deck small{font-size:5px}.replacement-decks .quest-deck b{font-size:32px}.replacement-decks .quest-deck>span{font-size:13px}.replacement-decks .quest-deck small{font-size:8px}}

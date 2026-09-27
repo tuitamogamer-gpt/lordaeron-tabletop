@@ -15,7 +15,7 @@ export function rewards(p: ContentPack, s: State, ids: string[], surviving: stri
  const xp = shares(s, reward.xp, all), gold = shares(s, reward.gold, alive);
  const bonus = quest ? shuffle(s, all.filter(h => h.level < quest.level)).sort((a, b) => a.xp - b.xp)[0]?.id : undefined;
  const amounts = all.map(h => ({ h, amount: Math.max(0, (xp[h.id] ?? 0) - (quest ? Math.max(0, h.level - quest.level) : 0) + (h.id === bonus && quest ? quest.level - h.level : 0)) }));
- for (const { h, amount } of amounts) { awardXP(p, h, amount); h.gold += gold[h.id] ?? 0; note(s, `${h.id}: +${amount} XP, +${gold[h.id] ?? 0} zlata.`); }
+ for (const { h, amount } of amounts) { awardXP(p, h, amount); h.gold += gold[h.id] ?? 0; note(s, `${h.id}: +${amount} XP, +${gold[h.id] ?? 0} gold.`); }
  s.reward = { faction: faction(p, ids[0]), quest: quest?.id, eligible: surviving, items: structuredClone(reward.items), special: [...reward.special ?? []], offered: [], replacement: !!quest };
  nextItem(s);
 }
@@ -31,7 +31,7 @@ export function spawnQuest(p: ContentPack, s: State, q: Quest): boolean {
  for (const spawn of q.spawns.filter(a => a.color !== 'blue')) { const k = `${spawn.creature}:${spawn.color}`; needed.set(k, (needed.get(k) ?? 0) + spawn.count); }
  for (const [key, n] of needed) {
   const [type, color] = key.split(':'); const c = p.creatures.find(c => c.id === type)!;
-  assert(c, 'Quest koristi nepoznato stvorenje.');
+  assert(c, "This quest uses an unknown creature.");
   if (s.enemies.filter(e => e.creature === type && e.color === color).length + n > c.stock[color as 'green' | 'red']) return false;
  }
  for (const spawn of q.spawns) {

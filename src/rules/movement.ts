@@ -20,11 +20,11 @@ export function reachable(p: ContentPack, s: State, h: Hero,limit=2): Record<str
  return result;
 }
 export function travel(p: ContentPack, s: State, h: Hero, path: string[],limit=2) {
- assert(path.length <= limit, 'Putovanje prelazi broj dozvoljenih koraka.');
+ assert(path.length <= limit, "Travel exceeds the allowed number of steps.");
  let at = h.location;
  for (const next of path) {
-  assert(!independents(s, at).length||canLeaveBlue(p,h)||(at!==h.location&&equipped(p,h).some(id=>p.cards.find(c=>c.id===id)?.travelThroughBlue)), 'Nezavisno čudovište zaustavlja putovanje.');
-  assert(steps(p, h, at).includes(next), 'Regije nisu povezane dozvoljenim putem.'); at = next;
+  assert(!independents(s, at).length||canLeaveBlue(p,h)||(at!==h.location&&equipped(p,h).some(id=>p.cards.find(c=>c.id===id)?.travelThroughBlue)), "An independent creature stops Travel.");
+  assert(steps(p, h, at).includes(next), "These regions are not connected by a legal route."); at = next;
  }
  h.location = at;
 }

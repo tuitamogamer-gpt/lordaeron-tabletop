@@ -10,7 +10,7 @@ power(4,'Blessing of Freedom','active',3,7,3,[],{...blessing,travelThroughBlue:t
 talent(5,'Improved Might',3,[],{cardRepeat:{card:'paladin-blessing-of-might',uses:2}});
 talent(6,'Improved Devotion',2,[ability('pool',[dice('green'),stat('reroll',1)],{automatic:true,condition:{kind:'equipped',cardId:'paladin-devotion-aura'}})]);
 talent(7,'Holy Shield',3,[ability('after-reroll',[spot({colors:['green'],min:7},1,resource('health',1),token('attrition'))])]);
-talent(8,'Improved Righteousness',2,[],{description:'Judgement: Seal of Righteousness dodaje još jednu crvenu kockicu.'});
+talent(8,'Improved Righteousness',2,[],{description:"Judgement: Seal of Righteousness adds one more red die."});
 talent(9,'Vengeance',4,[ability('tokens',[spot({colors:['red'],values:[8]},1,token('damage',2))])]);
 talent(10,'Benediction',4,[],{equipFreeTraits:['Blessing','Seal','Aura']});
 talent(11,'Reckoning',3,[pool(stat('attrition',2))]);
@@ -18,7 +18,7 @@ talent(12,'Mace Specialization',2,[ability('pool',[dice('red'),stat('reroll',1)]
 talent(13,'Holy Shock',5,[pool(dice('blue',2),stat('reroll',2))]);
 talent(14,'Conviction',5,eachSpot('after-reroll',{colors:['red'],values:[8]},n=>[stat('threat',-n)]));
 talent(15,'Blessing of Kings',5,[ability('learn',[resource('health',2,true),resource('energy',2,true)],{automatic:true})],{capacity:{health:2,energy:2}});
-talent(16,'Improved Holy Light',4,[],{description:'Holy Light oporavlja 3 zdravlja umjesto 2.'});
+talent(16,'Improved Holy Light',4,[],{description:"Holy Light recovers 3 health instead of 2."});
 power(18,'Holy Light','instant',2,6,2,[ability('wound',[{op:'if',condition:{kind:'owned',cardId:'paladin-improved-holy-light'},then:[{op:'heal-reaction',amount:3}],otherwise:[{op:'heal-reaction',amount:2}]}],{reaction:'friendly-damage'})]);
 power(19,'Seal of Righteousness','active',1,3,1,[pool(stat('attrition',1)),judgement([dice('red'),{op:'if',condition:{kind:'owned',cardId:'paladin-improved-righteousness'},then:[dice('red')]}])],seal);
 power(20,'Devotion Aura','active',1,2,1,[pool(dice('green'))],aura);

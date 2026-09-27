@@ -15,11 +15,11 @@ export const teamLeader=(p:ContentPack,s:State,f:Faction)=>shuffle(s,s.heroes.fi
 export function startNefarian(p:ContentPack,s:State,f:Faction){
  (s.nefarianFinal??=[]).push(f);delete s.eventFlow;
  beginBattle(s,'pve',s.heroes.filter(h=>faction(p,h.id)===f).map(h=>h.id),[],f,'bulwark',s.overlord.id);
- note(s,`Nefarian je stigao u Bulwark. ${f} ulazi u završnu borbu.`);
+ note(s,`Nefarian has reached the Bulwark. ${f} enters the final battle.`);
 }
 export function nextNefarianBattle(p:ContentPack,s:State){
  if(!s.nefarianFinal)return false;
- if(s.nefarianFinal.length===2){s.winner='draw';s.phase='finished';note(s,'Obje frakcije su poražene. Nefarian donosi neriješen kraj.');}
+ if(s.nefarianFinal.length===2){s.winner='draw';s.phase='finished';note(s,"Both factions are defeated. Nefarian ends the game in a draw.");}
  else startNefarian(p,s,other(s.nefarianFinal[0]));return true;
 }
 /** Resume an interrupted choice without repeating Fate or losing the bonus chain. */
@@ -36,7 +36,7 @@ export function drawEvents(p:ContentPack,s:State){
   if(!s.eventDeck.length){finishEvent(s);return;}
   const id=s.eventDeck.shift()!,e=p.events.find(e=>e.id===id)!;
   const ears=activeEvent(p,s,'ears');if(ears)removeWorld(s,ears.id);
-  s.eventDiscard.push(id);note(s,`Događaj: ${e.name}.`);
+  s.eventDiscard.push(id);note(s,`Event: ${e.name}.`);
   const duplicate=e.bonus&&s.eventSeen.includes(e.name);s.eventSeen.push(e.name);
   s.eventFlow={event:id,steps:[],started:false,moved:[]};
   // Fate precedes effects, including a duplicate bonus card that ends the chain.
@@ -49,8 +49,8 @@ export function drawEvents(p:ContentPack,s:State){
  }
 }
 export function bid(p:ContentPack,s:State,id:string,amount:number){
- const a=s.auction,h=hero(s,id);assert(a&&!Object.hasOwn(a.bids,id)&&integer(amount,0,h.gold),'Nevažeća ili već poslana ponuda.');a.bids[id]=amount;
- if(Object.keys(a.bids).length===s.heroes.length){const max=Math.max(...Object.values(a.bids)),tied=s.heroes.filter(h=>a.bids[h.id]===max),winner=tied[random(s,tied.length)];winner.gold-=max;winner.auctionItems.push(a.item);if(card(p,a.item).extraInstantSlot)winner.slots.push({addons:[]});note(s,`${winner.id} dobiva aukciju za ${max} zlata.`);delete s.auction;drawEvents(p,s);}
+ const a=s.auction,h=hero(s,id);assert(a&&!Object.hasOwn(a.bids,id)&&integer(amount,0,h.gold),"Invalid bid or bid already submitted.");a.bids[id]=amount;
+ if(Object.keys(a.bids).length===s.heroes.length){const max=Math.max(...Object.values(a.bids)),tied=s.heroes.filter(h=>a.bids[h.id]===max),winner=tied[random(s,tied.length)];winner.gold-=max;winner.auctionItems.push(a.item);if(card(p,a.item).extraInstantSlot)winner.slots.push({addons:[]});note(s,`${winner.id} wins the auction for ${max} gold.`);delete s.auction;drawEvents(p,s);}
 }
 export function checkWars(p:ContentPack,s:State):boolean{
  const f=other(s.faction),hs=s.heroes.filter(h=>faction(p,h.id)===f),war=s.wars.find(w=>w.regions.every(r=>hs.some(h=>h.location===r)));if(!war)return false;
@@ -58,5 +58,5 @@ export function checkWars(p:ContentPack,s:State):boolean{
  rewards(p,s,hs.map(h=>h.id),hs.map(h=>h.id),war.perHero?{...reward,xp:reward.xp*hs.length,gold:reward.gold*hs.length}:reward);s.phase='reward';return true;
 }
 export function replacement(p:ContentPack,s:State,tier:'green'|'yellow'|'red'){
- assert(s.reward?.replacement,'Nema questa za zamjenu.');assert(drawQuest(p,s,s.reward.replacementFaction??s.reward.faction,tier),'Iz ovog špila trenutno nije moguće postaviti quest.');s.reward.replacement=false;
+ assert(s.reward?.replacement,"No quest to replace.");assert(drawQuest(p,s,s.reward.replacementFaction??s.reward.faction,tier),"A quest cannot currently be placed from this deck.");s.reward.replacement=false;
 }

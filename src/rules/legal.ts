@@ -150,31 +150,31 @@ export function legalActions(p: ContentPack, s: State): Command[] {
 export function commandLabel(p: ContentPack, c: Command): string {
  const name = 'hero' in c ? character(p, c.hero).name.split(' ')[0] : '';
  switch (c.type) {
-  case 'event-choice':{const a=c.choice;return `${name}: ${a.mode==='skip'?'preskoči':a.mode==='gold'?'uzmi zlato':a.mode==='recover'?`oporavak (${a.health??0} zdravlja)`:a.region?p.regions.find(r=>r.id===a.region)?.name:a.card?card(p,a.card).name:a.quest?`${p.quests.find(q=>q.id===a.quest)?.name} → ${a.tier}`:'promijeni talente'}`;}
-  case 'peek':return `${name}: istraži Kazzakov trag`;
-  case 'purify':return `${name}: pročisti kugu (3 energije, +1 XP)`;
-  case 'claim-relic':return `${name}: preuzmi Light of Ages`;
+  case 'event-choice':{const a=c.choice;return `${name}: ${a.mode==='skip'?"skip":a.mode==='gold'?"take gold":a.mode==='recover'?`recover (${a.health??0} health)`:a.region?p.regions.find(r=>r.id===a.region)?.name:a.card?card(p,a.card).name:a.quest?`${p.quests.find(q=>q.id===a.quest)?.name} → ${a.tier}`:"replace talents"}`;}
+  case 'peek':return `${name}: investigate Kazzak clue`;
+  case 'purify':return `${name}: cleanse plague (3 energy, +1 XP)`;
+  case 'claim-relic':return `${name}: take Light of Ages`;
   case 'power-action':return `${name}: ${card(p,c.card).name}`;
-  case 'portal':return `${name}: Portal · ${[...(c.self===false?[]:[name]),...c.allies.map(id=>character(p,id).name.split(' ')[0])].join(', ')}${c.self===false?' (ti ostaješ)':''}`;
-  case 'summon':return `${name}: prizovi ${character(p,c.target).name}`;
-  case 'travel': return c.path.length ? `${name}: ${p.regions.find(r => r.id === c.path.at(-1))!.name}` : `${name}: ostani na mjestu`;
-  case 'rest': return `${name}: ${c.food?card(p,c.food).name:`odmor (+${c.health} zdravlja)`}`;
+  case 'portal':return `${name}: Portal · ${[...(c.self===false?[]:[name]),...c.allies.map(id=>character(p,id).name.split(' ')[0])].join(', ')}${c.self===false?" (you stay)":''}`;
+  case 'summon':return `${name}: summon ${character(p,c.target).name}`;
+  case 'travel': return c.path.length ? `${name}: ${p.regions.find(r => r.id === c.path.at(-1))!.name}` : `${name}: stay here`;
+  case 'rest': return `${name}: ${c.food?card(p,c.food).name:`rest (+${c.health} health)`}`;
   case 'train': return `${name}: ${card(p, c.cards[0]).name}`;
-  case 'town': return `${name}: ${c.operations.length ? c.operations.map(o => `${o.op === 'buy' ? 'kupi' : o.op === 'sell' ? 'prodaj' : 'nauči'} ${card(p, o.card).name}`).join(', ') : 'gradski oporavak'}`;
+  case 'town': return `${name}: ${c.operations.length ? c.operations.map(o => `${o.op === 'buy' ? "buy" : o.op === 'sell' ? "sell" : "learn"} ${card(p, o.card).name}`).join(', ') : "town recovery"}`;
   case 'ability': return `${name}: ${card(p, c.card).name}${c.args?.target ? ` → ${p.characters.find(h => h.id === c.args?.target)?.name ?? c.args.target}` : ''}`;
-  case 'challenge': return `${name}: izazov${c.allies.length ? ` (+${c.allies.length} saveznika)` : ''}`;
-  case 'attacker': return `${name} napada`;
-  case 'wound': return `${name}: rana${c.pet ? ' ljubimcu' : ''}`;
+  case 'challenge': return `${name}: Challenge${c.allies.length ? ` (+${c.allies.length} allies)` : ''}`;
+  case 'attacker': return `${name} attacks`;
+  case 'wound': return `${name}: wound${c.pet ? " to pet" : ''}`;
   case 'respawn': return `${name}: ${p.regions.find(r => r.id === c.region)?.name}`;
   case 'talent': return `${name}: ${card(p, c.card).name}`;
-  case 'reward': return `${name}: uzmi ${card(p, c.card).name}`;
-  case 'quest': return `Novi ${c.tier} quest`;
-  case 'bid': return `${name}: ponudi ${c.amount} zlata`;
-  case 'manage': return `${name}: potvrdi opremu`;
-  case 'roll': return 'Baci kockice'; case 'reroll': return 'Ponovi odabranu kockicu'; case 'penalty': return 'Ukloni odabrane kockice';
-  case 'tokens': return 'Postavi pogotke'; case 'monster': return 'Primijeni sposobnost čudovišta';
-  case 'armor': return `${c.faction}: oklop (${c.damage} daljinskih / ${c.defense} bliskih)`;
-  case 'endActions': return 'Pređi na upravljanje'; case 'endManagement': return 'Završi upravljanje'; case 'advance': return 'Sljedeća faza'; case 'closeBattle': return 'Završi borbu';
-  case 'trade': return 'Potvrdi razmjenu'; case 'loot': return `${name}: plijen ${card(p,c.card).name} od ${character(p,c.from).name.split(' ')[0]}`;
+  case 'reward': return `${name}: take ${card(p, c.card).name}`;
+  case 'quest': return `New ${c.tier} quest`;
+  case 'bid': return `${name}: bid ${c.amount} gold`;
+  case 'manage': return `${name}: confirm equipment`;
+  case 'roll': return "Roll dice"; case 'reroll': return "Reroll selected die"; case 'penalty': return "Remove selected dice";
+  case 'tokens': return "Place hits"; case 'monster': return "Apply creature ability";
+  case 'armor': return `${c.faction}: armor (${c.damage} ranged / ${c.defense} melee)`;
+  case 'endActions': return "Go to management"; case 'endManagement': return "End management"; case 'advance': return "Next phase"; case 'closeBattle': return "End combat";
+  case 'trade': return "Confirm trade"; case 'loot': return `${name}: loot ${card(p,c.card).name} from ${character(p,c.from).name.split(' ')[0]}`;
  }
 }

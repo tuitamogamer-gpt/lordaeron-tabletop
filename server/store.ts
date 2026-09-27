@@ -35,7 +35,7 @@ let singleton:RoomStore|undefined;
 export function getStore():RoomStore {
  if (singleton) return singleton;
  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) singleton=new RedisStore(Redis.fromEnv());
- else if (process.env.VERCEL || process.env.NODE_ENV==='production') throw new Error('Za mrežne partije poveži Upstash Redis i postavi UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN.');
+ else if (process.env.VERCEL || process.env.NODE_ENV==='production') throw new Error("For online games, connect Upstash Redis and configure UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN.");
  else singleton=new FileStore();
  return singleton;
 }

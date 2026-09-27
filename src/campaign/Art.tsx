@@ -33,6 +33,13 @@ export function FactionCrest({faction, className=''}: {faction: string; classNam
   return <span aria-hidden="true" className={`faction-crest ${faction} ${className}`}/>;
 }
 
+/** The artwork is decorative; references and counts are drawn as live text. */
+export function BoardTokenArt({index,x=0,y=0,width=32,height=32}: {index:number;x?:number;y?:number;width?:number;height?:number}) {
+  return <svg className="board-token-art" x={x} y={y} width={width} height={height} viewBox={`${index%3*100} ${Math.floor(index/3)*100} 100 100`} preserveAspectRatio="none" aria-hidden="true" pointerEvents="none">
+    <image href="/assets/warcraft/board-tokens-v2.webp" width="300" height="200"/>
+  </svg>;
+}
+
 export function cardIllustration(card: Card): PaintedIcon {
   if (card.classId && card.classId in abilityIcons) return card.classId as PaintedIcon;
   if (card.type === 'armor') return 'armor';

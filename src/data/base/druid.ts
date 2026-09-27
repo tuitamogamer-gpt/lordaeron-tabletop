@@ -10,7 +10,7 @@ power(7,'Starfire','instant',5,20,3,[ability('pool',[dice('blue',4)])]);
 talent(8,'Hurricane',4,[ability('after-reroll',[{op:'opponent-tokens',box:'attrition',amount:2}])]);
 talent(9,'Omen of Clarity',2,eachSpot('after-reroll',{colors:['red'],min:7},n=>[resource('energy',n)]).map(a=>({...a,condition:weapon})));
 talent(10,"Nature's Grace",3,[],{retainOnce:['druid-rejuvenation'],cardRepeat:{card:'druid-moonfire',uses:2}});
-talent(11,'Improved Rejuvenation',3,[],{description:'Rejuvenation oporavlja 4 zdravlja umjesto 2.'});
+talent(11,'Improved Rejuvenation',3,[],{description:"Rejuvenation recovers 4 health instead of 2."});
 talent(12,'Thick Hide',4,[ability('pool',[dice('green',2)],{automatic:true,condition:{kind:'equipped',cardId:'druid-bear-form'}})]);
 talent(13,'Strength of the Wild',5,Array.from({length:7},(_,i)=>Array.from({length:i+2},(_,damage)=>ability('after-reroll',[spot({colors:['red'],values:[8]},i+1,token('damage',damage),token('defense',i+1-damage))],{id:`wild-${i+1}-${damage}`,usageGroup:'wild',condition:form}))).flat());
 talent(14,'Vengeance',5,many('after-tokens',5,n=>[{op:'move-tokens',from:'attrition',to:'defense',amount:n}]));

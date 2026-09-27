@@ -8,7 +8,7 @@ power(4,'Fire Blast','instant',2,4,2,[ability('pool',[dice('blue',2)])]);
 power(5,'Mana Shield','instant',3,9,0,Array.from({length:21},(_,i)=>ability('pool',[token('armor',i+1)],{id:`shield-${i+1}`,cost:(i+1)*2,usageGroup:'shield'})));
 power(6,'Dispel','instant',3,8,1,[ability('after-reroll',[{op:'remove-all',filter:{values:[1,2]}}],{friendlyTiming:true})]);
 power(7,'Polymorph','instant',2,5,2,[ability('round-start',[{op:'defeat-independent'},{op:'unequip-self'}],{condition:{kind:'first-round'}})]);
-power(8,'Arcane Missiles','instant',2,7,2,[ability('pool',[dice('blue',2)],{freeIf:{kind:'previous-use',unharmed:true}})],{description:'FAQ 1.4: besplatno samo ako je Arcane Missiles korišten u neposredno prethodnoj rundi iste borbe i nisi izgubio zdravlje.'});
+power(8,'Arcane Missiles','instant',2,7,2,[ability('pool',[dice('blue',2)],{freeIf:{kind:'previous-use',unharmed:true}})],{description:"FAQ 1.4: free only if Arcane Missiles was used in the immediately preceding round of the same combat and you lost no health."});
 power(9,'Teleport','instant',3,10,0,[],{actionPower:'teleport'});
 power(10,'Cone of Cold','instant',4,12,2,[ability('pool',[dice('green',2),stat('threat',-1)])]);
 power(11,'Portal','instant',4,14,1,[],{actionPower:'portal'});
