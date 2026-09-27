@@ -36,7 +36,11 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
      const stats = p.creatures.find(c => c.id === e.creature)!.stats[e.color];
      return { region: e.region, value: 9 - Math.max(0, stats.attack - h!.health) * risk - stats.health * .2 };
     });
-    if (h!.level >= 4) targets.push({ region: s.overlord.region, value: 12 });
+    if (h!.level >= 4) {
+     if(s.overlord.region)targets.push({region:s.overlord.region,value:12});
+     else for(const token of s.kazzak??[])if(!token.known.includes(f)||token.real)targets.push({region:token.region,value:token.known.includes(f)&&token.real?14:8});
+    }
+    for(const w of s.world??[]){const e=p.events.find(e=>e.id===w.id);if(e?.boss&&!w.cleared&&(!e.boss.perFaction||!w.attempts.includes(f))&&h!.level>=3)targets.push({region:e.boss.region,value:8});}
     score = Math.max(-5, ...targets.map(t => t.value - distance(p, at, t.region, f) * 1.8));
     if (s.enemies.some(e => e.region === at && e.color === 'blue')) score -= 5 * risk;
     const friends = s.heroes.filter(a => a.id !== h!.id && faction(p, a.id) === f && a.location === at); score += friends.length * 1.2;
@@ -45,7 +49,8 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
    case 'challenge': {
     const party = [h!, ...command.allies.map(id => s.heroes.find(h => h.id === id)!)];
     const enemy = s.enemies.find(e => e.id === command.target);
-    const e = enemy ? p.creatures.find(c => c.id === enemy.creature)!.stats[enemy.color] : p.overlords.find(o => o.id === command.target)?.stats[s.heroes.length as 4 | 6];
+    const e = enemy ? p.creatures.find(c => c.id === enemy.creature)!.stats[enemy.color] : p.overlords.find(o => o.id === command.target)?.stats[s.heroes.length as 4 | 6]??p.events.find(e=>e.id===command.target)?.boss?.stats;
+    if(command.target==='kazzak'&&s.kazzak?.some(t=>t.region===h!.location&&t.known.includes(f)&&!t.real)){score=-15;break;}
     if (!e) { score = -2; break; }
     const count = enemy ? s.enemies.filter(a => a.region === enemy.region && a.creature === enemy.creature && a.faction === enemy.faction && (a.color === 'blue') === (enemy.color === 'blue')).length : 1;
     const prob = (9 - e.threat) / 8, health = party.reduce((n, h) => n + h.health, 0);
@@ -78,6 +83,34 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
    case 'talent': score = itemValue(p, command.card); reason = 'Talent poboljšava borbeni učinak.'; break;
    case 'quest': { const level = s.heroes.filter(h => faction(p, h.id) === s.reward?.faction).reduce((n,h) => n + h.level,0) / (s.heroes.length/2); score = 5 - Math.abs((command.tier === 'green' ? 2 : command.tier === 'yellow' ? 3 : 4) - level) * 3; reason = 'Odaberi težinu questa prema nivou frakcije.'; break; }
    case 'bid': score = -Math.abs(command.amount - Math.min(2, h!.gold)); reason = 'Ograničena ponuda čuva zlato za trening.'; break;
+   case 'peek':score=40;reason='Provjeri trag prije trošenja akcije na Kazzaka.';break;
+   case 'purify':score=8;reason='Očisti kugu i oslabi napad čudovišta u zoni.';break;
+   case 'claim-relic':score=h!.level*2+h!.health;reason='Relikviju nosi junak spreman za Kel’Thuzada.';break;
+   case 'event-choice':{
+    const step=s.eventFlow?.steps[0],a=command.choice;
+    score=a.mode==='skip'?0:1;reason='Izaberi korist događaja prema stanju junaka.';
+    if(a.mode==='skip')break;
+    if(step?.kind==='professions')score=a.mode==='gold'?h!.level:Math.min(capacity(p,h!).health-h!.health,a.health??0)*2+Math.min(capacity(p,h!).energy-h!.energy,h!.level-(a.health??0));
+    if(step?.kind==='retrain')score=a.mode==='gold'?h!.level*2:(a.talents??[]).reduce((n,id)=>n+itemValue(p,id),0)-h!.talents.reduce((n,id)=>n+itemValue(p,id),0);
+    if(step?.kind==='tribute')score=-itemValue(p,a.card!);
+    if(step?.kind==='sell')score=Math.floor(card(p,a.card!).price/2)-itemValue(p,a.card!)*2;
+    if(step?.kind==='merchants')score=card(p,a.card!).level<=h!.level?itemValue(p,a.card!)+2-Math.ceil(card(p,a.card!).price/2)*.2-(a.discard?itemValue(p,a.discard):0):-1;
+    if(step?.kind==='zeppelin'){
+     const goals=s.enemies.filter(e=>e.faction===f);score=Math.max(0,...goals.map(e=>distance(p,h!.location,e.region,f)-distance(p,a.region!,e.region,f)))-1;
+     if(s.enemies.some(e=>e.color==='blue'&&e.region===a.region))score-=5;
+    }
+    if(step?.kind==='horizons'){
+     const q=p.quests.find(q=>q.id===a.quest)!,level=s.heroes.filter(h=>faction(p,h.id)===f).reduce((n,h)=>n+h.level,0)/(s.heroes.length/2),tier=a.tier==='green'?2:a.tier==='yellow'?3:4;
+     score=Math.abs(q.level-level)-Math.abs(tier-level)-1;
+    }
+    if(step?.kind==='beasts'){
+     const friendly=s.heroes.filter(h=>faction(p,h.id)===f),enemy=s.heroes.filter(h=>faction(p,h.id)!==f);
+     score=Math.min(...friendly.map(h=>distance(p,a.region!,h.location,f)))-Math.min(...enemy.map(h=>distance(p,a.region!,h.location,f)));
+     if(s.enemies.some(e=>e.region===a.region&&e.faction===f))score-=4;
+    }
+    if(step?.kind==='nefarian')score=1;
+    break;
+   }
    case 'respawn': score = p.regions.find(r => r.id === command.region)?.town ? 3 : 0; reason = 'Povratak u sigurno mjesto za oporavak.'; break;
    case 'armor': score = command.damage * 2 + command.defense; reason = 'Prvo blokiraj daljinske pogotke.'; break;
    default: score = 0;

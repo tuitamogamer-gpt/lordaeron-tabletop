@@ -1,58 +1,27 @@
-# Warforged Chronicles · dizajn sistem v2
+# Warforged Chronicles · desktop sto v3
 
-Skenovi služe za tekst i mehanike. Sve igrive komponente imaju novi dizajn. Fotografija ploče i originalni skenovi nisu lica igrivih komponenti.
+Skenovi su izvori teksta, pravila i vrijednosti. Interfejs koristi vlastite ilustracije i predloške. Referenca za raspored je [fizički sto osnovne igre](https://www.ebgl.org/current.php?g=2): centralna ploča, questovi obje frakcije, lični listovi, špilovi i tracker.
 
-## Vizuelni jezik
+## Raspored
 
-Warcraft inspirisana ratna dvorana, klesani kamen, reljefna bronza, crveni i plavi frakcijski grbovi, pergamentni questovi i oslikane sposobnosti. Cinzel za imena i naslove; Inter za pravila, brojke i kontrole. Fokus je na trenutku aktivacije i odluci igrača. Sva slova i brojke ostaju HTML/SVG; ilustracije ne sadrže tekst.
+Lijevo su dva zasebna frakcijska quest panela, svaki sa svojim pomicanjem. U sredini su Overlord, ilustrirana mapa, akcije i aktivni svjetski događaji. Desno su portreti družine, lični resursi, rasna sposobnost, upravljanje i AI. Ispod mape je lični list sa sedam mjesta, torbom i talentima. Na dnu je svih 30 frakcijskih smjena. Hood of Shadow proširuje list na osam mjesta.
 
-| Token | Vrijednost | Primjena |
-| --- | --- | --- |
-| Ink | `#101316` | Pozadina |
-| Surface | `#252729` | Paneli |
-| Ivory | `#f4e4bf` | Naslovi |
-| Gold | `#e2b969` | Izbor i glavna akcija |
-| Horde | `#df6654` | Frakcija |
-| Alliance | `#77bce8` | Frakcija |
-| Energy | `#69bdf1` | Energija i daljinske moći |
-| Nature | `#a9cb6a` | Aktivne moći i stvorenja |
-| Arcane | `#c79ef0` | Događaji i Overlordi |
+Klesani kamen, bronzani rubovi, pergament, tamna dvorana i oslikani portreti daju Warcraft ton. Cinzel služi imenima, Inter objašnjenjima i brojkama. Crvena/plava signaliziraju frakciju, ali tekst i ikone ostaju prisutni. `prefers-reduced-motion` isključuje animacije.
 
-Implementacija: `src/campaign/design-system.tsx`, `Art.tsx` i `warcraft.css`, uz zajedničku osnovu `design-system.css`. Živi pregled: **Dizajn sistem** u navigaciji. Tačni imagegen promptovi i putanje svih sedam novih slikovnih datoteka nalaze se u [IMAGEGEN-WARCRAFT.md](IMAGEGEN-WARCRAFT.md).
+Svih 16 junaka ima vlastiti portret u novom 4×4 atlasu. Kazzak, Nefarian i Kel’Thuzad imaju zasebne portrete u atlasu 3×1. Ostaju prethodno generirani atlas 13 stvorenja, ikone klasa i akcija, mapa, grbovi, okvir i teksture. Tačni promptovi su u [IMAGEGEN-BASE.md](IMAGEGEN-BASE.md) i [IMAGEGEN-WARCRAFT.md](IMAGEGEN-WARCRAFT.md).
 
-## Predlošci
+## Komponente
 
-`CardFrame` daje isti redoslijed informacija: vrsta/nivo, nova ilustracija ili simbol, ime/klasa/frakcija, trenutak aktivacije i efekat, cijena/nagrada/vrijednosti.
+`Tabletop.tsx` i `tabletop.css` organizuju sto. `CardFrame` u `design-system.tsx` daje vrstu/nivo, art, ime, trenutak aktivacije, efekat i vrijednosti. `GameCard`, `CharacterCard`, `QuestCard`, `EventCardView`, `CreatureCard` i `OverlordCard` koriste taj okvir. `rules-text.ts` prevodi izvršive efekte u čitljiv tekst; `event-text.ts` opisuje trajne događaje i bossove.
 
-Na njemu su `AbilityCard`, `CharacterCard`, `QuestCard`, `EventCardView`, `CreatureCard` i `OverlordCard`. Oslikani atlas obuhvata 13 stvorenja, razvojnog Overlorda, događaj i plijen; drugi atlas daje 16 ikona klasa, opreme i akcija. SVG isječci čuvaju proporcije ilustracija. Prototipski portreti junaka koriste raniji generirani atlas; likovi iste klase trenutno dijele ilustraciju. To još nisu 16 finalnih individualnih ilustracija.
+`BaseCatalog` pretražuje kompletan osnovni set po vrsti, klasi, frakciji i špilu. Prikazuje 24 karte po stranici. Detalj kartice pokazuje sve jačine efekta i poveznicu na izvorni sken. Skenovi nisu pozadine karata.
 
-Mapa koristi novu sliku `public/assets/warcraft/lordaeron.webp` i interaktivni SVG sloj. Imagegen je promijenio slikarski tretman prethodne ilustracije uz zadržavanje rasporeda krajolika. Kretanje čita iz postojećeg grafa, ne iz piksela. Promjena pozadine ne mijenja legalne poteze. Čvorovi imaju naziv i pristup tastaturom; desktop alatna traka ima pretragu regije i centriranje na junaka. Detalji odabrane regije lebde u donjem dijelu mape.
+`Combat` grupiše dozvoljene sposobnosti po karti; izbor uključuje jačinu, cilj i kockice. `WorldDecision` vodi aukcije, događaje, retrening, nagrade, talente i povratak poraženih likova. `EquipmentEditor` podržava i posebno osmo mjesto. Sve naredbe prolaze kroz isti reducer.
 
-## Kasniji uvoz
+## Mapa i kontrole
 
-```text
-Sken / izvorni tekst
-  → transkripcija i dokaz izvora
-  → identifikacija osnovnog seta + FAQ ispravke
-  → strukturirana karta + tipizirani efekti + test primjera
-  → provjera podataka
-  → Warforged Chronicles renderer
-```
+SVG sloj drži 67 interaktivnih regija, veze, portrete likova, stvorenja, Overlorda, Kazzakove tragove i kugu/boss događaje. Putanje dolaze iz grafa, a ne iz piksela ilustracije. Ravan sken glavne ploče ostaje potreban za završnu provjeru veza i letnih oznaka.
 
-Karta čuva `id`, `name`, `description`, `source`, nivo, cijenu, energiju, tip, osobine i `abilities`. Izvor bilježi URL, stranicu/kartu i status `community`, `fixture` ili `verified`. Referentna `image` putanja može ostati radi poređenja; novi renderer je ne koristi kao izgled karte.
+Miš: točkić za zoom, povlačenje za pomak, klik za regiju. Kontrole: centriranje na junaka, izbor regije i putanje, cijela mapa, proširen prikaz. Tastatura: 1–5 akcije, F proširena mapa; u mapi +/−/0 i strelice. Nema posebnog mobilnog rasporeda; minimalna desktop širina je 1220 px.
 
-Promjena teksta, prevod, FAQ ispravka i cijena ne zahtijevaju novu bitmapu. Tekst se ne crta u sliku. OCR nije dokaz ispravne skripte: treba provjeriti vrijeme, ciljeve, redoslijed, sekundarne sposobnosti i primjer u testu. Nepoznati tekst ostaje otvorena stavka.
-
-## Stanja
-
-Legalnost, izbor, potrošena energija, uklonjene kockice, čekanje igrača i poraz imaju zasebna stanja. Boju dopunjava tekst ili simbol. Duge karte i odluke koriste zasebne panele s pomicanjem. Animacije poštuju `prefers-reduced-motion`.
-
-Preostaju finalne ilustracije likova/Overlorda, ikone specifičnih efekata i provjera dugih originalnih tekstova u postojećem predlošku. Probni tekstovi ne potvrđuju da svaki originalni tekst već ima gotov prikaz i interakciju.
-
-## Desktop kao jedina ciljna platforma
-
-Odluka korisnika: sav dalji UI rad usmjeren je na desktop. Nema zasebnog mobilnog rasporeda. Radna površina drži mapu, akcije, bočni panel likova/questova, karte i tracker u stalnim zonama. Bočni panel se pomiče nezavisno. Na nižim ekranima karte imaju sažet prikaz, a detalji se otvaraju klikom.
-
-Mapa se povlači mišem i povećava točkićem. Kontrole omogućavaju pronalazak regije ili junaka, pregled cijele ploče i proširivanje mape skrivanjem donjeg prostora s kartama. Prečice 1–5 pozivaju dozvoljene akcije; M otvara kampanju, F proširuje mapu. Dok je mapa u fokusu, + / − mijenjaju zoom, 0 prikazuje cijelu ploču, a strelice pomiču pogled. Prečice akcija ne rade dok korisnik unosi tekst ili koristi modalni dijalog.
-
-Raspored je provjeren na 1280 × 800 i 1920 × 1080. Minimalna predviđena širina radne površine je 1180 px.
+Provjera prikaza i trenutna ograničenja pregledničkog alata dokumentovani su u [VALIDATION.md](VALIDATION.md).

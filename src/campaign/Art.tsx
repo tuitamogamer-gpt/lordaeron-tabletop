@@ -26,7 +26,7 @@ export function PaintedArt({index, atlas='abilities', name, className=''}: {
 }
 
 export function AbilityArt({icon, className=''}: {icon: PaintedIcon; className?: string}) {
-  return <PaintedArt index={abilityIcons[icon]} className={className}/>;
+  return <PaintedArt index={abilityIcons[icon]} className={`ability-art ${className}`}/>;
 }
 
 export function FactionCrest({faction, className=''}: {faction: string; className?: string}) {

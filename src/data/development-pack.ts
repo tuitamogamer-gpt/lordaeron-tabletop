@@ -47,7 +47,7 @@ const events: EventCard[] = [
  { id:'reinforcements',name:'Pojačanja slabijoj frakciji · probno',bonus:false,fate:0,effects:[{op:'gold',amount:2,faction:'weaker'}],source:FIXTURE },
  { id:'war-hillsbrad',name:'Bitka za Hillsbrad · probno',bonus:false,fate:1,effects:[{op:'war',regions:['fields','durnholde'],reward:{xp:6,gold:6,items:[]}}],source:FIXTURE },
  { id:'auction',name:'Aukcija · probno',bonus:true,fate:2,effects:[{op:'auction',item:'auction-charm'}],source:FIXTURE },
- { id:'spiders',name:'Pauci na putu · probno',bonus:false,fate:1,effects:[{op:'spawn',spawns:[{creature:'spider',color:'blue',count:1,region:'aerie-valley'},{creature:'gnoll',color:'blue',count:1,region:'decrepit'}]}],source:FIXTURE },
+ { id:'spiders',name:'Pauci na putu · probno',bonus:false,fate:1,effects:[{op:'spawn',spawns:[{creature:'spider',color:'blue',count:1,region:'aerie-valley'},{creature:'gnoll',color:'blue',count:1,region:'undercity'}]}],source:FIXTURE },
  { id:'gold',name:'Trgovački karavan · probno',bonus:false,fate:0,effects:[{op:'gold',amount:1,faction:'all'}],source:FIXTURE },
 ];
 export const DEVELOPMENT_PACK: ContentPack = {

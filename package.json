@@ -1,7 +1,7 @@
 {
   "name": "lordaeron-tabletop",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
@@ -10,7 +10,8 @@
     "test": "vitest run",
     "dev:server": "tsx watch server/dev.ts",
     "simulate": "tsx scripts/simulate.ts",
-    "check:server": "tsc -p tsconfig.server.json"
+    "check:server": "tsc -p tsconfig.server.json",
+    "check:render": "tsx scripts/check-render.ts"
   },
   "dependencies": {
     "@fontsource/cinzel": "^5.2.0",

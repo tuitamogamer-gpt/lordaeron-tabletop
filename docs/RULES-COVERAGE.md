@@ -1,39 +1,31 @@
-# Pokrivenost osnovne igre
+# Osnovna igra + FAQ · stanje v0.3
 
-Izvori: [službeni pravilnik](https://images-cdn.fantasyflightgames.com/ffg_content/WoWBG/wowrules.pdf) i [FAQ 1.4](https://images-cdn.fantasyflightgames.com/ffg_content/WoWBG/WoW_FAQ__v1_4.pdf), samo odjeljci osnovne igre. Shadow of War Encounter Deck i ostala proširenja nisu u scopeu.
+Izvori: [pravilnik](https://images-cdn.fantasyflightgames.com/ffg_content/WoWBG/wowrules.pdf), [FAQ 1.4](https://images-cdn.fantasyflightgames.com/ffg_content/WoWBG/WoW_FAQ__v1_4.pdf), [dostavljeni skenovi](SCAN-INTEGRATION.md). Primjenjuju se samo odjeljci osnovne igre. Shadow of War i ostala proširenja nisu uključena.
 
-Oznaka „implementirano” znači da postoji izvršiv mehanizam i relevantni testovi. Ne znači da je kompletan originalni sadržaj provjeren ili da su sve međusobne kombinacije pokrivene.
+Aktivni paket `base-2005-faq-1.4-scans-v3` ima sve komponente osnovnog seta. `officialComplete` provjerava broj komponenti i zabilježene izvore; nije tvrdnja da su sve međusobne kombinacije iscrpno testirane.
 
-| Sistem | Status | Otvoreno |
+| Sistem | Implementirano | Preostala provjera |
 | --- | --- | --- |
-| Setup | 4/6 likova, frakcije, jedinstvena klasa, zlato, resursi, questovi, trgovac | Originalne početne karte i rasporedi listova |
-| Mapa | 67 čvorova, dvije etape, let, početne regije, blue blokada | Provjera svih veza i oznaka prema ravnom skenu |
-| Akcije | Travel, Rest, Train, Town, Challenge; redoslijed likova; dvije akcije | Posebne izmjene akcija koje daju originalne karte |
-| Grad i trgovina | Više uređenih transakcija, prodaja za pola naviše, trening, oporavak | Originalni trgovčev špil |
-| Razmjena | Bag predmeti i zlato, ista regija, poslije akcije, soulbound zabrana | Strategija botova za razmjenu |
-| Upravljanje | Slotovi, osobine, nivoi, aktivna energija, unique moći, dodaci, torba | Tačni slotovi originalnih likova, sve specifične iznimke |
-| Questovi | Obje frakcije, konačne figure, izbor boje špila, nagrade, više dovršenih questova | Svih 80 originalnih tekstova; iscrpljeni svi mogući zamjenski špilovi |
-| XP i talenti | Podjela, bonus/penal, nivoi, obnova resursa, izbor talenta | Originalnih 108 talenata i promjene kapaciteta njihovim efektima |
-| PvE | Individualni napadi, redoslijed, d8, kapice, reroll, Spot, tri borbena polja | Karte sa dodatnim podfazama i posebnim prekidima |
-| Rane / smrt | Pojedinačna raspodjela, ljubimci, posljednja prilika, respawn, XP poraženima | Specifična oživljavanja; nasumični redoslijed istovremenih povrataka |
-| Stun / Curse | Gubitak kockica, reroll/attrition, odmor i čišćenje pri porazu | Interakcije sa svim originalnim imunostima |
-| Minioni | 13 skriptiranih vrsta i 39 skupova vrijednosti | Provjera community vrijednosti originalnim listom |
-| PvP | Frakcijsko izmjenjivanje, prijetnja nivo+2, oklop, simultane rane, plijen | Sve posebne klasne/PvP FAQ kombinacije |
-| Eventi | Bonus lanci, aukcije, ratni zadaci, trgovac, spawn, jača/slabija frakcija | Svih 47 + 5 Kel’Thuzad tekstova i njihovih posebnih efekata |
-| Tracker i završnica | 30 poteza, finalna priprema, puni resursi, završni PvP, pobjeda/remi | Završni pregled svih detalja FAQ-a |
-| Overlord | Generički izazov/pobjeda, skaliranje 4/6, ruta/Fate i Nefarian hit-limit mehanizam | Originalni Kel’Thuzad, Kazzak, Nefarian profili i svi posebni efekti |
-| Skriptni sistem | Tipizirani borbeni AST bez evala, trošak, uslovi, izbori, sekundarne zavisnosti | Neborbene sposobnosti, dinamički kapaciteti i specifične klasne iznimke |
-| AI | Poseban heuristički planer, javno stanje, tri lokalna stila | Duboka strategija, bolji višekartni planovi, više stilova na serveru |
-| Multiplayer | Autoritativne odluke, sobe, kontrola mjesta, saglasnost, revizije, reconnect | Stvarni Vercel/Redis test, računi, oporavak izgubljene sesije |
+| Setup | 4/6 likova, jedinstvene klase, frakcije, originalni slotovi, rasne moći, početni questovi i trgovac | Šira igranja različitih postava |
+| Mapa | 67 regija, letovi, dvije etape, plave blokade, Teleport, Portal, Summon, Intercept, posebna putovanja | Topologija i oznake prema ravnom skenu glavne ploče |
+| Akcije | Svih pet; višestruke gradske transakcije, više treninga, hrana, posebne akcijske moći | Duge sekvence kroz UI |
+| Inventar | Sedam mjesta, osobine, addon funkcije, unique moći, kapaciteti, aktivni trošak, torba i razmjena | Strategija botova pri višekartnom opremanju |
+| Klase | 108 Power i 108 Talent karata iz devet klasa; automatski, uslovni i izborni efekti | Iscrpno testiranje svih kombinacija i efekata u istom vremenskom prozoru |
+| Predmeti | 46 triangle, 30 square, 16 circle, 28 special; četiri aukcijska predmeta | Balans i strategija njihovog korištenja |
+| Questovi | Svih 80, obje frakcije, spawnovi, konačne zalihe figura, nagrade i zamjene | Vrlo dugo iscrpljivanje svih zamjenskih špilova |
+| Borba | PvE/PvP, d8, fizičke zalihe boja, Spot, promjene, nezavisni reroll, Stun/Curse, pogoci, rane, ljubimci, poraz i oživljavanje | Sve konkurentne reakcije u grupnoj borbi |
+| Minioni | 13 vrsta, raspoložive boje i originalne vrijednosti iz referentnog lista | Više grupnih kombinacija u igranju |
+| Događaji | 47 + 5 Kel’Thuzad; bonusi, aukcije, kupovina, retrening, putovanja, premještanje grupa, bounty, trofeji, ratovi, kuga, sedam boss događaja | Više preklapanja trajnih događaja |
+| Overlordi | Oba profila svakog bossa; pet Kazzakovih tragova, Nefarian Fate i Bulwark, Kel’Thuzadove sposobnosti i događaji | Tumačenje izbora Spot kockica za Kel’Thuzadov Attrition u složenim kombinacijama |
+| Završnica | Pobjeda nad Overlordom, završni PvP, prisilni Nefarian obračun, remi | Dodatna igranja do pobjede nad svakim bossom |
+| AI | Zaseban planer, legalni kandidati, tri stila, procjena borbe i novih događaja | Dublji planovi ekipe, razmjena, dugoročni razvoj likova |
+| Autosave | Poseban ključ v0.3, hash sadržaja, strogi import i deterministički replay | Import različitih verzija namjerno nije podržan |
+| Online | Server i regresijski testovi sačuvani, UI isključen | Na čekanju po korisnikovoj odluci |
 
-## Brojevi originalnog seta
+## Primijenjene FAQ ispravke
 
-16 likova; 108 Power + 108 Talent karata; 120 predmeta; 80 questova; 47 osnovnih događaja + 5 dodatnih Kel’Thuzad događaja; 13 vrsta stvorenja; tri Overlord lista.
+Shadowguard djeluje u Defense fazi; Slice and Dice na kraju Reroll koraka; Arcane Missiles zahtijeva prethodnu upotrebu i neizgubljeno zdravlje u neposredno prethodnoj rundi iste borbe; Arcane Focus ima nezavisan reroll. Pyric Caduceus je ranged, Crackling Staff se aktivira poslije Dice Poola, plavi Scroll je Lesser Spirit, a Brutes in the Barrows koristi Infectis Scar.
 
-Razvojni set namjerno nosi `officialComplete: false`. Ima 80 probnih questova za kampanje bez ranog iscrpljivanja špila, sedam probnih događaja, generičke klasne sposobnosti i jednog izmišljenog razvojnog protivnika. Jednaki brojevi questova nisu dokaz originalne transkripcije.
+Judgement je besplatan i ne skida Seal; normalna Seal sposobnost i Judgement mogu se koristiti iste runde. Blessing of Kings je talent. Druid forme prate tip mjesta, dok itemi prate i osobinu. Oživljeni lik i dalje se računa poraženim za akcije, loot i nagrade. Nefarianov limit dopušta izbor pogodaka, bez obaveze da upravo osmice idu u damage/defense.
 
-## FAQ kontrola pri uvozu
-
-Posebno provjeriti Shadowguard, Slice and Dice, Arcane Missiles/Arcane Focus, Pyric Caduceus, Crackling Staff, pogrešno imenovani Scroll, Horde quest Brutes and Barrows, Judgment/Seal, Blessing of Kings, Stoneform, Resurrection/Reincarnation, Mend Pet i Nefarianov limit pogodaka. Ovi nazivi su lista za provjeru, ne tvrdnja da su odgovarajuće originalne karte već skriptirane.
-
-Nedostajući tekst se ne zamjenjuje nagađanjem. Nakon uvoza svaka takva karta treba konkretan test primjene i novu verziju paketa sadržaja. Sken je dokaz sadržaja; novi dizajn sistem ostaje isti.
+Kandidati iz `legalActions` nisu sve moguće kombinacije argumenata. Engine validira stvarnu naredbu; UI pruža pune transakcije, opremu, retrening i ručni odabir kockica. Botovi koriste enumerirane kandidate.

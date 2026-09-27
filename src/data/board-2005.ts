@@ -2,9 +2,9 @@ import type { Region, Source } from '../rules/model.js';
 export const BOARD_SOURCE: Source = { url: 'https://worldofwarcraft.judgehype.com/image/16487/', reference: 'Board photograph; manually traced topology, pending flat-scan review', status: 'community' };
 // Coordinates are percentages of the reference photograph, not the decorative prototype map.
 const rows: [string, string, string, number, number][] = [
- ['agamand','Agamand Mills','Tirisfal',23,23], ['scarlet-watch','Scarlet Watch Post','Tirisfal',30,24], ['monastery','Scarlet Monastery','Tirisfal',39,21],
+ ['agamand','Agamand Mills','Tirisfal',23,23], ['garrens-haunt','Garren’s Haunt','Tirisfal',30,24], ['monastery','Scarlet Monastery','Tirisfal',39,21],
  ['brightwater','Brightwater Lake','Tirisfal',35,27], ['venomweb','Venomweb Vale','Tirisfal',41,30], ['brill','Brill','Tirisfal',28,31], ['stillwater','Stillwater Pond','Tirisfal',20,31],
- ['deathknell','Deathknell','Tirisfal',16,37], ['nightmare','Nightmare Vale','Tirisfal',23,37], ['tirisfal-grove','Tirisfal Grove','Tirisfal',33,35], ['balnir','Balnir Farmstead','Tirisfal',36,38], ['decrepit','The Decrepit Ferry','Tirisfal',28,42],
+ ['deathknell','Deathknell','Tirisfal',16,37], ['nightmare','Nightmare Vale','Tirisfal',23,37], ['tirisfal-outpost','Tirisfal Outpost','Tirisfal',33,35], ['balnir','Balnir Farmstead','Tirisfal',36,38], ['undercity','The Undercity','Tirisfal',28,42],
  ['north-tide','North Tide’s Hollow','Silverpine',14,51], ['shining','Shining Strand','Silverpine',21,47], ['fenris','Fenris Isle','Silverpine',27,52], ['deep-elem','Deep Elem Mine','Silverpine',20,59],
  ['sepulcher','The Sepulcher','Silverpine',14,61], ['olsen','Olsen’s Farthing','Silverpine',15,68], ['ambermill','Ambermill','Silverpine',20,71], ['pyrewood','Pyrewood Village','Silverpine',15,76],
  ['dalaran','Dalaran Ruins','Alterac',28,62], ['corrahn','Corrahn’s Dagger','Alterac',32,68], ['alterac','Ruins of Alterac','Alterac',35,59], ['sohrans','Sofera’s Naze','Alterac',40,63], ['chillwind','Chillwind Point','Alterac',46,59], ['uplands','The Uplands','Alterac',40,50],
@@ -19,9 +19,9 @@ const rows: [string, string, string, number, number][] = [
  ['darrowshire','Darrowshire','Eastern Plaguelands',70,41], ['corins','Corin’s Crossing','Eastern Plaguelands',80,40], ['tyrs','Tyr’s Hand','Eastern Plaguelands',89,41],
 ];
 const links = [
- 'agamand:stillwater,brill,scarlet-watch', 'scarlet-watch:brill,brightwater,monastery', 'monastery:brightwater,venomweb', 'brightwater:brill,tirisfal-grove,venomweb',
- 'brill:stillwater,nightmare,decrepit,tirisfal-grove', 'stillwater:deathknell,nightmare', 'deathknell:nightmare', 'nightmare:decrepit', 'tirisfal-grove:decrepit,balnir,venomweb', 'balnir:venomweb,bulwark,decrepit',
- 'decrepit:shining,uplands', 'north-tide:shining,deep-elem,sepulcher', 'shining:deep-elem,fenris', 'fenris:deep-elem', 'deep-elem:sepulcher,olsen,ambermill,dalaran', 'sepulcher:olsen', 'olsen:ambermill,pyrewood', 'ambermill:pyrewood,dalaran,fields', 'pyrewood:azure',
+ 'agamand:stillwater,brill,garrens-haunt', 'garrens-haunt:brill,brightwater,monastery', 'monastery:brightwater,venomweb', 'brightwater:brill,tirisfal-outpost,venomweb',
+ 'brill:stillwater,nightmare,undercity,tirisfal-outpost', 'stillwater:deathknell,nightmare', 'deathknell:nightmare', 'nightmare:undercity', 'tirisfal-outpost:undercity,balnir,venomweb', 'balnir:venomweb,bulwark,undercity',
+ 'undercity:shining,uplands', 'north-tide:shining,deep-elem,sepulcher', 'shining:deep-elem,fenris', 'fenris:deep-elem', 'deep-elem:sepulcher,olsen,ambermill,dalaran', 'sepulcher:olsen', 'olsen:ambermill,pyrewood', 'ambermill:pyrewood,dalaran,fields', 'pyrewood:azure',
  'dalaran:corrahn,alterac,fields', 'corrahn:alterac,sohrans,tarren,fields', 'alterac:sohrans,uplands', 'sohrans:uplands,chillwind,tarren', 'chillwind:uplands,tarren,aerie-valley', 'uplands:bulwark,sorrow',
  'fields:tarren,southshore,azure', 'tarren:durnholde,aerie-valley,southshore', 'azure:southshore,purgation', 'southshore:dun-garok,durnholde,purgation', 'durnholde:dun-garok,aerie-valley', 'aerie-valley:aerie',
  'bulwark:dalson,andorhal,balnir', 'hearthglen:dalson,weeping', 'dalson:weeping,gahrron,andorhal', 'weeping:gahrron', 'gahrron:andorhal,sorrow,caer', 'andorhal:sorrow', 'sorrow:caer', 'caer:plaguemist',

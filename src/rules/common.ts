@@ -8,7 +8,12 @@ export const character = (p: ContentPack, id: string) => { const h = p.character
 export const faction = (p: ContentPack, id: string) => character(p, id).faction;
 export const card = (p: ContentPack, id: string) => { const c = p.cards.find(c => c.id === id); assert(c, `Nepoznata karta: ${id}`); return c; };
 export const region = (p: ContentPack, id: string) => { const r = p.regions.find(r => r.id === id); assert(r, 'Nepoznata regija.'); return r; };
-export const capacity = (p: ContentPack, h: Hero) => character(p, h.id).capacities[h.level - 1];
+export const capacity = (p: ContentPack, h: Hero) => {
+ const def=character(p,h.id),base={...def.capacities[h.level-1]};
+ const ids=[...h.talents,...h.auctionItems,...h.slots.flatMap((s,i)=>[s.card??def.slots[i]?.printed,...s.addons])];
+ for(const id of new Set(ids)){const modifier=p.cards.find(c=>c.id===id)?.capacity;if(modifier){base.health+=modifier.health??0;base.energy+=modifier.energy??0;}}
+ return base;
+};
 export const note = (s: State, text: string) => { s.log.push({ id: (s.log.at(-1)?.id ?? 0) + 1, turn: s.turn, text }); if (s.log.length > 250) s.log.shift(); };
 export function random(s: { rng: number }, n: number): number { assert(integer(n, 1), 'Neispravan raspon.'); let x = s.rng; x ^= x << 13; x ^= x >>> 17; x ^= x << 5; s.rng = x >>> 0; return Math.floor(s.rng / 0x100000000 * n); }
 export function shuffle<T>(s: { rng: number }, values: T[]): T[] { const a = [...values]; for (let i = a.length - 1; i > 0; i--) { const j = random(s, i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }

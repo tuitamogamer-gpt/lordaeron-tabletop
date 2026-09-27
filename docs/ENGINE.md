@@ -1,6 +1,6 @@
-# Engine v2
+# Engine v0.3 · osnovni set
 
-`src/rules/game.ts` izlaže `createGame(pack, setup)` i `apply(pack, state, command)`. Reducer klonira stanje, provjerava i izvršava naredbu. Neispravna naredba ne ostavlja djelimične promjene. React, server i AI koriste isti reducer.
+`src/rules/game.ts` izlaže `createGame(pack, setup)` i `apply(pack, state, command)`. Reducer klonira stanje, provjerava i izvršava naredbu. Neispravna naredba ne ostavlja djelimične promjene. React i AI koriste `BASE_PACK` iz `src/data/base/`. Server dijeli reducer, ali je online razvoj na holdu i njegov fixture paket još nije migriran na osnovni set.
 
 ## Tok
 
@@ -33,7 +33,9 @@ Ratni zadaci mogu prekinuti upravljanje zbog nagrada. Talent i posljednja prilik
 | `effects.ts` | Tipizirani efekti, uslovi, vrijeme, energija i ponovna upotreba |
 | `combat.ts` | Napadači, kockice, minioni, pogoci, rane, poraz i PvP |
 | `rewards.ts` | XP, nivoi, nagrade, zalihe figura i quest špilovi |
-| `events.ts` | Bonus lanci, aukcije, ratovi, trgovac i Fate ruta |
+| `events.ts` | Bonus lanci, aukcije, ratovi, trgovac, kuga i Fate ruta |
+| `event-choices.ts`, `event-rewards.ts`, `legal-events.ts` | Višestruke odluke, retrening, profesije, nagrade i legalni kandidati događaja |
+| `world.ts` | Trajni svjetski efekti, Kazzakovi identiteti, trofeji, boss događaji, Nefarianov Bulwark |
 | `legal.ts` | Kandidati provjereni kroz reducer |
 | `view.ts` | Javno stanje bez RNG-a, špilova i tuđih tajnih ponuda |
 | `session.ts` | Verzija, fingerprint, setup, naredbe i replay |
@@ -42,7 +44,7 @@ Enumeracija legalnih poteza je praktičan skup kandidata, ne svaka kombinacija. 
 
 ## Skripte
 
-Skripte su podaci, ne JavaScript stringovi. Čvorovi: `dice`, `resource`, `stat`, `token`, `change`, `spot`, `remove`, `if`, `condition`, `discard-self`, `heal-pet`. Nema `eval` izvršavanja.
+Skripte su tipizirani podaci, bez `eval` izvršavanja. AST u `model.ts` opisuje kockice, resurse, statistike, tokene, promjene, Spot, uklanjanje, uslove, statuse, liječenje ljubimaca, grupne efekte i posebne radnje. Interpreter provjerava vrijeme, uslove, ciljeve, trošak i ponovnu upotrebu. Statička polja karata opisuju kapacitete, ograničenja opreme, cijene, dodatna mjesta i popuste.
 
 ```ts
 {
@@ -52,9 +54,11 @@ Skripte su podaci, ne JavaScript stringovi. Čvorovi: `dice`, `resource`, `stat`
 }
 ```
 
-Sposobnost ima ID, vrijeme aktivacije, opcionalni trošak i zavisnost od primarne sposobnosti. Može birati kockice ili prijateljskog učesnika. Karte, talenti i rasne moći dijele izvršavanje, ali originalne rasne moći nisu unesene.
+Sposobnost ima ID, vrijeme aktivacije, opcionalni trošak i zavisnost od primarne sposobnosti. Može birati kockice, njihove boje, prijateljskog učesnika, kapacitet resursa ili mjesto opreme. Sve klasne karte, predmeti i rasne moći osnovnog seta sada su uneseni. `source.ts` bilježi originalni sken i eventualnu FAQ korekciju.
 
-Aktivni interpreter pokriva borbene efekte. `action` i `equip` su rezervisani tipovi; slobodne neborbene sposobnosti i složeni prekidi toka još zahtijevaju implementaciju uz originalne tekstove. Promjene kapaciteta, oživljavanje, sve klasne interakcije i tri originalna Overlord profila nisu završeni samim postojanjem općeg AST-a.
+Interpreter pokriva borbene prozore, početak/kraj runde, početak poteza, potrošnju energije, odmor, trening, opremanje i akcijske moći. Portal mora biti odmah sljedeća akcija nakon pripreme i može prebaciti samo saveznike; Summon, Intercept, Resurrection i Reincarnation imaju zasebne uslove toka. `lastActions` čuva učesnike posljednje grupne akcije za čišćenje kuge.
+
+Oba profila tri Overlorda koriste originalne statistike. Kazzak skriva pravi identitet među pet tokena po frakciji. Nefarian pomjera Fate i pokreće prisilnu uzastopnu borbu u Bulwarku. Kel’Thuzad uključuje dodatne događaje i izmjene borbe. Prisustvo skripte nije dokaz svake kombinacije: preostale provjere su u [RULES-COVERAGE.md](RULES-COVERAGE.md), a izvršeni testovi u [VALIDATION.md](VALIDATION.md).
 
 ## AI
 

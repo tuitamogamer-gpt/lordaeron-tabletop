@@ -1,9 +1,11 @@
 import { assert, capacity, card, character, integer, unique } from './common.js';
-import type { ContentPack, Equipped, Hero, State, TownOperation } from './model.js';
+import type { ContentPack, Equipped, Hero, Slot, State, TownOperation } from './model.js';
+export const heroSlots=(p:ContentPack,h:Hero):Slot[]=>[...character(p,h.id).slots,...h.auctionItems.filter(id=>card(p,id).extraInstantSlot).map(()=>({types:['instant' as const],traits:['all']}))];
 type Market = Pick<State, 'merchant'>;
 export function equipped(p: ContentPack, h: Hero): string[] {
- return h.slots.flatMap((slot, i) => [slot.card ?? character(p, h.id).slots[i].printed, ...slot.addons].filter((id): id is string => !!id));
+ return h.slots.flatMap((slot, i) => [slot.card ?? character(p, h.id).slots[i]?.printed, ...slot.addons].filter((id): id is string => !!id));
 }
+export const petCapacity=(p:ContentPack,h:Hero,id:string)=>(card(p,id).petHealth??0)+h.talents.reduce((n,t)=>{const v=card(p,t).petCapacity;return n+(v&&v.trait===card(p,id).trait?v.amount:0);},0);
 export const bagSize = (p: ContentPack, ids: string[]) => ids.filter(id => !card(p, id).bagExempt).length;
 export function receiveItem(p: ContentPack, s: Market, h: Hero, id: string, discard?: string) {
  assert(card(p, id).kind === 'item', 'Samo predmeti mogu u torbu.');
@@ -14,9 +16,11 @@ export function receiveItem(p: ContentPack, s: Market, h: Hero, id: string, disc
  } else assert(!discard, 'Predmet se može odbaciti samo kada je torba prepuna.');
 }
 export function unequip(p: ContentPack, h: Hero, id: string) {
+ const before=capacity(p,h);
  for (const slot of h.slots) { if (slot.card === id) delete slot.card; slot.addons = slot.addons.filter(c => c !== id); }
  delete h.pets[id];
  const c = card(p, id); if (c.kind === 'item') h.bag.push(id);
+ const after=capacity(p,h);if(after.health<before.health)h.health=Math.min(h.health,after.health);if(after.energy<before.energy)h.energy=Math.min(h.energy,after.energy);
 }
 export function train(p: ContentPack, h: Hero, id: string) {
  const c = card(p, id);
@@ -24,27 +28,34 @@ export function train(p: ContentPack, h: Hero, id: string) {
  assert(h.gold >= c.price, 'Nema dovoljno zlata.'); h.gold -= c.price; h.learned.push(id);
 }
 export function manage(p: ContentPack, s: Market, h: Hero, slots: Equipped[], discard: string[]) {
- const def = character(p, h.id), before = equipped(p, h);
+ const def = {...character(p, h.id),slots:heroSlots(p,h)}, before = equipped(p, h);
  assert(slots.length === def.slots.length, 'Pogrešan broj mjesta za opremu.');
  const oldItems = [...h.bag, ...h.slots.flatMap(a => [a.card, ...a.addons].filter((id): id is string => !!id && card(p, id).kind === 'item'))];
  const ids = slots.flatMap(a => [a.card, ...a.addons].filter((id): id is string => !!id));
  assert(unique(ids) && unique(discard), 'Ista karta ne može biti na dva mjesta.');
- const groups: string[] = []; let cost = 0;
+ const groups: string[] = []; let cost = 0;const newlyActive:string[]=[];
  slots.forEach((slot, i) => {
   const area = def.slots[i]; const functions: string[] = [];
   for (const id of [slot.card ?? area.printed, ...slot.addons].filter((x): x is string => !!x)) {
    const c = card(p, id), isPrinted = id === area.printed && !slot.card;
    assert(isPrinted || (c.kind === 'power' ? h.learned.includes(id) : oldItems.includes(id)), 'Karta nije u tvojoj torbi ili knjizi.');
-   assert(c.level <= h.level && area.types.includes(c.type), 'Karta ne odgovara mjestu ili nivou junaka.');
-   assert(c.kind !== 'item' || area.traits.includes('all') || area.traits.includes(c.trait ?? ''), 'Osobina predmeta ne odgovara mjestu.');
+   const override=h.talents.map(id=>card(p,id).equipOverride).find(v=>v&&area.types.includes(v.slot)&&v.traits.includes(c.trait??'')&&c.level<=v.maxLevel&&c.kind==='item'&&!c.addon);
+   assert(c.level <= h.level && (area.types.includes(c.type)||override), 'Karta ne odgovara mjestu ili nivou junaka.');
+   assert(c.kind !== 'item' || area.traits.includes('all') || area.traits.includes(c.trait ?? '')||override, 'Osobina predmeta ne odgovara mjestu.');
    assert(!area.stanceOnly || c.unique === 'Stance', 'Ovo mjesto je samo za Stance moći.');
    assert(c.unique !== 'Stance' || area.stanceOnly, 'Stance mora biti u predviđenom mjestu.');
    if (c.unique && c.kind === 'power') { assert(!groups.includes(c.unique), 'Dozvoljena je samo jedna moć jedinstvene kategorije.'); groups.push(c.unique); }
    if (slot.addons.includes(id)) { assert(c.addon && c.functionTrait && !functions.includes(c.functionTrait), 'Add-on iste funkcije je već opremljen.'); functions.push(c.functionTrait); }
    else assert(!c.addon, 'Add-on pripada dodatnom mjestu.');
-   if (!before.includes(id) && c.type === 'active') cost += c.energy;
+   if (!before.includes(id) && c.type === 'active') newlyActive.push(id);
   }
  });
+ // Management may equip the discount aura first; it never discounts its own equip cost.
+ const modifiers=[...h.talents,...before].map(id=>card(p,id));
+ for(const c of newlyActive.map(id=>card(p,id)).sort((a,b)=>(b.powerDiscount??0)-(a.powerDiscount??0))){
+  const free=modifiers.some(ca=>ca.equipFreeTraits?.includes(c.trait??''));
+  cost+=free?0:Math.max(0,c.energy-modifiers.reduce((n,ca)=>n+(ca.powerDiscount??0),0));modifiers.push(c);
+ }
  assert(h.energy >= cost, 'Nema energije za opremanje aktivnih moći.');
  const nextItems = ids.filter(id => card(p, id).kind === 'item');
  h.bag = oldItems.filter(id => !nextItems.includes(id));
@@ -53,7 +64,7 @@ export function manage(p: ContentPack, s: Market, h: Hero, slots: Equipped[], di
  h.energy -= cost; h.slots = structuredClone(slots);
  const after = equipped(p, h);
  for (const id of Object.keys(h.pets)) if (!after.includes(id)) delete h.pets[id];
- for (const id of after) if (card(p, id).petHealth && !before.includes(id)) h.pets[id] = card(p, id).petHealth!;
+ for (const id of after) if (card(p, id).petHealth && !before.includes(id)) h.pets[id] = petCapacity(p,h,id);
  const cap = capacity(p, h); h.health = Math.min(h.health, cap.health); h.energy = Math.min(h.energy, cap.energy);
 }
 export function sell(p: ContentPack, s: Market, h: Hero, id: string) {

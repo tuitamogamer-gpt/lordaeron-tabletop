@@ -4,20 +4,27 @@ export const id = z.string().min(1).max(100).regex(/^[a-zA-Z0-9:-]+$/);
 const ids = z.array(id).max(40);
 const n = z.number().int().min(0).max(10000);
 const dieIds = z.array(z.number().int().min(0).max(1000)).max(21);
-const slots = z.array(z.object({ card: id.optional(), addons: ids }).strict()).max(7);
+const slots = z.array(z.object({ card: id.optional(), addons: ids }).strict()).max(8);
 const pool = z.object({ red: n, blue: n, green: n }).strict();
 const op = z.discriminatedUnion('op', [z.object({ op:z.literal('buy'),card:id,discard:id.optional() }).strict(),z.object({ op:z.literal('sell'),card:id }).strict(),z.object({ op:z.literal('train'),card:id }).strict()]);
 const schema = z.discriminatedUnion('type', [
- z.object({type:z.literal('travel'),hero:id,path:z.array(id).max(2)}).strict(),
- z.object({type:z.literal('rest'),hero:id,health:n}).strict(),
+ z.object({type:z.literal('event-choice'),hero:id,choice:z.object({mode:z.enum(['skip','gold','recover','talents']).optional(),health:n.optional(),card:id.optional(),discard:id.optional(),region:id.optional(),quest:id.optional(),tier:z.enum(['green','yellow','red']).optional(),enemy:id.optional(),talents:ids.optional()}).strict()}).strict(),
+ z.object({type:z.literal('peek'),hero:id,region:id}).strict(),
+ z.object({type:z.literal('purify'),hero:id}).strict(),
+ z.object({type:z.literal('claim-relic'),hero:id}).strict(),
+ z.object({type:z.literal('travel'),hero:id,path:z.array(id).max(100),power:id.optional()}).strict(),
+ z.object({type:z.literal('power-action'),hero:id,card:id}).strict(),
+ z.object({type:z.literal('summon'),hero:id,target:id}).strict(),
+ z.object({type:z.literal('portal'),hero:id,allies:z.array(id).max(2),self:z.boolean().optional()}).strict(),
+ z.object({type:z.literal('rest'),hero:id,health:n,food:id.optional()}).strict(),
  z.object({type:z.literal('train'),hero:id,cards:ids}).strict(),
  z.object({type:z.literal('town'),hero:id,health:n,operations:z.array(op).max(100)}).strict(),
- z.object({type:z.literal('challenge'),hero:id,target:id,allies:z.array(id).max(2)}).strict(),
+ z.object({type:z.literal('challenge'),hero:id,target:id,allies:z.array(id).max(2),region:id.optional()}).strict(),
  z.object({type:z.literal('trade'),hero:id,to:id,items:ids,gold:n,receiveItems:ids,receiveGold:n}).strict(),
  z.object({type:z.literal('endActions')}).strict(), z.object({type:z.literal('endManagement')}).strict(),
  z.object({type:z.literal('manage'),hero:id,slots,discard:ids}).strict(),
  z.object({type:z.literal('talent'),hero:id,card:id}).strict(), z.object({type:z.literal('attacker'),hero:id}).strict(),
- z.object({type:z.literal('ability'),hero:id,card:id,ability:id,args:z.object({dice:dieIds,target:id.optional(),color:z.enum(['red','blue','green']).optional()}).partial().strict().optional()}).strict(),
+ z.object({type:z.literal('ability'),hero:id,card:id,ability:id,args:z.object({removeDice:dieIds.optional(),colors:z.array(z.enum(['red','blue','green'])).max(21).optional(),slot:n.optional(),free:z.boolean().optional(),secondaryTarget:id.optional(),health:n.optional(),targets:ids.optional(),discard:id.optional(),dice:dieIds,target:id.optional(),color:z.enum(['red','blue','green']).optional()}).partial().strict().optional()}).strict(),
  z.object({type:z.literal('roll'),omit:pool.optional()}).strict(),
  z.object({type:z.literal('penalty'),dice:dieIds}).strict(),z.object({type:z.literal('reroll'),dice:dieIds}).strict(),
  z.object({type:z.literal('advance'),targets:ids.optional()}).strict(), z.object({type:z.literal('monster'),unequip:ids.optional()}).strict(),

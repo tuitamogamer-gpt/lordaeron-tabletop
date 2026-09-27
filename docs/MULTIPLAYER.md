@@ -2,6 +2,8 @@
 
 **Status: online sobe su na holdu po odluci korisnika.** Ne provisionirati Redis niti povezivati postojeće spremište dok korisnik ne nastavi rad na online sobama. Produkcijska lokalna igra i AI botovi ostaju dostupni bez servera.
 
+U v0.3 kontrole i hookovi za online sobe uklonjeni su iz aktivnog interfejsa. Preostali tekst dokumentuje raniji server prototip, koji još koristi razvojni fixture paket. Server nije migriran na skenirani set i ne treba ga uključivati bez te migracije i nove multiplayer provjere.
+
 Klijenti šalju odluke; server izvršava zajednički engine. Nijedan klijent ne šalje novo stanje, rezultate bacanja ili poredak špila.
 
 ## API
