@@ -16,7 +16,7 @@ let depth=0,end=0;
 for(const match of svg.matchAll(/<svg\b|<\/svg>/g)){depth+=match[0]==='</svg>'?-1:1;if(depth===0){end=match.index!+match[0].length;break;}}
 svg=svg.slice(0,end);
 svg=svg.replace('<svg ', '<svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" width="2070" height="1380" ');
-const css=(readFileSync('src/campaign/map.css','utf8')+readFileSync('src/campaign/command-table.css','utf8')).replaceAll('var(--serif)','Georgia').replaceAll('var(--sans)','Arial');
+const css=(readFileSync('src/campaign/map.css','utf8')+readFileSync('src/campaign/command-table.css','utf8')+readFileSync('src/campaign/upgrade.css','utf8')).replaceAll('var(--serif)','Georgia').replaceAll('var(--sans)','Arial');
 svg=svg.replace('<svg ', '<svg class="strong-borders" ');
 svg=svg.replace('><defs>',`><style>${css}</style><defs>`);
 for(const url of new Set([...svg.matchAll(/href="(\/assets\/[^" ]+)"/g)].map(m=>m[1]))){

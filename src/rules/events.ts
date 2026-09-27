@@ -58,5 +58,8 @@ export function checkWars(p:ContentPack,s:State):boolean{
  rewards(p,s,hs.map(h=>h.id),hs.map(h=>h.id),war.perHero?{...reward,xp:reward.xp*hs.length,gold:reward.gold*hs.length}:reward);s.phase='reward';return true;
 }
 export function replacement(p:ContentPack,s:State,tier:'green'|'yellow'|'red'){
- assert(s.reward?.replacement,"No quest to replace.");assert(drawQuest(p,s,s.reward.replacementFaction??s.reward.faction,tier),"A quest cannot currently be placed from this deck.");s.reward.replacement=false;
+ assert(s.reward?.replacement,"No quest to replace.");
+ assert(!s.reward.offered.length&&!s.reward.items.length&&!s.reward.special.length&&!s.reward.extraItems?.length&&!s.reward.relic,"Distribute rewards first.");
+ assert(drawQuest(p,s,s.reward.replacementFaction??s.reward.faction,tier),"A quest cannot currently be placed from this deck.");s.reward.replacement=false;
+ if(s.reward.resolution){s.reward.resolution.status='complete';s.reward.resolution.receipts.push({kind:'quest',card:s.quests.at(-1),text:`A new ${tier} quest enters play.`});}
 }

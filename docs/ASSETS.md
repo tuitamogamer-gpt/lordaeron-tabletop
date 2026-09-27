@@ -1,5 +1,7 @@
 # Porijeklo materijala
 
+Aktuelna v0.7 koristi 521 imagegen lice karte, 16 izdvojenih tokena i novu Lordaeron reljefnu podlogu. Putanje, obrada i provjere su u [TABLETOP-V7.md](TABLETOP-V7.md), a svi promptovi u [imagegen-v7-prompts.json](imagegen-v7-prompts.json).
+
 ## Referentni resursi
 
 | Lokalna datoteka | Izvor | Napomena |

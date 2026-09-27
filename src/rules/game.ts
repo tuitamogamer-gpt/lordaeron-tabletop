@@ -5,6 +5,7 @@ import { battleEvents, bid, checkWars, drawEvents, eventChoice, finishEvent, nex
 import { bagSize, equipped, manage, receiveItem, rest, townOperations, train, unequip } from './inventory.js';
 import { canLeaveBlue, independents, respawnRegions, travel } from './movement.js';
 import { drawQuest, finalAttacker, nextItem, rewards } from './rewards.js';
+import { claimReward } from './reward-engine.js';
 import { activeEvent, plagued, worldEvent } from './world.js';
 import type { Command, ContentPack, Hero, ItemDeck, Setup, State, Tier } from './model.js';
 
@@ -212,11 +213,7 @@ export function apply(p: ContentPack, state: State, command: Command): State {
    break;
   }
   case 'reward': {
-   const r = s.reward; assert(s.phase === 'reward' && r && r.eligible.includes(c.hero) && r.offered.includes(c.card), "This reward is unavailable.");
-   receiveItem(p, s, hero(s, c.hero), c.card, c.discard);
-   if (r.offeredDeck === 'special') s.itemDecks.special = s.itemDecks.special.filter(id => id !== c.card);
-   else if (r.offeredDeck) s.itemDecks[r.offeredDeck].push(...r.offered.filter(id => id !== c.card));
-   nextItem(s); finishRewards(p, s); break;
+   claimReward(p, s, c.hero, c.card, c.discard); finishRewards(p, s); break;
   }
   case 'quest': assert(s.phase === 'reward' && s.reward && !s.reward.offered.length, "Distribute rewards first."); replacement(p, s, c.tier); finishRewards(p, s); break;
   case 'bid': assert(s.phase === 'event', "No auction is active."); bid(p, s, c.hero, c.amount); break;

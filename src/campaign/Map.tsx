@@ -7,8 +7,9 @@ import type { Command, Color } from '../rules/model';
 import type { GameView } from '../rules/view';
 import { clampCamera, OVERVIEW_CAMERA, questMarkers, zoomCamera } from './map-state';
 import { BoardTokenArt } from './Art';
+import { creatureStacks, MapPortraitToken } from './MapTokens';
 
-type Props = { focused: boolean; onToggleFocus: () => void; state: GameView; selected: string; heroId: string; legal: Command[]; onSelect: (id: string) => void; onMove: (c: Command) => void; selectedQuest?: string; onQuest?: (id: string, region: string) => void; onInspectQuest?: (id: string) => void; };
+type Props = { focused: boolean; onToggleFocus: () => void; state: GameView; selected: string; heroId: string; legal: Command[]; onSelect: (id: string) => void; onMove: (c: Command) => void; selectedQuest?: string; onQuest?: (id: string, region: string) => void; onInspectQuest?: (id: string) => void; onHero?: (id: string) => void; };
 const ratio = board.width / board.height;
 const centers = Object.fromEntries(BOARD_SHAPES.map(s => [s.id, s.center]));
 const points = (id: string) => BOARD_SHAPE_BY_ID[id].points.map(p => p.join(',')).join(' ');
@@ -20,8 +21,8 @@ function labelLines(name: string) {
  return lines;
 }
 
-export default function CampaignMap({ state, selected, heroId, legal, onSelect, onMove, focused, onToggleFocus, selectedQuest, onQuest, onInspectQuest }: Props) {
- const [camera,setCamera]=useState(OVERVIEW_CAMERA),[dragging,setDragging]=useState(false),[routeIndex,setRouteIndex]=useState(0),[showLabels,setShowLabels]=useState(true),[showRules,setShowRules]=useState(false),[strongBorders,setStrongBorders]=useState(true);
+export default function CampaignMap({ state, selected, heroId, legal, onSelect, onMove, focused, onToggleFocus, selectedQuest, onQuest, onInspectQuest, onHero }: Props) {
+ const [camera,setCamera]=useState(OVERVIEW_CAMERA),[dragging,setDragging]=useState(false),[routeIndex,setRouteIndex]=useState(0),[showLabels,setShowLabels]=useState(true),[showRules,setShowRules]=useState(false),[strongBorders,setStrongBorders]=useState(false);
  const canvas=useRef<HTMLDivElement>(null),entryButton=useRef<HTMLButtonElement>(null);
  const drag=useRef<{x:number;y:number;panX:number;panY:number}|null>(null),didDrag=useRef(false),previousSelection=useRef(selected),wasFocused=useRef(false);
  const markers=useMemo(()=>questMarkers(p,state),[state.quests,state.enemies]);
@@ -80,7 +81,7 @@ export default function CampaignMap({ state, selected, heroId, legal, onSelect, 
      <filter id="token-shadow"><feDropShadow dx="0" dy="2" stdDeviation="2" floodOpacity=".8"/></filter>
     </defs>
     <rect x={board.x} y={board.y} width={board.width} height={board.height} fill="#25291f"/>
-    <image className="board-terrain" href="/assets/warcraft/lordaeron-terrain-v2.webp" x={board.x} y={board.y} width={board.width} height={board.height} preserveAspectRatio="none" pointerEvents="none"/>
+    <image className="board-terrain" href="/assets/warcraft/lordaeron-relief-v3.webp" x={board.x} y={board.y} width={board.width} height={board.height} preserveAspectRatio="none" pointerEvents="none"/>
     {p.regions.map(r=><polygon key={r.id} points={points(r.id)} fill={r.home==='horde'?'#8d463a':r.home==='alliance'?'#3d6982':ZONE_COLORS[r.zone].fill} fillOpacity={r.home ? .28 : .06} pointerEvents="none"/>)}
     <g className="board-borders" pointerEvents="none">{BOARD_BORDERS.map((b,i)=>{const passable=b.regions.length===2,path=`M${b.a.join(',')} L${b.b.join(',')}`;return <g key={i}><path className="border-underlay" d={path} fill="none" stroke={passable?'#17140e':'#ccb680'} strokeWidth={passable?4.6:6} vectorEffect="non-scaling-stroke" strokeLinecap="round" opacity={strongBorders?1:.35}/><path data-border={passable?'passable':'impassable'} d={path} fill="none" stroke={passable?(strongBorders?'#efd69b':ZONE_COLORS[regionById[b.regions[0]].zone].border):'#080d09'} strokeWidth={passable?(strongBorders?1.7:1):4.1} vectorEffect="non-scaling-stroke" strokeLinejoin="round" strokeLinecap="round"/></g>;})}</g>
     <g className="map-zone-titles" pointerEvents="none">{[['TIRISFAL GLADES',439,176],['SILVERPINE FOREST',218,497],['ALTERAC MOUNTAINS',591,491],['HILLSBRAD FOOTHILLS',579,978],['WESTERN PLAGUELANDS',800,169],['EASTERN PLAGUELANDS',1260,117],['THE HINTERLANDS',1100,910]].map(([name,x,y])=><text key={name} x={x} y={y} textAnchor="middle">{name}</text>)}</g>
@@ -99,15 +100,15 @@ export default function CampaignMap({ state, selected, heroId, legal, onSelect, 
     })}</g>}
     {p.regions.map(r=>{
      const [x,y]=centers[r.id],enemies=state.enemies.filter(e=>e.region===r.id),people=state.heroes.filter(h=>h.location===r.id);
-     const counts=(['green','red','blue'] as Color[]).map(color=>({color,count:enemies.filter(e=>e.color===color).length})).filter(c=>c.count);
+     const stacks=creatureStacks(enemies);
      const tokens=markers.filter(m=>m.region===r.id);
      return <g key={r.id} className="map-tokens">
-      {counts.map(({color,count},i)=><g key={color} className={`creature-counter ${color}`} transform={`translate(${x+(i-(counts.length-1)/2)*23},${y+33})`} pointerEvents="none"><title>{`${count} ${colorLabel[color]} creatures in ${r.name}`}</title><BoardTokenArt index={color==='green'?2:color==='red'?3:4} x={-14} y={-14} width={28} height={28}/><text textAnchor="middle" y="4">{count}</text></g>)}
+      {stacks.map((stack,i)=><MapPortraitToken key={stack.creature+stack.color} kind="creature" x={x+(i%4-(Math.min(stacks.length,4)-1)/2)*38} y={Math.min(y+38,board.y+board.height-30-Math.floor((stacks.length-1)/4)*37)+Math.floor(i/4)*37} color={stack.color} count={stack.count} name={p.creatures.find(c=>c.id===stack.creature)!.name} label={`${stack.count} × ${p.creatures.find(c=>c.id===stack.creature)!.name} · ${colorLabel[stack.color]} · ${r.name}`} src={`/assets/tokens/${stack.creature}.webp`} onClick={()=>onSelect(r.id)}/>)}
       {tokens.map((m,i)=><g key={m.quest.id} role="button" tabIndex={0} aria-label={`${m.label} · ${m.quest.name} · ${m.remaining} objectives · ${r.name}`} className={`quest-map-token ${m.quest.faction} ${selectedQuest===m.quest.id?'active':''}`} transform={`translate(${x+36},${y-22+i*23})`} onClick={()=>{onSelect(r.id);onQuest?.(m.quest.id,r.id);}} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();onSelect(r.id);onQuest?.(m.quest.id,r.id);}}}><title>{`${m.quest.name} · ${m.remaining} objectives`}</title><rect className="token-hit-area" x="-22" y="-17" width="44" height="34" rx="5"/><BoardTokenArt index={m.quest.faction==='horde'?0:1} x={-24} y={-19} width={48} height={38}/><text textAnchor="middle" y="5">{m.label}</text></g>)}
-      {people.map((h,i)=>{const d=character(p,h.id);return <g key={h.id} className="map-hero" transform={`translate(${x+(i-(people.length-1)/2)*28},${y-36})`} filter="url(#token-shadow)" pointerEvents="none"><title>{`${d.name} · ${r.name}`}</title><image href="/assets/warcraft/characters-base.webp" clipPath="url(#map-portrait)" x={-12-d.portrait%4*24} y={-12-Math.floor(d.portrait/4)*24} width="96" height="96"/><circle r="13" fill="none" stroke={h.id===heroId?'#fff0b3':d.faction==='horde'?'#e5806a':'#8cb9ec'} strokeWidth={h.id===heroId?3:2}/></g>;})}
+      {people.map((h,i)=>{const d=character(p,h.id);return <MapPortraitToken key={h.id} kind="hero" x={x+(i-(people.length-1)/2)*49} y={Math.max(board.y+40,y-43)} src={`/assets/portraits/${h.id}.webp`} name={d.name} label={`${d.name} · level ${h.level} · ${r.name}`} color={d.faction} active={h.id===heroId} level={h.level} onClick={()=>{onSelect(r.id);onHero?.(h.id);}}/>;})}
      </g>;
     })}
-    {state.overlord.region&&centers[state.overlord.region]&&<g className="map-overlord" transform={`translate(${centers[state.overlord.region][0]},${centers[state.overlord.region][1]-33})`} pointerEvents="none"><title>{p.overlords.find(o=>o.id===state.overlord.id)?.name}</title><BoardTokenArt index={5} x={-20} y={-23} width={40} height={40}/></g>}
+    {state.overlord.region&&centers[state.overlord.region]&&<MapPortraitToken kind="overlord" x={centers[state.overlord.region][0]+(state.heroes.some(h=>h.location===state.overlord.region)?50:0)} y={Math.max(board.y+44,centers[state.overlord.region][1]-40)} src={`/assets/portraits/${state.overlord.id}.webp`} name={p.overlords.find(o=>o.id===state.overlord.id)!.name} label={`Overlord · ${p.overlords.find(o=>o.id===state.overlord.id)!.name} · ${regionById[state.overlord.region].name}`} onClick={()=>onSelect(state.overlord.region)}/>}
     {(state.world??[]).filter(w=>!w.cleared).flatMap(w=>{const e=p.events.find(e=>e.id===w.id)!;return(e.boss?[e.boss.region]:e.script==='plague'?w.tokens:[]).map(id=>{const [x,y]=centers[id];return <g className="world-map-marker" key={`${w.id}-${id}`} transform={`translate(${x-31},${y+19})`} pointerEvents="none"><title>{e.name}</title><path d="M-12 0 0-19 12 0 0 11Z" fill={e.boss?'#573665':'#4d6c30'} stroke="#c1ae79" strokeWidth="2"/><text textAnchor="middle" y="2" fontSize="12">{e.boss?'!':'☣'}</text></g>;});})}
     {state.kazzak?.filter(t=>!t.revealed).map(t=>{const[x,y]=centers[t.region];return <g className="world-map-marker" key={t.region} transform={`translate(${x-31},${y+19})`} pointerEvents="none"><title>Kazzak clue</title><circle r="14" fill="#482328" stroke="#cf9569" strokeWidth="2"/><text textAnchor="middle" y="5" fontSize="18">{t.real===undefined?'?':t.real?'!':'×'}</text></g>;})}
     <g className="map-cartouche" transform="translate(1080,965)" pointerEvents="none"><text textAnchor="middle">LORDAERON</text><text textAnchor="middle" y="21" className="cartouche-small">THE WAR TABLE · 2005</text></g>
@@ -121,6 +122,7 @@ export default function CampaignMap({ state, selected, heroId, legal, onSelect, 
    <button className="gold-button" disabled={!move} onClick={()=>move&&onMove(move)}>Travel here <small>{move?`${move.path.length} ${move.path.length===1?"region":"regions"} · 1 action`:"Unavailable"}</small><Icon name="walk"/></button>
   </div></div>
   <div className="map-travel-detail" aria-live="polite">{move?<><span className="route-origin">{regionById[me.location].name}</span>{move.path.map((id,i)=><span key={i}><Icon name={flight(allRoute[i],id)?'wind':'right'} size={12}/><b>{i+1}</b>{regionById[id].name}</span>)}{move.power&&<em>{card(p,move.power).name}</em>}{here.some(e=>e.color==='blue')&&<em>Blue creatures end movement.</em>}</>:<span>{blockedReason}</span>}</div>
+  <div className="destination-units" aria-label="Units in selected region">{creatureStacks(here).map(stack=>{const c=p.creatures.find(c=>c.id===stack.creature)!,stats=c.stats[stack.color];return <span className={stack.color} key={stack.creature+stack.color}><img src={`/assets/tokens/${stack.creature}.webp`} alt=""/><b>{stack.count} × {c.name}</b><small>{stack.color} · {stats.threat}+ threat / {stats.attack} attack / {stats.health} health</small></span>;})}{state.heroes.filter(h=>h.location===selected).map(h=><span key={h.id}><img src={`/assets/portraits/${h.id}.webp`} alt=""/><b>{character(p,h.id).name}</b><small>Level {h.level} · {h.health} health</small></span>)}{state.overlord.region===selected&&<span className="overlord"><img src={`/assets/portraits/${state.overlord.id}.webp`} alt=""/><b>{p.overlords.find(o=>o.id===state.overlord.id)!.name}</b><small>Overlord</small></span>}</div>
   {localMarkers.length>0&&<div className="destination-quests">{localMarkers.map(m=><button key={m.quest.id} className={selectedQuest===m.quest.id?'selected':''} onClick={()=>onInspectQuest?.(m.quest.id)}><span className={`quest-reference ${m.quest.faction}`}>{m.label}</span>{m.quest.name}<small>{m.remaining} objectives</small><Icon name="book" size={12}/></button>)}</div>}
  </section>;
 }

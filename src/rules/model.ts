@@ -83,6 +83,14 @@ export type CreatureRule = 'murloc' | 'gnoll' | 'ghoul' | 'crusader' | 'naga' | 
 export interface Creature { id: string; name: string; rule: CreatureRule; stats: Record<Color, { threat: number; attack: number; health: number }>; stock: Pool; description: string; image: string; source: Source; }
 export interface Spawn { creature: string; color: Color; region: string; count: number; }
 export interface Reward { xp: number; gold: number; items: { deck: ItemDeck; draw: number }[]; special?: string[]; }
+export type RewardStep =
+ | { op: 'experience'; amount: number; levelAdjusted: boolean }
+ | { op: 'gold'; amount: number }
+ | { op: 'draw'; deck: ItemDeck; count: number; keep: 1 }
+ | { op: 'special'; cards: string[] }
+ | { op: 'replace-quest' };
+export interface RewardReceipt { kind: 'xp' | 'gold' | 'item' | 'skip' | 'quest'; hero?: string; amount?: number; card?: string; text: string; }
+export interface RewardResolution { script: RewardStep[]; cursor: number; status: 'running' | 'choice' | 'replacement' | 'complete'; grants: { hero: string; xp: number; gold: number }[]; receipts: RewardReceipt[]; }
 export interface Quest { id: string; name: string; faction: Faction; tier: Tier; level: number; spawns: Spawn[]; reward: Reward; source: Source; }
 export type EventEffect =
  | { op: 'gold'; amount: number; faction: 'all' | 'stronger' | 'weaker' }
@@ -103,7 +111,7 @@ export interface Attack { poolLimits?:Partial<Pool>; rerollStarted?:boolean; pla
 export interface DamageRecord { defense?:boolean; before: number; amount: number; prevented: number; harmedBefore: boolean; }
 export type BattleStage = 'attacker' | 'pool' | 'penalty' | 'after-pool' | 'reroll' | 'after-reroll' | 'tokens' | 'after-tokens' | 'defense' | 'wounds' | 'resolution' | 'round-end' | 'over';
 export interface Battle { unabsorbed?: Partial<Record<Faction,number>>; killed?:Enemy[]; once?:string[];defenseLosses?:Record<string,number>;defenseSpent?:Record<string,number>; counters?:Record<string,number>; damageTaken?: Record<string,number>; damageSpent?: Record<string,number>; losses?: Record<string, DamageRecord>; kind: 'pve' | 'pvp' | 'final'; region: string; participants: string[]; defeated: string[]; enemies: string[]; boss?: string; round: number; stage: BattleStage; first: Faction; nextFaction: Faction; acted: string[]; active?: Attack; boxes: Record<Faction, Boxes>; lostDice: Pool; previous: Record<string, { cards: string[]; harmed: boolean }>; current: Record<string, { cards: string[]; harmed: boolean }>; wounds: Record<Faction, number>; afterWounds?: 'resolution' | 'round-end'; armorDone: Faction[]; winner?: Faction | 'draw'; report: string[]; }
-export interface RewardState { replacementFaction?:Faction;extraItems?:string[];relic?:string; faction: Faction; quest?: string; eligible: string[]; items: { deck: ItemDeck; draw: number }[]; special: string[]; offered: string[]; offeredDeck?: ItemDeck; replacement: boolean; }
+export interface RewardState { resolution?: RewardResolution; replacementFaction?:Faction;extraItems?:string[];relic?:string; faction: Faction; quest?: string; eligible: string[]; items: { deck: ItemDeck; draw: number }[]; special: string[]; offered: string[]; offeredDeck?: ItemDeck; replacement: boolean; }
 export interface War { weakReward?:Reward;perHero?:boolean; id: string; regions: [string, string]; reward: Reward; }
 export interface Auction { event: string; item: string; bids: Record<string, number>; }
 export interface Log { id: number; turn: number; text: string; }

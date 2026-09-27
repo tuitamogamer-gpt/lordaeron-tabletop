@@ -1,8 +1,10 @@
-# Lordaeron · WoW Board Game v0.6
+# Lordaeron · WoW Board Game v0.7
 
 Desktop adaptacija osnovne igre iz 2005. i službenog FAQ-a 1.4. React interfejs, zaseban TypeScript engine, lokalni hotseat i AI igrači. **Online sobe su na čekanju.**
 
 [Otvori igru](https://lordaeron-tabletop.vercel.app)
+
+v0.7 donosi 521 potpuno ilustrirano lice karte, reljefnu mapu, portrete i brojače jedinica, novi quest journal, scripted reward engine i geometrijski ispravne d8. Promjene, izvori i provjere: [TABLETOP-V7.md](docs/TABLETOP-V7.md).
 
 Igriva kampanja koristi sadržaj prenesen iz dostavljenih skenova: 16 likova, 108 moći, 108 talenata, 120 predmeta, 80 questova, 52 događaja, 13 vrsta stvorenja i tri Overlorda. Originali su lokalni izvori teksta i mehanika; **Warforged Chronicles** daje novi izgled ličnih listova i karata; centralna 2D mapa prati polja i granice originalne ploče. Nijedno proširenje nije uključeno.
 
@@ -53,9 +55,9 @@ Prečice: **1–5** akcije, **F** interakcija s mapom, **Esc** povratak. Unutar 
 
 ## Provjera i granice
 
-225 automatizovanih testova, render provjera 621 prikaza i tri završene kampanje s identičnim replayom. Provjere uključuju setup, opremanje, špilove, višestruki trening, varijante, borbu, mapu i React interakcije. AI planira cijelu opremu i zajednički trening više moći; koristi heuristike i ne predstavlja optimizovanu strategiju. Pregled pravila i promjena nalazi se u [RULES-AUDIT-V6.md](docs/RULES-AUDIT-V6.md).
+239 automatizovanih testova, render provjera 621 prikaza i tri završene kampanje s identičnim replayom. Provjere uključuju setup, opremanje, špilove, višestruki trening, varijante, borbu, mapu, scripted rewards i React interakcije. AI planira cijelu opremu i zajednički trening više moći; koristi heuristike i ne predstavlja optimizovanu strategiju. Pregled pravila i promjena nalazi se u [RULES-AUDIT-V6.md](docs/RULES-AUDIT-V6.md).
 
-Mapa je ručno precrtana iz dvije fotografije originala, uz dijagrame iz pravilnika. Granice i engine koriste isti graf. Render mape je ranije vizuelno pregledan; 67 poligona nema preklapanja. Arhiv ne sadrži ravan sken, pa je ovo rekonstrukcija s pojednostavljenim konturama. Novi lični list ima izmijenjene kolone, veličine teksta i prelamanje. Njegov završni pregled u stvarnom pregledniku nije potvrđen: Computer Use zaustavljen je zbog nepouzdanog očitavanja URL-a na Windowsu. DOM testovi i server render ne zamjenjuju tu provjeru. Detalji su u [MAP.md](docs/MAP.md) i [VALIDATION.md](docs/VALIDATION.md).
+Granice mape ručno su precrtane iz dvije fotografije originala, uz dijagrame iz pravilnika. Granice i engine koriste isti graf; 67 poligona nema preklapanja. Arhiv ne sadrži ravan sken, pa je ovo rekonstrukcija s pojednostavljenim konturama i stiliziranim Lordaeron reljefom. v0.7 je vizuelno provjeren u Chromeu, uključujući karte, mapu, questove i nagrade. Ranije provjere: [MAP.md](docs/MAP.md) i [VALIDATION.md](docs/VALIDATION.md); aktuelne: [TABLETOP-V7.md](docs/TABLETOP-V7.md).
 
 ## Dokumentacija
 
