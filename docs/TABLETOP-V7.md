@@ -16,7 +16,7 @@ Mapa ostaje Lordaeron u Eastern Kingdoms, područje originalne base igre. Reljef
 
 Svaki prisutni junak ima portret, frakcijski obruč, ime i nivo. Overlord ima veći portret i krunu. Svaka kombinacija vrste i boje miniona ima zaseban portret i brojač; odabrana regija prikazuje i tekstualan spisak jedinica. Kazzak zadržava skrivene tragove dok se ne otkrije. Pregled mape ima dovoljno veliku površinu za čitljive tokene, sa sticky akcijama.
 
-D8 je projekcija pravog oktaedra (6 vrhova, 8 trougaonih strana), sa osvijetljenim plohama, rezultatom i postojećim red/blue/green bojama. Reroll, Spot, uklanjanje i selekcija ostaju vezani za stvarno stanje enginea.
+D8 koristi osam numerisanih 3D ploha pravog oktaedra (6 vrhova, 8 trougaonih strana), sa osvijetljenim plohama, rezultatom i postojećim red/blue/green bojama. Reroll, Spot, uklanjanje i selekcija ostaju vezani za stvarno stanje enginea.
 
 Izvori za geografiju i oblik: [Blizzard · Getting Around Azeroth](https://news.blizzard.com/en-us/article/23156366/wow-classic-getting-around-azeroth), [Blizzard · Naxxramas](https://worldofwarcraft.blizzard.com/news/23572632/wow-classic-naxxramas-is-now-live), [Die Hard Dice · D8 octahedron](https://www.dieharddice.com/pages/test-dnd-dice-explained), [Apple TabletopKit · octahedron](https://developer.apple.com/documentation/tabletopkit/tossablerepresentation). Pravila, boje kockica i graf table dolaze iz postojećeg base paketa i originalnog pravilnika.
 
@@ -39,7 +39,7 @@ npm run render:map
 
 ## Provjera
 
-239 testova; 621 server render. Testovi pokrivaju sva puna lica, stvarni izbor nagrade, sve quest programe, višestruke draw korake, prazne špilove, named predmete, kapacitet torbe, serijalizaciju/replay i zaštitu od duplog završetka questa.
+268 testova; 621 server render. Testovi pokrivaju sva puna lica, stvarni izbor nagrade, sve quest programe, višestruke draw korake, prazne špilove, named predmete, kapacitet torbe, serijalizaciju/replay i zaštitu od duplog završetka questa.
 
 Tri kampanje završene uz identičan replay:
 - Kel’Thuzad / seed 2005: 968 komandi, 12 questova, Alliance, turn 30.

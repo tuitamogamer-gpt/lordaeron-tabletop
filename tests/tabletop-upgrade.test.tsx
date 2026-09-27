@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
-import { D8 } from '../src/campaign/D8';
+import D8 from '../src/campaign/D8';
 import { creatureStacks, MapPortraitToken } from '../src/campaign/MapTokens';
 import { questObjectives } from '../src/campaign/quest-design';
 import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
@@ -27,9 +27,9 @@ describe('tabletop pieces and cards',()=>{
   fireEvent.keyDown(screen.getByRole('button',{name:'Grumbaz Crowsblood'}),{key:'Enter'});expect(select).toHaveBeenCalledOnce();expect(screen.getByText('3')).toBeTruthy();
  });
  it('preserves a d8 result and its selection, removal and reroll states',()=>{
-  const click=vi.fn(),die={id:1,color:'blue' as const,value:8,removed:false,spotted:false,rerolled:true};const r=render(<D8 die={die} onSelect={click}/>);
-  const button=screen.getByRole('button',{name:/D8 · blue · 8 · rerolled/});expect(r.container.querySelectorAll('.d8-facet').length).toBeGreaterThanOrEqual(3);expect(screen.getByText('8')).toBeTruthy();fireEvent.click(button);expect(click).toHaveBeenCalledOnce();
-  r.rerender(<D8 die={{...die,removed:true}} onSelect={click}/>);fireEvent.click(screen.getByRole('button'));expect(click).toHaveBeenCalledOnce();
+  const click=vi.fn(),die={id:1,color:'blue' as const,value:8,removed:false,spotted:false,rerolled:true};const r=render(<D8 die={die} selected disabled={false} onSelect={click}/>);
+  const button=screen.getByRole('button',{name:/blue D8 8, miss, rerolled/});expect(r.container.querySelectorAll('.d8-face')).toHaveLength(8);expect(r.container.querySelector('.d8-result')?.textContent).toContain('8');expect(button.getAttribute('aria-pressed')).toBe('true');fireEvent.click(button);expect(click).toHaveBeenCalledOnce();
+  r.rerender(<D8 die={{...die,removed:true}} disabled={false} onSelect={click}/>);fireEvent.click(screen.getByRole('button'));expect(click).toHaveBeenCalledOnce();
  });
  it('counts only a quest’s own non-blue targets and preserves multi-spawn totals',()=>{
   const s=createGame(p,DEFAULT_SETUP),q=p.quests.find(q=>q.id===s.quests[0])!;const before=questObjectives(q,s);expect(before.reduce((n,o)=>n+o.total,0)).toBe(q.spawns.filter(v=>v.color!=='blue').reduce((n,o)=>n+o.count,0));
