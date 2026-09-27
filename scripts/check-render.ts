@@ -6,6 +6,8 @@ import Combat from '../src/campaign/Combat';
 import {GameCard,CharacterCard} from '../src/campaign/parts';
 import CharacterSheet,{startingHero} from '../src/campaign/CharacterSheet';
 import CampaignSetup from '../src/campaign/CampaignSetup';
+import ClassDeck from '../src/campaign/ClassDeck';
+import {EquipmentEditor} from '../src/campaign/Interactions';
 import {CreatureCard,EventCardView,OverlordCard,QuestCard} from '../src/campaign/design-system';
 import {createGame} from '../src/rules/game';
 import {beginBattle,chooseAttacker} from '../src/rules/combat';
@@ -23,4 +25,5 @@ for(const overlord of p.overlords)render(React.createElement(OverlordCard,{overl
 render(React.createElement(Campaign));
 const s=createGame(p,DEFAULT_SETUP);s.enemies=[{id:'smoke',creature:'murloc',color:'blue',region:'brill'}];beginBattle(s,'pve',[s.heroes[0].id],['smoke'],'horde','brill');chooseAttacker(p,s,s.heroes[0].id);
 render(React.createElement(Combat,{state:view(s),legal:legalActions(p,s),send:()=>{},busy:false,botStep:()=>{},botReady:false,auto:false,toggleBots:()=>{}}));
+for(const def of p.characters){const h=startingHero(def.id);render(React.createElement(ClassDeck,{hero:h,inspect:()=>{}}));h.level=5;h.energy=10;h.learned=p.cards.filter(c=>c.kind==='power'&&!c.printed&&c.classId===def.classId).map(c=>c.id);render(React.createElement(EquipmentEditor,{hero:h,send:()=>{},busy:false}));}
 console.log(JSON.stringify({rendered:count,pack:p.id,invalidText:false}));

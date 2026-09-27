@@ -113,7 +113,9 @@ export function checkElimination(p: ContentPack, s: State): boolean {
  if (s.respawns.length) return false;
  const horde = living(s, b, 'horde', p).length, alliance = living(s, b, 'alliance', p).length;
  if (b.kind === 'pve') { if (living(s, b).length) return false; b.winner = other(b.first); }
- else { if (horde && alliance) return false; b.winner = horde ? 'horde' : alliance ? 'alliance' : 'draw'; }
+ else { if (horde && alliance) return false; b.winner = horde ? 'horde' : alliance ? 'alliance' : 'draw';
+  if(!horde&&!alliance&&s.variants?.deadlyPvp){const diff=(b.unabsorbed?.horde??0)-(b.unabsorbed?.alliance??0);b.winner=diff>0?'alliance':diff<0?'horde':'draw';}
+ }
  b.stage = 'over'; if (b.kind === 'final') s.winner = b.winner; return true;
 }
 export function defense(p: ContentPack, s: State, targets?: string[]) {
@@ -140,7 +142,7 @@ export function wound(p: ContentPack, s: State, id: string, pet?: string) {
 }
 export function continueWounds(p: ContentPack, s: State) {
  const b = s.battle!;
- for (const f of ['horde', 'alliance'] as const) if (!living(s, b, f, p).length) b.wounds[f] = 0;
+ for (const f of ['horde', 'alliance'] as const) if (!living(s, b, f, p).length) {b.unabsorbed??={};b.unabsorbed[f]=(b.unabsorbed[f]??0)+b.wounds[f];b.wounds[f] = 0;}
  if (!b.wounds.horde && !b.wounds.alliance) { if (!checkElimination(p, s)) b.stage = b.afterWounds ?? 'resolution'; }
 }
 export function defeat(p: ContentPack, s: State, id: string, destination: string) {
@@ -165,8 +167,9 @@ export function resolution(p: ContentPack, s: State, targets?: string[]) {
   b.boxes[b.first].damage = Math.max(0, b.boxes[b.first].damage - loss); b.stage = 'round-end';
  } else {
   const difference = b.boxes.horde.damage - b.boxes.alliance.damage;
-  b.wounds[difference > 0 ? 'alliance' : 'horde'] = Math.abs(difference);
-  b.boxes = { horde: emptyBoxes(), alliance: emptyBoxes() }; b.afterWounds = 'round-end'; b.stage = difference ? 'wounds' : 'round-end';
+  if(s.variants?.deadlyPvp){b.wounds.horde=b.boxes.alliance.damage;b.wounds.alliance=b.boxes.horde.damage;}
+  else b.wounds[difference > 0 ? 'alliance' : 'horde'] = Math.abs(difference);
+  b.boxes = { horde: emptyBoxes(), alliance: emptyBoxes() }; b.afterWounds = 'round-end'; b.stage = b.wounds.horde+b.wounds.alliance ? 'wounds' : 'round-end';
  }
 }
 export function nextRound(s: State) {

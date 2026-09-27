@@ -34,7 +34,7 @@ export type Effect =
  | { op: 'resource'; resource: 'health' | 'energy' | 'gold'; amount: number; gain?: boolean; target?: 'self' | 'friendly' | 'pet' }
  | { op: 'stat'; stat: 'reroll' | 'attrition' | 'armor' | 'threat'; amount: number }
  | { op: 'token'; box: 'damage' | 'defense' | 'attrition' | 'armor'; amount: number }
- | { op: 'change'; repeat?:boolean; delta?: number; color?: Color; value?: number; filter: DiceFilter; count: number }
+ | { op: 'change'; colorChoice?:boolean; repeat?:boolean; delta?: number; color?: Color; value?: number; filter: DiceFilter; count: number }
  | { op: 'spot'; filter: DiceFilter; count: number; effects: Effect[] }
  | { op: 'remove'; filter: DiceFilter; count: number; effects: Effect[] }
  | { op: 'if'; condition: Condition; then: Effect[]; otherwise?: Effect[] }
@@ -102,13 +102,14 @@ export interface Boxes { damage: number; defense: number; armor: number; attriti
 export interface Attack { poolLimits?:Partial<Pool>; rerollStarted?:boolean; placed?: Boxes; flags?: Record<string,number>; forbidden?: { pool?: Color[]; reroll?: Color[] }; heroId: string; dice: Die[]; pool: Pool; removed: Pool; reroll: number; attrition: number; armor: number; threat: number; used: string[]; paid: string[]; woundStart: number; }
 export interface DamageRecord { defense?:boolean; before: number; amount: number; prevented: number; harmedBefore: boolean; }
 export type BattleStage = 'attacker' | 'pool' | 'penalty' | 'after-pool' | 'reroll' | 'after-reroll' | 'tokens' | 'after-tokens' | 'defense' | 'wounds' | 'resolution' | 'round-end' | 'over';
-export interface Battle { killed?:Enemy[]; once?:string[];defenseLosses?:Record<string,number>;defenseSpent?:Record<string,number>; counters?:Record<string,number>; damageTaken?: Record<string,number>; damageSpent?: Record<string,number>; losses?: Record<string, DamageRecord>; kind: 'pve' | 'pvp' | 'final'; region: string; participants: string[]; defeated: string[]; enemies: string[]; boss?: string; round: number; stage: BattleStage; first: Faction; nextFaction: Faction; acted: string[]; active?: Attack; boxes: Record<Faction, Boxes>; lostDice: Pool; previous: Record<string, { cards: string[]; harmed: boolean }>; current: Record<string, { cards: string[]; harmed: boolean }>; wounds: Record<Faction, number>; afterWounds?: 'resolution' | 'round-end'; armorDone: Faction[]; winner?: Faction | 'draw'; report: string[]; }
+export interface Battle { unabsorbed?: Partial<Record<Faction,number>>; killed?:Enemy[]; once?:string[];defenseLosses?:Record<string,number>;defenseSpent?:Record<string,number>; counters?:Record<string,number>; damageTaken?: Record<string,number>; damageSpent?: Record<string,number>; losses?: Record<string, DamageRecord>; kind: 'pve' | 'pvp' | 'final'; region: string; participants: string[]; defeated: string[]; enemies: string[]; boss?: string; round: number; stage: BattleStage; first: Faction; nextFaction: Faction; acted: string[]; active?: Attack; boxes: Record<Faction, Boxes>; lostDice: Pool; previous: Record<string, { cards: string[]; harmed: boolean }>; current: Record<string, { cards: string[]; harmed: boolean }>; wounds: Record<Faction, number>; afterWounds?: 'resolution' | 'round-end'; armorDone: Faction[]; winner?: Faction | 'draw'; report: string[]; }
 export interface RewardState { replacementFaction?:Faction;extraItems?:string[];relic?:string; faction: Faction; quest?: string; eligible: string[]; items: { deck: ItemDeck; draw: number }[]; special: string[]; offered: string[]; offeredDeck?: ItemDeck; replacement: boolean; }
 export interface War { weakReward?:Reward;perHero?:boolean; id: string; regions: [string, string]; reward: Reward; }
 export interface Auction { event: string; item: string; bids: Record<string, number>; }
 export interface Log { id: number; turn: number; text: string; }
-export interface State { factions?:Record<string,Faction>; world?:WorldEvent[];eventFlow?:EventFlow;lastAction?:string;lastActions?:string[];travelPowers?:string[];nefarianFinal?:Faction[];kazzak?:KazzakToken[]; pendingPortal?: string; energySpent?: string[]; travels?: Record<string,number>; turnStarted?: number; version: 2; pack: string; revision: number; rng: number; phase: 'actions' | 'management' | 'combat' | 'reward' | 'event' | 'final-management' | 'finished'; turn: number; faction: Faction; heroes: Hero[]; enemies: Enemy[]; quests: string[]; completed: string[]; questDecks: Record<Faction, Record<Tier, string[]>>; itemDecks: Record<ItemDeck, string[]>; merchant: string[]; eventDeck: string[]; eventDiscard: string[]; eventSeen: string[]; wars: War[]; auction?: Auction; overlord: { id: string; region: string; attack: number; health: number; threat: number }; battle?: Battle; reward?: RewardState; tradeWindow: boolean; finalReady: string[]; managed: string[]; respawns: string[]; winner?: Faction | 'draw'; log: Log[]; }
-export interface Setup { seed: number; roster: string[]; overlord: string; }
+export interface Variants { deadlyPvp?: boolean; overlordOnly?: boolean; }
+export interface State { variants?: Variants; lap?: number; factions?:Record<string,Faction>; world?:WorldEvent[];eventFlow?:EventFlow;lastAction?:string;lastActions?:string[];travelPowers?:string[];nefarianFinal?:Faction[];kazzak?:KazzakToken[]; pendingPortal?: string; energySpent?: string[]; travels?: Record<string,number>; turnStarted?: number; version: 2; pack: string; revision: number; rng: number; phase: 'actions' | 'management' | 'combat' | 'reward' | 'event' | 'final-management' | 'finished'; turn: number; faction: Faction; heroes: Hero[]; enemies: Enemy[]; quests: string[]; completed: string[]; questDecks: Record<Faction, Record<Tier, string[]>>; itemDecks: Record<ItemDeck, string[]>; merchant: string[]; eventDeck: string[]; eventDiscard: string[]; eventSeen: string[]; wars: War[]; auction?: Auction; overlord: { id: string; region: string; attack: number; health: number; threat: number }; battle?: Battle; reward?: RewardState; tradeWindow: boolean; finalReady: string[]; managed: string[]; respawns: string[]; winner?: Faction | 'draw'; log: Log[]; }
+export interface Setup { variants?: Variants; seed: number; roster: string[]; overlord: string; }
 export interface AbilityArgs { removeDice?:number[]; colors?:Color[]; slot?:number; free?:boolean;secondaryTarget?:string;health?:number; targets?:string[]; discard?: string; dice?: number[]; target?: string; color?: Color; }
 export type TownOperation = { op: 'buy'; card: string; discard?: string } | { op: 'sell'; card: string } | { op: 'train'; card: string };
 export type Command =
@@ -122,11 +123,11 @@ export type Command =
  | { type: 'portal'; hero: string; allies: string[]; self?:boolean }
  | { type: 'rest'; hero: string; health: number; food?: string }
  | { type: 'train'; hero: string; cards: string[] }
- | { type: 'town'; hero: string; health: number; operations: TownOperation[] }
+ | { type: 'town'; hero: string; health: number; operations: TownOperation[]; recoverAfter?: number }
  | { type: 'challenge'; hero: string; target: string; allies: string[]; region?: string }
  | { type: 'trade'; hero: string; to: string; items: string[]; gold: number; receiveItems: string[]; receiveGold: number }
  | { type: 'endActions' }
- | { type: 'manage'; hero: string; slots: Equipped[]; discard: string[] }
+ | { type: 'manage'; hero: string; slots: Equipped[]; discard: string[]; reEquip?: string[] }
  | { type: 'endManagement' }
  | { type: 'talent'; hero: string; card: string }
  | { type: 'attacker'; hero: string }

@@ -106,7 +106,7 @@ export function effects(p: ContentPack, s: State, h: Hero, id: string, list: Eff
    case 'change': {
     assert(a && b, "No active attack.");
     for (const d of select(e.filter, e.count,e.repeat)) {
-     const color = e.color ?? d.color; assert(colors.includes(color), "Unknown color.");
+     const color = (e.colorChoice?args.color:undefined) ?? e.color ?? d.color; assert(colors.includes(color), "Unknown color.");
      if (color !== d.color) assert(a.dice.filter(x => !x.removed && x.color === color).length < 7 - a.removed[color] - b.lostDice[color], "No die of the new color is available.");
      d.color = color; if(e.value!==undefined)d.value = e.value;else if(e.delta!==undefined)d.value=Math.max(1,Math.min(8,d.value+e.delta));
     } break;

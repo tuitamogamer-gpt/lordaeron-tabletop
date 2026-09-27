@@ -2,6 +2,8 @@ import { capacity, card, faction } from '../rules/common.js';
 import type { Command, ContentPack, Hero, Pool } from '../rules/model.js';
 import type { GameView } from '../rules/view.js';
 import { availableCards } from '../rules/effects.js';
+import { cardValue, scoreLoadout, usableItem } from './loadout.js';
+import { equipped, fitsSlot, heroSlots } from '../rules/inventory.js';
 export type Difficulty = 'cautious' | 'balanced' | 'aggressive';
 export interface Decision { command: Command; score: number; reason: string; alternatives: number; }
 /** Pure policy module: receives public information + legal moves, never the hidden server State. */
@@ -17,7 +19,14 @@ function distance(p: ContentPack, from: string, to: string, f: string): number {
   for (const id of adjacent) if (!seen.has(id) && (!p.regions.find(r => r.id === id)?.home || p.regions.find(r => r.id === id)?.home === f)) { seen.add(id); queue.push([id, n + 1]); }
  } return 100;
 }
-function itemValue(p: ContentPack, id: string) { return card(p, id).abilities.reduce((n, a) => n + a.effects.reduce((m, e) => m + (e.op === 'dice' ? e.amount * (e.color === 'blue' ? 1.15 : 1) : e.op === 'stat' ? e.amount * .7 : e.op === 'resource' ? e.amount * .35 : 0), 0), 0); }
+const itemValue=cardValue;
+function trainingValue(p:ContentPack,h:Hero,ids:string[]){
+ return ids.reduce((n,id)=>{const c=card(p,id),areas=heroSlots(p,h),possible=areas.map((a,i)=>fitsSlot(p,h,c,a)?i:-1).filter(i=>i>=0);
+  const displaced=Math.min(...possible.map(i=>{const old=h.slots[i].card??areas[i].printed;return old?cardValue(p,old,h):0;}));
+  const conflict=!!c.unique&&equipped(p,h).some(id=>card(p,id).unique===c.unique&&cardValue(p,id,h)>=cardValue(p,c.id,h));
+  return n+(possible.length&&!conflict?Math.max(-2,cardValue(p,id,h)-displaced)*1.5+3.5-c.price*.2:-4);
+ },0);
+}
 export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty: Difficulty = 'balanced'): Decision | undefined {
  const risk = difficulty === 'cautious' ? 1.5 : difficulty === 'aggressive' ? .65 : 1;
  const scored = legal.map((command, index) => {
@@ -41,9 +50,13 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
      else for(const token of s.kazzak??[])if(!token.known.includes(f)||token.real)targets.push({region:token.region,value:token.known.includes(f)&&token.real?14:8});
     }
     for(const w of s.world??[]){const e=p.events.find(e=>e.id===w.id);if(e?.boss&&!w.cleared&&(!e.boss.perFaction||!w.attempts.includes(f))&&h!.level>=3)targets.push({region:e.boss.region,value:8});}
-    score = Math.max(-5, ...targets.map(t => t.value - distance(p, at, t.region, f) * 1.8));
-    if (s.enemies.some(e => e.region === at && e.color === 'blue')) score -= 5 * risk;
-    const friends = s.heroes.filter(a => a.id !== h!.id && faction(p, a.id) === f && a.location === at); score += friends.length * 1.2;
+    score = Math.max(-6, ...targets.map(t => {
+     const before=distance(p,h!.location,t.region,f),after=distance(p,at,t.region,f);
+     // Gathering bonuses must never make walking away and back profitable.
+     return after<before?4+Math.min(2,before-after)*1.4+t.value*.22-after*.25+(after===0?1:0):-6;
+    }));
+    if (command.path.some(at=>s.enemies.some(e => e.region === at && e.color === 'blue'))) score -= 5 * risk;
+    const friends = s.heroes.filter(a => a.id !== h!.id && faction(p, a.id) === f && a.location === at&&a.actions>0); if(score>0)score += Math.min(.8,friends.length*.4);
     reason = "Moving toward an available quest and gathering the party."; break;
    }
    case 'challenge': {
@@ -57,7 +70,7 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
     const dice = party.map(h => pool(p, h)); const damage = dice.reduce((n, d) => n + (d.blue + d.red) * prob, 0), defense = dice.reduce((n, d) => n + (d.red + d.green) * prob, 0);
     const rounds = Math.ceil(e.health * count / Math.max(.5, damage));
     const wounds = Math.max(0, e.attack * count - defense) * rounds;
-    score = 12 + command.allies.length * 1.5 - Math.max(0, wounds - health * .6) * risk * 2 - (party.some(h => h.health < 2) ? 4 : 0);
+    score = 12 - command.allies.length*.65 - Math.max(0, wounds - health * .5) * risk * 2 - (party.some(h => h.health < 2) ? 4 : 0);
     reason = "Evaluating expected hits, defense and party health."; break;
    }
    case 'ability': {
@@ -71,16 +84,17 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
    case 'reroll': { const d = s.battle!.active!.dice.find(d => d.id === command.dice[0])!; score = d.value < s.battle!.active!.threat ? 12 - d.value : -5; reason = "Rerolling a miss or a dangerous low result."; break; }
    case 'wound': score = command.pet ? 30 : h!.health * 2 + h!.energy * .1; reason = "Assigning wounds while keeping participants alive."; break;
    case 'penalty': score = command.dice.reduce((n, id) => n + (s.battle!.active!.dice.find(d => d.id === id)?.color === 'green' ? 0 : -1), 0); break;
-   case 'manage': score = command.slots.reduce((n, a) => n + (a.card ? itemValue(p, a.card) : 0) + a.addons.reduce((n, id) => n + itemValue(p, id), 0), 0); reason = "Equipping useful purchased cards."; break;
-   case 'train': score = 2 + itemValue(p, command.cards[0]) - card(p, command.cards[0]).price * .25; reason = "Investing gold in a permanent power."; break;
+   case 'manage': score = scoreLoadout(p,h!,command); reason = "Choosing a complete loadout within slot, category and energy limits."; break;
+   case 'train': score = trainingValue(p,h!,command.cards); reason = "Learning compatible powers together to conserve actions."; break;
    case 'town': {
     const op = command.operations[0];
-    if (op?.op === 'buy') { const c = card(p, op.card); const current = h!.slots.flatMap(a => a.card ? [a.card] : []).filter(id => card(p, id).type === c.type); score = c.level <= h!.level ? itemValue(p, c.id) - Math.max(0,...current.map(id => itemValue(p,id))) + 1 : -5; if (op.discard === op.card) score = -20; }
+    if (op?.op === 'buy') { const c = card(p, op.card); const current = equipped(p,h!).filter(id => card(p, id).type === c.type); score = c.level <= h!.level&&usableItem(p,h!,c) ? itemValue(p, c.id,h!) - Math.max(0,...current.map(id => itemValue(p,id,h!))) + 1-c.price*.08 : -5; if (op.discard === op.card) score = -20; }
     else if (op?.op === 'sell') score = h!.bag.includes(op.card) && bagSizeValue(p, h!) >= 3 ? 2 : -5;
-    else score = 0; reason = "Buying equipment or freeing bag space."; break;
+    else if(op?.op==='train')score=trainingValue(p,h!,command.operations.filter(o=>o.op==='train').map(o=>o.card))+.1;
+    else score = 0; score+=command.health*1.6+Math.min(capacity(p,h!).energy-h!.energy,h!.level-command.health)*.65;reason = "Combining recovery with useful town purchases and training."; break;
    }
-   case 'reward': score = itemValue(p, command.card) + (card(p, command.card).level <= h!.level ? 2 : 0) - (command.discard ? itemValue(p, command.discard) : 0); reason = "Choosing the most useful reward."; break;
-   case 'talent': score = itemValue(p, command.card); reason = "Choosing a talent to improve combat performance."; break;
+   case 'reward': score = itemValue(p, command.card,h!) + (usableItem(p,h!,card(p,command.card))?3:-5) + (card(p, command.card).level <= h!.level ? 2 : 0) - (command.discard ? itemValue(p, command.discard,h!) : 0); reason = "Assigning rewards to a hero whose slots and traits can use them."; break;
+   case 'talent': score = itemValue(p, command.card,h!); reason = "Choosing a talent that supports learned powers and equipment."; break;
    case 'quest': { const level = s.heroes.filter(h => faction(p, h.id) === s.reward?.faction).reduce((n,h) => n + h.level,0) / (s.heroes.length/2); score = 5 - Math.abs((command.tier === 'green' ? 2 : command.tier === 'yellow' ? 3 : 4) - level) * 3; reason = "Choosing quest difficulty for the faction’s level."; break; }
    case 'bid': score = -Math.abs(command.amount - Math.min(2, h!.gold)); reason = "Limiting the bid to preserve gold for training."; break;
    case 'peek':score=40;reason="Investigating the clue before spending an action on Kazzak.";break;

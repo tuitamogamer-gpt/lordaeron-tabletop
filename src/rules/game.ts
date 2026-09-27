@@ -34,7 +34,7 @@ export function createGame(p: ContentPack, setup: Setup): State {
  assert(defs.filter(d => d.faction === 'horde').length === defs.length / 2, "Factions must have equal numbers of characters.");
  const boss = p.overlords.find(o => o.id === setup.overlord); assert(boss, "Unknown Overlord.");
  const heroes: Hero[] = defs.map(d => ({ id: d.id, location: p.regions.find(r => r.home === d.faction)!.id, ...d.capacities[0], gold: 5, level: 1, xp: 0, actions: 2, curse: 0, stun: 0, learned: [], talents: [], bag: [], slots: d.slots.map(() => ({ addons: [] })), pets: {}, auctionItems: [], talentChoices: [] }));
- const s: State = { factions:Object.fromEntries(defs.map(d=>[d.id,d.faction])), version: 2, pack: p.id, revision: 0, rng: setup.seed, phase: 'actions', turn: 1, faction: 'horde', heroes, enemies: [], quests: [], completed: [], questDecks: { horde: { grey: [], green: [], yellow: [], red: [] }, alliance: { grey: [], green: [], yellow: [], red: [] } }, itemDecks: { triangle: [], square: [], circle: [], special: [] }, merchant: [], eventDeck: [], eventDiscard: [], eventSeen: [], wars: [], overlord: { id: boss.id, region: boss.region, attack: 0, health: 0, threat: 0 }, tradeWindow: false, finalReady: [], managed: [], respawns: [], log: [] };
+ const s: State = { ...(setup.variants?{variants:structuredClone(setup.variants)}:{}), factions:Object.fromEntries(defs.map(d=>[d.id,d.faction])), version: 2, pack: p.id, revision: 0, rng: setup.seed, phase: 'actions', turn: 1, faction: 'horde', heroes, enemies: [], quests: [], completed: [], questDecks: { horde: { grey: [], green: [], yellow: [], red: [] }, alliance: { grey: [], green: [], yellow: [], red: [] } }, itemDecks: { triangle: [], square: [], circle: [], special: [] }, merchant: [], eventDeck: [], eventDiscard: [], eventSeen: [], wars: [], overlord: { id: boss.id, region: boss.region, attack: 0, health: 0, threat: 0 }, tradeWindow: false, finalReady: [], managed: [], respawns: [], log: [] };
  for (const f of ['horde', 'alliance'] as const) for (const tier of ['grey', 'green', 'yellow', 'red'] as Tier[]) s.questDecks[f][tier] = shuffle(s, p.quests.filter(q => q.faction === f && q.tier === tier).map(q => q.id));
  for (const deck of ['triangle', 'square', 'circle', 'special'] as ItemDeck[]) s.itemDecks[deck] = shuffle(s, p.cards.filter(c => c.kind === 'item' && c.deck === deck).map(c => c.id));
  for (const [deck, count] of [['triangle', 3], ['square', 2], ['circle', 1]] as const) { assert(s.itemDecks[deck].length >= count, "Missing items for the starting merchant."); s.merchant.push(...s.itemDecks[deck].splice(0, count)); }
@@ -72,11 +72,12 @@ function nextQuestReward(p: ContentPack, s: State): boolean {
 }
 function advanceTurn(p: ContentPack, s: State) {
  if (checkWars(p, s)) return;
- if (s.turn === 30) { s.phase = 'final-management'; s.faction = finalAttacker(p, s); for (const h of s.heroes) { Object.assign(h, capacity(p, h)); h.stun = 0; } s.finalReady = []; note(s, "Preparation for the final PvP battle begins."); return; }
- s.turn++;s.travels={};s.travelPowers=[]; for (const h of s.heroes) if (faction(p, h.id) === other(s.faction)) h.actions = 2;
+ if (s.turn === 30&&!s.variants?.overlordOnly) { s.phase = 'final-management'; s.faction = finalAttacker(p, s); for (const h of s.heroes) { Object.assign(h, capacity(p, h)); h.stun = 0; } s.finalReady = []; note(s, "Preparation for the final PvP battle begins."); return; }
+ if(s.turn===30){s.turn=1;s.lap=(s.lap??1)+1;note(s,`Defeat the Overlord: campaign lap ${s.lap} begins.`);}else s.turn++;
+ s.travels={};s.travelPowers=[]; for (const h of s.heroes) if (faction(p, h.id) === other(s.faction)) h.actions = 2;
  const icon = p.track[s.turn];
  if (icon === 'event') drawEvents(p, s);
- else { if (icon) s.merchant.push(...s.itemDecks[icon].splice(0, 1)); finishEvent(s); }
+ else { if (icon) s.merchant.push(...s.itemDecks[s.variants?.overlordOnly&&(s.lap??1)>1?'circle':icon].splice(0, 1)); finishEvent(s); }
 }
 /** Atomic deterministic reducer. A rejected command never changes the original state. */
 export function apply(p: ContentPack, state: State, command: Command): State {
@@ -85,7 +86,7 @@ export function apply(p: ContentPack, state: State, command: Command): State {
  assert(command && typeof command.type === 'string', "Invalid command.");
  const s = structuredClone(state), c = command;
  if(s.pendingPortal)assert(c.type==='ability'||(['travel','rest','train','town','challenge','power-action'].includes(c.type)&&'hero'in c&&c.hero===s.pendingPortal),"After a preparatory power, the same hero must immediately take their action.");
- if(!['purify','ability','talent','peek','reward','quest','claim-relic'].includes(c.type)){delete s.lastAction;delete s.lastActions;}
+ if(!['purify','ability','talent','peek','reward','quest','claim-relic','trade'].includes(c.type)){delete s.lastAction;delete s.lastActions;}
  if(c.type!=='ability'){delete s.energySpent;if(s.battle)delete s.battle.losses;}
  if (s.respawns.length) assert(c.type === 'respawn' || c.type === 'ability', "Resolve defeat or the final healing opportunity first.");
  const talent = s.heroes.find(h => h.talentChoices.length);
@@ -134,7 +135,7 @@ export function apply(p: ContentPack, state: State, command: Command): State {
   case 'train': { const h = actionable(p, s, c.hero); assert(c.cards.length && unique(c.cards), "Choose distinct powers."); for (const id of c.cards) train(p, h, id); actionDone(s, h, `${h.id} learns ${c.cards.length} powers.`); break; }
   case 'town': {
    const h = actionable(p, s, c.hero); assert(['both', s.faction].includes(region(p, h.location).town ?? ''), "A friendly town is required.");
-   townOperations(p,s,h,c.health,c.operations);
+   townOperations(p,s,h,c.health,c.operations,c.recoverAfter);
    actionDone(s, h, `${h.id} visits town.`); break;
   }
   case 'trade': {
@@ -167,7 +168,7 @@ export function apply(p: ContentPack, state: State, command: Command): State {
   case 'manage': {
    const h = hero(s, c.hero); assert((s.phase === 'management' && faction(p, h.id) === s.faction) || (s.phase === 'final-management' && !s.finalReady.includes(h.id)), "It is not this character’s management phase.");
    if (s.phase === 'final-management' && faction(p, h.id) !== s.faction) assert(s.heroes.filter(h => faction(p, h.id) === s.faction).every(h => s.finalReady.includes(h.id)), "The attacking faction prepares first.");
-   manage(p, s, h, c.slots, c.discard); if (s.phase === 'final-management') s.finalReady.push(h.id); else if (!s.managed.includes(h.id)) s.managed.push(h.id); break;
+   manage(p, s, h, c.slots, c.discard, c.reEquip); if (s.phase === 'final-management') s.finalReady.push(h.id); else if (!s.managed.includes(h.id)) s.managed.push(h.id); break;
   }
   case 'endManagement': {
    assert(s.phase === 'management' || s.phase === 'final-management', "This is not the management phase.");

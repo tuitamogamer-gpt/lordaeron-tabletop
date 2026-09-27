@@ -20,8 +20,8 @@ export const BASE_CHARACTERS:Character[]=(['Alliance','Horde'] as const).flatMap
  if(racial==='Bloodfury')racials=[pool(stat('attrition',1))];
  if(['Regeneration','Expansive Mind'].includes(racial))racials=[ability('turn-start',[resource(racial==='Regeneration'?'health':'energy',1)],{automatic:true})];
  if(racial==='Cannibalize')racials=[ability('combat-end',[resource('health',2)],{automatic:true,condition:{kind:'opponent-defeated'}})];
- if(racial==='Stoneform')racials=[ability('reroll',[change({values:[1,2]},3)],{startOnly:true})];
- STARTING_CARDS.push(definedCard(racial,{id:racialId,source,kind:'racial',type:'general',abilities:racials,description:racial==='Stoneform'?'At the start of your Reroll step, change one result of 1 or 2 into a 3 without changing its color.':''}));
+ if(racial==='Stoneform')racials=[ability('reroll',[{op:'change',filter:{values:[1,2]},value:3,count:1,colorChoice:true}],{startOnly:true})];
+ STARTING_CARDS.push(definedCard(racial,{id:racialId,source,kind:'racial',type:'general',abilities:racials,description:racial==='Stoneform'?'At the start of your Reroll step, change one result of 1 or 2 into a 3 of any available color (FAQ 1.4).':''}));
  const top:Slot[]=[structuredClone(all),structuredClone(all),structuredClone(all)];
  if(['warlock','mage','druid','rogue'].includes(cls))top[2].types=['active'];
  if(cls==='hunter')top[2].types=['instant'];

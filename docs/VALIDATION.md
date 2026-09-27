@@ -1,4 +1,34 @@
-# Provjera v0.4 · centralna 2D mapa
+# Provjera v0.6 · 27. 9. 2026.
+
+Aktivni paket: `base-2005-faq-1.4-v6`. Detalji opreme, špilova, FAQ ispravki, varijanti i botova su u [RULES-AUDIT-V6.md](RULES-AUDIT-V6.md).
+
+- `npm test`: **225/225** testova u **12** datoteka. Vitest sada eksplicitno uključuje `tests/`, da ignorisane lokalne radne kopije ne budu testirane kao dio ovog projekta.
+- `npm run check:render`: **621 prikaz**, uključujući class deck i editor opreme za svih 16 likova; bez neispravnih tekstualnih vrijednosti.
+- `npm run build`: TypeScript, server check i Vite prolaze. Preostaju ranija upozorenja za dvije Zod PURE anotacije i veličinu glavnog JS bundlea.
+- Nove regresije obuhvataju sve klasne špilove, višestruki trening, cijenu instant/active moći, premještanje i ponovno opremanje, ljubimce, slotove/trait/stance/add-on/unique pravila, talente, Stoneform, Town redoslijed, obje varijante i očuvanje prethodnog savea.
+- React testovi prolaze za kupovinu iz class decka, nivoe i budžet, Town redoslijed, pet refresh, setup varijante i obnovljeni tok Spellbooka.
+
+## Pune kampanje v0.6
+
+Simulacije provjeravaju resurse, torbu i mjesta nakon naredbi, zatim porede završno stanje s replayom.
+
+| Naredba | Naredbe | Questovi | Završna smjena | Ishod | Replay |
+| --- | ---: | ---: | ---: | --- | --- |
+| `npm run simulate -- 2005 kelthuzad` | 968 | 12 | 30 | Alijansa | identičan |
+| `npm run simulate -- 71 nefarian casters` | 484 | 3 | 25 | remi | identičan |
+| `npm run simulate -- 99 kazzak casters` | 1383 | 15 | 30 | Alijansa | identičan |
+
+Ovi rezultati potvrđuju završene tokove i determinističnost. Ne dokazuju optimalnu strategiju niti pobjedu botova nad svakim Overlordom. Promjena Town redoslijeda zadržava prethodno ponašanje kada `recoverAfter` nije naveden, kao u ovim bot komandama.
+
+## Ograničenje vizuelne provjere
+
+Browser kontrola vratila je prazan inventar, a otvaranje IAB-a nije bilo dostupno. Computer Use fallback zaustavljen je pri lokalnoj navigaciji jer alat nije mogao dovoljno pouzdano utvrditi trenutni URL na Windowsu. Daljnje upravljanje preglednikom nije pokušavano. Zato novi raspored ličnog lista nije potvrđen screenshotom stvarnog browsera. DOM testovi i server render ostaju zasebni dokazi, bez tvrdnje da potvrđuju odsustvo preklapanja pri svim veličinama prozora.
+
+Autosave koristi v6 ključ; v4/v3 zapis ostaje dostupan za preuzimanje. Ne vrši se automatski replay starih komandi pod promijenjenim pravilima.
+
+---
+
+# Historijska provjera v0.4 · centralna 2D mapa
 
 Aktivni paket: `base-2005-faq-1.4-map-v4`. Osnovni set i FAQ ostaju isti; mapa sada koristi precrtane poligone i njihove zajedničke granice.
 

@@ -1,5 +1,17 @@
 # Izvori i mogućnosti
 
+## Dopuna 27. 9. 2026. · pravila i način igre
+
+Pravilnik i FAQ ponovo su korišteni za provjeru setupa, slotova, Class decka, vremena plaćanja energije i obje službene varijante. Rezultati su u [RULES-AUDIT-V6.md](RULES-AUDIT-V6.md).
+
+[BGG Basegame review iz 2008.](https://boardgamegeek.com/thread/321278/world-of-warcraft-basegame-review) opisuje različite razvojne putanje klasa i njihov utjecaj na ponovnu igru. [On the docks of Southshore](https://boardgamegeek.com/thread/89200/on-the-docks-of-southshore) naglašava utrku dvije frakcije i koordinaciju. Dostupni su bili indeksirani odlomci kroz pretragu; direktni pristup objema stranicama vratio je 403. Nije pregledan gameplay video.
+
+[Toboldova recenzija od 2. januara 2006.](https://tobolds.blogspot.com/2006/01/world-of-warcraft-board-game-review.html) daje dodatni kontekst razvoja lika, ekipnih questova i trajanja PvP-a. Recenzije služe razumijevanju prioriteta igrača; brojke i izuzeci implementirani su prema službenom pravilniku i FAQ-u.
+
+Praktičan rezultat za botove: više treninga u jednoj akciji, kompatibilna kombinacija opreme, vrednovanje talenata u odnosu na naučene moći, izbjegavanje hodanja tamo–nazad i pažljiviji izbor broja učesnika borbe. To je naša interpretacija strategije, ne novo pravilo igre.
+
+## Ranije istraživanje infrastrukture
+
 Provjereno 26. 9. 2026. Fokus: FFG društvena igra iz 2005, ne WoW TCG, Hearthstone ili Wrath of the Lich King / Pandemic igra.
 
 ## Postoji li API?

@@ -30,7 +30,7 @@ function rawEffectText(e:Effect):string{
   case 'resource':return `${e.amount<0?"Spend":e.gain?"Gain":"Recover"} ${Math.abs(e.amount)} ${e.resource==='health'?"health":e.resource==='energy'?"energy":"gold"}${e.target==='friendly'?" for an ally":''}${e.gain?" (may exceed capacity)":''}`;
   case 'spot':return `Spot ${e.count} (${filterText(e.filter)}) → ${e.effects.map(effectText).join('; ')}`;
   case 'remove':return `Remove ${e.count} (${filterText(e.filter)}) → ${e.effects.map(effectText).join('; ')}`;
-  case 'change':return `Change ${e.count} (${filterText(e.filter)}) → ${e.delta?`value +${e.delta}, up to 8`:e.value??"same value"}${e.color?`, ${colorName[e.color]}`:''}`;
+  case 'change':return `Change ${e.count} (${filterText(e.filter)}) → ${e.delta?`value +${e.delta}, up to 8`:e.value??"same value"}${e.colorChoice?', any available color':e.color?`, ${colorName[e.color]}`:''}`;
   case 'discard-self':return "Discard this card";case 'condition':return `${e.amount>=0?'+':''}${e.amount} ${e.condition}`;
   case 'heal-pet':return `Pet: recover ${e.amount} health`;
   case 'if':return `If ${conditionText(e.condition)}: ${e.then.map(effectText).join('; ')}${e.otherwise?`; otherwise ${e.otherwise.map(effectText).join('; ')}`:''}`;

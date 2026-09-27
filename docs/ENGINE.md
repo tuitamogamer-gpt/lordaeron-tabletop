@@ -1,4 +1,4 @@
-# Engine v0.3 · osnovni set
+# Engine v0.6 · osnovni set
 
 `src/rules/game.ts` izlaže `createGame(pack, setup)` i `apply(pack, state, command)`. Reducer klonira stanje, provjerava i izvršava naredbu. Neispravna naredba ne ostavlja djelimične promjene. React i AI koriste `BASE_PACK` iz `src/data/base/`. Server dijeli reducer, ali je online razvoj na holdu i njegov fixture paket još nije migriran na osnovni set.
 
@@ -63,6 +63,10 @@ Oba profila tri Overlorda koriste originalne statistike. Kazzak skriva pravi ide
 ## AI
 
 `src/ai/planner.ts`: `decide(pack, publicView, legalMoves, difficulty)`. Procjenjuje oporavak, udaljenost, okupljanje, očekivane pogotke i rizik, opremu, trening, rane i nagrade. Vraća naredbu, ocjenu i objašnjenje.
+
+`src/ai/loadout.ts` pretražuje cijelu kombinaciju mjesta kroz beam od najviše 36 kandidata po koraku i vraća šest najboljih legalnih prijedloga. Stvarni `manage` provjerava energiju, kapacitete, kategorije, dodatke i torbu. Trening može obuhvatiti do tri moći u jednom bot prijedlogu; ljudski editor podržava sve dostupne moći u jednoj akciji. Kretanje se nagrađuje samo kada skraćuje put prema cilju.
+
+`Setup.variants` uključuje opcione varijante iz pravilnika. `State.lap` prati ponavljanje turn tracka u Defeat the Overlord režimu. Town komanda koristi opcioni `recoverAfter` indeks za oporavak između transakcija (`-1` preskače oporavak); izostavljen indeks zadržava raniji redoslijed. Management komanda može navesti `reEquip` za izričito ponovno opremanje već aktivne moći.
 
 Ne koristi LLM, vanjski API ni skriveni seed. U mreži server odlučuje za botove, klijent samo traži sljedeći potez. Heuristika nema duboko pretraživanje niti garanciju optimalne igre. Mrežni stil je uravnotežen; lokalno postoje oprezan, uravnotežen i agresivan stil.
 

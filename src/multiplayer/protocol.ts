@@ -18,11 +18,11 @@ const schema = z.discriminatedUnion('type', [
  z.object({type:z.literal('portal'),hero:id,allies:z.array(id).max(2),self:z.boolean().optional()}).strict(),
  z.object({type:z.literal('rest'),hero:id,health:n,food:id.optional()}).strict(),
  z.object({type:z.literal('train'),hero:id,cards:ids}).strict(),
- z.object({type:z.literal('town'),hero:id,health:n,operations:z.array(op).max(100)}).strict(),
+ z.object({type:z.literal('town'),hero:id,health:n,operations:z.array(op).max(100),recoverAfter:z.number().int().min(-1).max(100).optional()}).strict(),
  z.object({type:z.literal('challenge'),hero:id,target:id,allies:z.array(id).max(2),region:id.optional()}).strict(),
  z.object({type:z.literal('trade'),hero:id,to:id,items:ids,gold:n,receiveItems:ids,receiveGold:n}).strict(),
  z.object({type:z.literal('endActions')}).strict(), z.object({type:z.literal('endManagement')}).strict(),
- z.object({type:z.literal('manage'),hero:id,slots,discard:ids}).strict(),
+ z.object({type:z.literal('manage'),hero:id,slots,discard:ids,reEquip:ids.optional()}).strict(),
  z.object({type:z.literal('talent'),hero:id,card:id}).strict(), z.object({type:z.literal('attacker'),hero:id}).strict(),
  z.object({type:z.literal('ability'),hero:id,card:id,ability:id,args:z.object({removeDice:dieIds.optional(),colors:z.array(z.enum(['red','blue','green'])).max(21).optional(),slot:n.optional(),free:z.boolean().optional(),secondaryTarget:id.optional(),health:n.optional(),targets:ids.optional(),discard:id.optional(),dice:dieIds,target:id.optional(),color:z.enum(['red','blue','green']).optional()}).partial().strict().optional()}).strict(),
  z.object({type:z.literal('roll'),omit:pool.optional()}).strict(),
@@ -38,7 +38,7 @@ const schema = z.discriminatedUnion('type', [
  z.object({type:z.literal('closeBattle')}).strict(),
 ]);
 export const commandSchema: z.ZodType<Command> = schema;
-export const setupSchema: z.ZodType<Setup> = z.object({seed:z.number().int().min(1).max(0xffffffff),roster:z.array(id).min(4).max(6),overlord:id}).strict();
+export const setupSchema: z.ZodType<Setup> = z.object({seed:z.number().int().min(1).max(0xffffffff),roster:z.array(id).min(4).max(6),overlord:id,variants:z.object({deadlyPvp:z.boolean().optional(),overlordOnly:z.boolean().optional()}).strict().optional()}).strict();
 export const requestSchema = z.discriminatedUnion('kind',[
  z.object({kind:z.literal('create'),name:z.string().trim().min(1).max(32),setup:setupSchema,heroes:z.array(id).min(1).max(3)}).strict(),
  z.object({kind:z.literal('join'),room:id,name:z.string().trim().min(1).max(32),heroes:z.array(id).min(1).max(3)}).strict(),

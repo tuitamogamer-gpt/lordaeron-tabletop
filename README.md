@@ -1,4 +1,4 @@
-# Lordaeron · WoW Board Game v0.5
+# Lordaeron · WoW Board Game v0.6
 
 Desktop adaptacija osnovne igre iz 2005. i službenog FAQ-a 1.4. React interfejs, zaseban TypeScript engine, lokalni hotseat i AI igrači. **Online sobe su na čekanju.**
 
@@ -33,7 +33,7 @@ Simulacija provjerava resurse nakon svakog poteza i ponavlja završenu partiju i
 
 Prvo otvaranje vodi kroz **New game → Table → Characters → Overlord → Ready to play**. Biraš četiri ili šest likova, jednako podijeljenih između frakcija, bez ponavljanja klase. Pregled prije početka objašnjava resurse, početne gradove, questove, trgovca i Overlorda prema pravilniku. Sačuvana partija se nastavlja bez ponovnog setupa; započinjanje nove čuva prethodni autosave kao backup u postavkama.
 
-Glavni ekran prikazuje mapu i akcije. **Characters**, **Quests**, **Merchant**, **Encounter deck** i **Party controls** otvaraju zasebne panele; isti toggle, Close ili Esc vraća na mapu. Characters sadrži puni sheet, Spellbook, torbu i talente. Merchant se može pregledati bilo kada; kupovina je dostupna samo uz legalnu Town akciju. Eventi se vuku automatski po traci poteza.
+Glavni ekran prikazuje mapu i akcije. **Characters**, **Class decks**, **Quests**, **Merchant**, **Encounter deck** i **Party controls** otvaraju zasebne panele; isti toggle, Close ili Esc vraća na mapu. Characters sadrži puni sheet, Spellbook, torbu i talente. Class decks prikazuje 12 moći i 12 talenata svake klase. Merchant se može pregledati bilo kada; kupovina je dostupna samo uz legalnu Town akciju. Eventi se vuku automatski po traci poteza.
 
 Podrazumijevano upravljaš Grumbazom, a ostale likove vodi AI. **Run AI** pokreće botove; pojedinačni potez je u Party controls. U postavkama možeš preuzeti druge likove, izvesti ili uvesti partiju. Detalji novog interfejsa i provjera su u [UI-SETUP.md](docs/UI-SETUP.md).
 
@@ -43,17 +43,19 @@ Podrazumijevano upravljaš Grumbazom, a ostale likove vodi AI. **Run AI** pokre�
 - Travel prikazuje najviše dva koraka za jednu akciju, uključujući prijateljske letove i plave prepreke. Potez se potvrđuje dugmetom **Putuj ovdje**.
 - Frakcijski quest tokeni dijele oznake s kartama. Klik u oba smjera povezuje polje i quest; detalji prikazuju mete, spawnove i nagrade. Obje frakcije imaju vidljive brojače špilova; zamjena se bira nakon nagrada.
 - Lični list prikazuje sedam mjesta, dodatke, torbu i talente; Hood of Shadow otvara osmo mjesto.
+- Više moći kupuje se jednom Train ili Town akcijom. Instant moći plaćaju energiju pri korištenju, active pri opremanju. Ljubimci imaju izričit izbor ponovnog opremanja uz novi trošak. Talenti su besplatni na nivoima 2–5.
 - Borba vodi kroz kockice, reroll, Spot, sposobnosti, pogotke, rane, oživljavanje i nagrade. Izbor jačine, mete i kockica nalazi se uz odgovarajuću kartu.
 - Događaji imaju izbore, aukcije, ratove, trofeje, kugu i svjetske bossove. Kazzak ima skrivene tragove; Nefarian putuje prema Bulwarku; Kel’Thuzad uključuje pet dodatnih događaja.
 - Pobjeda nad Overlordom ili završni PvP nakon 30. smjene; Nefarianov dolazak može ranije pokrenuti završnicu.
+- Setup nudi službene varijante **Deadly PvP** i **Defeat the Overlord**. Standardna pravila ostaju zadana.
 
 Prečice: **1–5** akcije, **F** interakcija s mapom, **Esc** povratak. Unutar mape **+ / − / 0**, točkić i strelice. Desktop je jedina ciljna platforma.
 
 ## Provjera i granice
 
-157 automatizovanih testova, render provjera 572 komponente i tri završene kampanje s identičnim replayom. Novi testovi pokrivaju geometriju, Travel, quest tokene/špilove i React interakcije mape. AI koristi heuristike i ne predstavlja optimizovanu strategiju.
+225 automatizovanih testova, render provjera 621 prikaza i tri završene kampanje s identičnim replayom. Provjere uključuju setup, opremanje, špilove, višestruki trening, varijante, borbu, mapu i React interakcije. AI planira cijelu opremu i zajednički trening više moći; koristi heuristike i ne predstavlja optimizovanu strategiju. Pregled pravila i promjena nalazi se u [RULES-AUDIT-V6.md](docs/RULES-AUDIT-V6.md).
 
-Mapa je ručno precrtana iz dvije fotografije originala, uz dijagrame iz pravilnika. Granice i engine koriste isti graf. Render mape je vizuelno pregledan; 67 poligona nema preklapanja. Arhiv ne sadrži ravan sken, pa je ovo rekonstrukcija s pojednostavljenim konturama. Dostupni preglednički alat nije imao aktivan browser; DOM testovi i zaseban SVG render ne zamjenjuju završni pregled cijelog prozora u pregledniku. Detalji su u [MAP.md](docs/MAP.md) i [VALIDATION.md](docs/VALIDATION.md).
+Mapa je ručno precrtana iz dvije fotografije originala, uz dijagrame iz pravilnika. Granice i engine koriste isti graf. Render mape je ranije vizuelno pregledan; 67 poligona nema preklapanja. Arhiv ne sadrži ravan sken, pa je ovo rekonstrukcija s pojednostavljenim konturama. Novi lični list ima izmijenjene kolone, veličine teksta i prelamanje. Njegov završni pregled u stvarnom pregledniku nije potvrđen: Computer Use zaustavljen je zbog nepouzdanog očitavanja URL-a na Windowsu. DOM testovi i server render ne zamjenjuju tu provjeru. Detalji su u [MAP.md](docs/MAP.md) i [VALIDATION.md](docs/VALIDATION.md).
 
 ## Dokumentacija
 
@@ -66,4 +68,4 @@ Mapa je ručno precrtana iz dvije fotografije originala, uz dijagrame iz praviln
 - [Porijeklo materijala](docs/ASSETS.md)
 - [Multiplayer, trenutno na čekanju](docs/MULTIPLAYER.md)
 
-`main` je povezan s Vercel projektom `lordaeron-tabletop`. Redis nije povezan; online kontrole nisu izložene u trenutnom interfejsu. Stariji fixture paket i server testovi ostaju radi regresija. v0.4 ima novi content fingerprint i autosave ključ zbog ispravljenih puteva. Stara v0.3 partija ostaje netaknuta i može se preuzeti u postavkama; nije automatski ponovljena po novim pravilima kretanja.
+`main` je povezan s Vercel projektom `lordaeron-tabletop`. Redis nije povezan; online kontrole nisu izložene u trenutnom interfejsu. Stariji fixture paket i server testovi ostaju radi regresija. v0.6 ima novi content fingerprint i autosave ključ zbog promjena pravila. Prethodna v4/v3 partija ostaje netaknuta i može se preuzeti u postavkama; nije automatski ponovljena po novim pravilima.

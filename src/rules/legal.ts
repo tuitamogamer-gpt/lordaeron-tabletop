@@ -3,7 +3,8 @@ import { eligibleAttackers, living } from './combat.js';
 import { availableCards, condition, matches, timing } from './effects.js';
 import { eventCommands } from './legal-events.js';
 import { apply } from './game.js';
-import { bagSize, equipped } from './inventory.js';
+import { bagSize, classDeck, equipped } from './inventory.js';
+import { loadouts } from '../ai/loadout.js';
 import { reachable, respawnRegions } from './movement.js';
 import type { AbilityArgs, Command, ContentPack, Effect, Hero, State } from './model.js';
 
@@ -23,6 +24,7 @@ function argsFor(p: ContentPack, s: State, h: Hero, effects: Effect[],cardId:str
  if (effects.some(e => e.op === 'resource' && e.target === 'friendly')) args = args.flatMap(a => (s.battle?.participants ?? [h.id]).filter(id => faction(p, id) === faction(p, h.id)).map(target => ({ ...a, target })));
  if (effects.some(e => e.op === 'heal-pet'||e.op==='sacrifice-pet')) args = args.flatMap(a => Object.keys(h.pets).map(target => ({ ...a, target })));
  for(const e of effects){
+  if(e.op==='change'&&e.colorChoice)args=args.flatMap(a=>(['red','blue','green'] as const).map(color=>({...a,color})));
   if(e.op==='equip-power'&&e.slot===undefined)args=args.flatMap(a=>character(p,h.id).slots.flatMap((s,slot)=>s.types.includes(card(p,e.card).type)?[{...a,slot}]:[]));
   if(e.op==='remove-chosen')args=args.flatMap(a=>combinations((s.battle?.active?.dice??[]).filter(d=>!d.removed&&!d.spotted&&!a.dice?.includes(d.id)).map(d=>d.id),e.count).map(removeDice=>({...a,removeDice})));
   if(e.op==='dice-choice')args=args.flatMap(a=>{const result:AbilityArgs[]=[];for(let red=0;red<=e.amount;red++)for(let blue=0;blue<=e.amount-red;blue++)result.push({...a,colors:[...Array(red).fill('red'),...Array(blue).fill('blue'),...Array(e.amount-red-blue).fill('green')]});return result;});
@@ -78,10 +80,13 @@ export function legalActions(p: ContentPack, s: State): Command[] {
    for(const food of h.bag.filter(id=>card(p,id).trait==='Food'))list.push({type:'rest',hero:h.id,health:0,food});
    const town = p.regions.find(r => r.id === h.location)?.town;
    for (let health = 0; health <= Math.min(h.level * (town === s.faction || town === 'both' ? 3 : 2), Math.max(0, capacity(p, h).health - h.health)); health++) list.push({ type: 'rest', hero: h.id, health });
-   for (const c of p.cards.filter(c => c.kind === 'power' && c.classId === character(p, h.id).classId)) list.push({ type: 'train', hero: h.id, cards: [c.id] });
+   const training=classDeck(p,h).powers.filter(c=>c.level<=h.level&&c.price<=h.gold);
+   const bundles=Array.from({length:Math.min(3,training.length)},(_,i)=>combinations(training,i+1,40)).flat().filter(cs=>cs.reduce((n,c)=>n+c.price,0)<=h.gold);
+   for(const bundle of bundles)list.push({type:'train',hero:h.id,cards:bundle.map(c=>c.id)});
    if (town === s.faction || town === 'both') {
     const health = Math.min(h.level, Math.max(0, capacity(p, h).health - h.health));
     list.push({ type: 'town', hero: h.id, health, operations: [] });
+    for(const bundle of bundles)list.push({type:'town',hero:h.id,health,operations:bundle.map(c=>({op:'train',card:c.id}))});
     for (const id of s.merchant) for (const discard of discards(p, h, id)) list.push({ type: 'town', hero: h.id, health, operations: [{ op: 'buy', card: id, discard }] });
     for (const id of [...h.bag, ...equipped(p, h)]) list.push({ type: 'town', hero: h.id, health, operations: [{ op: 'sell', card: id }] });
    }
@@ -99,6 +104,7 @@ export function legalActions(p: ContentPack, s: State): Command[] {
   for (const h of s.heroes) {
    if (s.phase === 'management' && s.managed.includes(h.id)) continue;
    list.push({ type: 'manage', hero: h.id, slots: structuredClone(h.slots), discard: [] });
+   if((s.phase==='management'&&faction(p,h.id)===s.faction)||(s.phase==='final-management'&&!s.finalReady.includes(h.id)))list.push(...loadouts(p,h));
    for (const id of [...h.bag, ...h.learned].filter(id => !equipped(p, h).includes(id))) for (let i = 0; i < h.slots.length; i++) {
     const slots = structuredClone(h.slots); if (card(p, id).addon) slots[i].addons.push(id); else slots[i].card = id;
     list.push({ type: 'manage', hero: h.id, slots, discard: [] });
