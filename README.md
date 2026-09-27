@@ -44,7 +44,7 @@ Podrazumijevano upravljaš Grumbazom, a ostale likove vodi AI. **Run AI** pokre�
 - Frakcijski quest tokeni dijele oznake s kartama. Klik u oba smjera povezuje polje i quest; detalji prikazuju mete, spawnove i nagrade. Obje frakcije imaju vidljive brojače špilova; zamjena se bira nakon nagrada.
 - Lični list prikazuje sedam mjesta, dodatke, torbu i talente; Hood of Shadow otvara osmo mjesto.
 - Više moći kupuje se jednom Train ili Town akcijom. Instant moći plaćaju energiju pri korištenju, active pri opremanju. Ljubimci imaju izričit izbor ponovnog opremanja uz novi trošak. Talenti su besplatni na nivoima 2–5.
-- Borba vodi kroz kockice, reroll, Spot, sposobnosti, pogotke, rane, oživljavanje i nagrade. Izbor jačine, mete i kockica nalazi se uz odgovarajuću kartu.
+- **Combat** ima zaseban meni i toggle, animirane 3D D8 kockice i zajednički obračun. Plave daju ranged, crvene melee/defense, zelene armor, a attrition ulazi u resolution. **Auto-resolve** automatski vodi obračun i botove; **Autoplay battle** preuzima i igrače do rezultata. Moći, reroll i taktički izbori ostaju dostupni. [Detalji combat sistema](docs/COMBAT.md).
 - Događaji imaju izbore, aukcije, ratove, trofeje, kugu i svjetske bossove. Kazzak ima skrivene tragove; Nefarian putuje prema Bulwarku; Kel’Thuzad uključuje pet dodatnih događaja.
 - Pobjeda nad Overlordom ili završni PvP nakon 30. smjene; Nefarianov dolazak može ranije pokrenuti završnicu.
 - Setup nudi službene varijante **Deadly PvP** i **Defeat the Overlord**. Standardna pravila ostaju zadana.

@@ -5,7 +5,7 @@ import { eventBoss, worldAttack } from './world.js';
 import type { Battle, ContentPack, CreatureRule, Faction, State } from './model.js';
 export const living = (_s: State, b: Battle, f?: Faction, p?: ContentPack) => b.participants.filter(id => !b.defeated.includes(id) && (!f || faction(p!, id) === f));
 export const creatureRule = (p: ContentPack, s: State): CreatureRule => { const e = s.enemies.find(e => e.id === s.battle?.enemies[0]); return p.creatures.find(c => c.id === e?.creature)?.rule ?? 'none'; };
-export function stats(p: ContentPack, s: State, enemyId?: string) {
+export function stats(p: ContentPack, s: Pick<State, 'battle'|'heroes'|'enemies'|'overlord'|'world'>, enemyId?: string) {
  if (!enemyId&&eventBoss(p,s)) {const v=eventBoss(p,s)!.stats;return {...v,attack:v.attack+worldAttack(p,s,s.battle!.region)};}
  if (!enemyId) { const o = p.overlords.find(o => o.id === s.battle?.boss)!; const v = o.stats[s.heroes.length as 4 | 6]; return { threat: v.threat + s.overlord.threat, attack: v.attack + s.overlord.attack + worldAttack(p,s,s.battle!.region), health: v.health + s.overlord.health }; }
  const e = s.enemies.find(e => e.id === enemyId)!; const v=p.creatures.find(c => c.id === e.creature)!.stats[e.color];return {...v,attack:v.attack+worldAttack(p,s,e.region)};
