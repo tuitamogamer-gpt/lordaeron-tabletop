@@ -39,7 +39,7 @@ Svih 560 korisnikovih originala preuzeto je u ignorisanu lokalnu mapu; inventar,
 
 ## Ostalo
 
-Cinzel i Inter fontovi dolaze iz lokalnih `@fontsource` paketa, s licencama isporučenim u tim paketima. Ikone su iz `lucide-react`. Favicon, SVG putanje, CSS efekti i sintetizirani zvuk poteza nastali su za ovaj projekt. Za rad aplikacije nije potreban vanjski CDN.
+Cinzel i Inter fontovi dolaze iz lokalnih `@fontsource` paketa, s licencama isporučenim u tim paketima. Pomoćne kontrole koriste `lucide-react`; karakteri, resursi i glavni meniji koriste oslikane ikonice generirane za projekt. Devet novih WebP simbola, njihov tačan ImageGen prompt i desktop provjere opisani su u [PREMIUM-UI.md](PREMIUM-UI.md). Favicon, SVG putanje, CSS efekti i sintetizirani zvuk poteza nastali su za ovaj projekt. Za rad aplikacije nije potreban vanjski CDN.
 
 
 ## Warforged Chronicles · dizajn sistem v2

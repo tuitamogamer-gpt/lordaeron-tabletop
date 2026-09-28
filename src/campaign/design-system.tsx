@@ -1,5 +1,5 @@
+import { GameIcon } from './GameIcon';
 import type { CSSProperties, ReactNode } from 'react';
-import { Icon } from '../components';
 import type { Card, Creature, EventCard, Overlord, Quest } from '../rules/model';
 import { BASE_PACK as p } from '../data/base';
 import { CardArt, EventArt, PaintedArt, creatureIcons } from './Art';
@@ -70,5 +70,5 @@ export function OverlordCard({overlord:o,count=6}:{overlord:Overlord;count?:4|6}
 }
 export function BossPortrait({id}:{id:string}){return <span className="boss-portrait" role="img" aria-label={p.overlords.find(o=>o.id===id)?.name??id} style={{backgroundImage:`url(/assets/portraits/${id}.webp)`,backgroundSize:'cover',backgroundPosition:'center 30%'}}/>;}
 export function AbilityCard({card:c,children,footer,onClick,disabled,selected}:{card:Card;children:ReactNode;footer?:string;onClick?:()=>void;disabled?:boolean;selected?:boolean}) {
- return <CardFrame face={faces[c.id]} kind={c.kind==='racial'?'RACIAL':c.kind==='talent'?'TALENT':c.kind==='power'?"POWER":c.type==='bag'?"CONSUMABLE":"EQUIPMENT"} title={c.name.replace(/ · probn[oi]( quest)?/g,'')} subtitle={c.classId??c.type} rank={c.level} accent={c.type==='instant'||c.type==='ranged'?'energy':c.type==='active'?'nature':'gold'} art={<CardArt card={c}/>} onClick={onClick} disabled={disabled} selected={selected} footer={<><span><Icon name="bolt" size={13}/>{c.energy}</span><span>{footer??(c.printed?'Starting ability':`${c.price} gold`)}</span></>}>{children}</CardFrame>;
+ return <CardFrame face={faces[c.id]} kind={c.kind==='racial'?'RACIAL':c.kind==='talent'?'TALENT':c.kind==='power'?"POWER":c.type==='bag'?"CONSUMABLE":"EQUIPMENT"} title={c.name.replace(/ · probn[oi]( quest)?/g,'')} subtitle={c.classId??c.type} rank={c.level} accent={c.type==='instant'||c.type==='ranged'?'energy':c.type==='active'?'nature':'gold'} art={<CardArt card={c}/>} onClick={onClick} disabled={disabled} selected={selected} footer={<><span><GameIcon name="energy" size={18}/>{c.energy}</span><span>{footer??(c.printed?'Starting ability':`${c.price} gold`)}</span></>}>{children}</CardFrame>;
 }

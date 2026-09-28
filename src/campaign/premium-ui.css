@@ -1,0 +1,209 @@
+/* Desktop game chrome: painted symbols, warm bronze and readable live text. */
+.game-icon {
+  display: inline-flex;
+  position: relative;
+  flex: none;
+  vertical-align: middle;
+  overflow: hidden;
+  border: 1px solid #ae8950;
+  border-radius: 4px;
+  background: #111311;
+  box-shadow: 0 1px 0 #e8c78542, 0 2px 5px #0008;
+}
+.game-icon::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 1px 1px #fff2, inset 0 -1px 2px #0008;
+  pointer-events: none;
+}
+.game-icon > img,
+.game-icon > .ability-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  object-fit: cover;
+}
+.game-icon-health { border-color: #bb705a; }
+.game-icon-energy { border-color: #7199b5; }
+.game-icon-experience { border-color: #a68aba; }
+.campaign-app .brand-crest .game-icon { border: 0; box-shadow: none; }
+
+/* Hierarchy stays quiet around the map; names use Cinzel, data uses Inter. */
+.campaign-app .topnav button { font-size: 12px; }
+.campaign-app .campaign-title .eyebrow { font-size: 10px; color: #ccb78d; letter-spacing: 1.6px; }
+.campaign-app .campaign-title h1 { font-size: 26px; line-height: 1.3; }
+.campaign-app .campaign-title h1 > span { font: 500 12px/1.5 var(--sans); color: #d1c5ad; }
+.campaign-app .campaign-turn > .quiet-button { font-size: 12px; }
+.campaign-app .campaign-main { padding-top: 16px; }
+.campaign-app .campaign-title { margin-bottom: 14px; }
+.workspace-toggles { gap: 7px; }
+.workspace-toggles > button {
+  min-height: 48px;
+  padding: 8px 12px 8px 9px;
+  gap: 9px;
+  font: 600 12px/1.4 var(--serif);
+  color: #eedcba;
+  border-color: #887049;
+  background: linear-gradient(180deg, #37392f, #202721);
+  box-shadow: inset 0 1px #eed6a521, inset 0 -2px #080e0d70, 0 2px 5px #0005;
+  text-shadow: 0 1px 2px #000;
+}
+.workspace-toggles > button > b {
+  font: 600 11px/1 var(--sans);
+  color: #e5cb95;
+  border-color: #a0854e50;
+  background: #0d151a80;
+  min-width: 23px;
+  height: 23px;
+}
+.workspace-toggles > button[aria-pressed=true] {
+  border-color: #d9b16a;
+  background: linear-gradient(180deg, #665033, #30271c);
+  color: #ffe7b4;
+  box-shadow: inset 0 1px #f8dda144, inset 0 -2px #d4ae68, 0 2px 8px #0006;
+}
+.workspace-toggles.inside { padding-block: 11px; }
+.workspace-toggles.inside > button { padding: 7px 11px 7px 8px; }
+.turn-preview { font: 11px/1.5 var(--sans); color: #c4b89f; }
+
+/* The selected character reads as one nameplate, with explicitly named resources. */
+.map-context { gap: 14px; }
+.active-character-summary {
+  gap: 14px;
+  min-height: 65px;
+  padding: 7px 14px 7px 8px;
+  border-color: #ad8d54;
+  background: linear-gradient(105deg, #39382a, #202b24 48%, #15201c);
+  box-shadow: inset 0 1px #f4d49924, inset 0 -1px #0008, 0 3px 12px #0005;
+}
+.active-character-summary:hover { border-color: #e5c07c; background-color: #434432; }
+.summary-portrait { position: relative; display: block; flex: none; }
+.active-character-summary .summary-portrait > .portrait {
+  display: block;
+  width: 48px;
+  height: 48px;
+  border: 1px solid #dbb770;
+  box-shadow: 0 0 0 2px #111a15, 0 3px 8px #0009;
+}
+.summary-portrait > .game-icon { position: absolute; right: -6px; bottom: -3px; }
+.active-character-summary .summary-name { min-width: 165px; padding-left: 2px; }
+.active-character-summary .summary-name > small {
+  margin-bottom: 5px;
+  font: 500 10px/1.2 var(--sans);
+  letter-spacing: 1px;
+  color: #d0b581;
+}
+.active-character-summary .summary-name > strong {
+  display: block;
+  font: 600 17px/1.25 var(--serif);
+  color: #f6dfad;
+  text-shadow: 0 2px 3px #000;
+}
+.compact-vitals { display: flex; align-items: center; gap: 19px; margin: 0 8px 0 12px; }
+.compact-stat { display: inline-flex; align-items: center; gap: 8px; text-align: left; }
+.compact-stat small {
+  display: block;
+  margin-bottom: 4px;
+  font: 500 9px/1 var(--sans);
+  color: #c7bda6;
+  letter-spacing: .7px;
+  text-transform: uppercase;
+}
+.compact-stat b { display: block; font: 600 15px/1.1 var(--sans); font-variant-numeric: tabular-nums; }
+.compact-stat.health b { color: #ffc3ad; }
+.compact-stat.energy b { color: #badfff; }
+.compact-stat.gold b { color: #f5d38b; }
+.compact-stat em { font: 400 12px/1 var(--sans); font-style: normal; color: #c8c3b4; }
+.active-character-summary .summary-actions { padding: 1px 4px 0 13px; border-left: 1px solid #af915243; }
+.active-character-summary .action-pips { justify-content: center; gap: 7px; min-height: 15px; }
+.active-character-summary .action-pips i { width: 11px; height: 11px; background: #0d1714; }
+.active-character-summary .action-pips i.full { background: linear-gradient(135deg, #ffe9ae, #b7893c); }
+.active-character-summary .summary-actions > small { font: 500 9px/1 var(--sans); letter-spacing: .5px; color: #c7bda6; margin: 6px 0 0; }
+.active-character-summary > svg { color: #d2b77f; }
+.overlord-summary-button { min-width: 275px; border-color: #886b4d; background: linear-gradient(100deg, #352b2d, #1d2220); }
+.overlord-summary-button .boss-portrait { width: 62px; height: 63px; }
+.overlord-summary-button small { font-size: 10px; color: #c8ae8c; }
+.overlord-summary-button strong { font-size: 16px; color: #efdab6; }
+.overlord-summary-button > .threat-level .threat-copy > small { font-size: 9px; }
+
+/* Character sheets: stronger class identity and consistent resource symbols. */
+.character-roster { gap: 9px; }
+.character-roster button { min-height: 59px; padding: 7px 12px 7px 7px; gap: 11px; }
+.character-roster button > .portrait { width: 43px; height: 43px; }
+.character-roster strong { font-size: 14px; line-height: 1.4; }
+.character-roster small { font: 500 11px/1.5 var(--sans); color: #c6b99c; margin-top: 3px; }
+.character-roster button > b { font: 600 19px var(--sans); color: #e0c58d; }
+.sheet-nameplate .sheet-class { display: flex; align-items: center; gap: 9px; font: 600 11px/1.5 var(--sans); color: #d8bd88; letter-spacing: .7px; }
+.sheet-nameplate h2 { color: #ffe0a4; font-weight: 600; letter-spacing: .2px; }
+.sheet-nameplate p { color: #d1c3a7; font-size: 12px; }
+.campaign-app .resource-heading { align-items: center; margin-bottom: 7px; }
+.campaign-app .resource-heading > span { display: inline-flex; gap: 8px; align-items: center; font: 500 12px/1.4 var(--sans); color: #e6d8bc; }
+.campaign-app .resource-heading > b { font: 600 16px/1.2 var(--sans); color: #fff0d2; font-variant-numeric: tabular-nums; }
+.campaign-app .resource-heading > b > small { font: 400 12px var(--sans); color: #c3b59a; }
+.sheet-identity .resource { margin-bottom: 16px; }
+.sheet-identity .resource-track { height: 10px; border-color: #8c7347; border-radius: 2px; }
+.sheet-identity .health .resource-track > div { background: linear-gradient(#dc8370, #a94136 55%, #773528); }
+.sheet-identity .energy .resource-track > div { background: linear-gradient(#9bd4f1, #397fae 55%, #244d79); }
+.sheet-currency { gap: 8px; padding: 15px 0; }
+.sheet-currency > span { font: 600 18px/1.3 var(--sans); font-variant-numeric: tabular-nums; gap: 6px; }
+.sheet-currency small { font: 500 9px/1.4 var(--sans); color: #cbb990; letter-spacing: 1px; }
+.sheet-levels > div { border-color: #796b47; background: linear-gradient(140deg, #303329, #181f1b); }
+.sheet-levels > div.current { border-color: #d8b873; background: linear-gradient(135deg, #625034, #342c20); }
+.sheet-levels i { font: 600 14px/1.7 var(--sans); gap: 8px; }
+.sheet-levels b { color: #ecd6a7; }
+.sheet-levels small { color: #d0bf9b; }
+.sheet-tabs { gap: 4px; }
+.sheet-tabs > button { gap: 8px; font-size: 13px; padding: 10px; color: #dbc7a2; }
+.sheet-tabs > button > b { color: #ddc490; opacity: 1; }
+.sheet-section-title > span { font: 12px/1.65 var(--sans); color: #c6b99c; }
+.character-slot > header small { color: #d0bf9b; }
+.full-character-sheet .equipped-heading small { color: #d0bd95; font-size: 10px; letter-spacing: .4px; }
+.full-character-sheet .equipped-heading strong { font-size: 16px; line-height: 1.4; color: #ffe5b7; }
+.full-character-sheet .equipped-heading em { color: #ded0b0; font: 12px/1.65 var(--sans); }
+.inscribed-rules p > strong { font-size: 11px; color: #644321; }
+.racial-inscription .inscribed-rules p > strong { color: #dec28e; }
+.sheet-conditions { color: #d1c3a7; }
+.sheet-controls small { color: #c9bb9d; }
+.sheet-controls .gold-button, .sheet-controls .quiet-button { justify-content: flex-start; gap: 9px; }
+.sheet-help, .workspace-intro p, .party-control-panel > p { color: #d1c6af; }
+.class-deck-back > .game-icon { border: 0; box-shadow: none; }
+.workspace-intro p, .party-control-panel > p { font-size: 13px; }
+.workspace-modal .modal-head .eyebrow { font-size: 9px; color: #cbb489; }
+
+/* Match the existing action artwork with the rest of the command table. */
+.current-location { font-size: 14px; color: #eedbb4; }
+.current-location small { font: 11px/1.5 var(--sans); color: #c5b899; }
+.table-action-footer .action-dock button { min-height: 54px; font-size: 13px; gap: 10px; }
+.table-action-footer .action-dock .game-icon > .ability-art { width: 100%; height: 100%; border: 0; border-radius: 0; }
+.table-action-footer .action-dock kbd { font: 500 10px/1 var(--sans); color: #d1ba8d; }
+.table-action-footer .action-dock button:disabled { opacity: .48; }
+.table-action-footer .action-dock button:disabled .game-icon { filter: saturate(.5); }
+.command-table .map-toolbar > span { font-size: 11px; }
+.command-table .map-toolbar small { font-size: 9px; color: #c0b898; }
+.command-table .campaign-destination h3 { font-size: 19px; }
+.command-table .campaign-destination p, .command-table .map-travel-detail { font-size: 12px; }
+.command-table .map-legend { font-size: 10px; }
+.bot-status { font-size: 12px; }
+
+/* Compact desktop windows retain the same desktop table and all controls. */
+@media (max-width: 1250px) {
+  .workspace-toggles > button { padding-inline: 8px; gap: 7px; font-size: 11px; }
+  .active-character-summary { gap: 11px; }
+  .active-character-summary .summary-name > strong { font-size: 15px; }
+  .active-character-summary .summary-name { min-width: 150px; }
+  .compact-vitals { gap: 12px; margin-inline: 4px; }
+  .compact-stat { gap: 6px; }
+  .compact-stat b { font-size: 14px; }
+  .overlord-summary-button { min-width: 245px; gap: 8px; }
+  .overlord-summary-button strong { font-size: 14px; }
+  .overlord-summary-button .boss-portrait { width: 50px; }
+  .sheet-tabs > button { font-size: 12px; padding-inline: 8px; }
+  .sheet-levels i { gap: 5px; }
+  .table-action-footer .action-dock button { font-size: 12px; }
+}

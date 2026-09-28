@@ -1,10 +1,10 @@
+import { GameIcon } from './GameIcon';
 import { useState } from 'react';
 import { BASE_PACK as p } from '../data/base';
 import { character } from '../rules/common';
 import { classDeck, equipped } from '../rules/inventory';
 import type { Card, Command, Hero } from '../rules/model';
 import { GameCard } from './parts';
-import { Icon } from '../components';
 
 export function energyLabel(c:Card):string {
  if(c.kind==='talent')return 'Permanent talent';
@@ -18,8 +18,8 @@ export default function ClassDeck({hero:h,inspect,legal=[],onLearn,send,selected
  const cards=p.cards.filter(c=>c.classId===cls&&!c.printed&&c.kind===(tab==='powers'?'power':'talent')).sort((a,b)=>a.level-b.level||a.name.localeCompare(b.name));
  const total=selected.reduce((n,id)=>n+p.cards.find(c=>c.id===id)!.price,0),canTrain=legal.some(c=>c.type==='train'&&c.hero===h.id);
  return <section className="class-deck" aria-label={`${cls} class deck`}>
-  <div className="class-deck-heading"><div><span className="sheet-eyebrow">CLASS DECK · 24 CARDS</span><h3>{cls} arts & talents</h3></div><span className="deck-purse"><Icon name="coins"/>{h.gold}<small>gold available</small></span></div>
-  <div className="class-deck-piles" aria-label="Class deck piles">{(['powers','talents'] as const).map(kind=><button key={kind} aria-pressed={tab===kind} onClick={()=>{setTab(kind);setLevel(0);}}><span className={`class-deck-back ${kind}`} aria-hidden="true"><Icon name={kind==='powers'?'book':'spark'} size={30}/></span><span><strong>{kind==='powers'?'Power deck':'Talent deck'}</strong><small>{deck[kind].length} in deck · {kind==='powers'?h.learned.length:h.talents.length} {kind==='powers'?'learned':'chosen'}</small><em>{kind==='powers'?'Purchase with a Train or Town action':'Choose for free when you gain a level'}</em></span><b>{deck[kind].length}</b></button>)}</div>
+  <div className="class-deck-heading"><div><span className="sheet-eyebrow">CLASS DECK · 24 CARDS</span><h3>{cls} arts & talents</h3></div><span className="deck-purse"><GameIcon name="gold"/>{h.gold}<small>gold available</small></span></div>
+  <div className="class-deck-piles" aria-label="Class deck piles">{(['powers','talents'] as const).map(kind=><button key={kind} aria-pressed={tab===kind} onClick={()=>{setTab(kind);setLevel(0);}}><span className={`class-deck-back ${kind}`} aria-hidden="true"><GameIcon name={kind==='powers'?'train':'experience'} size={36}/></span><span><strong>{kind==='powers'?'Power deck':'Talent deck'}</strong><small>{deck[kind].length} in deck · {kind==='powers'?h.learned.length:h.talents.length} {kind==='powers'?'learned':'chosen'}</small><em>{kind==='powers'?'Purchase with a Train or Town action':'Choose for free when you gain a level'}</em></span><b>{deck[kind].length}</b></button>)}</div>
   <p className="sheet-help">{tab==='powers'?'Browse your class deck freely. Buy one or more eligible powers in a single action. Purchased powers go into your spellbook; equip them during Character Management.':'Gain one permanent talent at levels 2, 3, 4 and 5. Choose a card at or below the level you just gained. Talents cost no gold and do not occupy equipment slots.'}</p>
   <div className="class-deck-toolbar"><nav aria-label="Filter cards by level">{[0,1,2,3,4,5].map(n=><button key={n} aria-pressed={level===n} onClick={()=>setLevel(n)}>{n?`Level ${n}`:'All levels'}</button>)}</nav>{!toggle&&tab==='powers'&&onLearn&&<button className="gold-button" disabled={!canTrain} onClick={onLearn}>Train powers · 1 action</button>}</div>
   <div className="class-deck-cards">{cards.filter(c=>!level||c.level===level).map(c=>{
