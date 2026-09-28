@@ -1,6 +1,6 @@
 import { capacity, card, character, faction, hero, other } from './common.js';
-import { eligibleAttackers, living } from './combat.js';
-import { availableCards, condition, matches, timing } from './effects.js';
+import { creatureRule, eligibleAttackers, living } from './combat.js';
+import { availableCards, condition, immune, matches, timing } from './effects.js';
 import { eventCommands } from './legal-events.js';
 import { apply } from './game.js';
 import { bagSize, classDeck, equipped } from './inventory.js';
@@ -128,7 +128,7 @@ export function legalActions(p: ContentPack, s: State): Command[] {
   if (b.stage === 'reroll') for (const die of a!.dice.filter(d => !d.removed && !d.rerolled)) list.push({ type: 'reroll', dice: [die.id] });
   if (b.stage === 'after-reroll') {
    const h = hero(s, a!.heroId), powers = h.slots.flatMap(a => [a.card, ...a.addons].filter((id): id is string => !!id && card(p, id).kind === 'power'));
-   const count = Math.min(powers.length, a!.dice.filter(d => !d.removed && d.value === 1).length);
+   const count = creatureRule(p,s)==='wildkin'&&!immune(p,h,'wildkin') ? Math.min(powers.length, a!.dice.filter(d => !d.removed && d.value === 1).length) : 0;
    list.push({ type: 'monster' }); if (count) for (const unequip of combinations(powers, count)) list.push({ type: 'monster', unequip });
   }
   if (b.stage === 'tokens') {

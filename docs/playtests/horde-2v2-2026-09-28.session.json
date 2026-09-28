@@ -1,0 +1,4621 @@
+{
+  "format": "lordaeron-rules-session",
+  "version": 2,
+  "pack": "base-2005-faq-1.4-v6",
+  "contentHash": "4c24b6cf",
+  "setup": {
+    "seed": 3374075278,
+    "roster": [
+      "grumbaz-crowsblood",
+      "sofeea-icecall",
+      "brandon-lightstone",
+      "burbon-fang"
+    ],
+    "overlord": "kelthuzad",
+    "variants": {}
+  },
+  "commands": [
+    {
+      "type": "travel",
+      "hero": "grumbaz-crowsblood",
+      "path": [
+        "stillwater"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "sofeea-icecall",
+      "path": [
+        "stillwater"
+      ]
+    },
+    {
+      "type": "challenge",
+      "hero": "sofeea-icecall",
+      "target": "quest-horde-danger-in-stillwater:murloc:stillwater:0:green",
+      "allies": [
+        "grumbaz-crowsblood"
+      ]
+    },
+    {
+      "type": "attacker",
+      "hero": "sofeea-icecall"
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "sofeea-icecall-ranged",
+      "ability": "empower",
+      "args": {}
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "attacker",
+      "hero": "grumbaz-crowsblood"
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "closeBattle"
+    },
+    {
+      "type": "quest",
+      "tier": "green"
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "grumbaz-crowsblood",
+      "slots": [
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "manage",
+      "hero": "sofeea-icecall",
+      "slots": [
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "travel",
+      "hero": "brandon-lightstone",
+      "path": [
+        "azure",
+        "ambermill"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "burbon-fang",
+      "path": [
+        "azure",
+        "ambermill"
+      ]
+    },
+    {
+      "type": "challenge",
+      "hero": "brandon-lightstone",
+      "target": "quest-alliance-dogs-in-the-mill:gnoll:ambermill:0:green",
+      "allies": [
+        "burbon-fang"
+      ]
+    },
+    {
+      "type": "attacker",
+      "hero": "burbon-fang"
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "attacker",
+      "hero": "brandon-lightstone"
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        0
+      ]
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "closeBattle"
+    },
+    {
+      "type": "reward",
+      "hero": "brandon-lightstone",
+      "card": "triangle-26-shadow-wand"
+    },
+    {
+      "type": "reward",
+      "hero": "brandon-lightstone",
+      "card": "triangle-9-soldiers-armor"
+    },
+    {
+      "type": "quest",
+      "tier": "green"
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "burbon-fang",
+      "slots": [
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "manage",
+      "hero": "brandon-lightstone",
+      "slots": [
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "train",
+      "hero": "grumbaz-crowsblood",
+      "cards": [
+        "warrior-battle-shout",
+        "warrior-heroic-strike"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "grumbaz-crowsblood",
+      "path": [
+        "brill",
+        "tirisfal-outpost"
+      ]
+    },
+    {
+      "type": "train",
+      "hero": "sofeea-icecall",
+      "cards": [
+        "mage-arcane-intellect",
+        "mage-frostbolt"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "sofeea-icecall",
+      "path": [
+        "brill",
+        "tirisfal-outpost"
+      ]
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "grumbaz-crowsblood",
+      "slots": [
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "warrior-battle-shout"
+        },
+        {
+          "addons": [],
+          "card": "warrior-heroic-strike"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "manage",
+      "hero": "sofeea-icecall",
+      "slots": [
+        {
+          "addons": [],
+          "card": "mage-frostbolt"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "mage-arcane-intellect"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "event-choice",
+      "hero": "brandon-lightstone",
+      "choice": {
+        "card": "triangle-24-neophytes-robe"
+      }
+    },
+    {
+      "type": "event-choice",
+      "hero": "grumbaz-crowsblood",
+      "choice": {
+        "card": "triangle-29-cadet-vest"
+      }
+    },
+    {
+      "type": "event-choice",
+      "hero": "sofeea-icecall",
+      "choice": {
+        "card": "triangle-32-robe-of-apprenticeship"
+      }
+    },
+    {
+      "type": "event-choice",
+      "hero": "burbon-fang",
+      "choice": {
+        "card": "triangle-28-minor-mana-potion"
+      }
+    },
+    {
+      "type": "challenge",
+      "hero": "brandon-lightstone",
+      "target": "quest-alliance-shades-of-sorrow:worgen:ambermill:0:blue",
+      "allies": []
+    },
+    {
+      "type": "attacker",
+      "hero": "brandon-lightstone"
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        0
+      ]
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "wound",
+      "hero": "brandon-lightstone"
+    },
+    {
+      "type": "wound",
+      "hero": "brandon-lightstone"
+    },
+    {
+      "type": "wound",
+      "hero": "brandon-lightstone"
+    },
+    {
+      "type": "respawn",
+      "hero": "brandon-lightstone",
+      "region": "southshore"
+    },
+    {
+      "type": "closeBattle"
+    },
+    {
+      "type": "challenge",
+      "hero": "burbon-fang",
+      "target": "quest-alliance-shades-of-sorrow:worgen:ambermill:0:blue",
+      "allies": []
+    },
+    {
+      "type": "attacker",
+      "hero": "burbon-fang"
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "wound",
+      "hero": "burbon-fang"
+    },
+    {
+      "type": "wound",
+      "hero": "burbon-fang"
+    },
+    {
+      "type": "wound",
+      "hero": "burbon-fang"
+    },
+    {
+      "type": "respawn",
+      "hero": "burbon-fang",
+      "region": "southshore"
+    },
+    {
+      "type": "closeBattle"
+    },
+    {
+      "type": "trade",
+      "hero": "brandon-lightstone",
+      "to": "burbon-fang",
+      "items": [
+        "triangle-24-neophytes-robe"
+      ],
+      "receiveItems": [],
+      "gold": 0,
+      "receiveGold": 0
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "burbon-fang",
+      "slots": [
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-24-neophytes-robe"
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "manage",
+      "hero": "brandon-lightstone",
+      "slots": [
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "travel",
+      "hero": "grumbaz-crowsblood",
+      "path": [
+        "balnir"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "sofeea-icecall",
+      "path": [
+        "balnir"
+      ]
+    },
+    {
+      "type": "challenge",
+      "hero": "sofeea-icecall",
+      "target": "quest-horde-terror-in-the-fields:ghoul:balnir:0:green",
+      "allies": [
+        "grumbaz-crowsblood"
+      ]
+    },
+    {
+      "type": "attacker",
+      "hero": "sofeea-icecall"
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "mage-frostbolt",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "sofeea-icecall-ranged",
+      "ability": "empower",
+      "args": {}
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "attacker",
+      "hero": "grumbaz-crowsblood"
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "closeBattle"
+    },
+    {
+      "type": "talent",
+      "hero": "grumbaz-crowsblood",
+      "card": "warrior-anger-management"
+    },
+    {
+      "type": "talent",
+      "hero": "sofeea-icecall",
+      "card": "mage-arcane-focus"
+    },
+    {
+      "type": "quest",
+      "tier": "green"
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "grumbaz-crowsblood",
+      "slots": [
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "warrior-battle-shout"
+        },
+        {
+          "addons": [],
+          "card": "warrior-heroic-strike"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-29-cadet-vest"
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "manage",
+      "hero": "sofeea-icecall",
+      "slots": [
+        {
+          "addons": [],
+          "card": "mage-frostbolt"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "mage-arcane-intellect"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-32-robe-of-apprenticeship"
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "travel",
+      "hero": "brandon-lightstone",
+      "path": [
+        "sorrow"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "burbon-fang",
+      "path": [
+        "sorrow"
+      ]
+    },
+    {
+      "type": "challenge",
+      "hero": "brandon-lightstone",
+      "target": "quest-alliance-dark-alliances:gnoll:sorrow:0:green",
+      "allies": [
+        "burbon-fang"
+      ]
+    },
+    {
+      "type": "attacker",
+      "hero": "burbon-fang"
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        2
+      ]
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "ability",
+      "hero": "burbon-fang",
+      "card": "burbon-fang-ranged",
+      "ability": "after-reroll",
+      "args": {
+        "dice": [
+          0
+        ]
+      }
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "attacker",
+      "hero": "brandon-lightstone"
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "closeBattle"
+    },
+    {
+      "type": "talent",
+      "hero": "brandon-lightstone",
+      "card": "paladin-mace-specialization"
+    },
+    {
+      "type": "talent",
+      "hero": "burbon-fang",
+      "card": "hunter-lightning-reflexes"
+    },
+    {
+      "type": "reward",
+      "hero": "brandon-lightstone",
+      "card": "triangle-39-scroll-of-lesser-strength"
+    },
+    {
+      "type": "reward",
+      "hero": "brandon-lightstone",
+      "card": "triangle-14-skycaller"
+    },
+    {
+      "type": "quest",
+      "tier": "green"
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "burbon-fang",
+      "slots": [
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-24-neophytes-robe"
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "manage",
+      "hero": "brandon-lightstone",
+      "slots": [
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-9-soldiers-armor"
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "bid",
+      "hero": "brandon-lightstone",
+      "amount": 0
+    },
+    {
+      "type": "bid",
+      "hero": "burbon-fang",
+      "amount": 0
+    },
+    {
+      "type": "bid",
+      "hero": "sofeea-icecall",
+      "amount": 3
+    },
+    {
+      "type": "bid",
+      "hero": "grumbaz-crowsblood",
+      "amount": 0
+    },
+    {
+      "type": "travel",
+      "hero": "grumbaz-crowsblood",
+      "path": [
+        "tirisfal-outpost",
+        "undercity"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "sofeea-icecall",
+      "path": [
+        "tirisfal-outpost",
+        "undercity"
+      ]
+    },
+    {
+      "type": "challenge",
+      "hero": "sofeea-icecall",
+      "target": "quest-horde-evil-brew:crusader:undercity:0:blue",
+      "allies": [
+        "grumbaz-crowsblood"
+      ]
+    },
+    {
+      "type": "attacker",
+      "hero": "sofeea-icecall"
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "mage-frostbolt",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "sofeea-icecall-ranged",
+      "ability": "empower",
+      "args": {}
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "mage-arcane-focus",
+      "ability": "reroll",
+      "args": {
+        "dice": [
+          3
+        ]
+      }
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "attacker",
+      "hero": "grumbaz-crowsblood"
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        2
+      ]
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "wound",
+      "hero": "grumbaz-crowsblood"
+    },
+    {
+      "type": "wound",
+      "hero": "grumbaz-crowsblood"
+    },
+    {
+      "type": "wound",
+      "hero": "grumbaz-crowsblood"
+    },
+    {
+      "type": "wound",
+      "hero": "sofeea-icecall"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "attacker",
+      "hero": "sofeea-icecall"
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "attacker",
+      "hero": "grumbaz-crowsblood"
+    },
+    {
+      "type": "ability",
+      "hero": "grumbaz-crowsblood",
+      "card": "warrior-heroic-strike",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        3
+      ]
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "closeBattle"
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "grumbaz-crowsblood",
+      "slots": [
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "warrior-battle-shout"
+        },
+        {
+          "addons": [],
+          "card": "warrior-heroic-strike"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-29-cadet-vest"
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "manage",
+      "hero": "sofeea-icecall",
+      "slots": [
+        {
+          "addons": [],
+          "card": "mage-frostbolt"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "mage-arcane-intellect"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-32-robe-of-apprenticeship"
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "travel",
+      "hero": "brandon-lightstone",
+      "path": [
+        "andorhal",
+        "dalson"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "burbon-fang",
+      "path": [
+        "andorhal",
+        "dalson"
+      ]
+    },
+    {
+      "type": "challenge",
+      "hero": "brandon-lightstone",
+      "target": "quest-horde-evil-brew:ghoul:dalson:0:green",
+      "allies": [
+        "burbon-fang"
+      ]
+    },
+    {
+      "type": "attacker",
+      "hero": "burbon-fang"
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "attacker",
+      "hero": "brandon-lightstone"
+    },
+    {
+      "type": "ability",
+      "hero": "brandon-lightstone",
+      "card": "triangle-39-scroll-of-lesser-strength",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "wound",
+      "hero": "brandon-lightstone"
+    },
+    {
+      "type": "wound",
+      "hero": "brandon-lightstone"
+    },
+    {
+      "type": "wound",
+      "hero": "burbon-fang"
+    },
+    {
+      "type": "wound",
+      "hero": "brandon-lightstone"
+    },
+    {
+      "type": "wound",
+      "hero": "burbon-fang"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "attacker",
+      "hero": "burbon-fang"
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "attacker",
+      "hero": "brandon-lightstone"
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "closeBattle"
+    },
+    {
+      "type": "reward",
+      "hero": "brandon-lightstone",
+      "card": "triangle-1-trogg-club"
+    },
+    {
+      "type": "reward",
+      "hero": "burbon-fang",
+      "card": "triangle-45-footman-tunic"
+    },
+    {
+      "type": "quest",
+      "tier": "green"
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "burbon-fang",
+      "slots": [
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-45-footman-tunic"
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "manage",
+      "hero": "brandon-lightstone",
+      "slots": [
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-1-trogg-club"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-9-soldiers-armor"
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "rest",
+      "hero": "grumbaz-crowsblood",
+      "health": 3
+    },
+    {
+      "type": "rest",
+      "hero": "sofeea-icecall",
+      "health": 0
+    },
+    {
+      "type": "challenge",
+      "hero": "sofeea-icecall",
+      "target": "quest-horde-unwelcome-visitors:murloc:undercity:0:red",
+      "allies": [
+        "grumbaz-crowsblood"
+      ]
+    },
+    {
+      "type": "attacker",
+      "hero": "sofeea-icecall"
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "mage-frostbolt",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "sofeea-icecall-ranged",
+      "ability": "empower",
+      "args": {}
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        2,
+        4,
+        5
+      ]
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "mage-arcane-focus",
+      "ability": "reroll",
+      "args": {
+        "dice": [
+          5
+        ]
+      }
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "attacker",
+      "hero": "grumbaz-crowsblood"
+    },
+    {
+      "type": "ability",
+      "hero": "grumbaz-crowsblood",
+      "card": "warrior-heroic-strike",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        1,
+        2
+      ]
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "wound",
+      "hero": "grumbaz-crowsblood"
+    },
+    {
+      "type": "wound",
+      "hero": "grumbaz-crowsblood"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "closeBattle"
+    },
+    {
+      "type": "reward",
+      "hero": "grumbaz-crowsblood",
+      "card": "triangle-38-cured-leather-armor"
+    },
+    {
+      "type": "quest",
+      "tier": "green"
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "grumbaz-crowsblood",
+      "slots": [
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "warrior-battle-shout"
+        },
+        {
+          "addons": [],
+          "card": "warrior-heroic-strike"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-38-cured-leather-armor"
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "manage",
+      "hero": "sofeea-icecall",
+      "slots": [
+        {
+          "addons": [],
+          "card": "mage-frostbolt"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "mage-arcane-intellect"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-32-robe-of-apprenticeship"
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "train",
+      "hero": "brandon-lightstone",
+      "cards": [
+        "paladin-seal-of-righteousness",
+        "paladin-blessing-of-might",
+        "paladin-hammer-of-justice"
+      ]
+    },
+    {
+      "type": "train",
+      "hero": "burbon-fang",
+      "cards": [
+        "hunter-bear",
+        "hunter-scorpid-sting",
+        "hunter-aspect-of-the-monkey"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "brandon-lightstone",
+      "path": [
+        "gahrron",
+        "sorrow"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "burbon-fang",
+      "path": [
+        "gahrron",
+        "sorrow"
+      ]
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "brandon-lightstone",
+      "slots": [
+        {
+          "card": "paladin-blessing-of-might",
+          "addons": []
+        },
+        {
+          "card": "paladin-seal-of-righteousness",
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "card": "triangle-1-trogg-club",
+          "addons": []
+        },
+        {
+          "card": "paladin-hammer-of-justice",
+          "addons": []
+        },
+        {
+          "card": "triangle-9-soldiers-armor",
+          "addons": []
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "manage",
+      "hero": "burbon-fang",
+      "slots": [
+        {
+          "card": "hunter-aspect-of-the-monkey",
+          "addons": []
+        },
+        {
+          "card": "hunter-bear",
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "card": "hunter-scorpid-sting",
+          "addons": []
+        },
+        {
+          "card": "triangle-45-footman-tunic",
+          "addons": []
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "ability",
+      "hero": "burbon-fang",
+      "card": "triangle-28-minor-mana-potion",
+      "ability": "energy-spent",
+      "args": {}
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "travel",
+      "hero": "grumbaz-crowsblood",
+      "path": [
+        "brill",
+        "north-tide"
+      ]
+    },
+    {
+      "type": "town",
+      "hero": "grumbaz-crowsblood",
+      "health": 2,
+      "operations": [
+        {
+          "op": "sell",
+          "card": "triangle-29-cadet-vest"
+        },
+        {
+          "op": "buy",
+          "card": "triangle-31-scimitar"
+        },
+        {
+          "op": "train",
+          "card": "warrior-rend"
+        }
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "sofeea-icecall",
+      "path": [
+        "brill",
+        "north-tide"
+      ]
+    },
+    {
+      "type": "town",
+      "hero": "sofeea-icecall",
+      "health": 0,
+      "operations": [
+        {
+          "op": "train",
+          "card": "mage-fire-blast"
+        }
+      ],
+      "recoverAfter": 1
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "grumbaz-crowsblood",
+      "slots": [
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "warrior-battle-shout"
+        },
+        {
+          "addons": [],
+          "card": "warrior-heroic-strike"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-31-scimitar"
+        },
+        {
+          "addons": [],
+          "card": "warrior-rend"
+        },
+        {
+          "addons": [],
+          "card": "triangle-38-cured-leather-armor"
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "manage",
+      "hero": "sofeea-icecall",
+      "slots": [
+        {
+          "addons": [],
+          "card": "mage-frostbolt"
+        },
+        {
+          "addons": [],
+          "card": "mage-fire-blast"
+        },
+        {
+          "addons": [],
+          "card": "mage-arcane-intellect"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-32-robe-of-apprenticeship"
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "travel",
+      "hero": "brandon-lightstone",
+      "path": [
+        "southshore",
+        "azure"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "burbon-fang",
+      "path": [
+        "southshore",
+        "azure"
+      ]
+    },
+    {
+      "type": "challenge",
+      "hero": "brandon-lightstone",
+      "target": "quest-alliance-murlocs-in-the-mines:murloc:azure:0:green",
+      "allies": [
+        "burbon-fang"
+      ]
+    },
+    {
+      "type": "attacker",
+      "hero": "burbon-fang"
+    },
+    {
+      "type": "ability",
+      "hero": "burbon-fang",
+      "card": "hunter-scorpid-sting",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        7
+      ]
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        1
+      ]
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "attacker",
+      "hero": "brandon-lightstone"
+    },
+    {
+      "type": "ability",
+      "hero": "brandon-lightstone",
+      "card": "brandon-lightstone-ranged",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "ability",
+      "hero": "brandon-lightstone",
+      "card": "paladin-hammer-of-justice",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        0
+      ]
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        5
+      ]
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "wound",
+      "hero": "burbon-fang",
+      "pet": "hunter-bear"
+    },
+    {
+      "type": "wound",
+      "hero": "burbon-fang",
+      "pet": "hunter-bear"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "attacker",
+      "hero": "burbon-fang"
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        1
+      ]
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        2
+      ]
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "attacker",
+      "hero": "brandon-lightstone"
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "closeBattle"
+    },
+    {
+      "type": "talent",
+      "hero": "brandon-lightstone",
+      "card": "paladin-reckoning"
+    },
+    {
+      "type": "reward",
+      "hero": "brandon-lightstone",
+      "card": "triangle-40-skycaller"
+    },
+    {
+      "type": "reward",
+      "hero": "burbon-fang",
+      "card": "triangle-3-bent-staff"
+    },
+    {
+      "type": "quest",
+      "tier": "green"
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "burbon-fang",
+      "slots": [
+        {
+          "card": "hunter-aspect-of-the-monkey",
+          "addons": []
+        },
+        {
+          "card": "hunter-bear",
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "card": "triangle-3-bent-staff",
+          "addons": []
+        },
+        {
+          "card": "hunter-scorpid-sting",
+          "addons": []
+        },
+        {
+          "card": "triangle-45-footman-tunic",
+          "addons": []
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "manage",
+      "hero": "brandon-lightstone",
+      "slots": [
+        {
+          "card": "paladin-blessing-of-might",
+          "addons": []
+        },
+        {
+          "card": "paladin-seal-of-righteousness",
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "card": "triangle-1-trogg-club",
+          "addons": []
+        },
+        {
+          "card": "paladin-hammer-of-justice",
+          "addons": []
+        },
+        {
+          "card": "triangle-9-soldiers-armor",
+          "addons": []
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "event-choice",
+      "hero": "brandon-lightstone",
+      "choice": {
+        "mode": "skip"
+      }
+    },
+    {
+      "type": "event-choice",
+      "hero": "grumbaz-crowsblood",
+      "choice": {
+        "quest": "quest-horde-wolves-in-the-fold",
+        "tier": "green"
+      }
+    },
+    {
+      "type": "event-choice",
+      "hero": "brandon-lightstone",
+      "choice": {
+        "enemy": "quest-alliance-island-of-the-muckdwellers:gnoll:corrahn:0:blue",
+        "region": "uplands"
+      }
+    },
+    {
+      "type": "event-choice",
+      "hero": "grumbaz-crowsblood",
+      "choice": {
+        "enemy": "quest-horde-wolves-in-the-fold:wraith:caer:0:blue",
+        "region": "weeping"
+      }
+    },
+    {
+      "type": "event-choice",
+      "hero": "brandon-lightstone",
+      "choice": {
+        "enemy": "quest-alliance-shades-of-sorrow:worgen:ambermill:0:blue",
+        "region": "sepulcher"
+      }
+    },
+    {
+      "type": "event-choice",
+      "hero": "grumbaz-crowsblood",
+      "choice": {
+        "enemy": "quest-horde-danger-in-stillwater:murloc:brightwater:0:blue",
+        "region": "monastery"
+      }
+    },
+    {
+      "type": "event-choice",
+      "hero": "sofeea-icecall",
+      "choice": {
+        "mode": "skip"
+      }
+    },
+    {
+      "type": "event-choice",
+      "hero": "grumbaz-crowsblood",
+      "choice": {
+        "mode": "skip"
+      }
+    },
+    {
+      "type": "event-choice",
+      "hero": "burbon-fang",
+      "choice": {
+        "mode": "skip"
+      }
+    },
+    {
+      "type": "event-choice",
+      "hero": "brandon-lightstone",
+      "choice": {
+        "mode": "skip"
+      }
+    },
+    {
+      "type": "rest",
+      "hero": "grumbaz-crowsblood",
+      "health": 0
+    },
+    {
+      "type": "travel",
+      "hero": "grumbaz-crowsblood",
+      "path": [
+        "shining"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "sofeea-icecall",
+      "path": [
+        "shining"
+      ]
+    },
+    {
+      "type": "challenge",
+      "hero": "sofeea-icecall",
+      "target": "quest-horde-legacy-of-evil:ghoul:shining:0:green",
+      "allies": []
+    },
+    {
+      "type": "attacker",
+      "hero": "sofeea-icecall"
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "wound",
+      "hero": "sofeea-icecall"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "closeBattle"
+    },
+    {
+      "type": "reward",
+      "hero": "sofeea-icecall",
+      "card": "triangle-46-minor-mana-potion"
+    },
+    {
+      "type": "reward",
+      "hero": "sofeea-icecall",
+      "card": "triangle-8-ley-staff"
+    },
+    {
+      "type": "quest",
+      "tier": "green"
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "grumbaz-crowsblood",
+      "slots": [
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "warrior-battle-shout"
+        },
+        {
+          "addons": [],
+          "card": "warrior-heroic-strike"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-31-scimitar"
+        },
+        {
+          "addons": [],
+          "card": "warrior-rend"
+        },
+        {
+          "addons": [],
+          "card": "triangle-38-cured-leather-armor"
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "manage",
+      "hero": "sofeea-icecall",
+      "slots": [
+        {
+          "addons": [],
+          "card": "mage-frostbolt"
+        },
+        {
+          "addons": [],
+          "card": "mage-fire-blast"
+        },
+        {
+          "addons": [],
+          "card": "mage-arcane-intellect"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-8-ley-staff"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-32-robe-of-apprenticeship"
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "travel",
+      "hero": "burbon-fang",
+      "path": [
+        "purgation"
+      ]
+    },
+    {
+      "type": "challenge",
+      "hero": "burbon-fang",
+      "target": "quest-alliance-island-of-the-muckdwellers:murloc:purgation:0:green",
+      "allies": []
+    },
+    {
+      "type": "attacker",
+      "hero": "burbon-fang"
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        3
+      ]
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        5
+      ]
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "closeBattle"
+    },
+    {
+      "type": "talent",
+      "hero": "burbon-fang",
+      "card": "hunter-lethal-shots"
+    },
+    {
+      "type": "reward",
+      "hero": "burbon-fang",
+      "card": "triangle-18-scimitar"
+    },
+    {
+      "type": "quest",
+      "tier": "yellow"
+    },
+    {
+      "type": "travel",
+      "hero": "brandon-lightstone",
+      "path": [
+        "ambermill",
+        "deep-elem"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "brandon-lightstone",
+      "path": [
+        "fenris"
+      ]
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "burbon-fang",
+      "slots": [
+        {
+          "card": "hunter-aspect-of-the-monkey",
+          "addons": []
+        },
+        {
+          "card": "hunter-bear",
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "card": "triangle-18-scimitar",
+          "addons": []
+        },
+        {
+          "card": "hunter-scorpid-sting",
+          "addons": []
+        },
+        {
+          "card": "triangle-45-footman-tunic",
+          "addons": []
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "manage",
+      "hero": "brandon-lightstone",
+      "slots": [
+        {
+          "card": "paladin-blessing-of-might",
+          "addons": []
+        },
+        {
+          "card": "paladin-seal-of-righteousness",
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "card": "triangle-1-trogg-club",
+          "addons": []
+        },
+        {
+          "card": "paladin-hammer-of-justice",
+          "addons": []
+        },
+        {
+          "card": "triangle-9-soldiers-armor",
+          "addons": []
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "travel",
+      "hero": "grumbaz-crowsblood",
+      "path": [
+        "north-tide",
+        "caer"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "grumbaz-crowsblood",
+      "path": [
+        "plaguemist",
+        "quel-danil"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "sofeea-icecall",
+      "path": [
+        "north-tide",
+        "caer"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "sofeea-icecall",
+      "path": [
+        "plaguemist",
+        "quel-danil"
+      ]
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "grumbaz-crowsblood",
+      "slots": [
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "warrior-battle-shout"
+        },
+        {
+          "addons": [],
+          "card": "warrior-heroic-strike"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-31-scimitar"
+        },
+        {
+          "addons": [],
+          "card": "warrior-rend"
+        },
+        {
+          "addons": [],
+          "card": "triangle-38-cured-leather-armor"
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "manage",
+      "hero": "sofeea-icecall",
+      "slots": [
+        {
+          "addons": [],
+          "card": "mage-frostbolt"
+        },
+        {
+          "addons": [],
+          "card": "mage-fire-blast"
+        },
+        {
+          "addons": [],
+          "card": "mage-arcane-intellect"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-8-ley-staff"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-32-robe-of-apprenticeship"
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "challenge",
+      "hero": "brandon-lightstone",
+      "target": "quest-alliance-serpents-in-the-lake:naga:fenris:0:green",
+      "allies": []
+    },
+    {
+      "type": "attacker",
+      "hero": "brandon-lightstone"
+    },
+    {
+      "type": "ability",
+      "hero": "brandon-lightstone",
+      "card": "brandon-lightstone-ranged",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "ability",
+      "hero": "brandon-lightstone",
+      "card": "paladin-hammer-of-justice",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "ability",
+      "hero": "brandon-lightstone",
+      "card": "triangle-1-trogg-club",
+      "ability": "after-pool",
+      "args": {
+        "dice": [
+          0
+        ]
+      }
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "closeBattle"
+    },
+    {
+      "type": "reward",
+      "hero": "brandon-lightstone",
+      "card": "triangle-41-iridescent-hammer",
+      "discard": "triangle-26-shadow-wand"
+    },
+    {
+      "type": "reward",
+      "hero": "brandon-lightstone",
+      "card": "triangle-11-cobalt-buckler",
+      "discard": "triangle-14-skycaller"
+    },
+    {
+      "type": "quest",
+      "tier": "yellow"
+    },
+    {
+      "type": "travel",
+      "hero": "brandon-lightstone",
+      "path": [
+        "north-tide"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "burbon-fang",
+      "path": [
+        "azure",
+        "ambermill"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "burbon-fang",
+      "path": [
+        "pyrewood"
+      ]
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "brandon-lightstone",
+      "slots": [
+        {
+          "card": "paladin-blessing-of-might",
+          "addons": []
+        },
+        {
+          "card": "paladin-seal-of-righteousness",
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "card": "triangle-41-iridescent-hammer",
+          "addons": []
+        },
+        {
+          "card": "paladin-hammer-of-justice",
+          "addons": []
+        },
+        {
+          "card": "triangle-9-soldiers-armor",
+          "addons": [
+            "triangle-11-cobalt-buckler"
+          ]
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "manage",
+      "hero": "burbon-fang",
+      "slots": [
+        {
+          "card": "hunter-aspect-of-the-monkey",
+          "addons": []
+        },
+        {
+          "card": "hunter-bear",
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "card": "triangle-18-scimitar",
+          "addons": []
+        },
+        {
+          "card": "hunter-scorpid-sting",
+          "addons": []
+        },
+        {
+          "card": "triangle-45-footman-tunic",
+          "addons": []
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "challenge",
+      "hero": "grumbaz-crowsblood",
+      "target": "quest-horde-hinterlands-outrunners:gnoll:quel-danil:0:green",
+      "allies": [
+        "sofeea-icecall"
+      ]
+    },
+    {
+      "type": "attacker",
+      "hero": "sofeea-icecall"
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "mage-frostbolt",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "mage-fire-blast",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "sofeea-icecall-ranged",
+      "ability": "empower",
+      "args": {}
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "mage-arcane-focus",
+      "ability": "reroll",
+      "args": {
+        "dice": [
+          7
+        ]
+      }
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "attacker",
+      "hero": "grumbaz-crowsblood"
+    },
+    {
+      "type": "ability",
+      "hero": "grumbaz-crowsblood",
+      "card": "warrior-heroic-strike",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        4,
+        5
+      ]
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance",
+      "targets": [
+        "quest-horde-hinterlands-outrunners:gnoll:quel-danil:0:red",
+        "quest-horde-hinterlands-outrunners:gnoll:quel-danil:0:green"
+      ]
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "closeBattle"
+    },
+    {
+      "type": "talent",
+      "hero": "grumbaz-crowsblood",
+      "card": "warrior-piercing-howl"
+    },
+    {
+      "type": "talent",
+      "hero": "sofeea-icecall",
+      "card": "mage-impact"
+    },
+    {
+      "type": "reward",
+      "hero": "grumbaz-crowsblood",
+      "card": "triangle-16-archers-buckler"
+    },
+    {
+      "type": "reward",
+      "hero": "sofeea-icecall",
+      "card": "triangle-4-gnarled-staff"
+    },
+    {
+      "type": "quest",
+      "tier": "yellow"
+    },
+    {
+      "type": "travel",
+      "hero": "grumbaz-crowsblood",
+      "path": [
+        "skulk",
+        "seradane"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "sofeea-icecall",
+      "path": [
+        "shadra"
+      ]
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "grumbaz-crowsblood",
+      "slots": [
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "warrior-battle-shout"
+        },
+        {
+          "addons": [],
+          "card": "warrior-heroic-strike"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-31-scimitar"
+        },
+        {
+          "addons": [],
+          "card": "warrior-rend"
+        },
+        {
+          "addons": [
+            "triangle-16-archers-buckler"
+          ],
+          "card": "triangle-38-cured-leather-armor"
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "manage",
+      "hero": "sofeea-icecall",
+      "slots": [
+        {
+          "addons": [],
+          "card": "mage-frostbolt"
+        },
+        {
+          "addons": [],
+          "card": "mage-fire-blast"
+        },
+        {
+          "addons": [],
+          "card": "mage-arcane-intellect"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-8-ley-staff"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-32-robe-of-apprenticeship"
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "challenge",
+      "hero": "burbon-fang",
+      "target": "quest-horde-dark-hills-dark-hearts:gnoll:pyrewood:0:red",
+      "allies": []
+    },
+    {
+      "type": "attacker",
+      "hero": "burbon-fang"
+    },
+    {
+      "type": "ability",
+      "hero": "burbon-fang",
+      "card": "hunter-scorpid-sting",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "ability",
+      "hero": "burbon-fang",
+      "card": "hunter-lethal-shots",
+      "ability": "reroll-3",
+      "args": {
+        "dice": [
+          0,
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "ability",
+      "hero": "burbon-fang",
+      "card": "burbon-fang-ranged",
+      "ability": "after-reroll",
+      "args": {
+        "dice": [
+          11
+        ]
+      }
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "closeBattle"
+    },
+    {
+      "type": "reward",
+      "hero": "burbon-fang",
+      "card": "triangle-12-iridescent-hammer"
+    },
+    {
+      "type": "reward",
+      "hero": "burbon-fang",
+      "card": "triangle-33-cured-leather-armor",
+      "discard": "triangle-24-neophytes-robe"
+    },
+    {
+      "type": "quest",
+      "tier": "yellow"
+    },
+    {
+      "type": "travel",
+      "hero": "burbon-fang",
+      "path": [
+        "ambermill",
+        "azure"
+      ]
+    },
+    {
+      "type": "train",
+      "hero": "brandon-lightstone",
+      "cards": [
+        "paladin-concentration-aura"
+      ]
+    },
+    {
+      "type": "rest",
+      "hero": "brandon-lightstone",
+      "health": 0
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "brandon-lightstone",
+      "slots": [
+        {
+          "card": "paladin-blessing-of-might",
+          "addons": []
+        },
+        {
+          "card": "paladin-concentration-aura",
+          "addons": []
+        },
+        {
+          "card": "paladin-seal-of-righteousness",
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "card": "triangle-41-iridescent-hammer",
+          "addons": []
+        },
+        {
+          "card": "paladin-hammer-of-justice",
+          "addons": []
+        },
+        {
+          "card": "triangle-9-soldiers-armor",
+          "addons": [
+            "triangle-11-cobalt-buckler"
+          ]
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "manage",
+      "hero": "burbon-fang",
+      "slots": [
+        {
+          "card": "hunter-aspect-of-the-monkey",
+          "addons": []
+        },
+        {
+          "card": "hunter-bear",
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "card": "triangle-18-scimitar",
+          "addons": []
+        },
+        {
+          "card": "hunter-scorpid-sting",
+          "addons": []
+        },
+        {
+          "card": "triangle-33-cured-leather-armor",
+          "addons": []
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "event-choice",
+      "hero": "burbon-fang",
+      "choice": {
+        "region": "aerie"
+      }
+    },
+    {
+      "type": "event-choice",
+      "hero": "brandon-lightstone",
+      "choice": {
+        "region": "aerie"
+      }
+    },
+    {
+      "type": "event-choice",
+      "hero": "grumbaz-crowsblood",
+      "choice": {
+        "region": "caer"
+      }
+    },
+    {
+      "type": "event-choice",
+      "hero": "sofeea-icecall",
+      "choice": {
+        "region": "caer"
+      }
+    },
+    {
+      "type": "bid",
+      "hero": "brandon-lightstone",
+      "amount": 0
+    },
+    {
+      "type": "bid",
+      "hero": "burbon-fang",
+      "amount": 0
+    },
+    {
+      "type": "bid",
+      "hero": "grumbaz-crowsblood",
+      "amount": 3
+    },
+    {
+      "type": "bid",
+      "hero": "sofeea-icecall",
+      "amount": 0
+    },
+    {
+      "type": "travel",
+      "hero": "grumbaz-crowsblood",
+      "path": [
+        "pestilent",
+        "tyrs"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "sofeea-icecall",
+      "path": [
+        "pestilent",
+        "tyrs"
+      ]
+    },
+    {
+      "type": "challenge",
+      "hero": "sofeea-icecall",
+      "target": "quest-horde-belly-of-the-beast:crusader:tyrs:0:green",
+      "allies": [
+        "grumbaz-crowsblood"
+      ]
+    },
+    {
+      "type": "attacker",
+      "hero": "sofeea-icecall"
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "mage-frostbolt",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "mage-fire-blast",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "sofeea-icecall-ranged",
+      "ability": "empower",
+      "args": {}
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        0,
+        2,
+        6,
+        7
+      ]
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "mage-arcane-focus",
+      "ability": "reroll",
+      "args": {
+        "dice": [
+          7,
+          8
+        ]
+      }
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "attacker",
+      "hero": "grumbaz-crowsblood"
+    },
+    {
+      "type": "ability",
+      "hero": "grumbaz-crowsblood",
+      "card": "warrior-heroic-strike",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        0,
+        1,
+        3,
+        6
+      ]
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "wound",
+      "hero": "sofeea-icecall"
+    },
+    {
+      "type": "wound",
+      "hero": "sofeea-icecall"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "closeBattle"
+    },
+    {
+      "type": "talent",
+      "hero": "grumbaz-crowsblood",
+      "card": "warrior-impale"
+    },
+    {
+      "type": "talent",
+      "hero": "sofeea-icecall",
+      "card": "mage-combustion"
+    },
+    {
+      "type": "reward",
+      "hero": "sofeea-icecall",
+      "card": "triangle-5-minor-agility-potion"
+    },
+    {
+      "type": "reward",
+      "hero": "grumbaz-crowsblood",
+      "card": "triangle-27-fine-longbow"
+    },
+    {
+      "type": "reward",
+      "hero": "sofeea-icecall",
+      "card": "special-cowl-of-heroes"
+    },
+    {
+      "type": "quest",
+      "tier": "red"
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "grumbaz-crowsblood",
+      "slots": [
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "warrior-battle-shout"
+        },
+        {
+          "addons": [],
+          "card": "warrior-heroic-strike"
+        },
+        {
+          "addons": [],
+          "card": "triangle-27-fine-longbow"
+        },
+        {
+          "addons": [],
+          "card": "triangle-31-scimitar"
+        },
+        {
+          "addons": [],
+          "card": "warrior-rend"
+        },
+        {
+          "addons": [
+            "triangle-16-archers-buckler"
+          ],
+          "card": "triangle-38-cured-leather-armor"
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "manage",
+      "hero": "sofeea-icecall",
+      "slots": [
+        {
+          "addons": [],
+          "card": "mage-frostbolt"
+        },
+        {
+          "addons": [],
+          "card": "mage-fire-blast"
+        },
+        {
+          "addons": [],
+          "card": "mage-arcane-intellect"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-8-ley-staff"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [
+            "special-cowl-of-heroes"
+          ],
+          "card": "triangle-32-robe-of-apprenticeship"
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "travel",
+      "hero": "brandon-lightstone",
+      "path": [
+        "quel-danil",
+        "altar"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "brandon-lightstone",
+      "path": [
+        "shaol"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "burbon-fang",
+      "path": [
+        "quel-danil",
+        "altar"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "burbon-fang",
+      "path": [
+        "shaol"
+      ]
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "brandon-lightstone",
+      "slots": [
+        {
+          "card": "paladin-blessing-of-might",
+          "addons": []
+        },
+        {
+          "card": "paladin-concentration-aura",
+          "addons": []
+        },
+        {
+          "card": "paladin-seal-of-righteousness",
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "card": "triangle-41-iridescent-hammer",
+          "addons": []
+        },
+        {
+          "card": "paladin-hammer-of-justice",
+          "addons": []
+        },
+        {
+          "card": "triangle-9-soldiers-armor",
+          "addons": [
+            "triangle-11-cobalt-buckler"
+          ]
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "manage",
+      "hero": "burbon-fang",
+      "slots": [
+        {
+          "card": "hunter-aspect-of-the-monkey",
+          "addons": []
+        },
+        {
+          "card": "hunter-bear",
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "card": "triangle-18-scimitar",
+          "addons": []
+        },
+        {
+          "card": "hunter-scorpid-sting",
+          "addons": []
+        },
+        {
+          "card": "triangle-33-cured-leather-armor",
+          "addons": []
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "travel",
+      "hero": "grumbaz-crowsblood",
+      "path": [
+        "pestilent"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "sofeea-icecall",
+      "path": [
+        "pestilent"
+      ]
+    },
+    {
+      "type": "trade",
+      "hero": "sofeea-icecall",
+      "to": "grumbaz-crowsblood",
+      "items": [],
+      "receiveItems": [],
+      "gold": 3,
+      "receiveGold": 0
+    },
+    {
+      "type": "town",
+      "hero": "sofeea-icecall",
+      "health": 0,
+      "operations": [
+        {
+          "op": "sell",
+          "card": "triangle-4-gnarled-staff"
+        },
+        {
+          "op": "train",
+          "card": "mage-arcane-missiles"
+        },
+        {
+          "op": "train",
+          "card": "mage-cone-of-cold"
+        }
+      ]
+    },
+    {
+      "type": "town",
+      "hero": "grumbaz-crowsblood",
+      "health": 0,
+      "operations": [
+        {
+          "op": "train",
+          "card": "warrior-bloodrage"
+        },
+        {
+          "op": "train",
+          "card": "warrior-defensive-stance"
+        }
+      ]
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "grumbaz-crowsblood",
+      "slots": [
+        {
+          "addons": [],
+          "card": "warrior-defensive-stance"
+        },
+        {
+          "addons": [],
+          "card": "warrior-battle-shout"
+        },
+        {
+          "addons": [],
+          "card": "warrior-bloodrage"
+        },
+        {
+          "addons": [],
+          "card": "triangle-27-fine-longbow"
+        },
+        {
+          "addons": [],
+          "card": "triangle-31-scimitar"
+        },
+        {
+          "addons": [],
+          "card": "warrior-rend"
+        },
+        {
+          "addons": [
+            "triangle-16-archers-buckler"
+          ],
+          "card": "triangle-38-cured-leather-armor"
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "manage",
+      "hero": "sofeea-icecall",
+      "slots": [
+        {
+          "addons": [],
+          "card": "mage-cone-of-cold"
+        },
+        {
+          "addons": [],
+          "card": "mage-fire-blast"
+        },
+        {
+          "addons": [],
+          "card": "mage-arcane-intellect"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-8-ley-staff"
+        },
+        {
+          "addons": [],
+          "card": "mage-arcane-missiles"
+        },
+        {
+          "addons": [
+            "special-cowl-of-heroes"
+          ],
+          "card": "triangle-32-robe-of-apprenticeship"
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "event-choice",
+      "hero": "sofeea-icecall",
+      "choice": {
+        "mode": "skip"
+      }
+    },
+    {
+      "type": "event-choice",
+      "hero": "burbon-fang",
+      "choice": {
+        "mode": "skip"
+      }
+    },
+    {
+      "type": "event-choice",
+      "hero": "brandon-lightstone",
+      "choice": {
+        "mode": "gold"
+      }
+    },
+    {
+      "type": "event-choice",
+      "hero": "burbon-fang",
+      "choice": {
+        "mode": "gold"
+      }
+    },
+    {
+      "type": "event-choice",
+      "hero": "sofeea-icecall",
+      "choice": {
+        "mode": "gold"
+      }
+    },
+    {
+      "type": "event-choice",
+      "hero": "grumbaz-crowsblood",
+      "choice": {
+        "mode": "gold"
+      }
+    },
+    {
+      "type": "challenge",
+      "hero": "brandon-lightstone",
+      "target": "quest-alliance-alone-in-the-wild:wildkin:shaol:0:green",
+      "allies": [
+        "burbon-fang"
+      ]
+    },
+    {
+      "type": "attacker",
+      "hero": "burbon-fang"
+    },
+    {
+      "type": "ability",
+      "hero": "burbon-fang",
+      "card": "hunter-scorpid-sting",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "ability",
+      "hero": "burbon-fang",
+      "card": "hunter-lethal-shots",
+      "ability": "reroll-3",
+      "args": {
+        "dice": [
+          0,
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "attacker",
+      "hero": "brandon-lightstone"
+    },
+    {
+      "type": "ability",
+      "hero": "brandon-lightstone",
+      "card": "paladin-hammer-of-justice",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "ability",
+      "hero": "brandon-lightstone",
+      "card": "brandon-lightstone-ranged",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "closeBattle"
+    },
+    {
+      "type": "talent",
+      "hero": "burbon-fang",
+      "card": "hunter-mortal-shots"
+    },
+    {
+      "type": "reward",
+      "hero": "burbon-fang",
+      "card": "square-17-enchanted-gold-bloodrobe",
+      "discard": "triangle-3-bent-staff"
+    },
+    {
+      "type": "reward",
+      "hero": "brandon-lightstone",
+      "card": "square-2-scroll-of-great-strength"
+    },
+    {
+      "type": "quest",
+      "tier": "red"
+    },
+    {
+      "type": "travel",
+      "hero": "brandon-lightstone",
+      "path": [
+        "altar"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "burbon-fang",
+      "path": [
+        "altar"
+      ]
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "brandon-lightstone",
+      "slots": [
+        {
+          "card": "paladin-blessing-of-might",
+          "addons": []
+        },
+        {
+          "card": "paladin-concentration-aura",
+          "addons": []
+        },
+        {
+          "card": "paladin-seal-of-righteousness",
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "card": "triangle-41-iridescent-hammer",
+          "addons": []
+        },
+        {
+          "card": "paladin-hammer-of-justice",
+          "addons": []
+        },
+        {
+          "card": "triangle-9-soldiers-armor",
+          "addons": [
+            "triangle-11-cobalt-buckler"
+          ]
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "manage",
+      "hero": "burbon-fang",
+      "slots": [
+        {
+          "card": "hunter-aspect-of-the-monkey",
+          "addons": []
+        },
+        {
+          "card": "hunter-bear",
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "card": "triangle-18-scimitar",
+          "addons": []
+        },
+        {
+          "card": "hunter-scorpid-sting",
+          "addons": []
+        },
+        {
+          "card": "square-17-enchanted-gold-bloodrobe",
+          "addons": []
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "travel",
+      "hero": "grumbaz-crowsblood",
+      "path": [
+        "blackwood",
+        "northpass",
+        "stratholme"
+      ],
+      "power": "auction-trusty-mount"
+    },
+    {
+      "type": "rest",
+      "hero": "grumbaz-crowsblood",
+      "health": 0
+    },
+    {
+      "type": "travel",
+      "hero": "sofeea-icecall",
+      "path": [
+        "blackwood",
+        "northpass"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "sofeea-icecall",
+      "path": [
+        "stratholme"
+      ]
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "grumbaz-crowsblood",
+      "slots": [
+        {
+          "addons": [],
+          "card": "warrior-defensive-stance"
+        },
+        {
+          "addons": [],
+          "card": "warrior-battle-shout"
+        },
+        {
+          "addons": [],
+          "card": "warrior-bloodrage"
+        },
+        {
+          "addons": [],
+          "card": "triangle-27-fine-longbow"
+        },
+        {
+          "addons": [],
+          "card": "triangle-31-scimitar"
+        },
+        {
+          "addons": [],
+          "card": "warrior-rend"
+        },
+        {
+          "addons": [
+            "triangle-16-archers-buckler"
+          ],
+          "card": "triangle-38-cured-leather-armor"
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "manage",
+      "hero": "sofeea-icecall",
+      "slots": [
+        {
+          "addons": [],
+          "card": "mage-cone-of-cold"
+        },
+        {
+          "addons": [],
+          "card": "mage-fire-blast"
+        },
+        {
+          "addons": [],
+          "card": "mage-arcane-intellect"
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": [],
+          "card": "triangle-8-ley-staff"
+        },
+        {
+          "addons": [],
+          "card": "mage-arcane-missiles"
+        },
+        {
+          "addons": [
+            "special-cowl-of-heroes"
+          ],
+          "card": "triangle-32-robe-of-apprenticeship"
+        }
+      ],
+      "discard": [],
+      "reEquip": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "challenge",
+      "hero": "brandon-lightstone",
+      "target": "quest-alliance-eyes-in-the-ruins:spider:altar:0:green",
+      "allies": [
+        "burbon-fang"
+      ]
+    },
+    {
+      "type": "attacker",
+      "hero": "burbon-fang"
+    },
+    {
+      "type": "ability",
+      "hero": "burbon-fang",
+      "card": "hunter-scorpid-sting",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        8
+      ]
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        2
+      ]
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        4
+      ]
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "attacker",
+      "hero": "brandon-lightstone"
+    },
+    {
+      "type": "ability",
+      "hero": "brandon-lightstone",
+      "card": "brandon-lightstone-ranged",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "ability",
+      "hero": "brandon-lightstone",
+      "card": "square-2-scroll-of-great-strength",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        10
+      ]
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        1
+      ]
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        9
+      ]
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance",
+      "targets": [
+        "quest-alliance-eyes-in-the-ruins:spider:altar:0:green",
+        "quest-alliance-eyes-in-the-ruins:spider:altar:0:red"
+      ]
+    },
+    {
+      "type": "advance",
+      "targets": [
+        "quest-alliance-eyes-in-the-ruins:spider:altar:0:green",
+        "quest-alliance-eyes-in-the-ruins:spider:altar:0:red"
+      ]
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "attacker",
+      "hero": "burbon-fang"
+    },
+    {
+      "type": "ability",
+      "hero": "burbon-fang",
+      "card": "hunter-scorpid-sting",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "penalty",
+      "dice": [
+        4,
+        5
+      ]
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        2
+      ]
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "ability",
+      "hero": "burbon-fang",
+      "card": "burbon-fang-ranged",
+      "ability": "after-reroll",
+      "args": {
+        "dice": [
+          1
+        ]
+      }
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "attacker",
+      "hero": "brandon-lightstone"
+    },
+    {
+      "type": "ability",
+      "hero": "brandon-lightstone",
+      "card": "brandon-lightstone-ranged",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "ability",
+      "hero": "brandon-lightstone",
+      "card": "paladin-hammer-of-justice",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "penalty",
+      "dice": [
+        2,
+        3
+      ]
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        4
+      ]
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        9
+      ]
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "closeBattle"
+    },
+    {
+      "type": "talent",
+      "hero": "brandon-lightstone",
+      "card": "paladin-benediction"
+    },
+    {
+      "type": "reward",
+      "hero": "brandon-lightstone",
+      "card": "square-27-battlesmasher-of-the-bear"
+    },
+    {
+      "type": "quest",
+      "tier": "red"
+    },
+    {
+      "type": "train",
+      "hero": "brandon-lightstone",
+      "cards": [
+        "paladin-blessing-of-protection",
+        "paladin-holy-light"
+      ]
+    },
+    {
+      "type": "travel",
+      "hero": "burbon-fang",
+      "path": [
+        "skulk"
+      ]
+    },
+    {
+      "type": "endActions"
+    },
+    {
+      "type": "manage",
+      "hero": "brandon-lightstone",
+      "slots": [
+        {
+          "card": "paladin-blessing-of-protection",
+          "addons": []
+        },
+        {
+          "card": "paladin-concentration-aura",
+          "addons": []
+        },
+        {
+          "card": "paladin-seal-of-righteousness",
+          "addons": []
+        },
+        {
+          "card": "paladin-hammer-of-justice",
+          "addons": []
+        },
+        {
+          "card": "triangle-41-iridescent-hammer",
+          "addons": []
+        },
+        {
+          "card": "paladin-holy-light",
+          "addons": []
+        },
+        {
+          "card": "triangle-9-soldiers-armor",
+          "addons": [
+            "triangle-11-cobalt-buckler"
+          ]
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "manage",
+      "hero": "burbon-fang",
+      "slots": [
+        {
+          "card": "hunter-aspect-of-the-monkey",
+          "addons": []
+        },
+        {
+          "card": "hunter-bear",
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "card": "triangle-18-scimitar",
+          "addons": []
+        },
+        {
+          "card": "hunter-scorpid-sting",
+          "addons": []
+        },
+        {
+          "card": "square-17-enchanted-gold-bloodrobe",
+          "addons": []
+        }
+      ],
+      "discard": []
+    },
+    {
+      "type": "endManagement"
+    },
+    {
+      "type": "challenge",
+      "hero": "grumbaz-crowsblood",
+      "target": "kelthuzad",
+      "allies": [
+        "sofeea-icecall"
+      ]
+    },
+    {
+      "type": "attacker",
+      "hero": "sofeea-icecall"
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "mage-cone-of-cold",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "mage-fire-blast",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "sofeea-icecall-ranged",
+      "ability": "empower",
+      "args": {}
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "mage-arcane-missiles",
+      "ability": "pool",
+      "args": {}
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "triangle-5-minor-agility-potion",
+      "ability": "after-pool",
+      "args": {}
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        2,
+        1,
+        3,
+        6
+      ]
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "mage-arcane-focus",
+      "ability": "reroll",
+      "args": {
+        "dice": [
+          4,
+          8,
+          10,
+          12
+        ]
+      }
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "ability",
+      "hero": "sofeea-icecall",
+      "card": "mage-combustion",
+      "ability": "after-reroll-5",
+      "args": {
+        "dice": [
+          0,
+          8,
+          9,
+          10,
+          11
+        ]
+      }
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "attacker",
+      "hero": "grumbaz-crowsblood"
+    },
+    {
+      "type": "roll"
+    },
+    {
+      "type": "ability",
+      "hero": "grumbaz-crowsblood",
+      "card": "warrior-rend",
+      "ability": "after-pool",
+      "args": {
+        "dice": [
+          2
+        ]
+      }
+    },
+    {
+      "type": "ability",
+      "hero": "grumbaz-crowsblood",
+      "card": "warrior-impale",
+      "ability": "after-pool",
+      "args": {
+        "dice": [
+          5
+        ]
+      }
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "reroll",
+      "dice": [
+        3,
+        9,
+        4,
+        10
+      ]
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "monster"
+    },
+    {
+      "type": "tokens"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "wound",
+      "hero": "grumbaz-crowsblood"
+    },
+    {
+      "type": "wound",
+      "hero": "sofeea-icecall"
+    },
+    {
+      "type": "wound",
+      "hero": "sofeea-icecall"
+    },
+    {
+      "type": "advance"
+    },
+    {
+      "type": "closeBattle"
+    }
+  ]
+}

@@ -1,3 +1,11 @@
+# Browser playtest v0.7 · 28. 9. 2026.
+
+Odigrana je cela 2v2 partija: Codex je kroz UI vodio Grumbaza i Sofeeu (Horde), a Balanced botovi Brandona i Burbona (Alliance). **Horde je pobedila Kel’Thuzada u 25. potezu**, sa oba lika živa. Proveren je replay svih **684 naredbe / 685 stanja** i čuvanje rezultata posle reload-a.
+
+Završna provera: **323/323 testova u 20 datoteka**, TypeScript/server/Vite build prolazi. Ispravljene su nejasne borbene opcije i opisi, kao i preuzimanje klika od strane nove borbene faze i preskakanje odluke brzim ponavljanjem klika. Detalji su u [punom izveštaju i zapisima partije](FULL-GAME-FLOW-2V2.md), koji razdvaja stvarno odigrane situacije od preostalih granica pokrivenosti.
+
+---
+
 # Provjera v0.6 · 27. 9. 2026.
 
 Aktivni paket: `base-2005-faq-1.4-v6`. Detalji opreme, špilova, FAQ ispravki, varijanti i botova su u [RULES-AUDIT-V6.md](RULES-AUDIT-V6.md).

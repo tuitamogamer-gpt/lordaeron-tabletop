@@ -1,0 +1,1842 @@
+{
+  "input": "docs/playtests/horde-2v2-2026-09-28.session.json",
+  "setup": {
+    "seed": 3374075278,
+    "roster": [
+      "grumbaz-crowsblood",
+      "sofeea-icecall",
+      "brandon-lightstone",
+      "burbon-fang"
+    ],
+    "overlord": "kelthuzad",
+    "variants": {}
+  },
+  "commands": 684,
+  "checkedStates": 685,
+  "replayIdentical": true,
+  "phase": "finished",
+  "turn": 25,
+  "winner": "horde",
+  "quests": [
+    {
+      "id": "quest-horde-danger-in-stillwater",
+      "name": "Danger in Stillwater",
+      "faction": "horde"
+    },
+    {
+      "id": "quest-alliance-dogs-in-the-mill",
+      "name": "Dogs in the Mill",
+      "faction": "alliance"
+    },
+    {
+      "id": "quest-horde-terror-in-the-fields",
+      "name": "Terror in the Fields",
+      "faction": "horde"
+    },
+    {
+      "id": "quest-alliance-dark-alliances",
+      "name": "Dark Alliances",
+      "faction": "alliance"
+    },
+    {
+      "id": "quest-horde-evil-brew",
+      "name": "Evil Brew",
+      "faction": "horde"
+    },
+    {
+      "id": "quest-horde-unwelcome-visitors",
+      "name": "Unwelcome Visitors",
+      "faction": "horde"
+    },
+    {
+      "id": "quest-alliance-murlocs-in-the-mines",
+      "name": "Murlocs in the Mines",
+      "faction": "alliance"
+    },
+    {
+      "id": "quest-horde-legacy-of-evil",
+      "name": "Legacy of Evil",
+      "faction": "horde"
+    },
+    {
+      "id": "quest-alliance-island-of-the-muckdwellers",
+      "name": "Island of the Muckdwellers",
+      "faction": "alliance"
+    },
+    {
+      "id": "quest-alliance-serpents-in-the-lake",
+      "name": "Serpents in the Lake",
+      "faction": "alliance"
+    },
+    {
+      "id": "quest-horde-hinterlands-outrunners",
+      "name": "Hinterlands Outrunners",
+      "faction": "horde"
+    },
+    {
+      "id": "quest-horde-dark-hills-dark-hearts",
+      "name": "Dark Hills, Dark Hearts",
+      "faction": "horde"
+    },
+    {
+      "id": "quest-horde-belly-of-the-beast",
+      "name": "Belly of the Beast",
+      "faction": "horde"
+    },
+    {
+      "id": "quest-alliance-alone-in-the-wild",
+      "name": "Alone in the Wild",
+      "faction": "alliance"
+    },
+    {
+      "id": "quest-alliance-eyes-in-the-ruins",
+      "name": "Eyes in the Ruins",
+      "faction": "alliance"
+    }
+  ],
+  "events": [
+    {
+      "id": "event-9",
+      "name": "Traveling Merchants"
+    },
+    {
+      "id": "event-12",
+      "name": "Subterfuge"
+    },
+    {
+      "id": "event-19",
+      "name": "Auction House"
+    },
+    {
+      "id": "event-31",
+      "name": "The Hinterlands War"
+    },
+    {
+      "id": "event-35",
+      "name": "Arcane Corruption"
+    },
+    {
+      "id": "event-28",
+      "name": "New Horizons"
+    },
+    {
+      "id": "event-26",
+      "name": "The Beasts of Lordaeron"
+    },
+    {
+      "id": "event-49",
+      "name": "Goblin Merchant"
+    },
+    {
+      "id": "event-11",
+      "name": "Spread the Plague"
+    },
+    {
+      "id": "event-46",
+      "name": "Subterfuge"
+    },
+    {
+      "id": "event-6",
+      "name": "Goblin Zeppelin"
+    },
+    {
+      "id": "event-32",
+      "name": "Auction House"
+    },
+    {
+      "id": "event-39",
+      "name": "Foul Plaguewinds"
+    },
+    {
+      "id": "event-43",
+      "name": "New Horizons"
+    },
+    {
+      "id": "event-45",
+      "name": "Another Path to Power"
+    },
+    {
+      "id": "event-22",
+      "name": "The Old Snake"
+    },
+    {
+      "id": "event-52",
+      "name": "Daecris of the Many"
+    }
+  ],
+  "phases": [
+    "actions",
+    "combat",
+    "reward",
+    "management",
+    "event",
+    "finished"
+  ],
+  "combatStages": [
+    "attacker",
+    "pool",
+    "after-pool",
+    "reroll",
+    "after-reroll",
+    "tokens",
+    "defense",
+    "resolution",
+    "over",
+    "wounds",
+    "round-end",
+    "penalty"
+  ],
+  "types": {
+    "travel": 49,
+    "challenge": 19,
+    "attacker": 40,
+    "ability": 53,
+    "roll": 40,
+    "advance": 127,
+    "monster": 40,
+    "tokens": 40,
+    "closeBattle": 19,
+    "quest": 15,
+    "endActions": 24,
+    "manage": 48,
+    "endManagement": 24,
+    "reroll": 32,
+    "reward": 24,
+    "train": 6,
+    "event-choice": 24,
+    "wound": 25,
+    "respawn": 2,
+    "trade": 2,
+    "talent": 12,
+    "bid": 8,
+    "rest": 5,
+    "town": 4,
+    "penalty": 2
+  },
+  "heroes": [
+    {
+      "id": "grumbaz-crowsblood",
+      "location": "stratholme",
+      "health": 6,
+      "energy": 5,
+      "gold": 8,
+      "level": 4,
+      "xp": 19,
+      "actions": 1,
+      "curse": 0,
+      "stun": 0,
+      "learned": [
+        "warrior-battle-shout",
+        "warrior-heroic-strike",
+        "warrior-rend",
+        "warrior-bloodrage",
+        "warrior-defensive-stance"
+      ],
+      "talents": [
+        "warrior-anger-management",
+        "warrior-piercing-howl",
+        "warrior-impale"
+      ],
+      "bag": [],
+      "slots": [
+        {
+          "card": "warrior-defensive-stance",
+          "addons": []
+        },
+        {
+          "card": "warrior-battle-shout",
+          "addons": []
+        },
+        {
+          "card": "warrior-bloodrage",
+          "addons": []
+        },
+        {
+          "card": "triangle-27-fine-longbow",
+          "addons": []
+        },
+        {
+          "card": "triangle-31-scimitar",
+          "addons": []
+        },
+        {
+          "card": "warrior-rend",
+          "addons": []
+        },
+        {
+          "card": "triangle-38-cured-leather-armor",
+          "addons": [
+            "triangle-16-archers-buckler"
+          ]
+        }
+      ],
+      "pets": {},
+      "auctionItems": [
+        "auction-trusty-mount"
+      ],
+      "talentChoices": []
+    },
+    {
+      "id": "sofeea-icecall",
+      "location": "stratholme",
+      "health": 4,
+      "energy": 5,
+      "gold": 8,
+      "level": 4,
+      "xp": 19,
+      "actions": 1,
+      "curse": 0,
+      "stun": 0,
+      "learned": [
+        "mage-arcane-intellect",
+        "mage-frostbolt",
+        "mage-fire-blast",
+        "mage-arcane-missiles",
+        "mage-cone-of-cold"
+      ],
+      "talents": [
+        "mage-arcane-focus",
+        "mage-impact",
+        "mage-combustion"
+      ],
+      "bag": [
+        "triangle-46-minor-mana-potion"
+      ],
+      "slots": [
+        {
+          "card": "mage-cone-of-cold",
+          "addons": []
+        },
+        {
+          "card": "mage-fire-blast",
+          "addons": []
+        },
+        {
+          "card": "mage-arcane-intellect",
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "card": "triangle-8-ley-staff",
+          "addons": []
+        },
+        {
+          "card": "mage-arcane-missiles",
+          "addons": []
+        },
+        {
+          "card": "triangle-32-robe-of-apprenticeship",
+          "addons": [
+            "special-cowl-of-heroes"
+          ]
+        }
+      ],
+      "pets": {},
+      "auctionItems": [
+        "auction-boots-of-endurance"
+      ],
+      "talentChoices": []
+    },
+    {
+      "id": "brandon-lightstone",
+      "location": "altar",
+      "health": 9,
+      "energy": 6,
+      "gold": 3,
+      "level": 4,
+      "xp": 20,
+      "actions": 0,
+      "curse": 0,
+      "stun": 0,
+      "learned": [
+        "paladin-seal-of-righteousness",
+        "paladin-blessing-of-might",
+        "paladin-hammer-of-justice",
+        "paladin-concentration-aura",
+        "paladin-blessing-of-protection",
+        "paladin-holy-light"
+      ],
+      "talents": [
+        "paladin-mace-specialization",
+        "paladin-reckoning",
+        "paladin-benediction"
+      ],
+      "bag": [
+        "triangle-40-skycaller",
+        "triangle-1-trogg-club",
+        "square-27-battlesmasher-of-the-bear"
+      ],
+      "slots": [
+        {
+          "card": "paladin-blessing-of-protection",
+          "addons": []
+        },
+        {
+          "card": "paladin-concentration-aura",
+          "addons": []
+        },
+        {
+          "card": "paladin-seal-of-righteousness",
+          "addons": []
+        },
+        {
+          "card": "paladin-hammer-of-justice",
+          "addons": []
+        },
+        {
+          "card": "triangle-41-iridescent-hammer",
+          "addons": []
+        },
+        {
+          "card": "paladin-holy-light",
+          "addons": []
+        },
+        {
+          "card": "triangle-9-soldiers-armor",
+          "addons": [
+            "triangle-11-cobalt-buckler"
+          ]
+        }
+      ],
+      "pets": {},
+      "auctionItems": [],
+      "talentChoices": []
+    },
+    {
+      "id": "burbon-fang",
+      "location": "skulk",
+      "health": 8,
+      "energy": 6,
+      "gold": 36,
+      "level": 4,
+      "xp": 20,
+      "actions": 0,
+      "curse": 0,
+      "stun": 0,
+      "learned": [
+        "hunter-bear",
+        "hunter-scorpid-sting",
+        "hunter-aspect-of-the-monkey"
+      ],
+      "talents": [
+        "hunter-lightning-reflexes",
+        "hunter-lethal-shots",
+        "hunter-mortal-shots"
+      ],
+      "bag": [
+        "triangle-12-iridescent-hammer",
+        "triangle-45-footman-tunic",
+        "triangle-33-cured-leather-armor"
+      ],
+      "slots": [
+        {
+          "card": "hunter-aspect-of-the-monkey",
+          "addons": []
+        },
+        {
+          "card": "hunter-bear",
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "addons": []
+        },
+        {
+          "card": "triangle-18-scimitar",
+          "addons": []
+        },
+        {
+          "card": "hunter-scorpid-sting",
+          "addons": []
+        },
+        {
+          "card": "square-17-enchanted-gold-bloodrobe",
+          "addons": []
+        }
+      ],
+      "pets": {
+        "hunter-bear": 1
+      },
+      "auctionItems": [],
+      "talentChoices": []
+    }
+  ],
+  "combats": [
+    {
+      "command": 19,
+      "turn": 1,
+      "kind": "pve",
+      "first": "horde",
+      "region": "stillwater",
+      "rounds": 1,
+      "winner": "horde",
+      "defeated": []
+    },
+    {
+      "command": 43,
+      "turn": 2,
+      "kind": "pve",
+      "first": "alliance",
+      "region": "ambermill",
+      "rounds": 1,
+      "winner": "alliance",
+      "defeated": []
+    },
+    {
+      "command": 76,
+      "turn": 4,
+      "kind": "pve",
+      "first": "alliance",
+      "region": "ambermill",
+      "rounds": 1,
+      "winner": "horde",
+      "defeated": [
+        "brandon-lightstone"
+      ]
+    },
+    {
+      "command": 89,
+      "turn": 4,
+      "kind": "pve",
+      "first": "alliance",
+      "region": "ambermill",
+      "rounds": 1,
+      "winner": "horde",
+      "defeated": [
+        "burbon-fang"
+      ]
+    },
+    {
+      "command": 114,
+      "turn": 5,
+      "kind": "pve",
+      "first": "horde",
+      "region": "balnir",
+      "rounds": 1,
+      "winner": "horde",
+      "defeated": []
+    },
+    {
+      "command": 141,
+      "turn": 6,
+      "kind": "pve",
+      "first": "alliance",
+      "region": "sorrow",
+      "rounds": 1,
+      "winner": "alliance",
+      "defeated": []
+    },
+    {
+      "command": 199,
+      "turn": 7,
+      "kind": "pve",
+      "first": "horde",
+      "region": "undercity",
+      "rounds": 2,
+      "winner": "horde",
+      "defeated": []
+    },
+    {
+      "command": 242,
+      "turn": 8,
+      "kind": "pve",
+      "first": "alliance",
+      "region": "dalson",
+      "rounds": 2,
+      "winner": "alliance",
+      "defeated": []
+    },
+    {
+      "command": 275,
+      "turn": 9,
+      "kind": "pve",
+      "first": "horde",
+      "region": "undercity",
+      "rounds": 1,
+      "winner": "horde",
+      "defeated": []
+    },
+    {
+      "command": 342,
+      "turn": 12,
+      "kind": "pve",
+      "first": "alliance",
+      "region": "azure",
+      "rounds": 2,
+      "winner": "alliance",
+      "defeated": []
+    },
+    {
+      "command": 374,
+      "turn": 13,
+      "kind": "pve",
+      "first": "horde",
+      "region": "shining",
+      "rounds": 1,
+      "winner": "horde",
+      "defeated": []
+    },
+    {
+      "command": 394,
+      "turn": 14,
+      "kind": "pve",
+      "first": "alliance",
+      "region": "purgation",
+      "rounds": 1,
+      "winner": "alliance",
+      "defeated": []
+    },
+    {
+      "command": 424,
+      "turn": 16,
+      "kind": "pve",
+      "first": "alliance",
+      "region": "fenris",
+      "rounds": 1,
+      "winner": "alliance",
+      "defeated": []
+    },
+    {
+      "command": 457,
+      "turn": 17,
+      "kind": "pve",
+      "first": "horde",
+      "region": "quel-danil",
+      "rounds": 1,
+      "winner": "horde",
+      "defeated": []
+    },
+    {
+      "command": 480,
+      "turn": 18,
+      "kind": "pve",
+      "first": "alliance",
+      "region": "pyrewood",
+      "rounds": 1,
+      "winner": "alliance",
+      "defeated": []
+    },
+    {
+      "command": 525,
+      "turn": 19,
+      "kind": "pve",
+      "first": "horde",
+      "region": "tyrs",
+      "rounds": 1,
+      "winner": "horde",
+      "defeated": []
+    },
+    {
+      "command": 578,
+      "turn": 22,
+      "kind": "pve",
+      "first": "alliance",
+      "region": "shaol",
+      "rounds": 1,
+      "winner": "alliance",
+      "defeated": []
+    },
+    {
+      "command": 645,
+      "turn": 24,
+      "kind": "pve",
+      "first": "alliance",
+      "region": "altar",
+      "rounds": 2,
+      "winner": "alliance",
+      "defeated": []
+    },
+    {
+      "command": 684,
+      "turn": 25,
+      "kind": "pve",
+      "first": "horde",
+      "boss": "kelthuzad",
+      "region": "stratholme",
+      "rounds": 1,
+      "winner": "horde",
+      "defeated": []
+    }
+  ],
+  "turns": [
+    {
+      "turn": 1,
+      "faction": "horde",
+      "command": 1,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 1,
+          "xp": 0,
+          "health": 4,
+          "energy": 1,
+          "gold": 5,
+          "actions": 1,
+          "location": "stillwater"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 1,
+          "xp": 0,
+          "health": 2,
+          "energy": 4,
+          "gold": 5,
+          "actions": 2,
+          "location": "brill"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 1,
+          "xp": 0,
+          "health": 3,
+          "energy": 2,
+          "gold": 5,
+          "actions": 2,
+          "location": "southshore"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 1,
+          "xp": 0,
+          "health": 3,
+          "energy": 3,
+          "gold": 5,
+          "actions": 2,
+          "location": "southshore"
+        }
+      ]
+    },
+    {
+      "turn": 2,
+      "faction": "alliance",
+      "command": 24,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 1,
+          "xp": 2,
+          "health": 4,
+          "energy": 1,
+          "gold": 9,
+          "actions": 0,
+          "location": "stillwater"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 1,
+          "xp": 2,
+          "health": 2,
+          "energy": 3,
+          "gold": 8,
+          "actions": 0,
+          "location": "stillwater"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 1,
+          "xp": 0,
+          "health": 3,
+          "energy": 2,
+          "gold": 5,
+          "actions": 2,
+          "location": "southshore"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 1,
+          "xp": 0,
+          "health": 3,
+          "energy": 3,
+          "gold": 5,
+          "actions": 2,
+          "location": "southshore"
+        }
+      ]
+    },
+    {
+      "turn": 3,
+      "faction": "horde",
+      "command": 50,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 1,
+          "xp": 2,
+          "health": 4,
+          "energy": 1,
+          "gold": 9,
+          "actions": 2,
+          "location": "stillwater"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 1,
+          "xp": 2,
+          "health": 2,
+          "energy": 3,
+          "gold": 8,
+          "actions": 2,
+          "location": "stillwater"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 1,
+          "xp": 2,
+          "health": 3,
+          "energy": 2,
+          "gold": 7,
+          "actions": 0,
+          "location": "ambermill"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 1,
+          "xp": 2,
+          "health": 3,
+          "energy": 3,
+          "gold": 8,
+          "actions": 0,
+          "location": "ambermill"
+        }
+      ]
+    },
+    {
+      "turn": 4,
+      "faction": "horde",
+      "command": 58,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 1,
+          "xp": 2,
+          "health": 4,
+          "energy": 0,
+          "gold": 4,
+          "actions": 0,
+          "location": "tirisfal-outpost"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 1,
+          "xp": 2,
+          "health": 2,
+          "energy": 2,
+          "gold": 3,
+          "actions": 0,
+          "location": "tirisfal-outpost"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 1,
+          "xp": 2,
+          "health": 3,
+          "energy": 2,
+          "gold": 7,
+          "actions": 2,
+          "location": "ambermill"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 1,
+          "xp": 2,
+          "health": 3,
+          "energy": 3,
+          "gold": 8,
+          "actions": 2,
+          "location": "ambermill"
+        }
+      ]
+    },
+    {
+      "turn": 5,
+      "faction": "horde",
+      "command": 94,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 1,
+          "xp": 2,
+          "health": 4,
+          "energy": 0,
+          "gold": 1,
+          "actions": 2,
+          "location": "tirisfal-outpost"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 1,
+          "xp": 2,
+          "health": 2,
+          "energy": 2,
+          "gold": 0,
+          "actions": 2,
+          "location": "tirisfal-outpost"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 1,
+          "xp": 2,
+          "health": 1,
+          "energy": 1,
+          "gold": 6,
+          "actions": 0,
+          "location": "southshore"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 1,
+          "xp": 2,
+          "health": 1,
+          "energy": 1,
+          "gold": 7,
+          "actions": 0,
+          "location": "southshore"
+        }
+      ]
+    },
+    {
+      "turn": 6,
+      "faction": "alliance",
+      "command": 121,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 2,
+          "xp": 5,
+          "health": 6,
+          "energy": 4,
+          "gold": 4,
+          "actions": 0,
+          "location": "balnir"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 2,
+          "xp": 4,
+          "health": 3,
+          "energy": 6,
+          "gold": 3,
+          "actions": 0,
+          "location": "balnir"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 1,
+          "xp": 2,
+          "health": 1,
+          "energy": 1,
+          "gold": 6,
+          "actions": 2,
+          "location": "southshore"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 1,
+          "xp": 2,
+          "health": 1,
+          "energy": 1,
+          "gold": 7,
+          "actions": 2,
+          "location": "southshore"
+        }
+      ]
+    },
+    {
+      "turn": 7,
+      "faction": "alliance",
+      "command": 150,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 2,
+          "xp": 5,
+          "health": 6,
+          "energy": 4,
+          "gold": 4,
+          "actions": 2,
+          "location": "balnir"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 2,
+          "xp": 4,
+          "health": 3,
+          "energy": 6,
+          "gold": 3,
+          "actions": 2,
+          "location": "balnir"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 2,
+          "xp": 4,
+          "health": 5,
+          "energy": 4,
+          "gold": 6,
+          "actions": 0,
+          "location": "sorrow"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 2,
+          "xp": 4,
+          "health": 4,
+          "energy": 5,
+          "gold": 8,
+          "actions": 0,
+          "location": "sorrow"
+        }
+      ]
+    },
+    {
+      "turn": 8,
+      "faction": "alliance",
+      "command": 203,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 2,
+          "xp": 5,
+          "health": 3,
+          "energy": 4,
+          "gold": 4,
+          "actions": 0,
+          "location": "undercity"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 2,
+          "xp": 4,
+          "health": 3,
+          "energy": 5,
+          "gold": 0,
+          "actions": 0,
+          "location": "undercity"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 2,
+          "xp": 4,
+          "health": 5,
+          "energy": 4,
+          "gold": 6,
+          "actions": 2,
+          "location": "sorrow"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 2,
+          "xp": 4,
+          "health": 4,
+          "energy": 5,
+          "gold": 8,
+          "actions": 2,
+          "location": "sorrow"
+        }
+      ]
+    },
+    {
+      "turn": 9,
+      "faction": "horde",
+      "command": 249,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 2,
+          "xp": 5,
+          "health": 3,
+          "energy": 4,
+          "gold": 4,
+          "actions": 2,
+          "location": "undercity"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 2,
+          "xp": 4,
+          "health": 3,
+          "energy": 5,
+          "gold": 0,
+          "actions": 2,
+          "location": "undercity"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 2,
+          "xp": 6,
+          "health": 2,
+          "energy": 4,
+          "gold": 11,
+          "actions": 0,
+          "location": "dalson"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 2,
+          "xp": 6,
+          "health": 2,
+          "energy": 5,
+          "gold": 13,
+          "actions": 0,
+          "location": "dalson"
+        }
+      ]
+    },
+    {
+      "turn": 10,
+      "faction": "alliance",
+      "command": 281,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 2,
+          "xp": 7,
+          "health": 4,
+          "energy": 3,
+          "gold": 7,
+          "actions": 0,
+          "location": "undercity"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 2,
+          "xp": 6,
+          "health": 3,
+          "energy": 4,
+          "gold": 4,
+          "actions": 0,
+          "location": "undercity"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 2,
+          "xp": 6,
+          "health": 2,
+          "energy": 4,
+          "gold": 11,
+          "actions": 2,
+          "location": "dalson"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 2,
+          "xp": 6,
+          "health": 2,
+          "energy": 5,
+          "gold": 13,
+          "actions": 2,
+          "location": "dalson"
+        }
+      ]
+    },
+    {
+      "turn": 11,
+      "faction": "horde",
+      "command": 290,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 2,
+          "xp": 7,
+          "health": 4,
+          "energy": 3,
+          "gold": 7,
+          "actions": 2,
+          "location": "undercity"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 2,
+          "xp": 6,
+          "health": 3,
+          "energy": 4,
+          "gold": 4,
+          "actions": 2,
+          "location": "undercity"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 2,
+          "xp": 6,
+          "health": 2,
+          "energy": 2,
+          "gold": 0,
+          "actions": 0,
+          "location": "sorrow"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 2,
+          "xp": 6,
+          "health": 2,
+          "energy": 1,
+          "gold": 2,
+          "actions": 0,
+          "location": "sorrow"
+        }
+      ]
+    },
+    {
+      "turn": 12,
+      "faction": "alliance",
+      "command": 298,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 2,
+          "xp": 7,
+          "health": 6,
+          "energy": 3,
+          "gold": 1,
+          "actions": 0,
+          "location": "north-tide"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 2,
+          "xp": 6,
+          "health": 3,
+          "energy": 6,
+          "gold": 0,
+          "actions": 0,
+          "location": "north-tide"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 2,
+          "xp": 6,
+          "health": 2,
+          "energy": 2,
+          "gold": 0,
+          "actions": 2,
+          "location": "sorrow"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 2,
+          "xp": 6,
+          "health": 2,
+          "energy": 1,
+          "gold": 2,
+          "actions": 2,
+          "location": "sorrow"
+        }
+      ]
+    },
+    {
+      "turn": 13,
+      "faction": "alliance",
+      "command": 350,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 2,
+          "xp": 7,
+          "health": 6,
+          "energy": 3,
+          "gold": 1,
+          "actions": 2,
+          "location": "north-tide"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 2,
+          "xp": 6,
+          "health": 3,
+          "energy": 6,
+          "gold": 0,
+          "actions": 2,
+          "location": "north-tide"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 3,
+          "xp": 10,
+          "health": 7,
+          "energy": 5,
+          "gold": 2,
+          "actions": 0,
+          "location": "azure"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 2,
+          "xp": 8,
+          "health": 2,
+          "energy": 0,
+          "gold": 4,
+          "actions": 0,
+          "location": "azure"
+        }
+      ]
+    },
+    {
+      "turn": 14,
+      "faction": "alliance",
+      "command": 381,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 2,
+          "xp": 7,
+          "health": 6,
+          "energy": 4,
+          "gold": 1,
+          "actions": 0,
+          "location": "shining"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 2,
+          "xp": 9,
+          "health": 3,
+          "energy": 6,
+          "gold": 6,
+          "actions": 0,
+          "location": "shining"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 3,
+          "xp": 10,
+          "health": 7,
+          "energy": 5,
+          "gold": 2,
+          "actions": 2,
+          "location": "azure"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 2,
+          "xp": 8,
+          "health": 2,
+          "energy": 0,
+          "gold": 4,
+          "actions": 2,
+          "location": "azure"
+        }
+      ]
+    },
+    {
+      "turn": 15,
+      "faction": "horde",
+      "command": 403,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 2,
+          "xp": 7,
+          "health": 6,
+          "energy": 4,
+          "gold": 1,
+          "actions": 2,
+          "location": "shining"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 2,
+          "xp": 9,
+          "health": 3,
+          "energy": 6,
+          "gold": 6,
+          "actions": 2,
+          "location": "shining"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 3,
+          "xp": 10,
+          "health": 7,
+          "energy": 5,
+          "gold": 2,
+          "actions": 0,
+          "location": "fenris"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 3,
+          "xp": 11,
+          "health": 6,
+          "energy": 6,
+          "gold": 9,
+          "actions": 0,
+          "location": "purgation"
+        }
+      ]
+    },
+    {
+      "turn": 16,
+      "faction": "alliance",
+      "command": 411,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 2,
+          "xp": 7,
+          "health": 6,
+          "energy": 4,
+          "gold": 1,
+          "actions": 0,
+          "location": "quel-danil"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 2,
+          "xp": 9,
+          "health": 3,
+          "energy": 6,
+          "gold": 6,
+          "actions": 0,
+          "location": "quel-danil"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 3,
+          "xp": 10,
+          "health": 7,
+          "energy": 5,
+          "gold": 2,
+          "actions": 2,
+          "location": "fenris"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 3,
+          "xp": 11,
+          "health": 6,
+          "energy": 6,
+          "gold": 9,
+          "actions": 2,
+          "location": "purgation"
+        }
+      ]
+    },
+    {
+      "turn": 17,
+      "faction": "horde",
+      "command": 434,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 2,
+          "xp": 7,
+          "health": 6,
+          "energy": 4,
+          "gold": 1,
+          "actions": 2,
+          "location": "quel-danil"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 2,
+          "xp": 9,
+          "health": 3,
+          "energy": 6,
+          "gold": 6,
+          "actions": 2,
+          "location": "quel-danil"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 3,
+          "xp": 14,
+          "health": 7,
+          "energy": 3,
+          "gold": 12,
+          "actions": 0,
+          "location": "north-tide"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 3,
+          "xp": 11,
+          "health": 6,
+          "energy": 6,
+          "gold": 9,
+          "actions": 0,
+          "location": "pyrewood"
+        }
+      ]
+    },
+    {
+      "turn": 18,
+      "faction": "alliance",
+      "command": 468,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 3,
+          "xp": 10,
+          "health": 8,
+          "energy": 5,
+          "gold": 4,
+          "actions": 0,
+          "location": "seradane"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 3,
+          "xp": 11,
+          "health": 4,
+          "energy": 9,
+          "gold": 9,
+          "actions": 0,
+          "location": "shadra"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 3,
+          "xp": 14,
+          "health": 7,
+          "energy": 3,
+          "gold": 12,
+          "actions": 2,
+          "location": "north-tide"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 3,
+          "xp": 11,
+          "health": 6,
+          "energy": 6,
+          "gold": 9,
+          "actions": 2,
+          "location": "pyrewood"
+        }
+      ]
+    },
+    {
+      "turn": 19,
+      "faction": "alliance",
+      "command": 490,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 3,
+          "xp": 15,
+          "health": 8,
+          "energy": 5,
+          "gold": 9,
+          "actions": 2,
+          "location": "seradane"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 3,
+          "xp": 16,
+          "health": 4,
+          "energy": 9,
+          "gold": 14,
+          "actions": 2,
+          "location": "shadra"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 3,
+          "xp": 14,
+          "health": 7,
+          "energy": 3,
+          "gold": 3,
+          "actions": 0,
+          "location": "north-tide"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 3,
+          "xp": 14,
+          "health": 6,
+          "energy": 5,
+          "gold": 17,
+          "actions": 0,
+          "location": "azure"
+        }
+      ]
+    },
+    {
+      "turn": 20,
+      "faction": "alliance",
+      "command": 535,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 4,
+          "xp": 19,
+          "health": 11,
+          "energy": 6,
+          "gold": 11,
+          "actions": 0,
+          "location": "tyrs"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 4,
+          "xp": 19,
+          "health": 6,
+          "energy": 11,
+          "gold": 19,
+          "actions": 0,
+          "location": "tyrs"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 3,
+          "xp": 14,
+          "health": 7,
+          "energy": 3,
+          "gold": 3,
+          "actions": 2,
+          "location": "aerie"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 3,
+          "xp": 14,
+          "health": 6,
+          "energy": 5,
+          "gold": 17,
+          "actions": 2,
+          "location": "aerie"
+        }
+      ]
+    },
+    {
+      "turn": 21,
+      "faction": "horde",
+      "command": 543,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 4,
+          "xp": 19,
+          "health": 11,
+          "energy": 6,
+          "gold": 11,
+          "actions": 2,
+          "location": "tyrs"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 4,
+          "xp": 19,
+          "health": 6,
+          "energy": 11,
+          "gold": 19,
+          "actions": 2,
+          "location": "tyrs"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 3,
+          "xp": 14,
+          "health": 7,
+          "energy": 3,
+          "gold": 3,
+          "actions": 0,
+          "location": "shaol"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 3,
+          "xp": 14,
+          "health": 6,
+          "energy": 5,
+          "gold": 17,
+          "actions": 0,
+          "location": "shaol"
+        }
+      ]
+    },
+    {
+      "turn": 22,
+      "faction": "horde",
+      "command": 552,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 4,
+          "xp": 19,
+          "health": 11,
+          "energy": 5,
+          "gold": 0,
+          "actions": 0,
+          "location": "pestilent"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 4,
+          "xp": 19,
+          "health": 6,
+          "energy": 11,
+          "gold": 0,
+          "actions": 0,
+          "location": "pestilent"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 3,
+          "xp": 14,
+          "health": 7,
+          "energy": 3,
+          "gold": 3,
+          "actions": 2,
+          "location": "shaol"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 3,
+          "xp": 14,
+          "health": 6,
+          "energy": 5,
+          "gold": 17,
+          "actions": 2,
+          "location": "shaol"
+        }
+      ]
+    },
+    {
+      "turn": 23,
+      "faction": "horde",
+      "command": 588,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 4,
+          "xp": 19,
+          "health": 11,
+          "energy": 5,
+          "gold": 8,
+          "actions": 2,
+          "location": "pestilent"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 4,
+          "xp": 19,
+          "health": 6,
+          "energy": 11,
+          "gold": 8,
+          "actions": 2,
+          "location": "pestilent"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 3,
+          "xp": 17,
+          "health": 7,
+          "energy": 2,
+          "gold": 17,
+          "actions": 0,
+          "location": "altar"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 4,
+          "xp": 18,
+          "health": 8,
+          "energy": 8,
+          "gold": 31,
+          "actions": 0,
+          "location": "altar"
+        }
+      ]
+    },
+    {
+      "turn": 24,
+      "faction": "alliance",
+      "command": 596,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 4,
+          "xp": 19,
+          "health": 11,
+          "energy": 6,
+          "gold": 8,
+          "actions": 0,
+          "location": "stratholme"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 4,
+          "xp": 19,
+          "health": 6,
+          "energy": 11,
+          "gold": 8,
+          "actions": 0,
+          "location": "stratholme"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 3,
+          "xp": 17,
+          "health": 7,
+          "energy": 2,
+          "gold": 17,
+          "actions": 2,
+          "location": "altar"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 4,
+          "xp": 18,
+          "health": 8,
+          "energy": 8,
+          "gold": 31,
+          "actions": 2,
+          "location": "altar"
+        }
+      ]
+    },
+    {
+      "turn": 25,
+      "faction": "horde",
+      "command": 654,
+      "heroes": [
+        {
+          "id": "grumbaz-crowsblood",
+          "level": 4,
+          "xp": 19,
+          "health": 11,
+          "energy": 6,
+          "gold": 8,
+          "actions": 2,
+          "location": "stratholme"
+        },
+        {
+          "id": "sofeea-icecall",
+          "level": 4,
+          "xp": 19,
+          "health": 6,
+          "energy": 11,
+          "gold": 8,
+          "actions": 2,
+          "location": "stratholme"
+        },
+        {
+          "id": "brandon-lightstone",
+          "level": 4,
+          "xp": 20,
+          "health": 9,
+          "energy": 6,
+          "gold": 3,
+          "actions": 0,
+          "location": "altar"
+        },
+        {
+          "id": "burbon-fang",
+          "level": 4,
+          "xp": 20,
+          "health": 8,
+          "energy": 6,
+          "gold": 36,
+          "actions": 0,
+          "location": "skulk"
+        }
+      ]
+    }
+  ]
+}

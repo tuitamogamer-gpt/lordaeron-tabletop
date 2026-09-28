@@ -41,6 +41,31 @@ function saveAtPool() {
 }
 
 describe('combat room controls and dice', () => {
+ it('explains that Ghoul blocks normal rerolls even when equipment grants a reroll value', () => {
+  const s = battle(); s.enemies[0].creature = 'ghoul'; s.battle!.active!.reroll = 4;
+  render(<Combat {...props(s)} />);
+  expect(screen.getByText(/Normal rerolls blocked by Ghoul/)).toBeTruthy();
+  expect(screen.queryByRole('button', { name: 'Select misses' })).toBeNull();
+ });
+ it.each(['murloc', 'ghoul', 'kelthuzad'])('does not offer Wildkin power removal against %s', creature => {
+  const s = battle(), h = s.heroes[0];
+  h.learned.push('warrior-battle-shout'); h.slots[1].card = 'warrior-battle-shout';
+  if (creature === 'kelthuzad') { s.battle!.boss = creature; s.battle!.enemies = []; }
+  else s.enemies[0].creature = creature;
+  s.battle!.stage = 'after-reroll'; s.battle!.active!.dice[0].value = 1;
+  expect(legalActions(p, s).filter(c => c.type === 'monster')).toEqual([{ type: 'monster' }]);
+ });
+ it('still requires the actual Wildkin power removal choice', () => {
+  const s = battle(), h = s.heroes[0];
+  s.enemies[0].creature = 'wildkin'; h.learned.push('warrior-battle-shout'); h.slots[1].card = 'warrior-battle-shout';
+  s.battle!.stage = 'after-reroll'; s.battle!.active!.dice[0].value = 1;
+  const choices = legalActions(p, s).filter(c => c.type === 'monster');
+  expect(choices.length).toBeGreaterThan(0);
+  expect(choices.every(c => c.unequip?.length === 1)).toBe(true);
+  const command = choices.find(c => c.unequip?.includes('warrior-battle-shout'))!;
+  const after = apply(p, s, command);
+  expect(after.heroes[0].slots[1].card).toBeUndefined();
+ });
  it('shows eight physical faces per D8, hit labels and removed dice', () => {
   const r = render(<Combat {...props(battle())} />);
   expect(r.container.querySelectorAll('.d8-face')).toHaveLength(24);
@@ -65,6 +90,20 @@ describe('combat room controls and dice', () => {
   r.rerender(<Combat {...pr} busy />);
   expect(screen.getByLabelText('Dice tray').getAttribute('aria-busy')).toBe('true');
   expect((screen.getByRole('button', { name: 'Keep results' }) as HTMLButtonElement).disabled).toBe(true);
+ });
+ it('does not turn a pending defense click into a wound choice when combat advances', () => {
+  const s = battle(); s.battle!.participants = s.heroes.slice(0, 2).map(h => h.id);
+  s.battle!.stage = 'defense'; delete s.battle!.active;
+  const send = vi.fn(), r = render(<Combat {...props(s)} send={send} automationPending />);
+  const defense = screen.getByRole('button', { name: 'Resolve ranged & defense' });
+  fireEvent.mouseDown(defense);
+  const next = apply(p, s, { type: 'advance' });
+  expect(next.battle!.stage).toBe('wounds');
+  r.rerender(<Combat {...props(next)} send={send} />);
+  fireEvent.mouseUp(defense); fireEvent.click(defense);
+  expect(send).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('button', { name: 'Grumbaz: wound' }));
+  expect(send).toHaveBeenCalledExactlyOnceWith({ type: 'wound', hero: s.heroes[0].id });
  });
  it('retains the last roll when hits are banked and displays authoritative totals', () => {
   const s = battle(); s.battle!.stage = 'tokens'; const pr = props(s), r = render(<Combat {...pr} />);
@@ -104,5 +143,19 @@ describe('combat room controls and dice', () => {
   await act(async () => { vi.advanceTimersByTime(5000); });
   expect(commands()).toHaveLength(count);
   expect(importSession(p, localStorage.getItem('lordaeron-base-save-v6')!).state.battle?.stage).toBe('reroll');
+ });
+ it('applies a rapid repeated click once instead of skipping the next combat decision', async () => {
+  saveAtPool();
+  await act(async () => { render(<Campaign />); });
+  await screen.findByRole('dialog', { name: 'Combat' });
+  fireEvent.click(screen.getByRole('switch', { name: /^Auto-resolve/ }));
+  vi.useFakeTimers(); fireEvent.click(screen.getByRole('button', { name: /Roll \d+ D8/ }));
+  await act(async () => { vi.advanceTimersByTime(DICE_SETTLE_MS); });
+  const advance = screen.getByRole('button', { name: 'Continue to rerolls' });
+  const before = importSession(p, localStorage.getItem('lordaeron-base-save-v6')!);
+  act(() => { fireEvent.click(advance); fireEvent.click(advance); });
+  const after = importSession(p, localStorage.getItem('lordaeron-base-save-v6')!);
+  expect(after.session.commands).toHaveLength(before.session.commands.length + 1);
+  expect(after.state.battle?.stage).toBe('reroll');
  });
 });

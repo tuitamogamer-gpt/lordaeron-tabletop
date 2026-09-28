@@ -34,7 +34,7 @@ export function eventText(e:EventCard):string{
   winds:"Travel through the Western and Eastern Plaguelands costs 1 extra energy. Blue creatures in those zones award 2 XP. The event ends when no blue creatures remain there.",
   'soul-taint':"Characters within four regions of Kel’Thuzad lose half their health, rounding up. With Spread the Plague, the range is eight regions.",
   plague:"Place plague in Marris Stead, Hearthglen and Andorhal. Creatures in affected zones have +2 attack. After your action, you may spend 3 energy to clear a token and gain 1 XP.",
-  'arcane-corruption':"Characters lose half their energy, rounding down, or rounding up if Spread the Plague is active.",
+  'arcane-corruption':"Characters within four regions of Kel’Thuzad lose half their energy, rounding down. With Spread the Plague, the range is eight regions and the loss rounds up.",
   auction:"Each character submits one secret bid. The highest bid wins the item; ties are broken by a roll. The item is lost upon defeat.",
  };
  if(e.script==='war'){const war=e.effects.find(a=>a.op==='war');if(war?.op==='war')return `Occupy ${war.regions.map(regionName).join(" and ")} and hold them through the end of the opposing faction’s turn. Each character in the winning faction receives ${rewardText(war.reward)}; weaker faction: ${rewardText(war.weakReward??war.reward)}.`;}

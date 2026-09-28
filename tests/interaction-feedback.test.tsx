@@ -5,7 +5,7 @@ import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
 import { startingHero } from '../src/campaign/CharacterSheet';
 import EquipmentEditor from '../src/campaign/EquipmentEditor';
 import CombatScene from '../src/campaign/CombatScene';
-import { AnimatedValue, challengeProfile, encounterProfile, ThreatLevel } from '../src/campaign/feedback';
+import { AnimatedValue, challengeProfile, distinctChallenges, encounterProfile, ThreatLevel } from '../src/campaign/feedback';
 import { createGame } from '../src/rules/game';
 import { beginBattle, chooseAttacker, stats } from '../src/rules/combat';
 import { card, character } from '../src/rules/common';
@@ -108,6 +108,20 @@ describe('encounter feedback uses actual rules and outcomes', () => {
   const preview = encounterProfile(view(s), 'kelthuzad');
   beginBattle(s, 'pve', [s.heroes[0].id], [], 'horde', 'stratholme', 'kelthuzad');
   expect(preview).toEqual(stats(p, s));
+ });
+ it('offers one challenge per creature group while preserving party and target choices', () => {
+  const s = createGame(p, DEFAULT_SETUP), hero = s.heroes[0].id, ally = s.heroes[1].id;
+  s.enemies = [
+   { id: 'green', creature: 'gnoll', color: 'green', region: 'brill', faction: 'horde' },
+   { id: 'red', creature: 'gnoll', color: 'red', region: 'brill', faction: 'horde' },
+   { id: 'blue', creature: 'gnoll', color: 'blue', region: 'brill' },
+   { id: 'rival', creature: 'gnoll', color: 'red', region: 'brill', faction: 'alliance' },
+  ];
+  const commands = s.enemies.flatMap(e => [[], [ally]].map(allies => ({ type: 'challenge' as const, hero, target: e.id, allies })));
+  const choices = distinctChallenges(view(s), commands);
+  expect(choices).toHaveLength(6);
+  expect(choices.map(c => c.target)).toEqual(['green', 'green', 'blue', 'blue', 'rival', 'rival']);
+  expect(choices.filter(c => c.target === 'green').map(c => c.allies)).toEqual([[], [ally]]);
  });
  it('shows health feedback for the hero who was hurt and expires the cue', async () => {
   vi.useFakeTimers(); const s = createGame(p, DEFAULT_SETUP); const [a, h] = s.heroes;
