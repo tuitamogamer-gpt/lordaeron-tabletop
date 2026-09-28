@@ -1,6 +1,6 @@
 import { assert, capacity, card, character, colors, emptyBoxes, faction, hero, integer, other, random } from './common.js';
 import { defeat } from './combat.js';
-import { bagSize, equipped, petCapacity, unequip } from './inventory.js';
+import { bagSize, equipped, heroSlots, petCapacity, unequip } from './inventory.js';
 import type { AbilityArgs, Condition, ContentPack, DiceFilter, Die, Effect, Hero, State, Timing } from './model.js';
 export const matches = (die: Die, filter: DiceFilter) => !die.removed && (!filter.colors || filter.colors.includes(die.color)) && (!filter.values || filter.values.includes(die.value)) && (filter.min === undefined || die.value >= filter.min);
 export function availableCards(p: ContentPack, h: Hero) {
@@ -201,8 +201,9 @@ export function effects(p: ContentPack, s: State, h: Hero, id: string, list: Eff
    }
    case 'equip-power': {
     const at=e.slot??args.slot;assert(at!==undefined&&integer(at,0,h.slots.length-1),"Choose a power slot.");
-    const c=card(p,e.card),slot=h.slots[at],area=character(p,h.id).slots[at];
+    const c=card(p,e.card),slot=h.slots[at],area=heroSlots(p,h)[at];
     assert(c.kind==='power'&&h.learned.includes(c.id)&&c.level<=h.level&&slot&&area.types.includes(c.type),"This power is not learned or does not fit the slot.");
+    assert(!h.slots.some((v,i)=>i!==at&&(v.card===c.id||v.addons.includes(c.id))),"The same power cannot occupy two slots.");
     if(slot.card)unequip(p,h,slot.card);slot.card=c.id;
     if(bagSize(p,h.bag)>3){assert(args.discard&&h.bag.includes(args.discard)&&!card(p,args.discard).bagExempt,"Choose an item for the merchant.");h.bag.splice(h.bag.indexOf(args.discard),1);s.merchant.push(args.discard);}break;
    }
@@ -245,7 +246,7 @@ export function effects(p: ContentPack, s: State, h: Hero, id: string, list: Eff
    }
    case 'equip-demon': {
     assert(!equipped(p,h).some(id=>card(p,id).trait==='Demon')&&args.target&&typeof args.slot==='number'&&integer(args.slot,0,h.slots.length-1),"Choose a learned Demon and a slot for it.");
-    const c=card(p,args.target),slot=h.slots[args.slot!],area=character(p,h.id).slots[args.slot!];
+    const c=card(p,args.target),slot=h.slots[args.slot!],area=heroSlots(p,h)[args.slot!];
     assert(c.trait==='Demon'&&h.learned.includes(c.id)&&c.level<=h.level&&area.types.includes('active'),"This Demon is unavailable in that slot.");
     if(slot.card){const old=card(p,slot.card);if(a&&b?.stage==='pool'){a.dice=a.dice.filter(d=>d.source!==old.id);for(const effect of old.abilities.filter(v=>v.automatic&&v.timing==='pool').flatMap(v=>v.effects))if(effect.op==='stat')a[effect.stat]-=effect.amount;}unequip(p,h,old.id);}
     slot.card=c.id;h.pets[c.id]=petCapacity(p,h,c.id);break;
@@ -276,7 +277,7 @@ export function activate(p: ContentPack, s: State, heroId: string, cardId: strin
  if(c.trait==='Scroll'||c.trait==='Potion')assert(!b.current[heroId].cards.includes(`limit:${c.trait}`),`Only one ${c.trait} per combat round.`);
  if (ability.requires) assert(b.current[heroId].cards.includes(`${cardId}:${ability.requires}`), "Activate this card’s primary ability first.");
  const paid = b.current[heroId].cards.includes(cardId);
- if(args.free){assert(c.type==='instant'&&availableCards(p,h).some(id=>card(p,id).freeInstantOnce)&&!b.once?.includes(`free:${h.id}`),"A free power is unavailable.");b.once??=[];b.once.push(`free:${h.id}`);}
+ if(args.free){assert(c.kind==='power'&&c.type==='instant'&&availableCards(p,h).some(id=>card(p,id).freeInstantOnce)&&!b.once?.includes(`free:${h.id}`),"A free power is unavailable.");b.once??=[];b.once.push(`free:${h.id}`);}
  const free=args.free||ability.freeIf&&condition(p,s,h,cardId,ability.freeIf);
  const discount=availableCards(p,h).reduce((n,id)=>{const d=card(p,id).discount;return n+(c.kind==='power'?(card(p,id).powerDiscount??0):0)+(d?.cards.includes(cardId)?d.amount:0)+(c.type==='instant'?(card(p,id).instantDiscount??0):0);},0);
  const cost = Math.max(0,(free?0:ability.cost ?? ((paid&&!uses) || c.type === 'active' || c.kind === 'talent' || c.kind === 'racial' ? 0 : c.energy))+(uses?(repeats?.surcharge??0):0)-discount);

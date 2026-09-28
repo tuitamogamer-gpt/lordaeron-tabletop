@@ -25,7 +25,7 @@ export function resolveEvent(p:ContentPack,s:State,e:EventCard){
   case 'plague':addWorld(s,e.id).tokens=['marris','hearthglen','andorhal'];break;
   case 'soul-taint':case 'arcane-corruption':{
    const plague=!!activeEvent(p,s,'plague'),d=distances(p,s.overlord.region);
-   for(const h of s.heroes.filter(h=>d[h.location]<=(plague?8:4))){const prop=e.script==='soul-taint'?'health':'energy',amount=prop==='health'||plague?Math.ceil(h[prop]/2):Math.floor(h[prop]/2);h[prop]-=amount;if(!h.health&&!s.respawns.includes(h.id))s.respawns.push(h.id);}break;
+   for(const h of s.heroes.filter(h=>d[h.location]<=(plague?8:4))){const prop=e.script==='soul-taint'?'health':'energy',amount=plague?Math.ceil(h[prop]/2):Math.floor(h[prop]/2);h[prop]-=amount;if(!h.health&&!s.respawns.includes(h.id))s.respawns.push(h.id);}break;
   }
  }
  if(['cleanse','winds'].includes(e.script??'')){const ears=activeEvent(p,s,'ears');if(ears)removeWorld(s,ears.id);}
@@ -67,7 +67,8 @@ export function eventChoice(p:ContentPack,s:State,id:string,c:EventChoiceArgs){
    const group=s.enemies.filter(v=>v.color==='blue'&&v.region===enemy.region&&v.creature===enemy.creature);
    assert(group.every(v=>!flow.moved.includes(v.id)),"This group has already moved.");
    assert(distances(p,enemy.region)[c.region]<=2&&!region(p,c.region).home&&!s.heroes.some(h=>h.location===c.region&&faction(p,h.id)!==step.faction)&&!s.enemies.some(v=>v.region===c.region&&v.color==='blue'&&v.creature===enemy.creature&&!group.includes(v)),"The group cannot end in that region.");
-   for(const v of group){v.region=c.region;flow.moved.push(v.id);}break;
+   for(const v of group){v.region=c.region;flow.moved.push(v.id);}
+   const winds=activeEvent(p,s,'winds');if(winds&&!s.enemies.some(v=>v.color==='blue'&&plagued(p,v.region)))removeWorld(s,winds.id);break;
   }
  }
  note(s,`${character(p,id).name}: ${e.name}.`);flow.steps.shift();if(step.kind==='nefarian'&&flow.started){finishEvent(s);return;}drawEvents(p,s);

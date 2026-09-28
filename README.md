@@ -57,6 +57,8 @@ Prečice: **1–5** akcije, **F** interakcija s mapom, **Esc** povratak. Unutar 
 
 ## Provjera i granice
 
+Provjera svih event karata, klasnih moći i talenata dodaje sedam ispravki i potvrđuje smjenu Horda → Alijansa kroz svih 30 frakcijskih poteza. Rezultati 823 testova, tri pune AI partije i obuhvat provjere: [CARD-EVENT-TURN-AUDIT.md](docs/CARD-EVENT-TURN-AUDIT.md).
+
 Automatizovane provjere uključuju setup, opremanje, špilove, višestruki trening, varijante, borbu, mapu, scripted rewards, AI odluke i React interakcije. Novi AI engine bira ciljeve i sastav ekipe prema stanju, procjenjuje borbu, uspoređuje pune konfiguracije opreme i provjerava učinke sposobnosti prije upotrebe. Planiranje u browseru radi u Web Workeru. Karte klase su katalog za kupovinu/trening; moći se prvo uče i opremaju. Izvori, pretraživanje i granice: [AI-ENGINE.md](docs/AI-ENGINE.md). Pregled pravila: [RULES-AUDIT-V6.md](docs/RULES-AUDIT-V6.md).
 
 Granice mape ručno su precrtane iz dvije fotografije originala, uz dijagrame iz pravilnika. Granice i engine koriste isti graf; 67 poligona nema preklapanja. Arhiv ne sadrži ravan sken, pa je ovo rekonstrukcija s pojednostavljenim konturama i stiliziranim Lordaeron reljefom. v0.7 je vizuelno provjeren u Chromeu, uključujući karte, mapu, questove i nagrade. Ranije provjere: [MAP.md](docs/MAP.md) i [VALIDATION.md](docs/VALIDATION.md); aktuelne: [TABLETOP-V7.md](docs/TABLETOP-V7.md).

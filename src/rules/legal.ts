@@ -3,7 +3,7 @@ import { creatureRule, eligibleAttackers, living } from './combat.js';
 import { availableCards, condition, immune, matches, timing } from './effects.js';
 import { eventCommands } from './legal-events.js';
 import { apply } from './game.js';
-import { bagSize, classDeck, equipped } from './inventory.js';
+import { bagSize, classDeck, equipped, heroSlots } from './inventory.js';
 import { loadouts } from '../ai/loadout.js';
 import { reachable, respawnRegions } from './movement.js';
 import type { AbilityArgs, Command, ContentPack, Effect, Hero, State } from './model.js';
@@ -25,7 +25,7 @@ function argsFor(p: ContentPack, s: State, h: Hero, effects: Effect[],cardId:str
  if (effects.some(e => e.op === 'heal-pet'||e.op==='sacrifice-pet')) args = args.flatMap(a => Object.keys(h.pets).map(target => ({ ...a, target })));
  for(const e of effects){
   if(e.op==='change'&&e.colorChoice)args=args.flatMap(a=>(['red','blue','green'] as const).map(color=>({...a,color})));
-  if(e.op==='equip-power'&&e.slot===undefined)args=args.flatMap(a=>character(p,h.id).slots.flatMap((s,slot)=>s.types.includes(card(p,e.card).type)?[{...a,slot}]:[]));
+  if(e.op==='equip-power'&&e.slot===undefined)args=args.flatMap(a=>heroSlots(p,h).flatMap((s,slot)=>s.types.includes(card(p,e.card).type)?[{...a,slot}]:[]));
   if(e.op==='remove-chosen')args=args.flatMap(a=>combinations((s.battle?.active?.dice??[]).filter(d=>!d.removed&&!d.spotted&&!a.dice?.includes(d.id)).map(d=>d.id),e.count).map(removeDice=>({...a,removeDice})));
   if(e.op==='dice-choice')args=args.flatMap(a=>{const result:AbilityArgs[]=[];for(let red=0;red<=e.amount;red++)for(let blue=0;blue<=e.amount-red;blue++)result.push({...a,colors:[...Array(red).fill('red'),...Array(blue).fill('blue'),...Array(e.amount-red-blue).fill('green')]});return result;});
   if(e.op==='preset')args=combinations((s.battle?.active?.dice??[]).filter(d=>!d.removed&&!d.fixed&&d.color===e.color).map(d=>d.id),e.values.length).map(dice=>({dice}));
@@ -35,12 +35,16 @@ function argsFor(p: ContentPack, s: State, h: Hero, effects: Effect[],cardId:str
   if(e.op==='unequip-choice')args=args.flatMap(a=>e.cards.filter(id=>equipped(p,h).includes(id)).map(target=>({...a,target})));
   if(e.op==='defeat-independent')args=args.flatMap(a=>s.enemies.filter(e=>s.battle?.enemies.includes(e.id)&&e.color==='blue').map(e=>({...a,target:e.id})));
   if(e.op==='creature-dice')args=args.flatMap(a=>(s.battle?.enemies??[]).map(target=>({...a,target})));
-  if(e.op==='heal-reaction')args=args.flatMap(a=>Object.keys(s.battle?.losses??{}).filter(id=>faction(p,id)===faction(p,h.id)).map(target=>({...a,target})));
+  if(e.op==='heal-reaction'){
+   args=args.flatMap(a=>Object.keys(s.battle?.losses??{}).filter(id=>faction(p,id)===faction(p,h.id)).map(target=>({...a,target})));
+   if(availableCards(p,h).some(id=>card(p,id).healSplash?.cards.includes(cardId)))args=args.flatMap(a=>[a,...(s.battle?.participants??[]).filter(id=>id!==a.target&&!s.battle?.defeated.includes(id)&&faction(p,id)===faction(p,h.id)).map(secondaryTarget=>({...a,secondaryTarget}))]);
+  }
   if(e.op==='revive')args=args.flatMap(a=>s.respawns.filter(id=>(e.self?id===h.id:id!==h.id)&&faction(p,id)===faction(p,h.id)).flatMap(target=>Array.from({length:(e.amount==='level'?h.level:e.amount)+1},(_,health)=>({...a,target,health}))));
   if(e.op==='combo-add'){const cards=equipped(p,h).filter(id=>card(p,id).finisher);if(cards.length)args=args.flatMap(a=>cards.map(target=>({...a,target})));}
-  if(e.op==='equip-demon')args=args.flatMap(a=>h.learned.filter(id=>card(p,id).trait==='Demon').flatMap(target=>character(p,h.id).slots.flatMap((s,slot)=>s.types.includes('active')?[{...a,target,slot}]:[])));
+  if(e.op==='equip-demon')args=args.flatMap(a=>h.learned.filter(id=>card(p,id).trait==='Demon').flatMap(target=>heroSlots(p,h).flatMap((s,slot)=>s.types.includes('active')?[{...a,target,slot}]:[])));
  }
  if(effects.some(e=>e.op==='unequip-self'||e.op==='equip-power')&&bagSize(p,h.bag)>=3)args=args.flatMap(a=>[undefined,...[...h.bag,...equipped(p,h).filter(id=>card(p,id).kind==='item')].filter(id=>!card(p,id).bagExempt)].map(discard=>({...a,discard})));
+ if(s.battle&&card(p,cardId).kind==='power'&&card(p,cardId).type==='instant'&&availableCards(p,h).some(id=>card(p,id).freeInstantOnce)&&!s.battle.once?.includes(`free:${h.id}`))args=args.flatMap(a=>[a,{...a,free:true}]);
  return args;
 }
 export function abilityCommands(p: ContentPack, s: State): Command[] {

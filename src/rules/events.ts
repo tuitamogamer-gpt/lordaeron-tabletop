@@ -6,7 +6,7 @@ import { resolveEvent } from './event-choices.js';
 import type { ContentPack, Faction, State, WorldEvent } from './model.js';
 export { eventChoice } from './event-choices.js';
 export { battleEvents, purify } from './event-rewards.js';
-export function finishEvent(s:State){delete s.eventFlow;s.eventSeen=[];s.faction=other(s.faction);s.phase='actions';s.tradeWindow=false;}
+export function finishEvent(s:State){delete s.eventFlow;s.eventSeen=[];s.faction=other(s.faction);s.phase='actions';s.tradeWindow=false;note(s,`${s.faction} begins faction turn ${s.turn}.`);}
 export const removeWorld=(s:State,id:string)=>{s.world=s.world?.filter(e=>e.id!==id);};
 export function addWorld(s:State,id:string):WorldEvent{
  const e:WorldEvent={id,tokens:[],attempts:[],gold:0,items:[],trophies:{horde:[],alliance:[]}};(s.world??=[]).push(e);return e;

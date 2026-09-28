@@ -32,7 +32,7 @@ export function eventText(e:EventCard):string{
   ears:"Until the next event draw, defeated blue creatures award 1 XP and gold equal to half their attack, rounding down. The reward is shared.",
   cleanse:"Collect defeated blue creatures. The first faction with a combined trophy attack of at least 10 rewards each of its characters with 4 gold and 2 XP.",
   winds:"Travel through the Western and Eastern Plaguelands costs 1 extra energy. Blue creatures in those zones award 2 XP. The event ends when no blue creatures remain there.",
-  'soul-taint':"Characters within four regions of Kel’Thuzad lose half their health, rounding up. With Spread the Plague, the range is eight regions.",
+  'soul-taint':"Characters within four regions of Kel’Thuzad lose half their health, rounding down. With Spread the Plague, the range is eight regions and the loss rounds up.",
   plague:"Place plague in Marris Stead, Hearthglen and Andorhal. Creatures in affected zones have +2 attack. After your action, you may spend 3 energy to clear a token and gain 1 XP.",
   'arcane-corruption':"Characters within four regions of Kel’Thuzad lose half their energy, rounding down. With Spread the Plague, the range is eight regions and the loss rounds up.",
   auction:"Each character submits one secret bid. The highest bid wins the item; ties are broken by a roll. The item is lost upon defeat.",
