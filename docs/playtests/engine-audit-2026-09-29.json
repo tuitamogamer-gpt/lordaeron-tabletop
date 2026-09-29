@@ -1,0 +1,74 @@
+{
+  "date": "2026-09-29",
+  "pack": "base-2005-faq-1.4-v7",
+  "tests": 838,
+  "testFiles": 25,
+  "renderedComponents": 621,
+  "buildPassed": true,
+  "productionDependencyVulnerabilities": 0,
+  "runs": [
+    {
+      "overlord": "kelthuzad",
+      "seed": 20260929,
+      "roster": [
+        "grumbaz-crowsblood",
+        "sofeea-icecall",
+        "zowka-shattertusk",
+        "brandon-lightstone",
+        "burbon-fang",
+        "artumnis-moondream"
+      ],
+      "commands": 1787,
+      "checkedStates": 1788,
+      "replayIdentical": true,
+      "phase": "finished",
+      "turn": 30,
+      "winner": "horde",
+      "quests": 21,
+      "combats": 30,
+      "events": 12
+    },
+    {
+      "overlord": "nefarian",
+      "seed": 337,
+      "roster": [
+        "dongon-swiftblade",
+        "wennu-bloodsinger",
+        "leeam-sagewind",
+        "shailara-whitherblade",
+        "artumnis-moondream",
+        "brebo-bigshot"
+      ],
+      "commands": 1260,
+      "checkedStates": 1261,
+      "replayIdentical": true,
+      "phase": "finished",
+      "turn": 30,
+      "winner": "alliance",
+      "quests": 17,
+      "combats": 23,
+      "events": 13
+    },
+    {
+      "overlord": "kazzak",
+      "seed": 2026,
+      "roster": [
+        "dongon-swiftblade",
+        "wennu-bloodsinger",
+        "leeam-sagewind",
+        "shailara-whitherblade",
+        "artumnis-moondream",
+        "brebo-bigshot"
+      ],
+      "commands": 1265,
+      "checkedStates": 1266,
+      "replayIdentical": true,
+      "phase": "finished",
+      "turn": 30,
+      "winner": "horde",
+      "quests": 20,
+      "combats": 27,
+      "events": 14
+    }
+  ]
+}

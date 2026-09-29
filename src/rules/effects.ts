@@ -52,6 +52,19 @@ export function healthLoss(s: State, h: Hero, amount: number) {
  h.health = Math.max(0, h.health - amount);
  if (h.health === 0 && !s.respawns.includes(h.id)) s.respawns.push(h.id);
 }
+/** Start-of-pool equipment changes replace the old card's already-applied pool. */
+function withdrawPool(p: ContentPack, s: State, h: Hero, id: string) {
+ const b=s.battle,a=b?.active;
+ if(b?.stage!=='pool'||a?.heroId!==h.id)return;
+ a.dice=a.dice.filter(d=>d.source!==id);
+ for(const ability of card(p,id).abilities){
+  if(!ability.automatic||ability.timing!=='pool'||!b.current[h.id]?.cards.includes(`${id}:${ability.id}`))continue;
+  for(const effect of ability.effects){
+   if(effect.op==='stat')a[effect.stat]-=effect.amount;
+   if(effect.op==='dice')a.pool[effect.color]-=effect.amount;
+  }
+ }
+}
 export function effects(p: ContentPack, s: State, h: Hero, id: string, list: Effect[], args: AbilityArgs) {
  const b = s.battle, a = b?.active;
  const select = (filter: DiceFilter, count: number,repeat=false) => {
@@ -204,7 +217,9 @@ export function effects(p: ContentPack, s: State, h: Hero, id: string, list: Eff
     const c=card(p,e.card),slot=h.slots[at],area=heroSlots(p,h)[at];
     assert(c.kind==='power'&&h.learned.includes(c.id)&&c.level<=h.level&&slot&&area.types.includes(c.type),"This power is not learned or does not fit the slot.");
     assert(!h.slots.some((v,i)=>i!==at&&(v.card===c.id||v.addons.includes(c.id))),"The same power cannot occupy two slots.");
-    if(slot.card)unequip(p,h,slot.card);slot.card=c.id;
+    const old=slot.card??area.printed;
+    if(old&&old!==c.id)withdrawPool(p,s,h,old);
+    if(slot.card&&slot.card!==c.id)unequip(p,h,slot.card);slot.card=c.id;
     if(bagSize(p,h.bag)>3){assert(args.discard&&h.bag.includes(args.discard)&&!card(p,args.discard).bagExempt,"Choose an item for the merchant.");h.bag.splice(h.bag.indexOf(args.discard),1);s.merchant.push(args.discard);}break;
    }
    case 'group-resource': {
@@ -248,7 +263,8 @@ export function effects(p: ContentPack, s: State, h: Hero, id: string, list: Eff
     assert(!equipped(p,h).some(id=>card(p,id).trait==='Demon')&&args.target&&typeof args.slot==='number'&&integer(args.slot,0,h.slots.length-1),"Choose a learned Demon and a slot for it.");
     const c=card(p,args.target),slot=h.slots[args.slot!],area=heroSlots(p,h)[args.slot!];
     assert(c.trait==='Demon'&&h.learned.includes(c.id)&&c.level<=h.level&&area.types.includes('active'),"This Demon is unavailable in that slot.");
-    if(slot.card){const old=card(p,slot.card);if(a&&b?.stage==='pool'){a.dice=a.dice.filter(d=>d.source!==old.id);for(const effect of old.abilities.filter(v=>v.automatic&&v.timing==='pool').flatMap(v=>v.effects))if(effect.op==='stat')a[effect.stat]-=effect.amount;}unequip(p,h,old.id);}
+    const old=slot.card??area.printed;if(old)withdrawPool(p,s,h,old);
+    if(slot.card)unequip(p,h,slot.card);
     slot.card=c.id;h.pets[c.id]=petCapacity(p,h,c.id);break;
    }
   }

@@ -202,7 +202,7 @@ export function apply(p: ContentPack, state: State, command: Command): State {
    const from = hero(s, c.from); assert(from.bag.includes(c.card) && !card(p, c.card).soulbound, "This item cannot be taken."); receiveItem(p, s, hero(s, c.hero), c.card, c.discard); from.bag.splice(from.bag.indexOf(c.card), 1); b.report.push(`looted:${c.from}`); break;
   }
   case 'closeBattle': {
-   const b = s.battle; assert(b?.stage === 'over', "Combat has not ended.");
+   const b = s.battle; assert(s.phase === 'combat' && b?.stage === 'over', "Combat has not ended or its result has already been closed.");
    for (const id of b.participants) {
     automatic(p,s,id,'combat-end');const h=hero(s,id),cap=capacity(p,h);h.stun=0;h.health=Math.min(h.health,cap.health);h.energy=Math.min(h.energy,cap.energy);
    }

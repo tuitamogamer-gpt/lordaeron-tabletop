@@ -42,8 +42,9 @@ describe('class deck and equipment interface',()=>{
   const start=vi.fn();render(<CampaignSetup onStart={start} onCancel={()=>{}}/>);fireEvent.click(screen.getByRole('checkbox',{name:/Deadly PvP/}));fireEvent.click(screen.getByRole('checkbox',{name:/Defeat the Overlord/}));
   for(let i=0;i<3;i++)fireEvent.click(screen.getByRole('button',{name:/^Continue/}));expect(screen.getByText('Class decks')).toBeTruthy();fireEvent.click(screen.getByRole('button',{name:/Begin campaign/}));expect(start.mock.calls[0][0].variants).toEqual({deadlyPvp:true,overlordOnly:true});
  });
- it('preserves the older save and presents a fresh setup under the new rules',()=>{
-  const old=JSON.stringify({format:'lordaeron-rules-session',version:2,pack:'base-2005-faq-1.4-map-v4',contentHash:'131aa8d4',setup:DEFAULT_SETUP,commands:[]});localStorage.setItem('lordaeron-base-save-v4',old);render(<Campaign/>);
-  expect(screen.getByRole('dialog',{name:'New campaign'})).toBeTruthy();expect(localStorage.getItem('lordaeron-base-save-v4')).toBe(old);expect(localStorage.getItem('lordaeron-base-save-v6')).toBeNull();expect(character(p,DEFAULT_SETUP.roster[0]).classId).toBe('warrior');
+ it.each(['v4','v6'])('preserves the %s save and presents a fresh setup under the new rules',version=>{
+  const key=`lordaeron-base-save-${version}`;
+  const old=JSON.stringify({format:'lordaeron-rules-session',version:2,pack:version==='v4'?'base-2005-faq-1.4-map-v4':'base-2005-faq-1.4-v6',contentHash:version==='v4'?'131aa8d4':'4c24b6cf',setup:DEFAULT_SETUP,commands:[]});localStorage.setItem(key,old);render(<Campaign/>);
+  expect(screen.getByRole('dialog',{name:'New campaign'})).toBeTruthy();expect(localStorage.getItem(key)).toBe(old);expect(localStorage.getItem('lordaeron-base-save-v7')).toBeNull();expect(character(p,DEFAULT_SETUP.roster[0]).classId).toBe('warrior');
  });
 });

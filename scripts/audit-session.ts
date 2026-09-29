@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname } from 'node:path';
 import { BASE_PACK as pack } from '../src/data/base';
 import { apply, createGame } from '../src/rules/game';
 import { importSession } from '../src/rules/session';
-import { bagSize } from '../src/rules/inventory';
-import { character } from '../src/rules/common';
+import { assertState } from './assert-state';
 import type { State } from '../src/rules/model';
 
 // Audit an actual exported playthrough. This never generates gameplay commands.
@@ -21,29 +21,10 @@ const events = new Set<string>();
 let checks = 0;
 function check(s: State) {
   checks++;
-  assert(s.turn >= 1 && s.turn <= 30);
-  assert.equal(new Set(s.heroes.map(h => character(pack, h.id).classId)).size, s.heroes.length);
-  for (const h of s.heroes) {
-    for (const n of [h.health, h.energy, h.gold, h.xp, h.actions, h.curse, h.stun]) assert(Number.isInteger(n) && n >= 0, `Invalid resource: ${h.id}`);
-    assert(h.actions <= 2, `Too many actions: ${h.id}`);
-    assert(h.level >= 1 && h.level <= 5 && h.xp >= pack.xp[h.level - 1]);
-    assert(bagSize(pack, h.bag) <= 3, `Bag over capacity: ${h.id}`);
-    assert(h.slots.length >= 7 && h.slots.length <= 8);
-    assert.equal(new Set(h.learned).size, h.learned.length);
-    assert.equal(new Set(h.talents).size, h.talents.length);
-    for (const id of h.learned) assert(pack.cards.some(c => c.id === id && c.kind === 'power' && c.classId === character(pack, h.id).classId && c.level <= h.level));
-    for (const id of h.talents) assert(pack.cards.some(c => c.id === id && c.kind === 'talent' && c.classId === character(pack, h.id).classId && c.level <= h.level));
-    for (const n of Object.values(h.pets)) assert(Number.isInteger(n) && n >= 0);
-  }
+  assertState(pack, s);
   const battle = s.battle;
   if (s.phase === 'combat' && battle) {
     stages.add(battle.stage);
-    for (const box of Object.values(battle.boxes)) for (const n of Object.values(box)) assert(Number.isInteger(n) && n >= 0);
-    for (const die of battle.active?.dice ?? []) assert(Number.isInteger(die.value) && die.value >= 0 && die.value <= 8);
-    for (const color of ['red', 'blue', 'green'] as const) {
-      const available: number = (battle.active?.dice ?? []).filter(d => !d.removed && d.color === color).length;
-      assert(available + battle.lostDice[color] <= 7, `Physical ${color} dice supply exceeded`);
-    }
   }
   phases.add(s.phase);
   s.eventDiscard.forEach(id => events.add(id));
@@ -67,5 +48,5 @@ for (const [index, command] of session.commands.entries()) {
 assert.deepEqual(state, replayed, 'The independently applied command log diverged from strict import');
 assert.equal(state.phase, 'finished', 'The exported campaign has not finished');
 const report = { input, setup: session.setup, commands: session.commands.length, checkedStates: checks, replayIdentical: true, phase: state.phase, turn: state.turn, winner: state.winner, quests: state.completed.map(id => ({ id, name: pack.quests.find(q => q.id === id)?.name, faction: pack.quests.find(q => q.id === id)?.faction })), events: [...events].map(id => ({ id, name: pack.events.find(e => e.id === id)?.name })), phases: [...phases], combatStages: [...stages], types, heroes: state.heroes, combats, turns };
-if (process.argv[3]) writeFileSync(process.argv[3], JSON.stringify(report, null, 2) + '\n');
+if (process.argv[3]) { mkdirSync(dirname(process.argv[3]), { recursive: true }); writeFileSync(process.argv[3], JSON.stringify(report, null, 2) + '\n'); }
 console.log(JSON.stringify({ commands: report.commands, checkedStates: checks, replayIdentical: true, phase: state.phase, turn: state.turn, winner: state.winner, quests: state.completed.length, combats: combats.length, events: events.size, types, phases: report.phases, combatStages: report.combatStages }, null, 2));

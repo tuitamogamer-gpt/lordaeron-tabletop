@@ -24,11 +24,11 @@ const next=()=>fireEvent.click(screen.getByRole('button',{name:/^Continue/}));
 describe('guided campaign setup',()=>{
  it('opens for a fresh browser and does not save a placeholder campaign',()=>{
   render(<Campaign/>);expect(screen.getByRole('dialog',{name:'New campaign'})).toBeTruthy();
-  expect(localStorage.getItem('lordaeron-base-save-v6')).toBeNull();
+  expect(localStorage.getItem('lordaeron-base-save-v7')).toBeNull();
   expect(screen.queryByRole('region',{name:'Map of Lordaeron'})).toBeNull();
  });
  it('continues an existing save without forcing setup',()=>{
-  const raw=JSON.stringify(newSession(p,DEFAULT_SETUP));localStorage.setItem('lordaeron-base-save-v6',raw);
+  const raw=JSON.stringify(newSession(p,DEFAULT_SETUP));localStorage.setItem('lordaeron-base-save-v7',raw);
   render(<Campaign/>);expect(screen.queryByRole('dialog')).toBeNull();expect(screen.getByRole('region',{name:'Map of Lordaeron'})).toBeTruthy();
  });
  it.each([4,6] as const)('previews the %i-character rules and starts only after the last step',count=>{

@@ -10,6 +10,7 @@
     "test": "vitest run",
     "dev:server": "tsx watch server/dev.ts",
     "simulate": "tsx scripts/simulate.ts",
+    "audit:session": "tsx scripts/audit-session.ts",
     "check:server": "tsc -p tsconfig.server.json",
     "check:render": "tsx scripts/check-render.ts",
     "render:map": "tsx scripts/render-map.ts"

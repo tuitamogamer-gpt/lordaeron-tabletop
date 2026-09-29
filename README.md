@@ -31,7 +31,7 @@ npm run simulate -- 71 nefarian casters
 npm run simulate -- 99 kazzak casters
 ```
 
-Simulacija provjerava resurse nakon svakog poteza i ponavlja završenu partiju iz JSON zapisa. Druga postava uključuje Rogue, Priest i Warlock klase, uz Warrior, Druid i Mage.
+Simulacija provjerava resurse, jedinstvene figure, fizičke zalihe i D8 nakon svake naredbe, te ponavlja završenu partiju iz JSON zapisa. `--output putanja.json` čuva dnevnik za `npm run audit:session -- putanja.json izvjestaj.json`; `--trace` prikazuje spore odluke, a `--max-commands 12000` postavlja limit. Druga postava uključuje Rogue, Priest i Warlock klase, uz Warrior, Druid i Mage.
 
 ## Igranje
 
@@ -57,7 +57,7 @@ Prečice: **1–5** akcije, **F** interakcija s mapom, **Esc** povratak. Unutar 
 
 ## Provjera i granice
 
-Provjera svih event karata, klasnih moći i talenata dodaje sedam ispravki i potvrđuje smjenu Horda → Alijansa kroz svih 30 frakcijskih poteza. Rezultati 823 testova, tri pune AI partije i obuhvat provjere: [CARD-EVENT-TURN-AUDIT.md](docs/CARD-EVENT-TURN-AUDIT.md).
+Aktuelni prolaz popravlja Vanish bonuse, duplirane figure pri recikliranju questova i ponovno zatvaranje borbe. **838 testova**, build, render i tri nove AI partije s 4.312 naredbi i identičnim replayom prolaze: [ENGINE-SCRIPT-AUDIT.md](docs/ENGINE-SCRIPT-AUDIT.md). Prethodna provjera svih event karata, klasnih moći, talenata i smjene Horda → Alijansa kroz svih 30 poteza: [CARD-EVENT-TURN-AUDIT.md](docs/CARD-EVENT-TURN-AUDIT.md).
 
 Automatizovane provjere uključuju setup, opremanje, špilove, višestruki trening, varijante, borbu, mapu, scripted rewards, AI odluke i React interakcije. Novi AI engine bira ciljeve i sastav ekipe prema stanju, procjenjuje borbu, uspoređuje pune konfiguracije opreme i provjerava učinke sposobnosti prije upotrebe. Planiranje u browseru radi u Web Workeru. Karte klase su katalog za kupovinu/trening; moći se prvo uče i opremaju. Izvori, pretraživanje i granice: [AI-ENGINE.md](docs/AI-ENGINE.md). Pregled pravila: [RULES-AUDIT-V6.md](docs/RULES-AUDIT-V6.md).
 
@@ -74,4 +74,4 @@ Granice mape ručno su precrtane iz dvije fotografije originala, uz dijagrame iz
 - [Porijeklo materijala](docs/ASSETS.md)
 - [Multiplayer, trenutno na čekanju](docs/MULTIPLAYER.md)
 
-`main` je povezan s Vercel projektom `lordaeron-tabletop`. Redis nije povezan; online kontrole nisu izložene u trenutnom interfejsu. Stariji fixture paket i server testovi ostaju radi regresija. v0.6 ima novi content fingerprint i autosave ključ zbog promjena pravila. Prethodna v4/v3 partija ostaje netaknuta i može se preuzeti u postavkama; nije automatski ponovljena po novim pravilima.
+`main` je povezan s Vercel projektom `lordaeron-tabletop`. Redis nije povezan; online kontrole nisu izložene u trenutnom interfejsu. Stariji fixture paket i server testovi ostaju radi regresija. Paket pravila v7 ima novi content fingerprint i autosave ključ zbog promjena replaya. Prethodne v6/v4/v3 partije ostaju netaknute; najnovija prethodna partija može se preuzeti u postavkama i nije automatski ponovljena po novim pravilima.

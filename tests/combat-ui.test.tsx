@@ -36,7 +36,7 @@ function saveAtPool() {
  send({ type: 'travel', hero, path: ['brightwater'] });
  const challenge = legalActions(p, s).find(c => c.type === 'challenge' && c.hero === hero)!;
  send(challenge); send({ type: 'attacker', hero });
- localStorage.setItem('lordaeron-base-save-v6', JSON.stringify(session));
+ localStorage.setItem('lordaeron-base-save-v7', JSON.stringify(session));
  return session;
 }
 
@@ -114,7 +114,7 @@ describe('combat room controls and dice', () => {
   expect(screen.getByLabelText('Horde attrition').textContent).toBe('2');
  });
  it('opens the idle guide through its own menu and returns with the same close control', async () => {
-  localStorage.setItem('lordaeron-base-save-v6', JSON.stringify(newSession(p, DEFAULT_SETUP)));
+  localStorage.setItem('lordaeron-base-save-v7', JSON.stringify(newSession(p, DEFAULT_SETUP)));
   await act(async () => { render(<Campaign />); }); fireEvent.click(screen.getByRole('button', { name: /^Combat\s*D8$/ }));
   const dialog = await screen.findByRole('dialog', { name: 'Combat' });
   expect(within(dialog).getByText('Every roll has a role.')).toBeTruthy();
@@ -126,7 +126,7 @@ describe('combat room controls and dice', () => {
   const saved = saveAtPool(); render(<StrictMode><Campaign /></StrictMode>);
   await screen.findByRole('dialog', { name: 'Combat' });
   vi.useFakeTimers(); fireEvent.click(screen.getByRole('button', { name: /Roll \d+ D8/ }));
-  const commands = () => JSON.parse(localStorage.getItem('lordaeron-base-save-v6')!).commands as Command[];
+  const commands = () => JSON.parse(localStorage.getItem('lordaeron-base-save-v7')!).commands as Command[];
   expect(commands().length).toBe(saved.commands.length + 1);
   await act(async () => { vi.advanceTimersByTime(DICE_SETTLE_MS - 1); });
   expect(commands().length).toBe(saved.commands.length + 1);
@@ -142,7 +142,7 @@ describe('combat room controls and dice', () => {
   const count = commands().length;
   await act(async () => { vi.advanceTimersByTime(5000); });
   expect(commands()).toHaveLength(count);
-  expect(importSession(p, localStorage.getItem('lordaeron-base-save-v6')!).state.battle?.stage).toBe('reroll');
+  expect(importSession(p, localStorage.getItem('lordaeron-base-save-v7')!).state.battle?.stage).toBe('reroll');
  });
  it('applies a rapid repeated click once instead of skipping the next combat decision', async () => {
   saveAtPool();
@@ -152,9 +152,9 @@ describe('combat room controls and dice', () => {
   vi.useFakeTimers(); fireEvent.click(screen.getByRole('button', { name: /Roll \d+ D8/ }));
   await act(async () => { vi.advanceTimersByTime(DICE_SETTLE_MS); });
   const advance = screen.getByRole('button', { name: 'Continue to rerolls' });
-  const before = importSession(p, localStorage.getItem('lordaeron-base-save-v6')!);
+  const before = importSession(p, localStorage.getItem('lordaeron-base-save-v7')!);
   act(() => { fireEvent.click(advance); fireEvent.click(advance); });
-  const after = importSession(p, localStorage.getItem('lordaeron-base-save-v6')!);
+  const after = importSession(p, localStorage.getItem('lordaeron-base-save-v7')!);
   expect(after.session.commands).toHaveLength(before.session.commands.length + 1);
   expect(after.state.battle?.stage).toBe('reroll');
  });

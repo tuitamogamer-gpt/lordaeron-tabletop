@@ -24,6 +24,7 @@ for(const url of new Set([...svg.matchAll(/href="(\/assets\/[^" ]+)"/g)].map(m=>
  svg=svg.replaceAll(`href="${url}"`,`xlink:href="data:image/png;base64,${png.toString('base64')}"`);
 }
 mkdirSync('screenshots',{recursive:true});
+mkdirSync('.local-data',{recursive:true});
 writeFileSync('screenshots/02-map-regions.png',new Resvg(svg,{font:{defaultFontFamily:'Georgia',serifFamily:'Georgia',sansSerifFamily:'Arial'}}).render().asPng());
 writeFileSync('.local-data/map-preview.svg',svg);
 console.log('Rendered screenshots/02-map-regions.png (2070 × 1380)');

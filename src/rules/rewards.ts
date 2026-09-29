@@ -14,7 +14,12 @@ export function spawnQuest(p: ContentPack, s: State, q: Quest): boolean {
  for (const spawn of q.spawns) {
   const c = p.creatures.find(c => c.id === spawn.creature)!;
   const available = c.stock[spawn.color] - retainedFigures(s,spawn.creature,spawn.color) - s.enemies.filter(e => e.creature === spawn.creature && e.color === spawn.color).length;
-  for (let n = 0; n < Math.min(available, spawn.count); n++) s.enemies.push({ id: `${q.id}:${spawn.creature}:${spawn.region}:${n}:${spawn.color}`, creature: spawn.creature, color: spawn.color, region: spawn.region, ...(spawn.color !== 'blue' ? { quest: q.id, faction: q.faction } : {}) });
+  for (let n = 0; n < Math.min(available, spawn.count); n++) {
+   // New Horizons can recycle a quest while its independent figures remain.
+   let serial=n,id=`${q.id}:${spawn.creature}:${spawn.region}:${serial}:${spawn.color}`;
+   while(s.enemies.some(e=>e.id===id))id=`${q.id}:${spawn.creature}:${spawn.region}:${++serial}:${spawn.color}`;
+   s.enemies.push({ id, creature: spawn.creature, color: spawn.color, region: spawn.region, ...(spawn.color !== 'blue' ? { quest: q.id, faction: q.faction } : {}) });
+  }
  }
  s.quests.push(q.id); return true;
 }

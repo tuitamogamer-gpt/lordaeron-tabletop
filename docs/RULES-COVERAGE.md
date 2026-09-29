@@ -1,8 +1,8 @@
-# Osnovna igra + FAQ · stanje v0.6
+# Osnovna igra + FAQ · stanje v0.7
 
 Izvori: [pravilnik](https://images-cdn.fantasyflightgames.com/ffg_content/WoWBG/wowrules.pdf), [FAQ 1.4](https://images-cdn.fantasyflightgames.com/ffg_content/WoWBG/WoW_FAQ__v1_4.pdf), [dostavljeni skenovi](SCAN-INTEGRATION.md). Primjenjuju se samo odjeljci osnovne igre. Shadow of War i ostala proširenja nisu uključena.
 
-Aktivni paket `base-2005-faq-1.4-v6` ima sve komponente osnovnog seta. `officialComplete` provjerava broj komponenti i zabilježene izvore; nije tvrdnja da su sve međusobne kombinacije iscrpno testirane. [Pregled v0.6 po poglavljima](RULES-AUDIT-V6.md) opisuje posljednje ispravke.
+Aktivni paket `base-2005-faq-1.4-v7` ima sve komponente osnovnog seta. `officialComplete` provjerava broj komponenti i zabilježene izvore; nije tvrdnja da su sve međusobne kombinacije iscrpno testirane. [Pregled v0.6 po poglavljima](RULES-AUDIT-V6.md) opisuje osnovu, a [aktuelni audit enginea i skripti](ENGINE-SCRIPT-AUDIT.md) posljednje ispravke i provjere.
 
 | Sistem | Implementirano | Preostala provjera |
 | --- | --- | --- |
@@ -20,7 +20,7 @@ Aktivni paket `base-2005-faq-1.4-v6` ima sve komponente osnovnog seta. `official
 | Završnica | Pobjeda nad Overlordom, završni PvP, prisilni Nefarian obračun, remi | Dodatna igranja do pobjede nad svakim bossom |
 | Varijante | Deadly PvP i Defeat the Overlord sa str. 37; izbor u setupu, obostrane rane i drugi krug trake | Duge kampanje koje prelaze više krugova trake |
 | AI | [Procjena prema stanju](AI-ENGINE.md), grupni ciljevi i putanje, potpune kombinacije opreme, trening, korisna razmjena, pregled efekata i rerolla, Web Worker | Šire mjerenje kvaliteta strategije; iscrpno planiranje kasnijih rundi i protivničkih odgovora |
-| Autosave | Poseban ključ v6, hash sadržaja, strogi import i deterministički replay; stari zapis ostaje sačuvan | Import različitih verzija namjerno nije podržan |
+| Autosave | Poseban ključ v7, hash sadržaja, strogi import i deterministički replay; v6/v4/v3 zapisi ostaju sačuvani | Import različitih verzija namjerno nije podržan |
 | Online | Server i regresijski testovi sačuvani, UI isključen | Na čekanju po korisnikovoj odluci |
 
 ## Primijenjene FAQ ispravke

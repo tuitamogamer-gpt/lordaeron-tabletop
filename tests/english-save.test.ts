@@ -24,7 +24,7 @@ describe('Rules release save compatibility',()=>{
   expect(()=>importSession(changed,JSON.stringify(newSession(p,DEFAULT_SETUP)))).toThrow(/different version/);
  });
  it('rejects unknown hashes and saves from the previous map',()=>{
-  for(const changed of [{contentHash:'00000000'},{pack:'base-2005-faq-1.4-v3'}]){
+  for(const changed of [{contentHash:'00000000'},{pack:'base-2005-faq-1.4-v3'},{pack:'base-2005-faq-1.4-v6'}]){
    expect(()=>importSession(p,JSON.stringify({...newSession(p,DEFAULT_SETUP),...changed}))).toThrow(/different version/);
   }
  });
