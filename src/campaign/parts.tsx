@@ -1,4 +1,5 @@
 import { GameIcon } from './GameIcon';
+import { CardArt } from './Art';
 import { AbilityCard, CardFrame, triggerLabels } from './design-system';
 import { effectText, conditionText, staticCardText } from './rules-text';
 import { BASE_PACK as p } from '../data/base';
@@ -23,7 +24,7 @@ export function GameCard({card,disabled=false,onClick,selected=false,footer}:{ca
 }
 
 /** Compact cards occupy their slot; the complete rules live above the surrounding layout. */
-export function CardThumbnail({card:c,disabled=false,onClick,selected=false,footer,className='',actionLabel}:{card:Card;disabled?:boolean;onClick?:()=>void;selected?:boolean;footer?:string;className?:string;actionLabel?:string}){
+export function CardThumbnail({card:c,disabled=false,onClick,selected=false,footer,className='',actionLabel,art='card'}:{card:Card;disabled?:boolean;onClick?:()=>void;selected?:boolean;footer?:string;className?:string;actionLabel?:string;art?:'card'|'illustration'}){
  const id=useId(),anchor=useRef<HTMLButtonElement>(null),preview=useRef<HTMLDivElement>(null);
  const timer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined),[open,setOpen]=useState(false),[position,setPosition]=useState({left:12,top:12});
  const cancel=()=>{clearTimeout(timer.current);timer.current=undefined;};
@@ -62,7 +63,7 @@ export function CardThumbnail({card:c,disabled=false,onClick,selected=false,foot
  const kind=c.kind==='racial'?'Racial':c.kind==='talent'?'Talent':c.kind==='power'?'Power':c.type==='bag'?'Consumable':'Equipment';
  return <><button ref={anchor} type="button" className={`card-thumbnail ${selected?'selected':''} ${disabled?'unavailable':''} ${className}`} aria-label={actionLabel??`${onClick?'Inspect':'Preview'} ${pretty(c.name)}`} aria-describedby={open?id:undefined} aria-disabled={disabled||undefined} onPointerEnter={event=>{if(event.pointerType!=='touch'){cancel();timer.current=setTimeout(show,180);}}} onPointerLeave={leave} onFocus={show} onBlur={event=>{if(!preview.current?.contains(event.relatedTarget as Node|null))hide();}} onClick={()=>{if(disabled)return;if(onClick){hide();onClick();}else show();}}>
   <span className="card-thumbnail-top"><span>{kind}</span><b>LVL {c.level}</b></span>
-  <span className="card-thumbnail-art"><CardPortrait card={c}/></span>
+  <span className="card-thumbnail-art">{art==='illustration'?<CardArt card={c}/>:<CardPortrait card={c}/>}</span>
   <strong className="card-thumbnail-name">{pretty(c.name)}</strong>
   <span className="card-thumbnail-footer"><span><GameIcon name="energy" size={12}/>{cardEnergyText(c)}</span><span>{footer??(c.printed?'Starting':c.kind==='talent'?'Permanent':`${c.price} gold`)}</span></span>
  </button>{open&&createPortal(<div ref={preview} id={id} role="tooltip" aria-label={`${pretty(c.name)} full card`} className="card-hover-preview" style={position} onPointerEnter={cancel} onPointerLeave={leave}><GameCard card={c} footer={footer}/><span className="card-preview-hint">{actionLabel?`${actionLabel} · `:onClick?'Click the thumbnail to inspect · ':''}Click outside or press Esc to close</span></div>,anchor.current?.closest('dialog')??document.body)}</>;
