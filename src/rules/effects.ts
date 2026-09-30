@@ -1,12 +1,12 @@
 import { assert, capacity, card, character, colors, emptyBoxes, faction, hero, integer, other, random } from './common.js';
 import { defeat } from './combat.js';
 import { bagSize, equipped, heroSlots, petCapacity, unequip } from './inventory.js';
-import type { AbilityArgs, Condition, ContentPack, DiceFilter, Die, Effect, Hero, State, Timing } from './model.js';
+import type { AbilityArgs, Command, Condition, ContentPack, DiceFilter, Die, Effect, Hero, State, Timing } from './model.js';
 export const matches = (die: Die, filter: DiceFilter) => !die.removed && (!filter.colors || filter.colors.includes(die.color)) && (!filter.values || filter.values.includes(die.value)) && (filter.min === undefined || die.value >= filter.min);
 export function availableCards(p: ContentPack, h: Hero) {
  return [...new Set([...equipped(p, h), ...h.talents, ...h.auctionItems, ...h.bag.filter(id => card(p, id).type === 'bag'), ...[character(p, h.id).racial].filter((id): id is string => !!id)])];
 }
-export const opponents=(p:ContentPack,s:State,h:Hero)=>s.battle?.kind==='pve'?(s.battle.boss?1:s.battle.enemies.length):(s.battle?.participants.filter(id=>!s.battle!.defeated.includes(id)&&faction(p,id)!==faction(p,h.id)).length??0);
+export const opponents=(p:ContentPack,s:Pick<State,'battle'>,h:Hero)=>s.battle?.kind==='pve'?(s.battle.boss?1:s.battle.enemies.length):(s.battle?.participants.filter(id=>!s.battle!.defeated.includes(id)&&faction(p,id)!==faction(p,h.id)).length??0);
 export const immune=(p:ContentPack,h:Hero,rule:string)=>availableCards(p,h).some(id=>card(p,id).immune?.some(v=>v===rule));
 export function spendEnergy(s:State,h:Hero,amount:number){
  assert(h.energy>=amount,"Not enough energy.");h.energy-=amount;
@@ -21,7 +21,7 @@ export function timing(s: State): Timing | undefined {
  if (s.phase === 'actions') return 'action';
  return undefined;
 }
-export function condition(p: ContentPack, s: State, h: Hero, id: string, test: Condition): boolean {
+export function condition(p: ContentPack, s: Pick<State,'battle'|'enemies'>, h: Hero, id: string, test: Condition): boolean {
  const b = s.battle, a = b?.active;
  switch (test.kind) {
   case 'previous-use': return !!b?.previous[h.id]?.cards.includes(test.cardId ?? id) && (!test.unharmed || !b.previous[h.id].harmed);
@@ -270,6 +270,34 @@ export function effects(p: ContentPack, s: State, h: Hero, id: string, list: Eff
   }
  }
 }
+/** The UI quotes the same activation cost the reducer charges, without spending energy. */
+export function abilityEnergyCost(p:ContentPack,s:Pick<State,'battle'|'enemies'>,h:Hero,cardId:string,abilityId:string,args:AbilityArgs={}) {
+ const c=card(p,cardId),ability=c.abilities.find(a=>a.id===abilityId),b=s.battle;
+ assert(ability,"Unknown ability.");
+ if(!b)return 0;
+ const current=b.current[h.id]?.cards??[],paid=current.includes(cardId);
+ const groupKey=`${cardId}:group:${ability.usageGroup??abilityId}${ability.perAttacker?`:${b.active?.heroId}`:''}`;
+ const uses=current.filter(id=>id===groupKey).length;
+ const available=availableCards(p,h),repeats=c.type==='instant'?available.map(id=>card(p,id).instantRepeat).find(Boolean):undefined;
+ const free=args.free||ability.freeIf&&condition(p,s,h,cardId,ability.freeIf);
+ const discount=available.reduce((n,id)=>{const d=card(p,id).discount;return n+(c.kind==='power'?(card(p,id).powerDiscount??0):0)+(d?.cards.includes(cardId)?d.amount:0)+(c.type==='instant'?(card(p,id).instantDiscount??0):0);},0);
+ return Math.max(0,(free?0:ability.cost??((paid&&!uses)||c.type==='active'||c.kind==='talent'||c.kind==='racial'?0:c.energy))+(uses?(repeats?.surcharge??0):0)-discount);
+}
+/** Validate a player's tray selection beyond the bounded legal-command examples.
+ * Timing, strength, payment and targets come from an existing legal command.
+ * Dice-selection abilities use public combat data only. The disposable RNG is
+ * never the game RNG, and preview rolls and all other mutations are discarded.
+ */
+export function previewAbilityDice(p:ContentPack,state:Omit<State,'rng'|'questDecks'|'itemDecks'|'eventDeck'|'auction'|'kazzak'>,base:Extract<Command,{type:'ability'}>,selection:Pick<AbilityArgs,'dice'|'removeDice'>):{command:Extract<Command,{type:'ability'}>;error?:undefined}|{command?:undefined;error:string} {
+ try {
+  assert(selection.dice===undefined||base.args?.dice!==undefined,"This ability does not select tray dice.");
+  assert(selection.removeDice===undefined||base.args?.removeDice!==undefined,"This ability does not remove selected dice.");
+  const command={...base,args:{...base.args,...selection}};
+  const disposable:State={...structuredClone(state),rng:1,questDecks:{horde:{grey:[],green:[],yellow:[],red:[]},alliance:{grey:[],green:[],yellow:[],red:[]}},itemDecks:{triangle:[],square:[],circle:[],special:[]},eventDeck:[],auction:undefined,kazzak:undefined};
+  activate(p,disposable,command.hero,command.card,command.ability,command.args);
+  return {command};
+ } catch(error) {return {error:(error as Error).message};}
+}
 export function activate(p: ContentPack, s: State, heroId: string, cardId: string, abilityId: string, args: AbilityArgs = {}) {
  const h = hero(s, heroId), c = card(p, cardId), ability = c.abilities.find(a => a.id === abilityId), b = s.battle, a = b?.active;
  assert(availableCards(p, h).includes(cardId) && c.level <= h.level, "This card is unavailable to this hero.");
@@ -294,9 +322,7 @@ export function activate(p: ContentPack, s: State, heroId: string, cardId: strin
  if (ability.requires) assert(b.current[heroId].cards.includes(`${cardId}:${ability.requires}`), "Activate this card’s primary ability first.");
  const paid = b.current[heroId].cards.includes(cardId);
  if(args.free){assert(c.kind==='power'&&c.type==='instant'&&availableCards(p,h).some(id=>card(p,id).freeInstantOnce)&&!b.once?.includes(`free:${h.id}`),"A free power is unavailable.");b.once??=[];b.once.push(`free:${h.id}`);}
- const free=args.free||ability.freeIf&&condition(p,s,h,cardId,ability.freeIf);
- const discount=availableCards(p,h).reduce((n,id)=>{const d=card(p,id).discount;return n+(c.kind==='power'?(card(p,id).powerDiscount??0):0)+(d?.cards.includes(cardId)?d.amount:0)+(c.type==='instant'?(card(p,id).instantDiscount??0):0);},0);
- const cost = Math.max(0,(free?0:ability.cost ?? ((paid&&!uses) || c.type === 'active' || c.kind === 'talent' || c.kind === 'racial' ? 0 : c.energy))+(uses?(repeats?.surcharge??0):0)-discount);
+ const cost = abilityEnergyCost(p,s,h,cardId,abilityId,args);
  assert(integer(cost),"Invalid cost.");spendEnergy(s,h,cost);
  effects(p, s, h, cardId, ability.effects, args);
  for(const id of availableCards(p,h))for(const v of card(p,id).enhance??[])if(v.card===cardId&&v.timing===ability.timing)effects(p,s,h,id,v.effects,args);

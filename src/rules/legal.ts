@@ -1,5 +1,5 @@
 import { capacity, card, character, faction, hero, other } from './common.js';
-import { creatureRule, eligibleAttackers, living } from './combat.js';
+import { creatureRule, eligibleAttackers, living, poolPenaltyDice } from './combat.js';
 import { availableCards, condition, immune, matches, timing } from './effects.js';
 import { eventCommands } from './legal-events.js';
 import { apply } from './game.js';
@@ -124,7 +124,12 @@ export function legalActions(p: ContentPack, s: State): Command[] {
   const b = s.battle!, a = b.active;
   list.push(...abilityCommands(p, s));
   if (b.stage === 'attacker') for (const id of eligibleAttackers(p, s)) list.push({ type: 'attacker', hero: id });
-  if (b.stage === 'pool') {list.push({ type: 'roll' });if(a?.forbidden?.pool?.length)list.push({type:'roll',omit:{red:a.forbidden.pool.includes('red')?a.dice.filter(d=>!d.removed&&d.color==='red').length:0,blue:a.forbidden.pool.includes('blue')?a.dice.filter(d=>!d.removed&&d.color==='blue').length:0,green:a.forbidden.pool.includes('green')?a.dice.filter(d=>!d.removed&&d.color==='green').length:0}});}
+  if (b.stage === 'pool' && a) {
+   list.push({type:'roll'});
+   const penalties=new Set(poolPenaltyDice(p,hero(s,a.heroId),a)),omit={red:0,blue:0,green:0};
+   for(const color of ['red','blue','green'] as const){const count=a.dice.filter(d=>!d.removed&&!penalties.has(d.id)&&d.color===color).length;omit[color]=a.forbidden?.pool?.includes(color)?count:Math.max(0,count-(a.poolLimits?.[color]??7));}
+   if(Object.values(omit).some(Boolean))list.push({type:'roll',omit});
+  }
   if (b.stage === 'penalty') {
    const h = hero(s, a!.heroId), dice = a!.dice.filter(d => !d.removed);
    for (const ids of combinations(dice.map(d => d.id), Math.min(dice.length, h.stun * 2 + h.curse))) list.push({ type: 'penalty', dice: ids });

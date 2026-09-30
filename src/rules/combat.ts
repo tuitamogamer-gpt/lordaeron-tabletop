@@ -2,7 +2,7 @@ import { assert, capacity, card, character, colors, emptyBoxes, emptyPool, facti
 import { automatic, availableCards, healthLoss, immune, matches } from './effects.js';
 import { equipped, unequip } from './inventory.js';
 import { eventBoss, worldAttack } from './world.js';
-import type { Battle, ContentPack, CreatureRule, Faction, State } from './model.js';
+import type { Attack, Battle, ContentPack, CreatureRule, Faction, Hero, State } from './model.js';
 export const living = (_s: State, b: Battle, f?: Faction, p?: ContentPack) => b.participants.filter(id => !b.defeated.includes(id) && (!f || faction(p!, id) === f));
 export const creatureRule = (p: ContentPack, s: State): CreatureRule => { const e = s.enemies.find(e => e.id === s.battle?.enemies[0]); return p.creatures.find(c => c.id === e?.creature)?.rule ?? 'none'; };
 export function stats(p: ContentPack, s: Pick<State, 'battle'|'heroes'|'enemies'|'overlord'|'world'>, enemyId?: string) {
@@ -199,10 +199,16 @@ export function omitDice(s: State, omit = emptyPool()) {
  for(const color of colors)if(a.poolLimits?.[color]!==undefined)assert(a.dice.filter(d=>!d.removed&&d.color===color).length<=a.poolLimits[color]!, "A power limits dice of this color.");
  assert(!a.dice.some(d=>!d.removed&&a.forbidden?.pool?.includes(d.color)),"Equipment prevents rolling the chosen color.");
 }
-export function poolPenalties(p:ContentPack,s:State){
- const a=s.battle!.active!,h=hero(s,a.heroId);
+/** Deterministic equipment losses, shared by the roll and its public preview. */
+export function poolPenaltyDice(p:ContentPack,h:Hero,a:Attack){
+ const removed=new Set(a.dice.filter(d=>d.removed).map(d=>d.id)),ids:number[]=[];
  for(const id of availableCards(p,h))for(const color of colors){
   const n=card(p,id).poolPenalty?.[color]??0;
-  for(const d of a.dice.filter(d=>!d.removed&&d.color===color).slice(0,n)){d.removed=true;a.removed[color]++;}
+  for(const d of a.dice.filter(d=>!removed.has(d.id)&&d.color===color).slice(0,n)){removed.add(d.id);ids.push(d.id);}
  }
+ return ids;
+}
+export function poolPenalties(p:ContentPack,s:State){
+ const a=s.battle!.active!,h=hero(s,a.heroId);
+ for(const id of poolPenaltyDice(p,h,a)){const d=a.dice.find(d=>d.id===id)!;d.removed=true;a.removed[d.color]++;}
 }

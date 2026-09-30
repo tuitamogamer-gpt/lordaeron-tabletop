@@ -1,0 +1,33 @@
+/* A power is first selected and reviewed; only the final Use button spends energy. */
+.combat-room .combat-power-choice{display:block;padding:0;min-width:0;border:1px solid #68725b;background:linear-gradient(130deg,#25382d,#12251f);border-radius:7px;overflow:hidden}
+.combat-room .combat-power-choice.expanded{border-color:#dab56b;box-shadow:0 0 0 1px #dab56b44}
+.combat-power-choice .combat-power-summary{display:flex;align-items:center;gap:11px;width:100%;min-width:0;text-align:left;padding:10px 12px;color:#eddfbf}
+.combat-power-choice .combat-power-summary>.card-illustration{width:52px;height:45px;flex:none;border:1px solid #bca46780;border-radius:4px;background:#152a20}
+.combat-power-choice .combat-power-summary>span:nth-child(2){min-width:0;flex:1}
+.combat-room .combat-power-summary strong{display:block;font:600 13px/1.3 var(--serif);color:#ffe4ab}
+.combat-room .combat-power-summary small{display:block;font:10px/1.45 var(--sans);margin-top:4px;color:#c7cbb2}
+.combat-power-choice .combat-power-ready{display:flex;align-items:center;gap:9px;font:500 10px var(--sans);color:#d9cb9d;white-space:nowrap}
+.combat-power-choice .combat-power-ready b{font:500 20px/1 var(--sans)}
+.combat-power-choice .combat-power-summary:hover{background:#b5ad6210}
+.combat-power-choice .combat-power-review{padding:10px 12px 12px;border-top:1px solid #af965257;background:#0f201ce8;min-width:0}
+.combat-power-choice .combat-power-options{display:flex;gap:9px;align-items:flex-end;flex-wrap:wrap}
+.combat-power-choice .combat-power-options>label{display:flex;flex-direction:column;gap:5px;min-width:0;flex:1 1 170px;font:500 10px/1.3 var(--sans);color:#c5b383}
+.combat-room .combat-power-options select{width:100%;min-width:0;max-width:100%;height:33px;padding:5px 7px;font:500 11px/1.4 var(--sans);color:#f0e3bd;background:#243a2d;border:1px solid #84784a;border-radius:4px;text-overflow:ellipsis}
+.combat-power-choice .combat-power-effect{margin:9px 0 5px;font:12px/1.6 var(--sans);color:#e4d9ba}
+.combat-power-choice .combat-power-options:empty+.combat-power-effect{margin-top:0}
+.combat-power-choice .combat-power-bonus{margin:3px 0 6px;font:11px/1.5 var(--sans);color:#bfdaaa}
+.combat-room .combat-power-bonus>strong{font:600 10px/1.5 var(--sans);color:#dcc88d}
+.combat-power-choice .combat-power-target{margin:0 0 9px;font:10px/1.5 var(--sans);color:#b0c4af;overflow-wrap:anywhere}
+.combat-power-choice .combat-power-dice{display:flex;flex-wrap:wrap;align-items:center;gap:7px 14px;margin:5px 0 9px}
+.combat-power-choice .combat-power-dice label{display:flex;align-items:center;gap:7px;font:10px/1.4 var(--sans);color:#d6d2b1}
+.combat-power-choice .combat-power-dice input{width:14px;height:14px;accent-color:#d8bc72;flex:none}
+.combat-power-choice .combat-power-dice>small{flex-basis:100%;font:10px/1.5 var(--sans);color:#afc7b0}
+.combat-power-choice .combat-power-validation{padding:7px 9px;margin:5px 0 9px;border:1px solid #ad754d66;border-radius:4px;font:11px/1.5 var(--sans);color:#f3c096;background:#7f492421}
+.combat-power-choice .combat-power-confirm{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:9px;border-top:1px solid #ad925938}
+.combat-power-choice .combat-power-energy{display:grid;grid-template-columns:auto auto;align-items:center;gap:2px 9px}
+.combat-power-choice .combat-power-energy>span{font:10px/1.4 var(--sans);color:#b8cab5}
+.combat-power-choice .combat-power-energy output{font:600 17px/1.25 var(--sans);color:#a9d8e5;white-space:nowrap}
+.combat-power-choice .combat-power-energy>small{grid-column:1/-1;font:9px/1.4 var(--sans);color:#d2bd83}
+.combat-power-choice .combat-power-confirm>.gold-button{min-height:36px;padding:8px 12px;font:600 11px/1.3 var(--sans);white-space:normal}
+.combat-power-choice .combat-power-review-hint{display:block;margin-top:8px;font:9px/1.4 var(--sans);color:#97af9d}
+@media(max-width:650px){.combat-power-choice .combat-power-confirm{align-items:stretch;flex-direction:column}.combat-power-choice .combat-power-options{flex-direction:column;align-items:stretch}.combat-power-choice .combat-power-options>label{flex-basis:auto}}

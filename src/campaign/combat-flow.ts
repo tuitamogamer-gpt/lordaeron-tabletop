@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { decide, type Difficulty } from '../ai/planner';
+import { publicState } from '../ai/public-state';
 import { BASE_PACK } from '../data/base';
 import { character, faction } from '../rules/common';
 import { botOwns } from '../multiplayer/ownership';
 import type { BattleStage, Command, ContentPack } from '../rules/model';
 import type { GameView } from '../rules/view';
+import { apply } from '../rules/game';
 
 export const DICE_SETTLE_MS = 1350;
 export const COMBAT_STEP_MS = 750;
@@ -97,31 +99,70 @@ export function combatStep(stage: BattleStage, afterWounds?: 'resolution' | 'rou
  return stage === 'over' ? 4 : 3;
 }
 
-/** Only advances bookkeeping with a single legal outcome. Tactical choices stay visible. */
-export function bookkeepingCommand(state: GameView, legal: Command[]): Command | undefined {
- const battle = state.battle;
- if (state.phase !== 'combat' || !battle || battle.stage === 'over' || state.respawns.length) return;
- if (legal.some(c => c.type === 'ability' || c.type === 'reroll' || c.type === 'talent')) return;
- if (legal.length !== 1) return;
- const command = legal[0];
- if (['attacker', 'advance', 'tokens', 'monster', 'wound', 'armor', 'penalty'].includes(command.type)) return command;
+export type CombatAutomationOptions = {
+ resolve: boolean; campaignAuto: boolean; difficulty: Difficulty;
+ /** One explicit click may decline optional human reactions during a bot's move. */
+ humanResponsePassed?: boolean;
+ /** Accepted for older callers only. It never delegates a human's decisions. */
+ play?: boolean;
+};
+
+/** A bot may support a player only while preserving every currently offered
+ * human choice. In particular it cannot consume a pending healing/mana response
+ * or move on to another phase. The preview never reads the actual game RNG.
+ */
+function preservesHumanWindow(p:ContentPack,state:GameView,command:Command,human:Command[]):boolean{
+ if(command.type!=='ability')return false;
+ try{
+  const next=apply(p,publicState(state),command),before=state.battle,after=next.battle;
+  if(next.phase!==state.phase||!before||!after||after.stage!==before.stage||after.round!==before.round||after.active?.heroId!==before.active?.heroId)return false;
+  const changedDice=new Set(before.active?.dice.filter(d=>{
+   const updated=after.active?.dice.find(a=>a.id===d.id);
+   return !updated||updated.spotted!==d.spotted||updated.removed!==d.removed||updated.value!==d.value||updated.color!==d.color;
+  }).map(d=>d.id));
+  // Test choices involving changed dice first: one rejected Spot/Remove proves
+  // that this support would consume the player's decision. Avoid regenerating
+  // hundreds of bounded target/strength combinations for every bot candidate.
+  const affected=(c:Command)=>c.type==='ability'&&[...(c.args?.dice??[]),...(c.args?.removeDice??[])].some(id=>changedDice.has(id));
+  return [...human].sort((a,b)=>Number(affected(b))-Number(affected(a))).every(c=>{
+   // Healing can prevent an imminent defeat. It may remove the no-longer-needed
+   // respawn prompt, but cannot actually defeat/revive the hero or pick a home.
+   if(c.type==='respawn'&&state.respawns.includes(c.hero)&&!next.respawns.includes(c.hero)&&!after.defeated.includes(c.hero)&&(next.heroes.find(h=>h.id===c.hero)?.health??0)>0)return true;
+   try{apply(p,next,c);return true;}catch{return false;}
+  });
+ }catch{return false;}
+}
+const supportCache=new WeakMap<GameView,WeakMap<Command[],Map<string,{pack:ContentPack;commands:Command[]}>>>();
+function supportedMove(p:ContentPack,state:GameView,legal:Command[],bots:string[],human:Command[],candidates:Command[],difficulty:Difficulty):Command[]{
+ const abilities=candidates.filter(c=>c.type==='ability');if(!abilities.length)return [];
+ let byLegal=supportCache.get(state);if(!byLegal){byLegal=new WeakMap();supportCache.set(state,byLegal);}
+ let cached=byLegal.get(legal);if(!cached){cached=new Map();byLegal.set(legal,cached);}
+ const key=JSON.stringify([bots,difficulty]);
+ const previous=cached.get(key);if(previous?.pack===p)return previous.commands;
+ // Rank once with the existing policy, then validate only until a profitable,
+ // safe support move is found. A sole optional ability is still free to decline.
+ const ranked=abilities.map(c=>decide(p,state,[c],difficulty)).filter((d):d is NonNullable<typeof d>=>!!d&&d.score>0).sort((a,b)=>b.score-a.score);
+ const best=ranked.find(d=>preservesHumanWindow(p,state,d.command,human));
+ const result=best?[best.command]:[];cached.set(key,{pack:p,commands:result});return result;
 }
 
-export function combatCandidates(p: ContentPack, state: GameView, legal: Command[], bots: string[], options: {
- resolve: boolean; play: boolean; campaignAuto: boolean; difficulty: Difficulty;
-}): Command[] {
+/** A human's decision window stays open, including a single legal confirmation. */
+export function combatCandidates(p: ContentPack, state: GameView, legal: Command[], bots: string[], options: CombatAutomationOptions): Command[] {
  if (state.phase !== 'combat' || !state.battle) return [];
- // Hold the result until acknowledged. Campaign-wide AI may continue an all-bot battle.
- if (state.battle.stage === 'over') {
-  return options.campaignAuto ? legal.filter(c => botOwns(p, state, c, bots)) : [];
- }
- if (options.play) return legal;
- if (!options.resolve) return [];
  const human = legal.filter(c => !botOwns(p, state, c, bots));
- if (human.length) {const command=bookkeepingCommand(state,human);return command?[command]:[];}
- return legal;
+ const candidates = legal.filter(c => botOwns(p, state, c, bots));
+ if (human.length && (!options.humanResponsePassed || human.some(c => c.type !== 'ability'))) {
+  if(!options.resolve)return [];
+  return supportedMove(p,state,legal,bots,human,candidates,options.difficulty);
+ }
+ // Bots may take their loot, but the result waits for acknowledgment unless the
+ // whole campaign is automated. Human/shared reward choices still take priority.
+ if (state.battle.stage === 'over') {
+  return options.resolve ? candidates.filter(c => c.type !== 'closeBattle' || options.campaignAuto) : [];
+ }
+ return options.resolve ? candidates : [];
 }
-export function combatAutomation(p:ContentPack,state:GameView,legal:Command[],bots:string[],options:{resolve:boolean;play:boolean;campaignAuto:boolean;difficulty:Difficulty}):Command|undefined{
+export function combatAutomation(p:ContentPack,state:GameView,legal:Command[],bots:string[],options:CombatAutomationOptions):Command|undefined{
  const candidates=combatCandidates(p,state,legal,bots,options);
  return candidates.length===1?candidates[0]:decide(p,state,candidates,options.difficulty)?.command;
 }

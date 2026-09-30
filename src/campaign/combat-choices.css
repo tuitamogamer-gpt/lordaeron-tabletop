@@ -1,0 +1,40 @@
+/* Keep a player's decisions beside the dice, with no automatic human turns. */
+.campaign-app .player-driven-combat .combat-workbench{grid-template-columns:minmax(0,1fr) 340px 224px}
+.campaign-app .player-driven-combat .combat-decisions{display:flex;flex-direction:column;position:relative;bottom:auto;min-height:0;max-height:none;margin:0;padding:12px 14px;border-block:0;border-inline:1px solid #60705b66;overflow:hidden;box-shadow:none;background:linear-gradient(160deg,#233129,#152325)}
+.player-driven-combat .combat-decision-heading{flex:none;padding-bottom:9px;border-bottom:1px solid #7d825b55;margin-bottom:7px;gap:8px}
+.player-driven-combat .combat-decision-heading h4{font:600 17px var(--serif);color:#f3d594}
+.player-driven-combat .combat-decision-heading>span{display:block;font-size:9px;text-align:right}
+.combat-choice-content{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#818063 #182724;padding-right:3px}
+.combat-choice-guidance{font:11px/1.5 var(--sans);color:#cfceaf;margin:0 0 10px}
+.combat-energy-budget{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border:1px solid #b1a36466;border-radius:5px;background:#d9c7830c;gap:8px}
+.combat-energy-budget>span>strong{font:600 13px var(--serif);color:#ead6a9}.combat-energy-budget>span>small{display:block;font:10px/1.5 var(--sans);color:#b6bfa9}
+.combat-energy-budget>b{font:600 25px/1 var(--sans);color:#a6d5f1}.combat-energy-budget>b>small{font:11px var(--sans);color:#91a99f}
+.combat-applied-energy{margin:5px 0 8px}.combat-applied-energy p{font:10px/1.5 var(--sans);color:#d4c899;margin:0;padding:2px 3px}.combat-applied-energy p>span{display:block;color:#8da88e;font-size:9px}
+.combat-power-status{font:10px/1.4 var(--sans);color:#b5bea8;border-bottom:1px solid #5d6a5144;margin:5px 0;padding:4px 0}
+.combat-power-status>summary{cursor:pointer;color:#d1c49e}.combat-power-status>div{padding:6px 4px;border-top:1px solid #5d6a5144;margin-top:4px}.combat-power-status strong{font-weight:600;color:#ddceaa}.combat-power-status span,.combat-power-status small{display:block;margin-top:3px}.combat-power-status p{font-size:10px;line-height:1.5}
+.player-driven-combat .combat-skill-list{display:flex!important;flex-direction:column;max-height:none;overflow:visible;gap:7px;margin:10px 0}
+.player-driven-combat .combat-skill-group{width:100%;flex:none}
+.combat-no-powers{font:10px/1.5 var(--sans);color:#acb5a7;margin:12px 0}
+.combat-pool-builder{flex:none;border:1px solid #73866966;border-radius:5px;padding:9px;margin:10px 0 0;min-width:0}
+.combat-pool-builder legend{font:600 12px var(--serif);color:#e2d2a5;padding-inline:5px}
+.combat-pool-builder>div{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.combat-pool-builder label{display:flex;flex-direction:column;gap:4px;color:var(--channel);font:600 10px/1.4 var(--sans);text-transform:capitalize}
+.combat-pool-builder label>input{width:100%;min-width:0;min-height:32px;padding:4px 7px;font:600 17px/1 var(--sans);border:1px solid #6c7d6b;border-radius:4px;background:#13201e;color:var(--channel)}
+.combat-pool-builder label>small{font:9px var(--sans);color:#97a995;text-transform:none}
+.combat-pool-builder p{font:10px/1.5 var(--sans);color:#bec8ad;margin:8px 0 3px}.combat-pool-builder>small{font:9px/1.45 var(--sans);display:block;color:#93a692;margin-top:6px}
+.combat-pool-builder .combat-pool-danger{color:#ffb2a0;font-weight:600}
+.player-driven-combat .combat-action-row{flex:none;padding-top:9px;margin-top:9px;border-top:1px solid #8a865466;display:flex;flex-direction:column;align-items:stretch;max-height:210px;overflow:auto}
+.player-driven-combat .combat-action-row button{white-space:normal;text-align:center;min-height:35px;padding:8px;font-size:11px}
+.player-driven-combat .combat-roll-button{justify-content:center;width:100%}
+.player-driven-combat .combat-ledger{padding:13px 11px;min-width:0}
+.player-driven-combat .combat-party{grid-template-columns:1fr}.player-driven-combat .combat-party .portrait{width:27px;height:27px}
+.player-driven-combat .combat-faction-pool{gap:4px 9px}.player-driven-combat .combat-total>span{font-size:9px}.player-driven-combat .combat-total output{font-size:21px}
+.player-driven-combat .combat-arena-scroll{padding:12px 13px}.player-driven-combat .combat-dice-lane{grid-template-columns:87px minmax(0,1fr) 43px;gap:5px;padding-inline:7px}
+.player-driven-combat .dice-lane-label{grid-template-columns:1fr}.player-driven-combat .dice-lane-label>svg{display:none}.player-driven-combat .dice-lane-label strong{font-size:9px}.player-driven-combat .dice-lane-label small{font-size:8px}
+.player-driven-combat .combat-phase-note p{display:block;font:10px/1.45 var(--sans)}
+.player-driven-combat .combat-timeline li{flex-direction:column;gap:3px;padding:7px 3px}.player-driven-combat .combat-timeline b{font-size:8px;text-align:center}
+.player-driven-combat .combat-d8{width:43px;flex-basis:43px}.player-driven-combat .combat-dice-lane{min-height:76px}
+.player-driven-combat .combat-room-footer{padding:10px 18px}.player-driven-combat .combat-room-footer>div:last-child>span{max-width:400px;text-align:right}
+@media(min-width:1450px){.campaign-app .modal.player-driven-combat{width:min(1600px,calc(100vw - 48px))}.campaign-app .player-driven-combat .combat-workbench{grid-template-columns:minmax(0,1fr) 370px 240px}}
+@media(min-width:801px) and (max-width:1150px){.campaign-app .player-driven-combat .combat-workbench{grid-template-columns:minmax(0,1fr) 320px;grid-template-rows:minmax(0,1fr) 180px}.campaign-app .player-driven-combat .combat-decisions{grid-column:2;grid-row:1/3}.player-driven-combat .combat-ledger{grid-column:1;grid-row:2;display:block;border-top:1px solid #60705b66}.player-driven-combat .combat-dice-lane{grid-template-columns:70px minmax(0,1fr) 40px}}
+@media(max-width:800px){.campaign-app .player-driven-combat .combat-workbench{display:flex;flex-direction:column;overflow:auto}.campaign-app .player-driven-combat .combat-arena{flex:none;overflow:visible}.player-driven-combat .combat-arena-scroll{overflow:visible}.campaign-app .player-driven-combat .combat-decisions{flex:none;min-height:300px;overflow:visible}.combat-choice-content{overflow:visible}.player-driven-combat .combat-ledger{display:block;overflow:visible}.player-driven-combat .combat-room-footer>div:last-child>span{display:none}}

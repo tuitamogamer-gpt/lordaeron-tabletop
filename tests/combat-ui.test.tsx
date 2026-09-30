@@ -45,6 +45,47 @@ function saveAtPool() {
 }
 
 describe('combat room controls and dice', () => {
+ it('reviews Heroic Strike without spending, then confirms energy and an explicitly chosen dice pool', () => {
+  let s = createGame(p, DEFAULT_SETUP); const h = s.heroes[0];
+  h.learned = ['warrior-heroic-strike']; h.slots[1].card = 'warrior-heroic-strike';
+  s.enemies = [{ id: 'enemy', creature: 'murloc', color: 'green', region: 'brill' }];
+  beginBattle(s, 'pve', [h.id], ['enemy'], 'horde', 'brill');
+  s = apply(p, s, { type: 'attacker', hero: h.id });
+  const send = vi.fn((c: Command) => { s = apply(p, s, c); r.rerender(<Combat {...props(s)} send={send} />); });
+  const r = render(<Combat {...props(s)} send={send} />);
+  expect(s.heroes[0].energy).toBe(2);
+  expect(screen.getByText('Automatic · already applied')).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: 'Choose Heroic Strike' }));
+  expect(screen.getByLabelText('Heroic Strike energy after cost').textContent).toBe('2 → 0');
+  fireEvent.change(screen.getByRole('spinbutton', { name: 'Roll red dice' }), { target: { value: '1' } });
+  expect(send).not.toHaveBeenCalled();
+  expect(screen.getByRole('button', { name: 'Roll 2 D8' })).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: 'Use Heroic Strike · 2 energy' }));
+  expect(send).toHaveBeenCalledExactlyOnceWith({ type: 'ability', hero: h.id, card: 'warrior-heroic-strike', ability: 'pool', args: {} });
+  expect(s.heroes[0].energy).toBe(0);
+  expect(s.battle!.active!.reroll).toBe(1);
+  expect((screen.getByRole('spinbutton', { name: 'Roll red dice' }) as HTMLInputElement).value).toBe('2');
+  expect(screen.queryByRole('button', { name: 'Choose Heroic Strike' })).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Roll 3 D8' }));
+  expect(send).toHaveBeenLastCalledWith({ type: 'roll', omit: { red: 1, blue: 0, green: 0 } });
+  expect(s.battle!.stage).toBe('after-pool');
+  expect(s.battle!.active!.dice.filter(d => !d.removed)).toHaveLength(3);
+  expect(screen.getByRole('button', { name: 'Continue to rerolls' })).toBeTruthy();
+ });
+ it('warns before confirming a pool too small to survive Stun', () => {
+  let s = createGame(p, DEFAULT_SETUP); const h = s.heroes[0]; h.stun = 1;
+  s.enemies = [{ id: 'enemy', creature: 'murloc', color: 'green', region: 'brill' }];
+  beginBattle(s, 'pve', [h.id], ['enemy'], 'horde', 'brill');
+  s = apply(p, s, { type: 'attacker', hero: h.id });
+  const pr = props(s); render(<Combat {...pr} />);
+  expect(screen.queryByText(/Confirming this pool defeats/)).toBeNull();
+  fireEvent.change(screen.getByRole('spinbutton', { name: 'Roll red dice' }), { target: { value: '0' } });
+  expect(screen.getByText(/Stun requires 2 dice. Confirming this pool defeats Grumbaz immediately/)).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Confirm pool · 1 D8' })).toBeTruthy();
+  expect(pr.send).not.toHaveBeenCalled();
+  fireEvent.change(screen.getByRole('spinbutton', { name: 'Roll red dice' }), { target: { value: '1' } });
+  expect(screen.queryByText(/Confirming this pool defeats/)).toBeNull();
+ });
  it('holds the result through anticipation and strike, reveals impact, then unlocks decisions', () => {
   vi.useFakeTimers();
   const s = battle(); s.battle!.stage = 'defense'; delete s.battle!.active; s.battle!.boxes.horde.damage = 20;
@@ -155,7 +196,7 @@ describe('combat room controls and dice', () => {
   expect(screen.queryByRole('dialog')).toBeNull();
   expect(screen.getByRole('button', { name: /^Combat\s*D8$/ }).getAttribute('aria-pressed')).toBe('false');
  });
- it('automates a real saved battle, waits for the dice, and continues while the room is hidden', async () => {
+ it('holds a human decision after rolling, including while the room is hidden', async () => {
   const saved = saveAtPool(); render(<StrictMode><Campaign /></StrictMode>);
   await screen.findByRole('dialog', { name: 'Combat' });
   vi.useFakeTimers(); fireEvent.click(screen.getByRole('button', { name: /Roll \d+ D8/ }));
@@ -168,20 +209,21 @@ describe('combat room controls and dice', () => {
   await act(async () => { vi.advanceTimersByTime(1); });
   await act(async () => { vi.advanceTimersByTime(COMBAT_STEP_MS); });
   expect(commands().filter(c => c.type === 'roll')).toHaveLength(1);
-  expect(commands().filter(c => c.type === 'advance')).toHaveLength(1);
+  expect(commands().filter(c => c.type === 'advance')).toHaveLength(0);
   fireEvent.click(screen.getByRole('button', { name: /Return to combat/ }));
   expect(screen.getByRole('dialog', { name: 'Combat' })).toBeTruthy();
-  fireEvent.click(screen.getByRole('switch', { name: /^Auto-resolve/ }));
   const count = commands().length;
   await act(async () => { vi.advanceTimersByTime(5000); });
   expect(commands()).toHaveLength(count);
+  expect(importSession(p, localStorage.getItem('lordaeron-base-save-v7')!).state.battle?.stage).toBe('after-pool');
+  fireEvent.click(screen.getByRole('button',{name:'Continue to rerolls'}));
   expect(importSession(p, localStorage.getItem('lordaeron-base-save-v7')!).state.battle?.stage).toBe('reroll');
  });
  it('applies a rapid repeated click once instead of skipping the next combat decision', async () => {
   saveAtPool();
   await act(async () => { render(<Campaign />); });
   await screen.findByRole('dialog', { name: 'Combat' });
-  fireEvent.click(screen.getByRole('switch', { name: /^Auto-resolve/ }));
+  fireEvent.click(screen.getByRole('switch', { name: /^Auto-play bots/ }));
   vi.useFakeTimers(); fireEvent.click(screen.getByRole('button', { name: /Roll \d+ D8/ }));
   await act(async () => { vi.advanceTimersByTime(DICE_SETTLE_MS); });
   const advance = screen.getByRole('button', { name: 'Continue to rerolls' });
@@ -191,7 +233,7 @@ describe('combat room controls and dice', () => {
   expect(after.session.commands).toHaveLength(before.session.commands.length + 1);
   expect(after.state.battle?.stage).toBe('reroll');
  });
- it('waits for every defense and wound animation before sending the next automated command', async () => {
+ it('keeps defense and wounds as deliberate human choices after each animation', async () => {
   const saved = saveAtPool(); let current = importSession(p, JSON.stringify(saved)).state;
   for (const type of ['roll', 'advance', 'advance', 'monster', 'tokens']) {
    const command = legalActions(p, current).find(c => c.type === type)!;
@@ -203,6 +245,8 @@ describe('combat room controls and dice', () => {
   const commands = () => JSON.parse(localStorage.getItem('lordaeron-base-save-v7')!).commands as Command[];
   const start = commands().length;
   await act(async () => { vi.advanceTimersByTime(COMBAT_STEP_MS); });
+  expect(commands()).toHaveLength(start);
+  fireEvent.click(screen.getByRole('button',{name:'Resolve ranged & defense'}));
   expect(commands()).toHaveLength(start + 1);
   expect(screen.getByLabelText('Battle animation: anticipation')).toBeTruthy();
   await act(async () => { vi.advanceTimersByTime(COMBAT_BEATS.complete - 1); });
@@ -211,11 +255,13 @@ describe('combat room controls and dice', () => {
   await act(async () => { vi.advanceTimersByTime(COMBAT_STEP_MS - 1); });
   expect(commands()).toHaveLength(start + 1);
   await act(async () => { vi.advanceTimersByTime(1); });
+  expect(commands()).toHaveLength(start + 1);
+  fireEvent.click(screen.getByRole('button',{name:'Grumbaz: wound'}));
   expect(commands()).toHaveLength(start + 2); expect(commands().at(-1)?.type).toBe('wound');
   expect(screen.getByLabelText('Battle animation: anticipation')).toBeTruthy();
   await act(async () => { vi.advanceTimersByTime(COMBAT_BEATS.complete - 1); });
   expect(commands()).toHaveLength(start + 2);
-  fireEvent.click(screen.getByRole('switch', { name: /^Auto-resolve/ }));
+  fireEvent.click(screen.getByRole('switch', { name: /^Auto-play bots/ }));
   await act(async () => { vi.advanceTimersByTime(COMBAT_BEATS.complete + COMBAT_STEP_MS); });
   expect(commands()).toHaveLength(start + 2);
  }, 15000);

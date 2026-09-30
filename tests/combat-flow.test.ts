@@ -5,7 +5,7 @@ import { beginBattle, chooseAttacker, stats } from '../src/rules/combat';
 import { settleAutomatic } from '../src/rules/effects';
 import { legalActions } from '../src/rules/legal';
 import { view } from '../src/rules/view';
-import { bookkeepingCommand, combatAutomation, combatCue, combatStep, rollSignature } from '../src/campaign/combat-flow';
+import { combatCandidates, combatAutomation, combatCue, combatStep, rollSignature } from '../src/campaign/combat-flow';
 import type { BattleStage, Command, State } from '../src/rules/model';
 
 const hero = DEFAULT_SETUP.roster[0];
@@ -23,36 +23,85 @@ describe('combat automation without bypassing player decisions', () => {
  it('waits for a human roll, but rolls for a bot without campaign-wide AI', () => {
   const s = battle(); expect(auto(s)).toBeUndefined(); expect(auto(s, [hero])).toBeDefined();
  });
- it('autoplay handles a player and pauses as soon as it is disabled', () => {
-  const s = battle(); expect(auto(s, [], { play: true })).toBeDefined(); expect(auto(s, [], { resolve: false })).toBeUndefined();
+ it('never hands a human to AI, even through the obsolete autoplay option', () => {
+  const s = battle(); expect(auto(s, [], { play: true })).toBeUndefined(); expect(auto(s, [], { campaignAuto: true })).toBeUndefined(); expect(auto(s, [hero], { resolve: false })).toBeUndefined();
  });
- it('never bypasses an optional ability, reroll, or choice of wound recipient', () => {
+ it('re-evaluates bot eligibility when a player takes control during combat', () => {
+  const s = battle(), legal = legalActions(p, s);
+  expect(combatCandidates(p, view(s), legal, [hero], options).length).toBeGreaterThan(0);
+  expect(combatCandidates(p, view(s), legal, [], options)).toEqual([]);
+ });
+ it('never bypasses an optional ability, reroll, or a single wound recipient', () => {
   const s = view(battle()); s.battle!.stage = 'reroll';
   const next: Command = { type: 'advance' };
-  expect(bookkeepingCommand(s, [next, { type: 'reroll', dice: [0] }])).toBeUndefined();
-  expect(bookkeepingCommand(s, [next, { type: 'ability', hero, card: 'printed-melee', ability: 'pool' }])).toBeUndefined();
+  const candidates = (legal: Command[]) => combatCandidates(p, s, legal, [], options);
+  expect(candidates([next, { type: 'reroll', dice: [0] }])).toEqual([]);
+  expect(candidates([next, { type: 'ability', hero, card: 'printed-melee', ability: 'pool' }])).toEqual([]);
   s.battle!.stage = 'wounds';
-  expect(bookkeepingCommand(s, [{ type: 'wound', hero }, { type: 'wound', hero: DEFAULT_SETUP.roster[1] }])).toBeUndefined();
-  expect(bookkeepingCommand(s, [{ type: 'wound', hero }])).toEqual({ type: 'wound', hero });
+  expect(candidates([{ type: 'wound', hero }, { type: 'wound', hero: DEFAULT_SETUP.roster[1] }])).toEqual([]);
+  expect(candidates([{ type: 'wound', hero }])).toEqual([]);
  });
  it('preserves the last healing and respawn window', () => {
   const s = view(battle()); s.respawns = [hero];
-  expect(bookkeepingCommand(s, [{ type: 'advance' }])).toBeUndefined();
+  expect(combatCandidates(p, s, [{ type: 'advance' }], [], options)).toEqual([]);
+ });
+ it.each([
+  ['attacker', { type: 'attacker', hero }],
+  ['pool', { type: 'roll' }],
+  ['penalty', { type: 'penalty', dice: [0] }],
+  ['after-pool', { type: 'advance' }],
+  ['reroll', { type: 'advance' }],
+  ['after-reroll', { type: 'monster' }],
+  ['tokens', { type: 'tokens' }],
+  ['after-tokens', { type: 'advance' }],
+  ['defense', { type: 'advance' }],
+  ['wounds', { type: 'wound', hero }],
+  ['resolution', { type: 'advance' }],
+  ['round-end', { type: 'advance' }],
+  ['over', { type: 'closeBattle' }],
+ ] as [BattleStage, Command][])('waits for human confirmation at %s even when there is one command', (stage, command) => {
+  const s = view(battle()); s.battle!.stage = stage;
+  expect(combatCandidates(p, s, [command], [], { ...options, play: true, campaignAuto: true })).toEqual([]);
+ });
+ it('pauses a bot for a human reaction, and resumes one move only after an explicit pass', () => {
+  const s = view(battle()), responder = DEFAULT_SETUP.roster[1];
+  const roll: Command = { type: 'roll' }, reaction: Command = { type: 'ability', hero: responder, card: 'friendly-power', ability: 'response' };
+  expect(combatCandidates(p, s, [roll, reaction], [hero], options)).toEqual([]);
+  expect(combatCandidates(p, s, [roll, reaction], [hero], { ...options, humanResponsePassed: true })).toEqual([roll]);
+  expect(combatCandidates(p, s, [roll, reaction], [hero], options)).toEqual([]);
+  expect(combatCandidates(p, s, [roll, reaction], [], { ...options, humanResponsePassed: true })).toEqual([]);
+ });
+ it('cannot pass a shared faction choice or attacker selection to a bot', () => {
+  const s = view(battle()), partner = DEFAULT_SETUP.roster[1]; s.battle!.participants.push(partner);
+  const optionsPassed = { ...options, humanResponsePassed: true };
+  s.battle!.stage = 'attacker';
+  expect(combatCandidates(p, s, [{ type: 'attacker', hero }, { type: 'attacker', hero: partner }], [hero], optionsPassed)).toEqual([]);
+  s.battle!.stage = 'defense'; delete s.battle!.active;
+  expect(combatCandidates(p, s, [{ type: 'advance' }], [hero], optionsPassed)).toEqual([]);
+ });
+ it('lets bots choose their PvP loot while preserving the final acknowledgment', () => {
+  const s = view(battle()), opponent = DEFAULT_SETUP.roster[3];
+  s.battle!.stage = 'over'; s.battle!.kind = 'pvp'; s.battle!.participants.push(opponent); s.battle!.defeated.push(opponent);
+  const loot: Command = { type: 'loot', hero, from: opponent, card: 'trophy' };
+  const close: Command = { type: 'closeBattle' };
+  expect(combatCandidates(p, s, [loot, close], [hero, opponent], options)).toEqual([loot]);
+  expect(combatCandidates(p, s, [close], [hero, opponent], options)).toEqual([]);
+  expect(combatCandidates(p, s, [loot, close], [opponent], options)).toEqual([]);
  });
  it('counts blue, red, armor and attrition once through the existing reducer', () => {
   let s = battle(); s.battle!.stage = 'tokens';
   const a = s.battle!.active!; a.threat = 5; a.attrition = 2; a.armor = 1;
   a.dice = [8, 5, 4, 7, 6, 1].map((value, id) => ({ id, value, color: id < 3 ? 'blue' : id < 5 ? 'red' : 'green', spotted: false, removed: false, rerolled: false }));
-  expect(auto(s)).toEqual({ type: 'tokens' });
-  s = apply(p, s, auto(s)!);
+  expect(auto(s)).toBeUndefined();
+  s = apply(p, s, { type: 'tokens' });
   expect(s.battle!.boxes.horde).toEqual({ damage: 2, defense: 2, armor: 1, attrition: 2 });
-  expect(s.battle!.active).toBeUndefined(); expect(auto(s)?.type).toBe('advance');
+  expect(s.battle!.active).toBeUndefined(); expect(auto(s)).toBeUndefined();
  });
  it('ranged kills happen before enemy wounds', () => {
   let s = battle(); s.battle!.stage = 'defense'; delete s.battle!.active;
   s.battle!.boxes.horde.damage = stats(p, s, 'enemy').health;
   const health = s.heroes[0].health;
-  s = apply(p, s, auto(s)!);
+  s = apply(p, s, { type: 'advance' });
   expect(s.battle!.stage).toBe('over'); expect(s.heroes[0].health).toBe(health);
   expect(auto(s)).toBeUndefined(); expect(auto(s, [hero])).toBeUndefined();
   expect(auto(s, [hero], { campaignAuto: true })).toEqual({ type: 'closeBattle' });
@@ -61,10 +110,10 @@ describe('combat automation without bypassing player decisions', () => {
   let s = battle('ogre'); s.battle!.stage = 'defense'; delete s.battle!.active;
   const attack = stats(p, s, 'enemy').attack;
   s.battle!.boxes.horde = { damage: 0, defense: attack, armor: 0, attrition: 2 };
-  s = apply(p, s, auto(s)!);
+  s = apply(p, s, { type: 'advance' });
   expect(s.battle!.stage).toBe('resolution'); expect(s.battle!.boxes.horde.defense).toBe(attack);
   expect(s.battle!.wounds.horde).toBe(0);
-  s = apply(p, s, auto(s)!);
+  s = apply(p, s, { type: 'advance' });
   expect(s.battle!.boxes.horde.defense).toBe(0); expect(s.battle!.boxes.horde.attrition).toBe(0);
  });
  it('finishes varied all-bot encounters using legal commands and stops at the result', () => {
