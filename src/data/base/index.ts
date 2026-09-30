@@ -26,7 +26,7 @@ export const BASE_PACK:ContentPack={
  cards:[...STARTING_CARDS,...CLASS_CARDS,...BASE_ITEMS,...AUCTION_CARDS],xp:[0,4,10,18,28],
  track:{2:'triangle',4:'event',5:'triangle',7:'event',8:'triangle',10:'event',11:'triangle',13:'event',14:'square',16:'event',17:'square',19:'event',20:'square',22:'event',23:'circle',25:'event',26:'circle',29:'circle'},
 };
-export const DEFAULT_SETUP:Setup={seed:2005,roster:['grumbaz-crowsblood','sofeea-icecall','zowka-shattertusk','brandon-lightstone','burbon-fang','artumnis-moondream'],overlord:'kelthuzad'};
+export const DEFAULT_SETUP:Setup={seed:2005,roster:['grumbaz-crowsblood','sofeea-icecall','zowka-shattertusk','brandon-lightstone','burbon-fang','artumnis-moondream'],overlord:'kelthuzad',variants:{overlordOnly:true}};
 export const CONTENT_COVERAGE=[
  {name:"Characters and starting cards",expected:16,note:"16 character sheets: racial powers, starting equipment, capacities and seven slots."},
  {name:'Power + Talent',expected:216,note:"108 powers and 108 talents across all nine classes."},

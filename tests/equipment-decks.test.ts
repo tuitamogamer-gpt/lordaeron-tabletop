@@ -106,7 +106,7 @@ describe('FAQ and rulebook variants',()=>{
   n.turn=1;n.phase='management';n.managed=n.heroes.filter(h=>character(p,h.id).faction==='horde').map(h=>h.id);const purple=n.itemDecks.circle[0],r=apply(p,n,{type:'endManagement'});expect(p.track[2]).toBe('triangle');expect(r.merchant.at(-1)).toBe(purple);
  });
  it('standard play still enters final preparation after turn 30',()=>{
-  const s=createGame(p,DEFAULT_SETUP);s.turn=30;s.phase='management';s.wars=[];s.managed=s.heroes.filter(h=>character(p,h.id).faction===s.faction).map(h=>h.id);expect(apply(p,s,{type:'endManagement'}).phase).toBe('final-management');
+  const s=createGame(p,{...DEFAULT_SETUP,variants:{overlordOnly:false}});s.turn=30;s.phase='management';s.wars=[];s.managed=s.heroes.filter(h=>character(p,h.id).faction===s.faction).map(h=>h.id);expect(apply(p,s,{type:'endManagement'}).phase).toBe('final-management');
  });
 });
 describe('bots plan class progression',()=>{

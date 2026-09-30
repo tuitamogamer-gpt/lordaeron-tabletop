@@ -5,7 +5,9 @@ import { BASE_PACK as p } from '../data/base';
 import { CardArt, EventArt, PaintedArt, creatureIcons } from './Art';
 import { eventText, overlordText, rewardText } from './event-text';
 import fullCards from '../data/full-cards.json';
+import abilityFaces from '../data/ability-card-faces.json';
 import RulesText from './RulesText';
+import { cardEnergyText } from './card-energy';
 const faces: Record<string, string> = fullCards;
 
 /** Presentation never reads an imported scan. A scan can supply verified content, not layout. */
@@ -14,10 +16,10 @@ export const DESIGN = {
  colors:{ink:'#101316',surface:'#252729',ivory:'#f4e4bf',gold:'#e2b969',horde:'#df6654',alliance:'#77bce8',energy:'#69bdf1',nature:'#a9cb6a',arcane:'#c79ef0'},
 } as const;
 export const triggerLabels:Record<string,string>={'round-start':"Round start",'after-tokens':"After placing hits",'energy-spent':"After spending energy",rest:"On Rest",learn:"Choose a talent",'turn-start':"Turn start",'combat-end':"Combat end",pool:"Preparation", 'after-pool':"After rolling",reroll:'Reroll','after-reroll':"After rerolls",tokens:"Hits",defense:"Defense",wound:"Before defeat",'round-end':"Round end",action:"During an action",equip:"Equipping"};
-export function CardFrame({kind,title,subtitle,rank,art,face,children,footer,accent='gold',onClick,disabled,selected=false}:{kind:string;title:string;subtitle?:string;rank?:string|number;art?:ReactNode;face?:string;children:ReactNode;footer:ReactNode;accent?:string;onClick?:()=>void;disabled?:boolean;selected?:boolean}) {
+export function CardFrame({kind,title,subtitle,rank,art,face,children,footer,accent='gold',onClick,disabled,selected=false,abilityLayout=false}:{kind:string;title:string;subtitle?:string;rank?:string|number;art?:ReactNode;face?:string;children:ReactNode;footer:ReactNode;accent?:string;onClick?:()=>void;disabled?:boolean;selected?:boolean;abilityLayout?:boolean}) {
  const style={'--card-accent':DESIGN.colors[accent as keyof typeof DESIGN.colors]??accent} as CSSProperties;
- const body=<>{face&&<img className="full-card-face" src={face} alt="" loading="lazy" width="384" height="576"/>}<span className="folio-top"><span>{kind}</span><b>{rank??'◆'}</b></span><span className="folio-art" aria-hidden="true">{!face&&<>{art}<i/><i/></>}</span><span className="folio-title"><strong>{title}</strong>{subtitle&&<small>{subtitle}</small>}</span><span className="folio-rules">{children}</span><span className="folio-footer">{footer}</span></>;
- const cls=`folio-card ${face?'full-image-card':''} ${selected?'selected':''}`;
+ const body=<>{face&&<img className="full-card-face" src={face} alt="" loading="lazy" width="384" height={abilityLayout?640:576}/>}<span className="folio-top"><span>{kind}</span><b>{abilityLayout?`LVL ${rank??1}`:rank??'◆'}</b></span><span className="folio-art" aria-hidden="true">{(!face||abilityLayout)&&<>{art}{!abilityLayout&&<><i/><i/></>}</>}</span><span className="folio-title"><strong>{title}</strong>{subtitle&&<small>{subtitle}</small>}</span><span className="folio-rules">{children}</span><span className="folio-footer">{footer}</span></>;
+ const cls=`folio-card ${face?'full-image-card':''} ${abilityLayout?'ability-layout':''} ${selected?'selected':''}`;
  return onClick?<button className={cls} style={style} onClick={onClick} disabled={disabled}>{body}</button>:<article className={cls} style={style}>{body}</article>;
 }
 const glyphPaths:Record<string,string[]>={
@@ -70,5 +72,5 @@ export function OverlordCard({overlord:o,count=6}:{overlord:Overlord;count?:4|6}
 }
 export function BossPortrait({id}:{id:string}){return <span className="boss-portrait" role="img" aria-label={p.overlords.find(o=>o.id===id)?.name??id} style={{backgroundImage:`url(/assets/portraits/${id}.webp)`,backgroundSize:'cover',backgroundPosition:'center 30%'}}/>;}
 export function AbilityCard({card:c,children,footer,onClick,disabled,selected}:{card:Card;children:ReactNode;footer?:string;onClick?:()=>void;disabled?:boolean;selected?:boolean}) {
- return <CardFrame face={faces[c.id]} kind={c.kind==='racial'?'RACIAL':c.kind==='talent'?'TALENT':c.kind==='power'?"POWER":c.type==='bag'?"CONSUMABLE":"EQUIPMENT"} title={c.name.replace(/ · probn[oi]( quest)?/g,'')} subtitle={c.classId??c.type} rank={c.level} accent={c.type==='instant'||c.type==='ranged'?'energy':c.type==='active'?'nature':'gold'} art={<CardArt card={c}/>} onClick={onClick} disabled={disabled} selected={selected} footer={<><span><GameIcon name="energy" size={18}/>{c.energy}</span><span>{footer??(c.printed?'Starting ability':`${c.price} gold`)}</span></>}>{children}</CardFrame>;
+ return <CardFrame abilityLayout face={abilityFaces[c.id as keyof typeof abilityFaces]} kind={c.kind==='racial'?'RACIAL':c.kind==='talent'?'TALENT':c.kind==='power'?"POWER":c.type==='bag'?"CONSUMABLE":"EQUIPMENT"} title={c.name.replace(/ · probn[oi]( quest)?/g,'')} subtitle={[c.classId,c.type,c.trait].filter(Boolean).join(' · ')} rank={c.level} accent={c.type==='instant'||c.type==='ranged'?'energy':c.type==='active'?'nature':'gold'} art={<CardArt card={c}/>} onClick={onClick} disabled={disabled} selected={selected} footer={<><span><GameIcon name="energy" size={18}/>{cardEnergyText(c)}</span><span>{footer??(c.printed?'Starting ability':c.kind==='talent'?'Free on level up':`${c.price} gold`)}</span></>}>{children}</CardFrame>;
 }

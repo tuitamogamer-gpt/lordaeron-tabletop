@@ -127,6 +127,19 @@ describe('state-dependent tactics',()=>{
 });
 
 describe('campaign objectives and economy',()=>{
+ it('keeps a reachable Overlord plan behind five irrelevant blue-only groups',()=>{
+  const s=createGame(p,DEFAULT_SETUP),h=s.heroes[0],side=faction(p,h.id);
+  for(const hero of s.heroes){hero.level=5;hero.xp=p.xp[4];Object.assign(hero,capacity(p,hero));}
+  s.quests=[];
+  s.enemies=p.creatures.slice(0,5).map((creature,i)=>({id:`leftover-${i}`,creature:creature.id,color:'blue',region:'garrens-haunt'}));
+  const v=view(s),engine=createStrategy(p,v,1),boss=engine.targets(side).find(o=>o.boss===s.overlord.id)!;
+  expect(s.variants?.overlordOnly).toBe(true);
+  expect(engine.targets(side).filter(o=>o.enemies[0]?.color==='blue')).toHaveLength(5);
+  expect(routeDistance(p,v,h.location,'garrens-haunt',side)).toBeLessThanOrEqual(routeDistance(p,v,h.location,boss.region,side));
+  const plan=engine.plan(h);
+  expect(plan?.objective.boss).toBe(s.overlord.id);
+  expect(plan?.travelActions).toBeGreaterThan(0);
+ });
  it('changes Rest distribution according to current health and energy',()=>{
   const {s,h}=game('mage');s.enemies=[];h.health=capacity(p,h).health;h.energy=0;
   expect(choose(s,c=>c.type==='rest'&&c.hero===h.id).command).toMatchObject({type:'rest',health:0});

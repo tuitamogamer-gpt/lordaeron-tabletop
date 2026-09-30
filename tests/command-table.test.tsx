@@ -58,11 +58,23 @@ describe('guided campaign setup',()=>{
   expect((screen.getByRole('button',{name:/^Begin campaign/}) as HTMLButtonElement).disabled).toBe(false);
  });
 });
-function Table({initial=createGame(p,DEFAULT_SETUP),send=vi.fn()}:{initial?:State;send?:(c:unknown)=>void}){
+function Table({initial=createGame(p,DEFAULT_SETUP),send=vi.fn(),bots=[],takeControl}:{initial?:State;send?:(c:unknown)=>void;bots?:string[];takeControl?:(id:string)=>void}){
  const [id,setId]=useState(initial.heroes[0].id),[selected,setSelected]=useState('brill');
- return <Tabletop state={view(initial,initial.heroes.map(h=>h.id))} h={initial.heroes.find(h=>h.id===id)!} legal={legalActions(p,initial)} controlled={initial.heroes.map(h=>h.id)} bots={[]} auto={false} botReady={false} botReason="" selectHero={setId} selected={selected} selectRegion={setSelected} inspect={()=>{}} open={()=>{}} send={send} botStep={()=>{}} toggleBots={()=>{}} focused={false} toggleFocus={()=>{}} notify={()=>{}}/>;
+ return <Tabletop state={view(initial,initial.heroes.map(h=>h.id))} h={initial.heroes.find(h=>h.id===id)!} legal={legalActions(p,initial)} controlled={initial.heroes.map(h=>h.id).filter(id=>!bots.includes(id))} bots={bots} auto={false} botReady={false} botReason="" selectHero={setId} selected={selected} selectRegion={setSelected} inspect={()=>{}} open={()=>{}} send={send} botStep={()=>{}} toggleBots={()=>{}} focused={false} toggleFocus={()=>{}} notify={()=>{}} takeControl={takeControl}/>;
 }
 describe('on-demand game panels',()=>{
+ it('offers a direct handover from AI to the player for the selected character',()=>{
+  const initial=createGame(p,DEFAULT_SETUP),takeControl=vi.fn(),id=initial.heroes[0].id;render(<Table initial={initial} bots={[id]} takeControl={takeControl}/>);
+  fireEvent.click(screen.getByRole('button',{name:/^Characters/}));const dialog=screen.getByRole('dialog',{name:'Characters'});
+  expect(within(dialog).getByText(`${character(p,id).name} is controlled by AI.`)).toBeTruthy();
+  fireEvent.click(within(dialog).getByRole('button',{name:`Play as ${character(p,id).name.split(' ')[0]}`}));expect(takeControl).toHaveBeenCalledWith(id);
+ });
+ it('defines each available action in the fixed command dock and explains unavailable actions',()=>{
+  render(<Table/>);const actions=screen.getByRole('navigation',{name:'Character actions · each costs 1 action'});
+  expect(within(actions).getByRole('button',{name:/^Travel/}).getAttribute('title')).toContain('Select a region, review the route');
+  expect(within(actions).getByText('Recover health & energy')).toBeTruthy();expect(within(actions).getByText('Learn class powers')).toBeTruthy();expect(within(actions).getByText('Shop, rest or train')).toBeTruthy();expect(within(actions).getByText('Fight a local target')).toBeTruthy();
+  expect(within(actions).getByRole('button',{name:/^Challenge/}).getAttribute('title')).toContain('no eligible target');
+ });
  it('keeps sheets and shops out of the map until opened, and switches within the dialog',()=>{
   render(<Table/>);expect(screen.queryByRole('dialog')).toBeNull();expect(screen.queryByText('Powers & equipment')).toBeNull();
   fireEvent.click(screen.getByRole('button',{name:/^Characters/}));

@@ -1,6 +1,8 @@
 # Lordaeron board · v0.5
 
-The central map is a 2D polygon board with all 67 named regions in the seven printed areas. The default table view fits the full board. **Interact with map** (or F) expands it beside the quest ledger, enabling wheel zoom, drag, arrow-key panning, +/−, region search, hero centering, and 0 to reset. Escape returns to the table and restores the overview.
+The central map is a 2D polygon board with all 67 named regions in the seven printed areas. The default table view fits the full board and action dock within the current desktop viewport. **Interact with map** (or F) centers the selected region at 200% and enables scrolling/panning within the board: a wheel or trackpad moves vertically and horizontally, Shift + wheel moves horizontally, and dragging or arrow keys also pans. Ctrl/Command + wheel and the +/− buttons zoom. Region search and hero centering locate specific pieces; **Entire map** or 0 restores the fitted board. **Done interacting** or Escape exits interaction, resets pan and zoom, and returns keyboard focus to the interaction button.
+
+The action dock shows the purpose of Travel, Rest, Train, Town and Challenge directly below each name. Hover titles explain the exact legal action or its unavailable condition. Selected-region figures and quests open in **Region details**, an overlay drawer, so inspecting a crowded region does not increase the page height. Character and quest collections continue to open in their own dialogs.
 
 ## Sources and interpretation
 
@@ -25,9 +27,10 @@ Blue creatures stop movement on entry and force the next action to be a Challeng
 
 - Stable H01–H40 / A01–A40 references appear on both the active cards and faction tokens. These are UI references, not additional game rules or printed token numbers.
 - A token exists for each region containing a quest's surviving objective figures. Its location follows the actual figures, including event movement. Blue independent figures never receive a faction quest token.
-- Selecting a card selects its live region; selecting a token highlights and scrolls to its card. The details view includes rewards, remaining targets and all printed spawns, with buttons to locate each region.
+- Selecting a card selects its live region; selecting a token tracks that quest and highlights its objective regions. The quest details view includes rewards, remaining targets and all printed spawns, with buttons to locate each region.
 - Green, yellow and red deck stacks show public remaining counts for both factions. They use the same draw controls in the reward decision, enabled only for legal replacement commands. Deck order remains private. Grey cards are setup-only and the unused grey cards are removed from play.
 - Creature counters use their actual green/red/blue figure colors independently of faction token colors. Heroes, towns, flight icons, graveyards, Overlords, Kazzak clues and active world markers remain on the board.
+- Hovering or keyboard-focusing a creature, faction quest marker, hero, Overlord, world-event marker or Kazzak clue opens a readable tooltip. Quest markers show their faction, stable reference and live remaining objectives. Creature help explains blue movement blockers, current combat stats and associated quests. Hero help shows public resources and actions; Overlord and event markers explain their rules. Unrevealed Kazzak clues disclose only knowledge already visible in `GameView`. Tooltip placement uses its rendered dimensions to remain within the map viewport.
 
 ## Save compatibility
 
@@ -37,6 +40,6 @@ The English v0.5 release translates six display-only card descriptions. The exac
 
 ## Verification
 
-`tests/board-map.test.ts` verifies the whole connected board, anchors, every walking preview, the printed flight example, impassable terrain, action costs, blue stops, quest movement/removal and replacement deck counts. `tests/map-ui.test.tsx` exercises the React controls in jsdom, including drag suppression, Escape, confirmation and both directions of quest selection. These are DOM tests, not a full browser layout test.
+`tests/board-map.test.ts` verifies the whole connected board, anchors, every walking preview, the printed flight example, impassable terrain, action costs, blue stops, quest movement/removal, replacement deck counts and bounded two-axis camera scrolling. `tests/map-ui.test.tsx` exercises the React controls in jsdom, including wheel/trackpad pan, Shift-scroll, Ctrl-wheel zoom, drag suppression, overview reset, Escape, confirmation, hover/focus help, optional region details and both directions of quest selection. `tests/command-table.test.tsx` checks visible action definitions and direct player takeover of an AI character. These are DOM tests, not a full browser layout test.
 
 `npm run render:map` produces `screenshots/02-map-regions.png` directly from the Map component's SVG and map CSS, with embedded artwork. An independent Shapely audit found all 67 polygons valid with zero positive-area overlaps. Browser automation had no available browser in this session; whole-page browser layout and real-device gesture review are not claimed by the SVG/DOM checks.

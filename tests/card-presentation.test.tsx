@@ -17,7 +17,7 @@ describe('consistent new card artwork', () => {
  it('uses the new full-card illustration for every playable card, including printed and racial abilities', () => {
   const r = render(<>{p.cards.map(c => <CardArt key={c.id} card={c} />)}</>);
   const sources = [...r.container.querySelectorAll('.card-illustration image')].map(e => e.getAttribute('href'));
-  expect(sources).toEqual(p.cards.map(c => `/assets/full-cards/${c.id}.webp`));
+  expect(sources).toEqual(p.cards.map(c => `/assets/full-cards/v8/${c.id}.webp`));
   expect(r.container.querySelector('img[src*="/card-art/"]')).toBeNull();
  });
 
@@ -27,9 +27,9 @@ describe('consistent new card artwork', () => {
   const r = render(<EquipmentEditor hero={h} send={send} busy={false} />);
   fireEvent.click(screen.getByRole('button', { name: 'Equip Fireball' }));
   const slot = screen.getByRole('button', { name: /^Slot 1:/ });
-  expect(slot.querySelector('image')?.getAttribute('href')).toBe('/assets/full-cards/mage-fireball.webp');
+  expect(slot.querySelector('image')?.getAttribute('href')).toBe('/assets/full-cards/v8/mage-fireball.webp');
   const preview = screen.getByRole('region', { name: 'Selected card preview' });
-  expect(preview.querySelector('.full-card-face')?.getAttribute('src')).toBe('/assets/full-cards/mage-fireball.webp');
+  expect(preview.querySelector('.full-card-face')?.getAttribute('src')).toBe('/assets/full-cards/v8/mage-fireball.webp');
   expect(within(preview).getAllByRole('img', { name: 'blue dice' }).length).toBeGreaterThan(0);
   expect(send).not.toHaveBeenCalled();
 
@@ -38,7 +38,7 @@ describe('consistent new card artwork', () => {
   fireEvent.click(screen.getByRole('button', { name: 'Equip Fireball' }));
   const printed = card(p, def.slots[startingSlot].printed!);
   fireEvent.click(screen.getByRole('button', { name: new RegExp(`${printed.name}.*Restore starting equipment`) }));
-  expect(screen.getByRole('region', { name: 'Selected card preview' }).querySelector('.full-card-face')?.getAttribute('src')).toBe(`/assets/full-cards/${printed.id}.webp`);
+  expect(screen.getByRole('region', { name: 'Selected card preview' }).querySelector('.full-card-face')?.getAttribute('src')).toBe(`/assets/full-cards/v8/${printed.id}.webp`);
   expect(r.container.querySelector('img[src*="/card-art/"]')).toBeNull();
   fireEvent.click(screen.getByRole('button', { name: 'Confirm equipment' }));
   expect(send.mock.calls[0][0].slots[startingSlot].card).toBeUndefined();
@@ -48,13 +48,32 @@ describe('consistent new card artwork', () => {
   const def = p.characters.find(c => c.classId === 'mage')!;
   const r = render(<CharacterSheet hero={startingHero(def.id)} inspect={() => {}} preview />);
   for (const slot of def.slots.filter(s => s.printed)) {
-   expect(r.container.querySelector(`image[href="/assets/full-cards/${slot.printed}.webp"]`)).toBeTruthy();
+   expect(r.container.querySelector(`image[href="/assets/full-cards/v8/${slot.printed}.webp"]`)).toBeTruthy();
   }
   expect(screen.getAllByRole('img', { name: /dice/ }).length).toBeGreaterThan(0);
  });
 });
 
 describe('graphical dice in authoritative rules', () => {
+ it('keeps every Execute strength and its energy cost visible on the card', () => {
+  const r = render(<GameCard card={card(p, 'warrior-execute')} />);
+  expect(r.container.textContent).toContain('Choose one strength · 5 options');
+  for (let amount = 1; amount <= 5; amount++) {
+   expect(r.container.textContent).toContain(`${amount} energy`);
+   expect(r.container.textContent).toContain(`+${amount} ranged hits`);
+  }
+  expect(r.container.querySelectorAll('.power-strength-option')).toHaveLength(5);
+  expect(r.container.querySelector('.folio-footer')?.textContent).toContain('1–5 energy');
+ });
+
+ it('renders generated D8 art without dropping the readable dice noun or accessible color', () => {
+  const r = render(<RulesText>Roll 2 red/blue dice.</RulesText>);
+  expect(screen.getByRole('img', { name: 'red/blue dice' })).toBeTruthy();
+  expect(r.container.textContent).toContain('dice');
+  expect([...r.container.querySelectorAll('.rule-die image')].map(e => e.getAttribute('href')))
+   .toEqual(['/assets/ability-ui/d8-red.webp', '/assets/ability-ui/d8-blue.webp']);
+ });
+
  it('keeps counts, thresholds and both effect branches while illustrating each dice color', () => {
   const effect: Effect = { op: 'if', condition: { kind: 'no-color', color: 'green' }, then: [
    { op: 'spot', count: 2, filter: { colors: ['red', 'blue'], min: 7 }, effects: [{ op: 'dice', color: 'blue', amount: 3 }] },

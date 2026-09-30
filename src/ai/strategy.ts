@@ -200,10 +200,11 @@ export function createStrategy(p: ContentPack, s: GameView, risk: number) {
   if (plans.has(key)) return plans.get(key);
   const side = faction(p, h.id), friends = s.heroes.filter(a => faction(p, a.id) === side && a.id !== h.id && a.health > 0);
   let best: Plan | undefined;
-  const nearby=[...targets(side)].sort((a,b)=>distance(h.location,a.region,side)-distance(h.location,b.region,side)).slice(0,5);
+  const nearby=targets(side).filter(o=>{
+   if (o.boss && !o.reward && h.level < 3) return false;
+   return o.enemies[0]?.color !== 'blue' || o.region === h.location || s.enemies.some(e => e.region === o.region && e.faction === side);
+  }).sort((a,b)=>distance(h.location,a.region,side)-distance(h.location,b.region,side)).slice(0,5);
   for (const o of nearby) {
-   if (o.boss && !o.reward && h.level < 3) continue;
-   if (o.enemies[0]?.color === 'blue' && o.region !== h.location && !s.enemies.some(e => e.region === o.region && e.faction === side)) continue;
    const d = distance(h.location, o.region, side);
    for (let mask = 0; mask < 1 << friends.length; mask++) {
     const party = [h, ...friends.filter((_, i) => mask & (1 << i))];

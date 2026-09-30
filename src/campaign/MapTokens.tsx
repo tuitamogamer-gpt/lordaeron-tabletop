@@ -1,6 +1,15 @@
 import { useId } from 'react';
 import type { Color, Enemy } from '../rules/model';
 
+export interface TokenHelp {
+ title: string;
+ category: string;
+ summary: string;
+ details?: string[];
+ hint?: string;
+}
+export type ShowTokenHelp = (help: TokenHelp | null, target?: SVGElement) => void;
+
 export function creatureStacks(enemies: Enemy[]) {
  const groups = new Map<string, { creature: string; color: Color; count: number }>();
  for (const e of enemies) { const key = `${e.creature}:${e.color}`, stack = groups.get(key); if (stack) stack.count++; else groups.set(key, { creature: e.creature, color: e.color, count: 1 }); }
@@ -8,12 +17,12 @@ export function creatureStacks(enemies: Enemy[]) {
 }
 
 /** Isolated portraits, distinct faction rings, accessible hit areas and live counters. */
-export function MapPortraitToken({ x, y, src, name, label, kind, color, count, level, active, onClick }: {
- x:number; y:number; src:string; name:string; label?:string; kind:'hero'|'overlord'|'creature'; color?:string; count?:number; level?:number; active?:boolean; onClick:()=>void;
+export function MapPortraitToken({ x, y, src, name, label, kind, color, count, level, active, onClick, help, onHelp }: {
+ x:number; y:number; src:string; name:string; label?:string; kind:'hero'|'overlord'|'creature'; color?:string; count?:number; level?:number; active?:boolean; onClick:()=>void; help?:TokenHelp; onHelp?:ShowTokenHelp;
 }) {
  const clip=`token-${useId().replace(/:/g,'')}`,r=kind==='overlord'?26:kind==='hero'?21:17;
- return <g className={`portrait-map-token ${kind} ${color??''} ${active?'active':''}`} transform={`translate(${x},${y})`} role="button" tabIndex={0} aria-label={label??name} onClick={onClick} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();onClick();}}}>
-  <title>{label??name}</title><defs><clipPath id={clip}><circle r={r-2}/></clipPath></defs>
+ return <g className={`portrait-map-token ${kind} ${color??''} ${active?'active':''}`} transform={`translate(${x},${y})`} role="button" tabIndex={0} aria-label={label??name} aria-describedby={help?`${clip}-help`:undefined} onClick={onClick} onPointerEnter={e=>help&&onHelp?.(help,e.currentTarget)} onPointerLeave={()=>onHelp?.(null)} onFocus={e=>help&&onHelp?.(help,e.currentTarget)} onBlur={()=>onHelp?.(null)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();onClick();}}}>
+  <title>{label??name}</title>{help&&<desc id={`${clip}-help`}>{[help.category,help.summary,...help.details??[],help.hint].filter(Boolean).join('. ')}</desc>}<defs><clipPath id={clip}><circle r={r-2}/></clipPath></defs>
   <circle className="portrait-token-shadow" r={r+2}/>{active&&<circle className="portrait-token-active" r={r+5}/>}
   <image href={src} x={-r+2} y={-r+2} width={(r-2)*2} height={(r-2)*2} clipPath={`url(#${clip})`} preserveAspectRatio="xMidYMid slice"/>
   <circle className="portrait-token-ring" r={r}/>

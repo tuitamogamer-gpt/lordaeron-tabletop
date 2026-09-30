@@ -2,8 +2,9 @@ import type { Card } from '../rules/model';
 import illustrations from '../data/card-art.json';
 import generatedIllustrations from '../data/generated-card-art.json';
 import fullCards from '../data/full-cards.json';
+import abilityFaces from '../data/ability-card-faces.json';
 const cardArt:Record<string,string>={...illustrations,...generatedIllustrations};
-const cardFaces:Record<string,string>=fullCards;
+const cardFaces:Record<string,string>={...fullCards,...abilityFaces};
 
 const abilityIcons = {
   melee: 0, arcane: 1, armor: 2, warrior: 3,
@@ -38,7 +39,7 @@ export function CardArt({card,className='',fit='cover'}:{card:Card;className?:st
  // Use the same new illustration as the full card, including starting and racial cards.
  // The viewport shows its painted scene without shrinking the border and blank rules panel into an icon.
  const face=cardFaces[card.id];
- if(face)return <svg className={`painted-art ability-art card-illustration ${className}`} viewBox="20 58 344 274" preserveAspectRatio={`xMidYMid ${fit==='contain'?'meet':'slice'}`} aria-hidden="true" focusable="false"><image href={face} width="384" height="576"/></svg>;
+ if(face)return <svg className={`painted-art ability-art card-illustration ${className}`} viewBox="22 53 340 160" preserveAspectRatio={`xMidYMid ${fit==='contain'?'meet':'slice'}`} aria-hidden="true" focusable="false"><image href={face} width="384" height="640"/></svg>;
  const src=cardArt[card.id];
  return src?<img className={`painted-art ability-art card-illustration ${className}`} src={src} alt="" loading="lazy" width="192" height="192"/>:<AbilityArt icon={cardIllustration(card)} className={className}/>;
 }

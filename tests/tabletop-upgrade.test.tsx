@@ -15,7 +15,7 @@ import RewardResolution from '../src/campaign/RewardResolution';
 afterEach(cleanup);
 describe('tabletop pieces and cards',()=>{
  it('renders a full raster card face with live rules for powers and events',()=>{
-  const a=render(<GameCard card={p.cards.find(c=>c.id==='mage-fireball')!}/>);expect(a.container.querySelector('.full-card-face')?.getAttribute('src')).toContain('/full-cards/mage-fireball.webp');expect(a.container.querySelector('.folio-art svg')).toBeNull();expect(screen.getByText('Fireball')).toBeTruthy();a.unmount();
+  const a=render(<GameCard card={p.cards.find(c=>c.id==='mage-fireball')!}/>);expect(a.container.querySelector('.full-card-face')?.getAttribute('src')).toContain('/full-cards/v8/mage-fireball.webp');expect(a.container.querySelector('.folio-art svg image')?.getAttribute('href')).toContain('/full-cards/v8/mage-fireball.webp');expect(screen.getByText('Fireball')).toBeTruthy();a.unmount();
   const e=render(<EventCardView event={p.events[0]}/>);expect(e.container.querySelector('.full-card-face')).toBeTruthy();expect(e.container.querySelector('.folio-art svg')).toBeNull();
  });
  it('keeps species and colors separate when counting minions',()=>{

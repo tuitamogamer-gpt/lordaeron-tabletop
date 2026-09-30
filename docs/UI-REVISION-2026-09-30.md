@@ -1,0 +1,32 @@
+# UI dorada · 30. septembar 2026.
+
+Ability, talent, racial i equipment karte imaju novi imagegen dizajn: generirani okvir, slika svake karte, svijetao pergament, zasebne naslovne i donje pločice. Tekst pravila ostaje vezan za izvršivi paket. Raspored koristi rastuće panele umjesto procentualne podjele slike; sve opcije jačine, cijene, uslovi i tajming su vidljivi. Crvene, plave i zelene D8 oznake imaju nove generirane, transparentne slike i čitljive pristupačne opise.
+
+Runtime assets: `public/assets/ability-ui/{header,title,rules,footer,frame,d8-red,d8-blue,d8-green}.webp` i 406 lica u `public/assets/full-cards/v8/`. Manifest: `src/data/ability-card-faces.json`. Izvori su kopirani u `.local-data/ability-ui-sources/`; `scripts/prepare-ability-ui.ts` ponavlja izrezivanje pregledanih panoa, spajanje postojećih jedinstvenih imagegen ilustracija i pripremu D8 oznaka.
+
+Setup prikazuje stvarne seedovane questove i postavljene figure. Nakon početka animacija prolazi kroz izvlačenje karata, postavljanje figura i povezivanje frakcijskih markera. Glavni sto stalno ima pregled aktivnih questova i ponavljanje posljednjeg postavljanja. Izvještaj o postavljanju broji stvarne figure, uključujući nestašicu plave zalihe. Živi crteži koriste javno stanje; učitavanje sačuvane partije ne ponavlja historijska obavještenja. AI čeka dok je ovaj pregled otvoren.
+
+Mapa u pregledu koristi raspoloživu visinu ekrana. Detalji izabrane regije su opcionalni. Interakcija s mapom uključuje horizontalno/vertikalno pomicanje, Shift + wheel za horizontalno pomicanje, Ctrl + wheel za zoom, drag, strelice i dugmad. Izlazak vraća cijelu mapu. Tokeni otvaraju objašnjenja na hover i keyboard focus; plave prepreke, quest oznake, figure likova, bossovi i događaji imaju posebne opise.
+
+Nova kampanja ima fiksan cilj poraza Overlorda i opcionalan Deadly PvP. Originalni pravilnik na str. 37 navodi Overlord-only kao varijantu; ona je sada trajna postavka novih kampanja prema zahtjevu korisnika. Stare partije sa izričitom prethodnom konfiguracijom zadržavaju tačan replay. Šest karaktera je tri po frakciji; svako od šest mjesta može biti ljudski ili AI igrač. Novi testovi prolaze kroz akcije, upravljanje, trening, trio borbu/nagrade i replay.
+
+## Provjera
+
+- `npm run build`: prošao TypeScript za klijent/server i produkcijski Vite build.
+- `npm run check:render`: 621 prikaz karata, ličnih listova, setupa i borbe bez neispravnog teksta.
+- Ukupni prolaz: 864 od 865 testova prošlo; jedini pad bio je razlika `-0` i `0` u novom pan testu. Kamera sada normalizira nulu. Završni ponovljeni prolaz svih pogođenih UI/map/card/quest testova: 93/93 prošlo, uključujući granice tooltipa i handover karaktera.
+- Šest karaktera: 10 scenarija prošlo. Sačuvana simulacija prolazi kroz 32 smjene, 364 legalne naredbe i 12 eventa; drugo obilaženje trake, invarijante i identičan replay su potvrđeni. [Izvještaj](SIX-CHARACTER-CAMPAIGNS.md).
+- AI izbor ciljeva: plave grupe koje nisu cilj više ne zauzimaju svih pet kandidata prije filtriranja. Završni prolaz AI planner/worker/six-character provjera: 37/37 prošlo; reprodukcijski test potvrđuje dostupan plan za Overlorda.
+- Pregledani su generirani izvorni i runtime asseti, uključujući transparentnost sva tri D8 simbola. Browser screenshot i mjerenje stvarnog prozora nisu potvrđeni: podržani CUA alat je vraćao timeout pri povezivanju s Chromeom/i browserom aplikacije. CSS pregled za 1366×768 daje mapu i akcije unutar visine prozora; stvarna vizuelna provjera ostaje ograničenje ovog prolaza.
+
+## Imagegen promptovi
+
+Oba nova izvora generirana su built-in imagegen alatom, bez eksternog API ključa. Prvi prompt je dao jedan okvir; drugi tri D8 ikone u transparentnom atlasu. Slike su pregledane prije pripreme WebP kopija.
+
+Frame prompt:
+
+> Use case: ui-mockup. Asset type: production fantasy tabletop ability card FRAME BACKGROUND, portrait aspect ratio 3:5, single card straight-on occupying the entire canvas edge to edge. Primary request: create an exquisitely readable premium Warcraft-inspired boardgame ability card template, antique gold and dark forged bronze frame, restrained carved corner ornaments, elegant warm ivory parchment. Precise composition: narrow dark bronze header band from y=0% to 10%, a clean empty deep forest charcoal illustration window x=7% to 93%, y=10% to 37%; a dark bronze TITLE nameplate y=37% to 48%; a very spacious clean bright warm ivory parchment RULES panel from x=7% to 93%, y=48% to 92%; narrow dark bronze cost footer y=92% to 100%. The parchment must be UNIFORMLY LIGHT, extremely low texture, no stains, no symbols, no drawings across its text area. Keep the rules panel much larger than the art window. Minimal fine gold rules around the art window and title plate. Style: hand-painted AAA fantasy physical collectible card, exquisite aged gold, subtle beveled edges, highly polished but quiet, precise rectangular panels. Absolutely NO LETTERS, NO TEXT, NO NUMBERS, NO icons or dice, NO decorative marks within the rules panel. This blank template is a production UI asset, live exact text and unique ability illustrations will be added in software. No perspective, no scene background, no multiple cards, no border outside the card.
+
+D8 prompt:
+
+> Use case: stylized-concept. Asset type: production inline dice icon sprite sheet for fantasy tabletop rules text. Generate exactly THREE isolated small eight-sided dice on a truly transparent background, arranged in ONE perfectly even horizontal row with three equally sized square cells. Left cell ruby RED D8, center cell sapphire BLUE D8, right cell emerald GREEN D8. Each object is a geometrically accurate octahedron: top point, bottom point, triangular flat faces, six vertices, eight triangular faces. Front-on isometric studio view of faceted die with extremely clear sharp triangular geometry, gold fine edge details and restrained luminous jewel colors, polished tactile premium boardgame prop; easy to recognize at 24 pixel icon size. Equal object size, equal centers at x=1/6, 1/2, 5/6 of canvas and y=1/2. All three dice must be whole, well separated, large enough to fill 75% of their cell with generous clean transparent padding. Numeral 8 in crisp ivory is centered on the front triangular face of each die, tiny other faces have no text. No perspective surface or pedestal, no background, no extra dice, no hands, no shadows extending beyond cell. Transparent alpha background, wide 3:1 composition.

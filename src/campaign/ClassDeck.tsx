@@ -5,11 +5,12 @@ import { character } from '../rules/common';
 import { classDeck, equipped } from '../rules/inventory';
 import type { Card, Command, Hero } from '../rules/model';
 import { GameCard } from './parts';
+import { cardEnergyText } from './card-energy';
 
 export function energyLabel(c:Card):string {
  if(c.kind==='talent')return 'Permanent talent';
  if(c.type==='active')return `${c.energy} energy to equip · constant benefit`;
- if(c.type==='instant')return `${c.energy} energy per use`;
+ if(c.type==='instant')return `${cardEnergyText(c)} per use`;
  return c.energy?`${c.energy} energy to use`:'No energy cost';
 }
 export default function ClassDeck({hero:h,inspect,legal=[],onLearn,send,selected=[],toggle}:{hero:Hero;inspect:(id:string)=>void;legal?:Command[];onLearn?:()=>void;send?:(c:Command)=>void;selected?:string[];toggle?:(id:string)=>void}){

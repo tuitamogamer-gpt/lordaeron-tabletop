@@ -43,15 +43,16 @@ Podrazumijevano upravljaš Grumbazom, a ostale likove vodi AI. **Run AI** pokre�
 
 - Dvije akcije po liku: Travel, Rest, Train, Town i Challenge; zatim upravljanje opremom.
 - Centralna 2D mapa ima 67 omeđenih polja u sedam oblasti. Prolaz prati obojenu zajedničku granicu; crni rub i dodir u uglu nisu prolaz.
-- **Interact with map** uključuje prošireni prikaz, zoom, povlačenje, pretragu regija i centriranje junaka. Završetak vraća pregled cijele table.
+- Pregled mape staje u jedan ekran s akcijama. **Interact with map** uključuje pomicanje točkićem/trackpadom u oba smjera, Shift za horizontalno pomicanje i Ctrl za zoom. Završetak vraća pregled cijele table. Hover ili fokus na tokenu objašnjava figuru, quest i pravilo kretanja.
 - Travel prikazuje najviše dva koraka za jednu akciju, uključujući prijateljske letove i plave prepreke. Potez se potvrđuje dugmetom **Putuj ovdje**.
 - Frakcijski quest tokeni dijele oznake s kartama. Klik u oba smjera povezuje polje i quest; detalji prikazuju mete, spawnove i nagrade. Obje frakcije imaju vidljive brojače špilova; zamjena se bira nakon nagrada.
 - Lični list prikazuje sedam mjesta, dodatke, torbu i talente; Hood of Shadow otvara osmo mjesto.
 - Više moći kupuje se jednom Train ili Town akcijom. Instant moći plaćaju energiju pri korištenju, active pri opremanju. Ljubimci imaju izričit izbor ponovnog opremanja uz novi trošak. Talenti su besplatni na nivoima 2–5.
 - **Combat** ima zaseban meni i toggle, animirane 3D D8 kockice i zajednički obračun. Plave daju ranged, crvene melee/defense, zelene armor, a attrition ulazi u resolution. **Auto-resolve** automatski vodi obračun i botove; **Autoplay battle** preuzima i igrače do rezultata. Moći, reroll i taktički izbori ostaju dostupni. [Detalji combat sistema](docs/COMBAT.md).
 - Događaji imaju izbore, aukcije, ratove, trofeje, kugu i svjetske bossove. Kazzak ima skrivene tragove; Nefarian putuje prema Bulwarku; Kel’Thuzad uključuje pet dodatnih događaja.
-- Pobjeda nad Overlordom ili završni PvP nakon 30. smjene; Nefarianov dolazak može ranije pokrenuti završnicu.
-- Setup nudi službene varijante **Deadly PvP** i **Defeat the Overlord**. Standardna pravila ostaju zadana.
+- Cilj novih kampanja uvijek je **Defeat the Overlord**. Nakon 30. smjene traka se ponavlja do njegovog poraza. **Deadly PvP** je nezavisna, opcionalna postavka obračuna PvP štete.
+- Setup prikazuje stvarno izvučene questove, figure i regije. Animirani početni pregled i naknadne zamjene mogu se ponovo otvoriti s glavnog stola. Svih šest karaktera imaju zasebne akcije, AI, opremu, moći i nagrade.
+- Ability karte koriste novi imagegen okvir i D8 simbole, čitljiv tekst i sve opcije jačine. Pravila rastu s sadržajem karte bez preklapanja ili skrolanja unutar njenog teksta. [Promjene i promptovi](docs/UI-REVISION-2026-09-30.md).
 
 Prečice: **1–5** akcije, **F** interakcija s mapom, **Esc** povratak. Unutar mape **+ / − / 0**, točkić i strelice. Desktop je jedina ciljna platforma.
 

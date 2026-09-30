@@ -6,7 +6,7 @@ import { reachable, steps } from '../src/rules/movement';
 import { legalActions } from '../src/rules/legal';
 import { spawnQuest } from '../src/rules/rewards';
 import { view } from '../src/rules/view';
-import { questMarkers, questLabel, clampCamera, zoomCamera } from '../src/campaign/map-state';
+import { questMarkers, questLabel, clampCamera, zoomCamera, panCamera } from '../src/campaign/map-state';
 const empty=()=>{const s=createGame(p,DEFAULT_SETUP);s.enemies=[];return s;};
 
 describe('2005 board geometry and printed movement examples',()=>{
@@ -104,5 +104,10 @@ describe('bounded map camera',()=>{
   const c={zoom:2,x:20,y:-30},cursor={x:50,y:80},next=zoomCamera(c,3,cursor,900,600,1.5);
   expect((cursor.x-next.x)/next.zoom).toBe((cursor.x-c.x)/c.zoom);
   expect((cursor.y-next.y)/next.zoom).toBe((cursor.y-c.y)/c.zoom);
+ });
+ it('scrolls both axes and clamps overscroll against the fitted map edges',()=>{
+  expect(panCamera({zoom:2,x:0,y:0},{x:75,y:100},900,600,1.5)).toEqual({zoom:2,x:-75,y:-100});
+  expect(panCamera({zoom:2,x:0,y:0},{x:9999,y:-9999},900,600,1.5)).toEqual({zoom:2,x:-450,y:300});
+  expect(panCamera({zoom:1,x:0,y:0},{x:75,y:100},900,600,1.5)).toEqual({zoom:1,x:0,y:0});
  });
 });

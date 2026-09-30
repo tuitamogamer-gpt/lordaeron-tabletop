@@ -45,7 +45,7 @@ export function createGame(p: ContentPack, setup: Setup): State {
   assert(drawQuest(p, s, f, 'green'), "No starting green quest."); s.questDecks[f].grey = [];
  }
  if(boss.combat==='kazzak'){const regions=['deep-elem','chillwind','dalson','plaguemist','infectis'],real=shuffle(s,regions)[0];s.kazzak=regions.map(region=>({region,real:region===real,known:[],revealed:false}));s.overlord.region='';}
- settleAutomatic(p,s); note(s, "Setup complete. The Horde begins the first of 30 faction turns."); return s;
+ settleAutomatic(p,s); note(s, s.variants?.overlordOnly ? "Setup complete. Defeat the Overlord to win. The Horde begins the first faction turn." : "Setup complete. The Horde begins the first of 30 faction turns."); return s;
 }
 function actionable(p: ContentPack, s: State, id: string, challenge = false) {
  const h = hero(s, id); assert(s.phase === 'actions' && faction(p, id) === s.faction && h.actions > 0, "This hero has no available action now.");

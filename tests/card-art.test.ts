@@ -5,8 +5,13 @@ import {BASE_PACK as p} from '../src/data/base';
 import extracted from '../src/data/card-art.json';
 import generated from '../src/data/generated-card-art.json';
 import fullFaces from '../src/data/full-cards.json';
+import abilityFaces from '../src/data/ability-card-faces.json';
 const art:Record<string,string>={...extracted,...generated};
 describe('complete illustration coverage',()=>{
+ it('ships the redesigned generated faces and all colored D8 symbols',()=>{
+  for(const c of p.cards){const path=abilityFaces[c.id as keyof typeof abilityFaces];expect(path,c.id).toMatch(/^\/assets\/full-cards\/v8\/.+\.webp$/);expect(existsSync(`public${path}`),c.id).toBe(true);}
+  for(const color of ['red','blue','green'])expect(existsSync(`public/assets/ability-ui/d8-${color}.webp`)).toBe(true);
+ });
  it('ships full raster faces for all abilities, items, quests, encounters, creatures and overlords',()=>{
   const faces:Record<string,string>=fullFaces;
   for(const id of [...p.cards.map(c=>c.id),...p.quests.map(q=>q.id),...p.events.map(e=>e.id),...p.creatures.map(c=>`creature-${c.id}`),...p.overlords.map(o=>`overlord-${o.id}`)]){expect(faces[id],id).toMatch(/^\/assets\/full-cards\/.+\.webp$/);expect(existsSync(`public${faces[id]}`),id).toBe(true);}

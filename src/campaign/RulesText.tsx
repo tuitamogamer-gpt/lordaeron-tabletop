@@ -6,6 +6,7 @@ const dicePhrase = /\b(?:(?:red|blue|green)(?:\s*(?:\/|,|or|and)\s*(?:red|blue|g
 const colors = /\b(red|blue|green)\b/gi;
 
 function DieGlyph({ color }: { color?: Color }) {
+ if(color)return <svg className={`rule-die ${color}`} viewBox="0 0 36 36" aria-hidden="true" focusable="false" data-die-color={color}><image href={`/assets/ability-ui/d8-${color}.webp`} width="36" height="36"/></svg>;
  return <svg className={`rule-die ${color ?? 'any'}`} viewBox="0 0 32 36" aria-hidden="true" focusable="false" data-die-color={color ?? 'any'}>
   <path className="die-silhouette" d="M16 1.5 30 10v16L16 34.5 2 26V10Z" />
   <path className="die-top" d="M16 1.5 30 10 16 13 2 10Z" />
@@ -22,7 +23,7 @@ function DicePhrase({ text }: { text: string }) {
   {matches.length ? matches.map((match, i) => <Fragment key={i}>
    {i > 0 && <span className="dice-conjunction" aria-hidden="true">{text.slice(matches[i - 1].index! + matches[i - 1][0].length, match.index)}</span>}
    <DieGlyph color={match[0].toLowerCase() as Color} />
-  </Fragment>) : <DieGlyph />}
+  </Fragment>) : <DieGlyph />}<span className="dice-word" aria-hidden="true">{/\bdie$/i.test(text)?'die':'dice'}</span>
  </span>;
 }
 

@@ -38,9 +38,22 @@ describe('class deck and equipment interface',()=>{
   const h=startingHero(p.characters.find(c=>c.classId==='hunter')!.id),send=vi.fn();h.level=2;h.energy=4;h.learned=['hunter-bear'];h.slots[0].card='hunter-bear';h.pets['hunter-bear']=1;
   render(<EquipmentEditor hero={h} send={send} busy={false}/>);fireEvent.click(screen.getByRole('checkbox',{name:/Re-equip Bear/}));expect(screen.getByText(/Energy: 4 → 1/)).toBeTruthy();fireEvent.click(screen.getByRole('button',{name:'Confirm equipment'}));expect(send.mock.calls[0][0].reEquip).toEqual(['hunter-bear']);
  });
- it('offers both page-37 variants in setup and passes them into the game',()=>{
-  const start=vi.fn();render(<CampaignSetup onStart={start} onCancel={()=>{}}/>);fireEvent.click(screen.getByRole('checkbox',{name:/Deadly PvP/}));fireEvent.click(screen.getByRole('checkbox',{name:/Defeat the Overlord/}));
+ it('fixes the Overlord objective and offers Deadly PvP as an independent combat rule',()=>{
+  const start=vi.fn();render(<CampaignSetup onStart={start} onCancel={()=>{}}/>);expect(screen.getByText('Campaign objective · Defeat the Overlord')).toBeTruthy();expect(screen.queryByRole('checkbox',{name:/Defeat the Overlord/})).toBeNull();fireEvent.click(screen.getByRole('checkbox',{name:/Deadly PvP/}));
   for(let i=0;i<3;i++)fireEvent.click(screen.getByRole('button',{name:/^Continue/}));expect(screen.getByText('Class decks')).toBeTruthy();fireEvent.click(screen.getByRole('button',{name:/Begin campaign/}));expect(start.mock.calls[0][0].variants).toEqual({deadlyPvp:true,overlordOnly:true});
+ });
+ it('defaults to six heroes and lets either added faction seat be the human-controlled hero',()=>{
+  const start=vi.fn();render(<CampaignSetup onStart={start} onCancel={()=>{}}/>);
+  expect(screen.getByRole('button',{name:/^6 characters/}).getAttribute('aria-pressed')).toBe('true');
+  expect(screen.getByText('You control one hero; AI controls the other 5. Turn this off to play all 6 heroes on this device.')).toBeTruthy();
+  fireEvent.click(screen.getByRole('button',{name:/^Continue/}));
+  const picker=screen.getByRole('combobox',{name:'Your character'});
+  expect(within(picker).getAllByRole('option')).toHaveLength(6);
+  for(const id of [DEFAULT_SETUP.roster[2],DEFAULT_SETUP.roster[5]]){fireEvent.change(picker,{target:{value:id}});expect((picker as HTMLSelectElement).value).toBe(id);}
+  for(let i=0;i<2;i++)fireEvent.click(screen.getByRole('button',{name:/^Continue/}));
+  expect(screen.getByRole('region',{name:'Starting quests and creature placement'})).toBeTruthy();
+  fireEvent.click(screen.getByRole('button',{name:/Begin campaign/}));
+  expect(start).toHaveBeenCalledWith(expect.objectContaining({roster:DEFAULT_SETUP.roster,variants:{overlordOnly:true}}),DEFAULT_SETUP.roster[5],true);
  });
  it.each(['v4','v6'])('preserves the %s save and presents a fresh setup under the new rules',version=>{
   const key=`lordaeron-base-save-${version}`;

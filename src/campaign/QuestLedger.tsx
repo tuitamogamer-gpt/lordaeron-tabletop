@@ -28,9 +28,11 @@ export function QuestDecks({ state, side, legal = [], send }: { state: GameView;
 export default function QuestLedger({ state, selected, onQuest, onInspect }: { state: GameView; selected?: string; onQuest: (id: string, region?: string) => void; onInspect: (id: string) => void }) {
  const root = useRef<HTMLElement>(null);
  const markers = questMarkers(p, state);
- useEffect(() => { root.current?.querySelector(`[data-quest="${selected}"]`)?.scrollIntoView({ block: 'nearest', inline: 'nearest' }); }, [selected]);
- return <aside className="quest-ledger table-frame" ref={root}>
+ useEffect(() => { if(selected) root.current?.querySelector(`[data-quest="${selected}"]`)?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' }); }, [selected]);
+ const targets=state.enemies.filter(e=>e.quest&&state.quests.includes(e.quest)&&e.color!=='blue').length;
+ return <aside className="quest-ledger table-frame" ref={root} aria-label="Active quest journal">
   <div className="ledger-heading"><Icon name="scroll"/><span>CALL TO ARMS<small>Quests and decks</small></span></div>
+  <div className="ledger-overview"><b>{state.quests.length}</b> active quests <span>·</span><b>{targets}</b> objectives on the map</div>
   {(['horde', 'alliance'] as const).map(side => {
    const quests = state.quests.map(id => p.quests.find(q => q.id === id)!).filter(q => q.faction === side);
    return <section className={`faction-quests ${side}`} key={side}>
@@ -40,13 +42,14 @@ export default function QuestLedger({ state, selected, onQuest, onInspect }: { s
      const active = markers.filter(m => m.quest.id === q.id), objective = q.spawns.find(s => s.color !== 'blue')!, objectives=questObjectives(q,state),total=objectives.reduce((n,o)=>n+o.total,0),remaining=objectives.reduce((n,o)=>n+o.remaining,0);
      return <article className={`table-quest ${q.tier} ${selected === q.id ? 'selected' : ''}`} key={q.id} data-quest={q.id}>
       <button className="quest-locate" onClick={() => onQuest(q.id, active[0]?.region ?? objective.region)} aria-label={`${questLabel(p,q.id)} · ${q.name} · show on map`}>
-       <img className="quest-mini-face" src={questFaces[q.id]} alt="" loading="lazy"/><span className={`quest-reference ${side}`}>{questLabel(p,q.id)}</span><span><span className="quest-tier-line">LEVEL {q.level} · {q.tier}</span><strong>{q.name}</strong><small>{active.map(m => regionName(m.region)).join(' · ') || regionName(objective.region)} · {remaining} objectives</small><span className="quest-progress" role="progressbar" aria-label={`${q.name} progress`} aria-valuenow={total-remaining} aria-valuemax={total} aria-valuemin={0}><i style={{width:`${(total-remaining)/total*100}%`}}/></span><span className="quest-progress-caption">{total-remaining} / {total} defeated</span><em>{q.reward.xp} XP · {q.reward.gold} gold {q.reward.items.map(i => ` · ${i.draw}${deckSymbol[i.deck]}`).join('')}</em></span>
+       <img className="quest-mini-face" src={questFaces[q.id]} alt="" loading="lazy"/><span className={`quest-reference ${side}`}>{questLabel(p,q.id)}</span><span><span className="quest-tier-line">LEVEL {q.level} · {q.tier}</span><strong>{q.name}</strong>{objectives.map(o=><span className="quest-objective-preview" key={`${o.creature}:${o.region}:${o.color}`}><i className={`creature-dot ${o.color}`}/><span>{o.remaining} × {o.name}<br/>{regionName(o.region)}</span></span>)}<span className="quest-progress" role="progressbar" aria-label={`${q.name} progress`} aria-valuenow={total-remaining} aria-valuemax={total} aria-valuemin={0}><i style={{width:`${(total-remaining)/Math.max(1,total)*100}%`}}/></span><span className="quest-progress-caption">{total-remaining} / {total} defeated</span>{remaining===0&&<span className="quest-ready"><Icon name="check" size={12}/>Objectives cleared</span>}<em>{q.reward.xp} XP · {q.reward.gold} gold {q.reward.items.map(i => ` · ${i.draw}${deckSymbol[i.deck]}`).join('')}</em></span>
       </button>
       <button className="quest-inspect" aria-label={`Quest details: ${q.name}`} title="View quest card" onClick={() => onInspect(q.id)}><Icon name="book" size={13}/></button>
      </article>;
     })}
    </section>;
   })}
+  <div className="ledger-explanation"><Icon name="flag" size={17}/><p>Map markers use the same H / A reference as each quest card. Clear that quest’s green and red creatures to complete it. Blue creatures are independent obstacles and stop travel.</p></div>
   <div className="ledger-foot"><Icon name="check" size={13}/>{state.completed.length} completed · grey deck is for setup only</div>
  </aside>;
 }

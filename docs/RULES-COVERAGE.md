@@ -17,8 +17,8 @@ Aktivni paket `base-2005-faq-1.4-v7` ima sve komponente osnovnog seta. `official
 | Minioni | 13 vrsta, raspoložive boje i originalne vrijednosti iz referentnog lista | Više grupnih kombinacija u igranju |
 | Događaji | 47 + 5 Kel’Thuzad; bonusi, aukcije, kupovina, retrening, putovanja, premještanje grupa, bounty, trofeji, ratovi, kuga, sedam boss događaja | Više preklapanja trajnih događaja |
 | Overlordi | Oba profila svakog bossa; pet Kazzakovih tragova, Nefarian Fate i Bulwark, Kel’Thuzadove sposobnosti i događaji | Tumačenje izbora Spot kockica za Kel’Thuzadov Attrition u složenim kombinacijama |
-| Završnica | Pobjeda nad Overlordom, završni PvP, prisilni Nefarian obračun, remi | Dodatna igranja do pobjede nad svakim bossom |
-| Varijante | Deadly PvP i Defeat the Overlord sa str. 37; izbor u setupu, obostrane rane i drugi krug trake | Duge kampanje koje prelaze više krugova trake |
+| Završnica | Nove kampanje uvijek imaju cilj poraziti Overlorda; traka se ponavlja poslije poteza 30. Završni PvP ostaje podržan za ranije snimljene postave. Prisilni Nefarian obračun i remi su skriptovani. | Dodatna igranja do pobjede nad svakim bossom |
+| Opciona borba | Deadly PvP sa str. 37 je nezavisan checkbox i mijenja samo PvP obračun. Defeat the Overlord sa iste stranice je stalni cilj novih kampanja, sa ponavljanjem trake i ljubičastim predmetima u kasnijim krugovima. | Duge kampanje koje prelaze više krugova trake |
 | AI | [Procjena prema stanju](AI-ENGINE.md), grupni ciljevi i putanje, potpune kombinacije opreme, trening, korisna razmjena, pregled efekata i rerolla, Web Worker | Šire mjerenje kvaliteta strategije; iscrpno planiranje kasnijih rundi i protivničkih odgovora |
 | Autosave | Poseban ključ v7, hash sadržaja, strogi import i deterministički replay; v6/v4/v3 zapisi ostaju sačuvani | Import različitih verzija namjerno nije podržan |
 | Online | Server i regresijski testovi sačuvani, UI isključen | Na čekanju po korisnikovoj odluci |

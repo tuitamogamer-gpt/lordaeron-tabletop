@@ -53,7 +53,7 @@ describe('every event card completes its turn transition', () => {
 
 describe('faction turns cannot overlap or skip a side', () => {
  it.each([4, 6])('plays all 30 alternating faction turns with %i heroes and real event decisions', count => {
-  let s = fresh(count); const turns: string[] = [];
+  let s = fresh(count); s.variants = { overlordOnly: false }; const turns: string[] = [];
   for (let turn = 1; turn <= 30; turn++) {
    expect(s.phase).toBe('actions'); expect(s.turn).toBe(turn);
    expect(s.faction).toBe(turn % 2 ? 'horde' : 'alliance'); turns.push(s.faction);
