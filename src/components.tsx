@@ -1,4 +1,4 @@
-import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useRef, type CSSProperties, type ReactNode, type RefObject } from 'react';
 import { ArrowRight, Axe, BookOpen, Bug, Check, ChevronDown, ChevronRight, CircleHelp, Coins, Compass, Crown, Download, Eye, Fish, Flag, Flame, FlaskConical, Footprints, Heart, Home, Layers, Leaf, Map, MapPin, Maximize2, Minus, Moon, Mountain, Music2, Plus, RotateCcw, ScrollText, Search, Settings2, Shield, Skull, Snowflake, Sparkles, Sun, Sword, Swords, Target, Tent, Trophy, Upload, Users, Volume2, VolumeX, Wind, X, Zap, Lock, type LucideIcon } from 'lucide-react';
 import { heroDefinition } from './data/content';
 import { GameIcon } from './campaign/GameIcon';
@@ -6,9 +6,12 @@ export const ICONS: Record<string,LucideIcon>={arrow:ArrowRight,axe:Axe,book:Boo
 export function Icon({name,size=18,...props}:{name:string;size?:number;className?:string}) {const Component=ICONS[name]??Sparkles;return <Component size={size} strokeWidth={1.6} aria-hidden="true" {...props}/>;}
 export function Portrait({id,className='',style={}}:{id:string;className?:string;style?:CSSProperties}){const d=heroDefinition(id);return <span role="img" aria-label={d.name} className={`portrait ${className}`} style={{backgroundPosition:`${d.portrait%3*50}% ${Math.floor(d.portrait/3)*50}%`,...style}}/>;}
 let modalCount = 0, overflowBeforeModals = '';
+export function useModalDialog(ref:RefObject<HTMLDialogElement|null>,active=true){
+  useEffect(()=>{if(!active)return;const dialog=ref.current;if(!dialog)return;const previousFocus=document.activeElement;dialog.showModal();if(modalCount++===0)overflowBeforeModals=document.body.style.overflow;document.body.style.overflow='hidden';return()=>{if(--modalCount===0)document.body.style.overflow=overflowBeforeModals;if(previousFocus instanceof HTMLElement&&previousFocus.isConnected)previousFocus.focus();};},[ref,active]);
+}
 export function Modal({title,children,onClose,wide=false,className=''}:{title:string;children:ReactNode;onClose:()=>void;wide?:boolean;className?:string}){
   const ref=useRef<HTMLDialogElement>(null);
-  useEffect(()=>{const previousFocus=document.activeElement;ref.current?.showModal();if(modalCount++===0)overflowBeforeModals=document.body.style.overflow;document.body.style.overflow='hidden';return()=>{if(--modalCount===0)document.body.style.overflow=overflowBeforeModals;if(previousFocus instanceof HTMLElement&&previousFocus.isConnected)previousFocus.focus();};},[]);
+  useModalDialog(ref);
   return <dialog ref={ref} className={`modal ${wide?'wide':''} ${className}`} aria-label={title} onCancel={e=>{e.preventDefault();onClose();}} onClick={e=>{if(e.target===e.currentTarget)onClose();}}><div className="modal-head"><div><span className="eyebrow">LORDAERON · CHRONICLES</span><h2>{title}</h2></div><button className="icon-button" aria-label="Close" onClick={onClose}><Icon name="x"/></button></div>{children}</dialog>;
 }
 export function ResourceBar({type,value,max}:{type:'health'|'energy';value:number;max:number}){return <div className={`resource ${type}`}><div className="resource-heading"><span><GameIcon name={type} size={24}/>{type==='health'?"Health":"Energy"}</span><b>{value}<small> / {max}</small></b></div><div className="resource-track"><div style={{width:`${Math.max(0,Math.min(100,value/max*100))}%`}}/></div></div>;}

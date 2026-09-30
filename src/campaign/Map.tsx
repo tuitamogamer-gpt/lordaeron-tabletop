@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { Icon } from '../components';
+import { createPortal } from 'react-dom';
+import { Icon, useModalDialog } from '../components';
 import { BASE_PACK as p } from '../data/base';
 import { BOARD_BORDERS, BOARD_SHAPE_BY_ID, BOARD_SHAPES, BOARD_VIEW as board, ZONE_COLORS, walkingLine } from '../data/board-geometry';
 import { capacity, card, character } from '../rules/common';
@@ -27,6 +28,8 @@ export default function CampaignMap({ state, selected, heroId, legal, onSelect, 
  const [camera,setCamera]=useState(OVERVIEW_CAMERA),[dragging,setDragging]=useState(false),[routeIndex,setRouteIndex]=useState(0),[showLabels,setShowLabels]=useState(true),[showRules,setShowRules]=useState(false),[strongBorders,setStrongBorders]=useState(false),[showDetails,setShowDetails]=useState(false);
  const [tokenHelp,setTokenHelp]=useState<(TokenHelp&{x:number;y:number;below:boolean})|null>(null);
  const canvas=useRef<HTMLDivElement>(null),entryButton=useRef<HTMLButtonElement>(null),tooltip=useRef<HTMLDivElement>(null);
+ const fullscreen=useRef<HTMLDialogElement>(null);
+ useModalDialog(fullscreen,focused);
  const drag=useRef<{x:number;y:number;panX:number;panY:number}|null>(null),didDrag=useRef(false),previousSelection=useRef(selected),wasFocused=useRef(false);
  const markers=useMemo(()=>questMarkers(p,state),[state.quests,state.enemies]);
  const me=state.heroes.find(h=>h.id===heroId)!;
@@ -60,7 +63,7 @@ export default function CampaignMap({ state, selected, heroId, legal, onSelect, 
   const el=canvas.current;if(!el)return;
   const resize=new ResizeObserver(()=>{setCamera(c=>clampCamera(c,el.clientWidth,el.clientHeight,ratio));setTokenHelp(null);});
   resize.observe(el);return()=>resize.disconnect();
- },[]);
+ },[focused]);
  useEffect(()=>{
   setTokenHelp(null);
   if(!focused){reset();drag.current=null;setDragging(false);if(wasFocused.current)entryButton.current?.focus();}
@@ -87,7 +90,7 @@ export default function CampaignMap({ state, selected, heroId, legal, onSelect, 
   return {title:`${stack.count} × ${creature.name}`,category:`${stack.color} creatures · ${regionById[region].name}`,summary:stack.color==='blue'?'Entering this region ends Travel. Your next action must be Challenge.':'Quest creatures. Defeat the matching group with a Challenge action.',details:[`Each: threat ${stats.threat}+ · ${stats.attack} attack · ${stats.health} health`,...(quests.length?quests.map(q=>`${stack.color==='blue'?'Placed by':'Objective for'} ${q}`):['No active quest association.']),creature.description],hint:stack.color==='blue'?'Blue creatures do not count toward quest completion.':'Select the region to inspect its creatures and quests.'};
  };
  const boss=p.overlords.find(o=>o.id===state.overlord.id)!,bossStats=encounterProfile(state,boss.id)!;
- return <section className={`campaign-map territorial-map ${focused?'interacting':'overview'} ${strongBorders?'strong-borders':''}`} aria-label="Map of Lordaeron">
+ const map=<section className={`campaign-map territorial-map ${focused?'interacting':'overview'} ${strongBorders?'strong-borders':''}`} aria-label="Map of Lordaeron">
   <div className="map-toolbar"><span><Icon name="compass"/>LORDAERON <small>67 REGIONS · 7 ZONES</small></span><div>
    {focused&&<><select className="map-jump" aria-label="Find a region" value={selected} onChange={e=>{onSelect(e.target.value);focusRegion(e.target.value);}}>{p.regions.map(r=><option key={r.id} value={r.id}>{r.name}</option>)}</select><button className="icon-button" aria-label="Find your hero" onClick={()=>{onSelect(me.location);focusRegion(me.location);}}><Icon name="target"/></button><button className="icon-button" aria-label="Zoom out" onClick={()=>changeZoom(-.25)} disabled={camera.zoom===1}><Icon name="minus"/></button><output className="map-zoom" aria-label="Map zoom">{Math.round(camera.zoom*100)}%</output><button className="icon-button" aria-label="Zoom in" onClick={()=>changeZoom(.25)} disabled={camera.zoom===4}><Icon name="plus"/></button><button className="icon-button" title="Entire map (0)" aria-label="Entire map" onClick={reset}><Icon name="reset"/></button><button className={`icon-button ${showLabels?'selected':''}`} aria-label="Region labels" aria-pressed={showLabels} onClick={()=>setShowLabels(v=>!v)}><Icon name="pin"/></button></>}
    <button className="map-border-toggle" aria-pressed={strongBorders} onClick={()=>setStrongBorders(v=>!v)}><Icon name="map" size={14}/>Borders</button>
@@ -155,4 +158,5 @@ export default function CampaignMap({ state, selected, heroId, legal, onSelect, 
   {localMarkers.length>0&&<div className="destination-quests">{localMarkers.map(m=><button key={m.quest.id} className={selectedQuest===m.quest.id?'selected':''} onClick={()=>onInspectQuest?.(m.quest.id)}><span className={`quest-reference ${m.quest.faction}`}>{m.label}</span>{m.quest.name}<small>{m.remaining} objectives</small><Icon name="book" size={12}/></button>)}</div>}
   {!here.length&&!localMarkers.length&&<p className="region-empty">No creatures or quest objectives in this region.</p>}</aside>}
  </section>;
+ return focused?createPortal(<dialog ref={fullscreen} className="campaign-app map-fullscreen-dialog" aria-label="Interact with map" aria-modal="true" onCancel={e=>{e.preventDefault();onToggleFocus();}} onKeyDown={e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();onToggleFocus();}}}>{map}</dialog>,document.body):map;
 }

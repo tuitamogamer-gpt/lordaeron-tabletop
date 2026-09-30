@@ -80,3 +80,113 @@
 .map-region-details{position:absolute;right:10px;bottom:84px;z-index:7;width:min(430px,calc(100% - 20px));max-height:calc(100% - 145px);overflow:auto;background:#17251ff5;border:1px solid #b99b5f;border-radius:5px;box-shadow:0 10px 30px #000b}.map-region-details>header{display:flex;align-items:center;justify-content:space-between;padding:10px 13px;border-bottom:1px solid #96794755}.map-region-details>header>strong{font:600 15px var(--serif);color:#edd4a0}.map-region-details .destination-units{max-height:none;padding:12px;gap:12px}.map-region-details .destination-quests{max-height:none;padding:10px;gap:8px}.map-region-details .destination-quests>button{width:100%;text-align:left}.map-region-details .destination-quests small{margin-left:auto}.region-empty{padding:12px 14px;font:11px/1.5 var(--sans);color:#c7bd9d}
 @media(prefers-reduced-motion:no-preference){.map-token-tooltip{animation:map-help-appear .12s ease-out}.map-region-details{animation:map-help-appear .16s ease-out}@keyframes map-help-appear{from{opacity:0}to{opacity:1}}}
 @media(max-width:1450px){.quest-deck b{font-size:17px}.quest-deck>span{font-size:8px}.quest-deck small{font-size:5px}.replacement-decks .quest-deck b{font-size:32px}.replacement-decks .quest-deck>span{font-size:13px}.replacement-decks .quest-deck small{font-size:8px}}
+
+/* Interaction opens in a native top-layer dialog; the table overview keeps its own layout. */
+.campaign-app.map-fullscreen-dialog {
+ position:fixed;
+ inset:0;
+ width:100vw;
+ height:100vh;
+ height:100dvh;
+ min-width:0;
+ min-height:0;
+ max-width:none;
+ max-height:none;
+ margin:0;
+ padding:0;
+ border:0;
+ border-image:none;
+ border-radius:0;
+ overflow:hidden;
+ box-shadow:none;
+ background:#101b15;
+ color:#e9dbba;
+ outline:none;
+}
+.campaign-app.map-fullscreen-dialog[open] {display:flex;}
+.campaign-app.map-fullscreen-dialog:not([open]) {display:none;}
+.campaign-app.map-fullscreen-dialog::backdrop {background:#07110d;backdrop-filter:none;}
+.campaign-app.map-fullscreen-dialog>.territorial-map {
+ display:flex;
+ flex-direction:column;
+ flex:1;
+ width:100%;
+ height:100%;
+ min-width:0;
+ min-height:0;
+ border:0;
+ border-image:none;
+ border-radius:0;
+ overflow:hidden;
+ box-shadow:none;
+ background:#101b15;
+}
+.campaign-app.map-fullscreen-dialog .territorial-map .campaign-map-scroll {
+ flex:1 1 0;
+ width:100%;
+ height:auto;
+ min-width:0;
+ min-height:0;
+ max-height:none;
+ aspect-ratio:auto;
+ overscroll-behavior:contain;
+}
+.campaign-app.map-fullscreen-dialog .territorial-map .map-toolbar {min-height:48px;padding:7px 16px;gap:12px;}
+.campaign-app.map-fullscreen-dialog .territorial-map .map-toolbar>span {font-size:12px;letter-spacing:1.2px;white-space:nowrap;}
+.campaign-app.map-fullscreen-dialog .territorial-map .map-toolbar>span>small {display:inline;font-size:9px;margin-left:10px;}
+.campaign-app.map-fullscreen-dialog .territorial-map .map-toolbar>div {gap:5px;min-width:0;}
+.campaign-app.map-fullscreen-dialog .territorial-map .map-toolbar .map-jump {width:clamp(140px,14vw,230px);min-height:32px!important;margin-right:5px;padding:5px 8px!important;font-size:11px;}
+.campaign-app.map-fullscreen-dialog .territorial-map .map-toolbar .icon-button {width:32px;height:32px;}
+.campaign-app.map-fullscreen-dialog .territorial-map .map-toolbar .icon-button svg {width:16px;height:16px;}
+.campaign-app.map-fullscreen-dialog .map-interact {min-height:32px;padding:7px 11px;font-size:11px;}
+.campaign-app.map-fullscreen-dialog .map-interact kbd {font-size:8px;}
+.campaign-app.map-fullscreen-dialog .map-zoom {font-size:11px;min-width:40px;}
+.campaign-app.map-fullscreen-dialog .map-border-toggle {min-height:32px;font-size:11px;}
+.campaign-app.map-fullscreen-dialog .map-legend {min-height:25px;padding:5px 12px;gap:8px 20px;font-size:9px;}
+.campaign-app.map-fullscreen-dialog .map-legend .legend-quests {display:flex;}
+.campaign-app.map-fullscreen-dialog .territorial-map .campaign-destination {position:relative;inset:auto;z-index:1;display:flex;align-items:center;justify-content:space-between;min-height:58px;padding:6px 16px;gap:16px;border-top:1px solid #8d784c;background:#141f19;pointer-events:auto;}
+.campaign-app.map-fullscreen-dialog .territorial-map .campaign-destination>div {pointer-events:auto;padding:0;max-width:none;border:0;background:none;box-shadow:none;}
+.campaign-app.map-fullscreen-dialog .territorial-map .campaign-destination>div:first-child {min-width:0;}
+.campaign-app.map-fullscreen-dialog .territorial-map .campaign-destination h3 {font-size:18px;margin:2px 0;}
+.campaign-app.map-fullscreen-dialog .territorial-map .campaign-destination p {font-size:10px;margin-top:2px;}
+.campaign-app.map-fullscreen-dialog .territorial-map .campaign-destination .eyebrow {font-size:8px;}
+.campaign-app.map-fullscreen-dialog .territorial-map .destination-controls {flex-direction:row;align-items:center;max-width:none;gap:10px;}
+.campaign-app.map-fullscreen-dialog .territorial-map .destination-controls select {width:clamp(160px,20vw,320px);max-width:320px;min-height:35px;padding:5px 8px;font-size:11px;}
+.campaign-app.map-fullscreen-dialog .territorial-map .campaign-destination .gold-button {min-height:39px;max-width:none;min-width:150px;padding:6px 12px!important;font-size:11px!important;gap:5px 10px;}
+.campaign-app.map-fullscreen-dialog .territorial-map .campaign-destination .gold-button small {font-size:9px;}
+.campaign-app.map-fullscreen-dialog .territorial-map .region-details-toggle {min-height:35px;font-size:11px;padding:6px 10px;}
+.campaign-app.map-fullscreen-dialog .map-travel-detail {min-height:27px;max-height:45px;overflow:auto;padding:5px 16px;font-size:11px;}
+.campaign-app.map-fullscreen-dialog .map-gesture-hint {bottom:12px;font-size:9px;letter-spacing:1px;}
+.campaign-app.map-fullscreen-dialog .territorial-map .map-rules {top:56px;left:auto;right:16px;width:min(720px,calc(100% - 32px));max-height:calc(100% - 150px);overflow:auto;font-size:12px;}
+.campaign-app.map-fullscreen-dialog .map-region-details {right:16px;bottom:94px;max-height:calc(100% - 166px);}
+@media(max-width:1050px) {
+ .campaign-app.map-fullscreen-dialog .territorial-map .map-toolbar>span>small {display:none;}
+ .campaign-app.map-fullscreen-dialog .territorial-map .map-toolbar {padding-inline:10px;gap:8px;}
+ .campaign-app.map-fullscreen-dialog .territorial-map .map-toolbar>span {font-size:10px;}
+ .campaign-app.map-fullscreen-dialog .territorial-map .map-toolbar .map-jump {width:140px;margin-right:0;}
+ .campaign-app.map-fullscreen-dialog .territorial-map .campaign-destination {padding-inline:10px;gap:10px;}
+ .campaign-app.map-fullscreen-dialog .territorial-map .destination-controls {gap:6px;}
+ .campaign-app.map-fullscreen-dialog .territorial-map .destination-controls select {width:180px;}
+}
+@media(max-width:760px) {
+ .campaign-app.map-fullscreen-dialog .territorial-map .map-toolbar {flex-wrap:wrap;justify-content:flex-end;gap:4px;}
+ .campaign-app.map-fullscreen-dialog .territorial-map .map-toolbar>span {display:none;}
+ .campaign-app.map-fullscreen-dialog .territorial-map .map-toolbar>div {flex:1;flex-wrap:wrap;justify-content:flex-end;gap:4px;}
+ .campaign-app.map-fullscreen-dialog .territorial-map .map-toolbar .map-jump {margin-right:auto;}
+ .campaign-app.map-fullscreen-dialog .map-legend {gap:6px 10px;font-size:8px;}
+ .campaign-app.map-fullscreen-dialog .territorial-map .campaign-destination {flex-wrap:wrap;gap:5px;}
+ .campaign-app.map-fullscreen-dialog .territorial-map .campaign-destination>div:first-child {flex-basis:100%;}
+ .campaign-app.map-fullscreen-dialog .territorial-map .destination-controls {width:100%;justify-content:flex-end;flex-wrap:wrap;}
+ .campaign-app.map-fullscreen-dialog .territorial-map .destination-controls select {flex:1;min-width:110px;max-width:none;}
+ .campaign-app.map-fullscreen-dialog .territorial-map .region-details-toggle {margin-right:auto;}
+ .campaign-app.map-fullscreen-dialog .map-gesture-hint {max-width:calc(100% - 20px);font-size:7px;letter-spacing:0;white-space:normal;text-align:center;}
+ .campaign-app.map-fullscreen-dialog .map-region-details {right:10px;bottom:132px;max-height:calc(100% - 210px);}
+}
+@media(max-height:620px) {
+ .campaign-app.map-fullscreen-dialog .territorial-map .map-toolbar {min-height:42px;padding-block:4px;}
+ .campaign-app.map-fullscreen-dialog .map-legend {min-height:22px;padding-block:3px;}
+ .campaign-app.map-fullscreen-dialog .territorial-map .campaign-destination {min-height:51px;padding-block:4px;}
+ .campaign-app.map-fullscreen-dialog .territorial-map .campaign-destination h3 {font-size:16px;}
+ .campaign-app.map-fullscreen-dialog .map-travel-detail {min-height:23px;padding-block:3px;font-size:10px;}
+ .campaign-app.map-fullscreen-dialog .territorial-map .map-rules {top:48px;}
+}

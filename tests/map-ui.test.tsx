@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
+import { Modal } from '../src/components';
 import { createGame } from '../src/rules/game';
 import { legalActions } from '../src/rules/legal';
 import { view } from '../src/rules/view';
@@ -18,6 +19,7 @@ beforeEach(()=>{
  HTMLElement.prototype.scrollIntoView=vi.fn();
  HTMLElement.prototype.setPointerCapture=vi.fn();HTMLElement.prototype.hasPointerCapture=()=>false;
  vi.stubGlobal('PointerEvent',MouseEvent);
+ HTMLDialogElement.prototype.showModal=function(){this.setAttribute('open','');};
 });
 afterEach(()=>{cleanup();vi.restoreAllMocks();vi.unstubAllGlobals();});
 
@@ -28,29 +30,57 @@ describe('table overview and map interaction',()=>{
   return <CampaignMap state={v} heroId={s.heroes[0].id} selected={selected} legal={legalActions(p,s)} focused={focused} onToggleFocus={()=>setFocused(v=>!v)} onSelect={setSelected} onMove={send} selectedQuest={quest} onQuest={id=>setQuest(id)}/>;
  }
  it('leaves the world view fixed, enables zoom and drag on request, and restores the overview on Escape',()=>{
-  const {container}=render(<Table/>),svg=container.querySelector('.campaign-map-scroll>svg')!;
+  render(<Table/>);let svg=screen.getByRole('group',{name:'2D board with 67 bordered regions'});
   const overview=screen.getByRole('region',{name:"Entire board overview"});
   fireEvent.wheel(overview,{deltaY:-100,clientX:450,clientY:300});expect(svg.getAttribute('style')).toContain('scale(1)');
   fireEvent.click(screen.getByRole('button',{name:/Interact with map/}));
+  svg=screen.getByRole('group',{name:'2D board with 67 bordered regions'});
   const canvas=screen.getByRole('region',{name:/Interactive map:/});
   expect(screen.getByLabelText("Map zoom").textContent).toBe('200%');
   fireEvent.click(screen.getByRole('button',{name:"Entire map"}));
   fireEvent.click(screen.getByRole('button',{name:"Zoom in"}));expect(screen.getByLabelText("Map zoom").textContent).toBe('125%');
   fireEvent.pointerDown(canvas,{button:0,clientX:350,clientY:250});fireEvent.pointerMove(canvas,{clientX:420,clientY:290});fireEvent.pointerUp(canvas);
   expect(svg.getAttribute('style')).toContain('translate(70px,40px)');
-  fireEvent.keyDown(canvas,{key:'Escape'});expect(svg.getAttribute('style')).toContain('scale(1)');
+  fireEvent.keyDown(canvas,{key:'Escape'});expect(screen.getByRole('group',{name:'2D board with 67 bordered regions'}).getAttribute('style')).toContain('scale(1)');
   expect(document.activeElement).toBe(screen.getByRole('button',{name:/Interact with map/}));
  });
  it('pans with wheel and trackpad on both axes, uses Shift for horizontal scrolling, and reserves Control-wheel for zoom',()=>{
-  const {container}=render(<Table/>);fireEvent.click(screen.getByRole('button',{name:/Interact with map/}));
+  render(<Table/>);fireEvent.click(screen.getByRole('button',{name:/Interact with map/}));
   fireEvent.click(screen.getByRole('button',{name:'Entire map'}));
   for(let i=0;i<4;i++)fireEvent.click(screen.getByRole('button',{name:'Zoom in'}));
-  const canvas=screen.getByRole('region',{name:/Interactive map:/}),svg=container.querySelector('.campaign-map-scroll>svg')!;
+  const canvas=screen.getByRole('region',{name:/Interactive map:/}),svg=screen.getByRole('group',{name:'2D board with 67 bordered regions'});
   fireEvent.wheel(canvas,{deltaX:60,deltaY:80});expect(svg.getAttribute('style')).toContain('translate(-60px,-80px) scale(2)');
   fireEvent.wheel(canvas,{deltaY:30,shiftKey:true});expect(svg.getAttribute('style')).toContain('translate(-90px,-80px) scale(2)');
   fireEvent.wheel(canvas,{deltaY:-100,ctrlKey:true,clientX:450,clientY:300});expect(screen.getByLabelText('Map zoom').textContent).toBe('218%');
-  fireEvent.click(screen.getByRole('button',{name:/Done interacting/}));expect(svg.getAttribute('style')).toContain('translate(0px,0px) scale(1)');
-  fireEvent.wheel(canvas,{deltaX:100,deltaY:100});expect(svg.getAttribute('style')).toContain('translate(0px,0px) scale(1)');
+  fireEvent.click(screen.getByRole('button',{name:/Done interacting/}));
+  const overview=screen.getByRole('region',{name:'Entire board overview'}),fitted=screen.getByRole('group',{name:'2D board with 67 bordered regions'});
+  expect(fitted.getAttribute('style')).toContain('translate(0px,0px) scale(1)');
+  fireEvent.wheel(overview,{deltaX:100,deltaY:100});expect(fitted.getAttribute('style')).toContain('translate(0px,0px) scale(1)');
+ });
+ it('moves the interactive map into a modal viewport and returns it to the table on native Escape',()=>{
+  document.body.style.overflow='auto';
+  const {container}=render(<Table/>);
+  expect(container.querySelector('.territorial-map.overview')).toBeTruthy();
+  fireEvent.click(screen.getByRole('button',{name:/Interact with map/}));
+  const dialog=screen.getByRole('dialog',{name:'Interact with map'});
+  expect(dialog.parentElement).toBe(document.body);
+  expect(dialog.classList.contains('map-fullscreen-dialog')).toBe(true);
+  expect(dialog.getAttribute('aria-modal')).toBe('true');
+  expect(container.querySelector('.territorial-map')).toBeNull();
+  expect(within(dialog).getByRole('region',{name:/Interactive map:/})).toBe(document.activeElement);
+  expect(document.body.style.overflow).toBe('hidden');
+  fireEvent(dialog,new Event('cancel',{bubbles:false,cancelable:true}));
+  expect(screen.queryByRole('dialog',{name:'Interact with map'})).toBeNull();
+  expect(container.querySelector('.territorial-map.overview')).toBeTruthy();
+  expect(document.body.style.overflow).toBe('auto');
+  document.body.style.overflow='';
+ });
+ it('keeps page scrolling locked until both the map and a nested game dialog close',()=>{
+  const {rerender}=render(<><Table/></>);fireEvent.click(screen.getByRole('button',{name:/Interact with map/}));
+  rerender(<><Table/><Modal title="Quest details" onClose={()=>{}}>Quest</Modal></>);
+  fireEvent.click(screen.getByRole('button',{name:/Done interacting/}));
+  expect(document.body.style.overflow).toBe('hidden');
+  rerender(<><Table/></>);expect(document.body.style.overflow).toBe('');
  });
  it('explains quest ownership and live objectives on hover, and blue movement blockers on keyboard focus',()=>{
   const s=createGame(p,DEFAULT_SETUP),v=view(s),m=questMarkers(p,v)[0];
