@@ -131,3 +131,27 @@
 .compact-decision .reward-choice-heading h3{font-size:16px}
 .compact-decision .reward-claim-form{padding:10px;gap:10px;margin-top:8px}
 @media (prefers-reduced-motion:reduce){.loadout-slot{transition:none}}
+
+/* Whole card faces remain visible even in the smaller character equipment slots. */
+.compact-character-sheet .sheet-racial-thumbnail>.card-thumbnail-name{grid-row:1/3;align-self:center}
+.compact-character-sheet .sheet-racial-thumbnail>.card-thumbnail-footer{grid-row:3;justify-content:flex-start}
+.compact-character-sheet .sheet-slot-card>.card-thumbnail{display:grid;grid-template-columns:minmax(40px,.65fr) minmax(0,1fr);grid-template-rows:1fr auto;padding:6px;gap:0 4px}
+.compact-character-sheet .sheet-slot-card .card-thumbnail-art{grid-column:1;grid-row:1/3;height:100%}
+.compact-character-sheet .sheet-slot-card .card-thumbnail-name{grid-column:2;grid-row:1;text-align:left;justify-content:flex-start;padding:3px;min-height:0}
+.compact-character-sheet .sheet-slot-card .card-thumbnail-footer{grid-column:2;grid-row:2;flex-wrap:wrap;justify-content:flex-start;padding:3px;gap:3px}
+.compact-character-sheet .sheet-slot-card .card-thumbnail-footer>span:last-child{text-align:left;justify-content:flex-start}
+.sheet-gallery-pages{display:flex;flex:none;align-items:center;justify-content:flex-end;gap:12px;min-height:32px;padding-top:5px;font:10px/1.4 var(--sans);color:#c5b28c}
+.sheet-gallery-pages .quiet-button{font-size:10px;padding:5px 10px}
+@media(min-width:1000px){
+ .compact-character-sheet .sheet-pane .sheet-card-grid .card-thumbnail,.compact-character-sheet .sheet-pane .bag-empty{height:clamp(230px,calc(100dvh - 510px),280px)}
+ .compact-character-sheet .talent-slots .card-thumbnail{height:clamp(220px,calc(100dvh - 510px),265px);padding:8px}
+ .character-codex .character-roster{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:5px;margin-bottom:8px}
+ .character-codex .character-roster>button{min-width:0;min-height:42px;padding:4px;gap:6px}
+ .character-codex .character-roster button>.portrait{width:30px;height:30px}
+ .character-codex .character-roster strong{font-size:10px;line-height:1.3}
+ .character-codex .character-roster small{font-size:8px;line-height:1.3;margin-top:2px}
+ .character-codex .full-character-sheet.compact-character-sheet{height:min(560px,calc(100dvh - 260px))}
+ .workspace-modal .merchant-stock>.card-thumbnail{height:clamp(235px,calc(100dvh - 390px),320px)}
+ .compact-town .town-card-grid>.card-thumbnail,.compact-town .town-card-entry>.card-thumbnail{height:clamp(225px,calc(100dvh - 440px),290px)}
+ .compact-decision .talent-choice .card-thumbnail{height:clamp(210px,calc(100dvh - 485px),280px)}
+}

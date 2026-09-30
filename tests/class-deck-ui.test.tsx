@@ -22,7 +22,8 @@ describe('class deck and equipment interface',()=>{
  });
  it('shows separate power and talent piles, level requirements, and free talent acquisition',()=>{
   render(<ClassDeck hero={mage()} inspect={()=>{}}/>);expect(screen.getByRole('button',{name:/Power deck.*12 in deck/})).toBeTruthy();expect(screen.getByRole('button',{name:/Talent deck.*12 in deck/})).toBeTruthy();
-  fireEvent.click(screen.getByRole('button',{name:/^Talent deck/}));expect(screen.getAllByText('Free on level up')).toHaveLength(12);expect(screen.queryByText(/gold to learn/)).toBeNull();
+  fireEvent.click(screen.getByRole('button',{name:/^Talent deck/}));expect(screen.getAllByText('Free on level up')).toHaveLength(6);expect(screen.getByText('1–6 of 12 talents')).toBeTruthy();expect(screen.queryByText(/gold to learn/)).toBeNull();
+  fireEvent.click(screen.getByRole('button',{name:'Next class deck page'}));expect(screen.getAllByText('Free on level up')).toHaveLength(6);expect(screen.getByText('7–12 of 12 talents')).toBeTruthy();
   fireEvent.click(screen.getByRole('button',{name:'Level 5'}));expect(screen.getAllByText('Free on level up')).toHaveLength(3);
  });
  it('stages several affordable powers and disables purchases above the remaining budget',()=>{
@@ -33,6 +34,21 @@ describe('class deck and equipment interface',()=>{
  });
  it('permits browsing the deck without spending actions or gold',()=>{
   const h=mage(),copy=structuredClone(h),send=vi.fn();render(<ClassDeck hero={h} inspect={()=>{}} send={send}/>);fireEvent.click(screen.getByRole('button',{name:/^Talent deck/}));fireEvent.click(screen.getByRole('button',{name:'Level 2'}));expect(h).toEqual(copy);expect(send).not.toHaveBeenCalled();
+ });
+ it('preserves training selections across pages and resets paging when the level changes',()=>{
+  const h=mage();h.level=5;h.gold=100;const copy=structuredClone(h),r=render(<Training h={h}/>);
+  fireEvent.click(screen.getAllByRole('button',{name:'Add to training'})[0]);
+  fireEvent.click(screen.getByRole('button',{name:'Next class deck page'}));
+  expect(r.container.querySelectorAll('.deck-card-entry')).toHaveLength(6);
+  expect(screen.getByText('7–12 of 12 powers',{exact:false})).toBeTruthy();
+  fireEvent.click(screen.getAllByRole('button',{name:'Add to training'})[0]);
+  fireEvent.click(screen.getByRole('button',{name:'Previous class deck page'}));
+  expect(screen.getAllByRole('button',{name:'Remove from training'})).toHaveLength(1);
+  expect(screen.getByText('· 2 selected',{exact:false})).toBeTruthy();
+  fireEvent.click(screen.getByRole('button',{name:'Next class deck page'}));
+  fireEvent.click(screen.getByRole('button',{name:'Level 1'}));
+  expect((screen.getByRole('button',{name:'Previous class deck page'}) as HTMLButtonElement).disabled).toBe(true);
+  expect(screen.getAllByRole('button',{name:'Remove from training'})).toHaveLength(1);expect(h).toEqual(copy);
  });
  it('previews energy and submits a pet re-equip with its explicit cost',()=>{
   const h=startingHero(p.characters.find(c=>c.classId==='hunter')!.id),send=vi.fn();h.level=2;h.energy=4;h.learned=['hunter-bear'];h.slots[0].card='hunter-bear';h.pets['hunter-bear']=1;

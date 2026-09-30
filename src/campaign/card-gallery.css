@@ -1,0 +1,100 @@
+/* A quiet, bounded shelf: complete upright card faces and a stable six-card page. */
+.base-catalog.card-gallery{--gallery-card-height:clamp(255px,calc(100dvh - 448px),355px);padding:4px 0 0}
+.card-gallery .catalog-intro{gap:24px;margin:0 0 14px}
+.card-gallery .catalog-intro .eyebrow{font-size:8px;letter-spacing:2px}
+.card-gallery .catalog-intro h2{font-size:28px;margin:6px 0}
+.card-gallery .catalog-intro p{margin:0;font-size:11px;color:#baaf98}
+.card-gallery .catalog-search{min-width:275px;border-radius:5px;border-color:#786746;background:#131c18b3}
+.card-gallery .catalog-search input{width:100%;font-size:12px}
+.card-gallery .catalog-tabs{gap:6px;justify-content:flex-start;border-bottom-color:#94744366}
+.card-gallery .catalog-tabs button{padding:11px 16px;border-radius:4px 4px 0 0;font-size:11px}
+.card-gallery .catalog-tabs button b{font-size:9px;color:#b9a584}
+.card-gallery .catalog-tabs button.active{background:linear-gradient(#b8995524,#b8995509);color:#ffe5af;border-bottom-color:#e3bc70}
+.card-gallery .catalog-filter{margin:12px 0;gap:10px;min-height:33px}
+.card-gallery .catalog-filter>select{width:154px;min-height:31px;font-size:10px;border-color:#6e6447;background-color:#19231d;border-radius:4px}
+.catalog-result-count{min-width:105px;color:#bdac8a;font-size:11px}
+.catalog-result-count strong{font:600 17px/1 var(--serif);color:#e9d0a0;margin-right:4px}
+.gallery-browse-hint{margin-left:auto;font:10px/1.4 var(--sans);color:#bdaf94}
+.gallery-shelf{position:relative;padding:16px 18px 19px;border:1px solid #8571424d;border-radius:8px;background:radial-gradient(ellipse at 50% 110%,#89754321,transparent 65%),linear-gradient(180deg,#0e1a16a8,#17251ddb);box-shadow:inset 0 1px #d7c19312,0 12px 24px #0002}
+.card-gallery .base-card-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:20px;align-items:start;min-height:var(--gallery-card-height)}
+.card-gallery .base-card-grid>.card-thumbnail{height:var(--gallery-card-height);width:100%;max-width:216px;justify-self:center;flex:none}
+.card-gallery .base-card-grid .card-thumbnail-name{font-size:12px;height:42px;min-height:42px;padding:4px 6px}
+.card-gallery .base-card-grid .card-thumbnail-footer{font-size:9px;height:26px;min-height:26px;padding:4px 7px}
+.gallery-footer{display:flex;align-items:center;justify-content:space-between;gap:18px;min-height:49px;padding:5px 2px;font:10px/1.4 var(--sans);color:#b9ab8e}
+.gallery-footer .catalog-pagination{margin:0;gap:15px;font-size:11px}
+.gallery-footer .catalog-pagination button{min-width:88px;padding:7px 12px;font-size:10px;border-color:#756440;border-radius:4px}
+.gallery-footer .catalog-pagination b{color:#ffe0a4}
+.gallery-range,.gallery-footer-note{flex:1}
+.gallery-footer-note{text-align:right;color:#8f957f}
+.gallery-empty{position:absolute;inset:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#baa98a;text-align:center}
+.gallery-empty>svg{width:28px;height:28px;opacity:.7}.gallery-empty h3{font:600 21px var(--serif);margin:0;color:#ddc596}.gallery-empty p{font-size:12px;margin:0 0 7px}
+.card-gallery.reference-gallery .base-card-grid{grid-template-columns:repeat(3,minmax(0,1fr));align-items:start}
+.card-gallery.reference-gallery .base-card-grid>.folio-card{min-height:0}
+
+/* Class decks use the same shelf, with their state and purchase action outside the face. */
+.class-deck.portrait-class-deck{--gallery-card-height:clamp(220px,calc(100dvh - 422px),310px);gap:9px}
+.portrait-class-deck .class-deck-heading h3{font-size:19px}
+.portrait-class-deck .class-deck-piles{gap:10px}
+.portrait-class-deck .class-deck-piles>button{border-color:#8c74484d;box-shadow:none;padding:8px 12px;background:#18231edb}
+.portrait-class-deck .class-deck-piles>button[aria-pressed=true]{border-color:#c0a064;background:linear-gradient(120deg,#55442a9c,#283028);box-shadow:inset 3px 0 #d2b06a}
+.portrait-class-deck .class-deck-back{box-shadow:none;border:none;background:none;width:24px;height:27px}
+.portrait-class-deck .class-deck-piles>button>b{font-size:19px;color:#bba477}
+.portrait-class-deck .class-deck-toolbar{min-height:29px}
+.portrait-class-deck .class-deck-toolbar nav>button{border-radius:4px;padding:5px 9px;font-size:10px}
+.portrait-class-deck .class-deck-cards{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:13px;align-items:start;padding:8px 10px 9px;border:1px solid #88714540;border-radius:7px;background:linear-gradient(#12201aad,#18271f82)}
+.portrait-class-deck .deck-card-entry{gap:5px;align-items:stretch;max-width:200px;width:100%;justify-self:center}
+.portrait-class-deck .deck-card-state{display:block;min-height:18px;padding:2px 0;text-align:center;font:500 9px/1.4 var(--sans);color:#c8b48d;background:none;border:0;white-space:normal;overflow:visible}
+.portrait-class-deck .deck-card-entry.owned>.deck-card-state{color:#b6d7a1;background:none}
+.portrait-class-deck .deck-card-entry.selected>.deck-card-state{color:#ffdc89;background:none}
+.portrait-class-deck .deck-card-entry.level-locked>.deck-card-state{color:#999d8d}
+.portrait-class-deck .deck-card-entry>.card-thumbnail{height:var(--gallery-card-height);border-radius:5px}
+.portrait-class-deck .card-thumbnail-name{font-size:11px;height:38px;min-height:38px;padding:4px 5px}
+.portrait-class-deck .card-thumbnail-footer{font-size:9px;height:26px;min-height:26px;padding:4px 5px}
+.portrait-class-deck .deck-card-action{min-height:0;padding:0;background:none;border:0}
+.portrait-class-deck .deck-card-action:empty{display:none}
+.portrait-class-deck .deck-card-action>button{margin:0;min-height:29px;padding:5px 4px;border-radius:4px;font-size:10px}
+.class-deck-footer{display:flex;justify-content:space-between;align-items:center;gap:10px;color:#b6a785;font:10px/1.3 var(--sans);min-height:28px}
+.class-deck-footer>span>b{font-weight:500;color:#e5c277}
+.class-deck-footer .catalog-pagination{gap:10px;font-size:10px;white-space:nowrap}
+.class-deck-footer .catalog-pagination button{padding:5px 9px;font-size:10px;min-height:27px;border-color:#78623f;border-radius:4px}
+.deck-empty{grid-column:1/-1;display:grid;place-items:center;min-height:var(--gallery-card-height);margin:0;color:#b8aa8d;font:12px/1.5 var(--sans)}
+
+@media(min-width:1000px){
+ .workspace-classes:has(.character-control-handover) .portrait-class-deck{--gallery-card-height:clamp(190px,calc(100dvh - 516px),310px)}
+ .campaign-app .town-modal .compact-town{padding:8px 18px}
+ .campaign-app .town-modal .compact-town>p{margin-bottom:6px}
+ .campaign-app .town-modal .compact-town .town-recovery-order select{min-height:29px;padding:4px 7px}
+ .campaign-app .town-modal .compact-town .rest-slider{margin:5px 0;font-size:10px}
+ .campaign-app .town-modal .compact-town .transaction-summary{padding:4px 0;font-size:11px}
+ .campaign-app .town-modal .compact-town .town-shelves{margin:5px 0 8px}
+ .campaign-app .town-modal .compact-town .town-shelves button{min-height:30px;padding:5px 12px;font-size:10px}
+ .campaign-app .town-modal .town-card-grid>.card-thumbnail,.campaign-app .town-modal .town-card-entry>.card-thumbnail{height:clamp(225px,calc(100dvh - 478px),290px)}
+ .campaign-app .town-modal .card-thumbnail-name{height:38px;min-height:38px;padding:4px 0;font-size:11px}
+ .campaign-app .town-modal .card-thumbnail-footer{height:30px;min-height:30px;padding:3px 0}
+ .campaign-app .town-modal .town-card-entry>select{min-height:28px;padding:4px 6px}
+ .campaign-app .town-modal .town-card-entry>.quiet-button{min-height:28px;padding:4px 6px}
+ .campaign-app .town-modal .loadout-pagination button{min-height:28px;padding:4px 9px}
+ .campaign-app .town-modal .transaction-receipt{padding-top:5px}
+ .campaign-app .town-modal .settings-buttons{margin-top:7px}
+ .campaign-app .town-modal .settings-buttons button{min-height:31px;padding:6px 12px}
+ .compact-character-sheet .portrait-class-deck{gap:5px;min-height:0}
+ .compact-character-sheet .portrait-class-deck .class-deck-heading h3{font-size:15px}
+ .compact-character-sheet .portrait-class-deck .class-deck-piles>button{padding:5px 9px;min-height:39px}
+ .compact-character-sheet .portrait-class-deck .class-deck-toolbar{min-height:25px}
+ .compact-character-sheet .portrait-class-deck .class-deck-toolbar nav>button{padding:4px 6px;font-size:9px}
+ .compact-character-sheet .portrait-class-deck .class-deck-cards{flex:1;min-height:0;grid-template-rows:minmax(0,1fr);gap:10px;padding:6px 8px}
+ .compact-character-sheet .portrait-class-deck .deck-card-entry{height:100%;min-height:0;gap:3px}
+ .compact-character-sheet .portrait-class-deck .deck-card-entry>.card-thumbnail{height:auto;max-height:265px;flex:1;min-height:0}
+ .compact-character-sheet .portrait-class-deck .deck-card-action{display:none}
+ .compact-character-sheet .portrait-class-deck .deck-card-state{font-size:8px;min-height:15px}
+ .compact-character-sheet .portrait-class-deck .card-thumbnail-name{font-size:10px;height:36px;min-height:36px;padding:3px 5px}
+ .compact-character-sheet .portrait-class-deck .card-thumbnail-footer{font-size:8px;height:22px;min-height:22px;padding:3px 4px}
+ .compact-character-sheet .portrait-class-deck .class-deck-footer{min-height:26px;font-size:9px}
+ .compact-character-sheet .portrait-class-deck .class-deck-footer .catalog-pagination button{font-size:9px;min-height:25px;padding:4px 7px}
+ .compact-decision.talent-decision .card-thumbnail-name{height:38px;min-height:38px;padding:4px 0;font-size:11px}
+ .compact-decision.talent-decision .card-thumbnail-footer{height:34px;min-height:34px;padding:3px 0}
+ .compact-decision.talent-decision .talent-choice>.gold-button{height:44px;min-height:44px}
+}
+@media(max-width:1100px){.card-gallery .catalog-tabs button{padding-inline:10px}.card-gallery .base-card-grid{gap:12px}.gallery-shelf{padding-inline:12px}.gallery-footer-note{display:none}.gallery-range{flex:none}}
+@media(max-width:999px){.base-catalog.card-gallery{--gallery-card-height:310px}.card-gallery .base-card-grid,.portrait-class-deck .class-deck-cards{grid-template-columns:repeat(3,minmax(0,1fr))}.card-gallery .catalog-intro{flex-wrap:wrap;gap:12px}.card-gallery .catalog-search{flex:1;min-width:220px}.card-gallery .catalog-tabs{flex-wrap:wrap}.gallery-browse-hint{display:none}.portrait-class-deck .class-deck-toolbar{flex-wrap:wrap}.card-gallery .base-card-grid>.card-thumbnail{max-width:190px}.class-deck.portrait-class-deck{--gallery-card-height:280px}}
+@media(max-width:600px){.card-gallery .base-card-grid,.card-gallery.reference-gallery .base-card-grid,.portrait-class-deck .class-deck-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card-gallery .catalog-intro h2{font-size:24px}.card-gallery .catalog-tabs{gap:1px}.card-gallery .catalog-tabs button{font-size:10px;padding:9px 8px}.card-gallery .catalog-filter{flex-wrap:wrap;gap:7px}.catalog-result-count{width:100%}.card-gallery .catalog-filter>select{flex:1;width:auto}.gallery-shelf{padding:10px}.gallery-footer{flex-wrap:wrap;justify-content:center;gap:6px;padding-block:10px}.gallery-range{width:100%;text-align:center}.class-deck-footer{flex-wrap:wrap}.class-deck-footer .catalog-pagination{margin-left:0}.portrait-class-deck .class-deck-toolbar nav{flex-wrap:wrap}.portrait-class-deck .class-deck-heading h3{font-size:16px}.portrait-class-deck .deck-purse small{display:none}}

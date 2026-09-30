@@ -85,13 +85,14 @@ describe('Town thumbnail transactions',()=>{
  it('keeps every stock item reachable by pages and clamps the page after the last purchase',()=>{
   const h=mage();h.gold=100;const merchant=inventoryItems.slice(0,13).map(c=>c.id),send=vi.fn();
   const r=render(<TownEditor hero={h} merchant={merchant} send={send} busy={false}/>);
-  expect(r.container.querySelectorAll('.town-card-entry')).toHaveLength(12);
+  expect(r.container.querySelectorAll('.town-card-entry')).toHaveLength(6);
+  fireEvent.click(within(screen.getByRole('navigation',{name:'Town card pages'})).getByRole('button',{name:'Next'}));
   fireEvent.click(within(screen.getByRole('navigation',{name:'Town card pages'})).getByRole('button',{name:'Next'}));
   expect(r.container.querySelectorAll('.town-card-entry')).toHaveLength(1);
   expect(screen.getByRole('button',{name:`Preview ${card(p,merchant[12]).name}`})).toBeTruthy();
   fireEvent.click(screen.getByRole('button',{name:'Add purchase'}));
-  expect(screen.queryByRole('navigation',{name:'Town card pages'})).toBeNull();
-  expect(r.container.querySelectorAll('.town-card-entry')).toHaveLength(12);
+  expect(within(screen.getByRole('navigation',{name:'Town card pages'})).getByRole('button',{name:'Next'}).hasAttribute('disabled')).toBe(true);
+  expect(r.container.querySelectorAll('.town-card-entry')).toHaveLength(6);
   fireEvent.click(screen.getByRole('button',{name:'Confirm · 1 transactions · 1 action'}));
   expect(send).toHaveBeenCalledWith(expect.objectContaining({operations:[{op:'buy',card:merchant[12],discard:undefined}]}));
  });

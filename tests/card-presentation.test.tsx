@@ -14,6 +14,21 @@ import type { Effect } from '../src/rules/model';
 afterEach(cleanup);
 
 describe('consistent new card artwork', () => {
+ it('keeps every learned power and talent reachable in six-card character pages', () => {
+  const h=startingHero(p.characters.find(c=>c.classId==='mage')!.id);
+  h.learned=p.cards.filter(c=>c.kind==='power'&&!c.printed&&c.classId==='mage').map(c=>c.id);
+  const r=render(<CharacterSheet hero={h} inspect={()=>{}} preview/>);
+  fireEvent.click(screen.getByRole('button',{name:/Spellbook/}));
+  expect(r.container.querySelectorAll('.sheet-card-grid .card-thumbnail')).toHaveLength(6);
+  const firstIds=[...r.container.querySelectorAll('.sheet-card-grid .card-portrait-face>image')].map(e=>e.getAttribute('href'));
+  fireEvent.click(within(screen.getByRole('navigation',{name:'Character card pages'})).getByRole('button',{name:'Next'}));
+  const lastIds=[...r.container.querySelectorAll('.sheet-card-grid .card-portrait-face>image')].map(e=>e.getAttribute('href'));
+  expect(new Set([...firstIds,...lastIds]).size).toBe(h.learned.length);
+  fireEvent.click(screen.getByRole('button',{name:/^Talents/}));
+  fireEvent.click(screen.getByRole('button',{name:'Browse all talents'}));
+  expect(r.container.querySelectorAll('.sheet-card-grid .card-thumbnail')).toHaveLength(6);
+  expect(within(screen.getByRole('navigation',{name:'Character card pages'})).getByRole('button',{name:'Previous'}).hasAttribute('disabled')).toBe(true);
+ });
  it('uses the new full-card illustration for every playable card, including printed and racial abilities', () => {
   const r = render(<>{p.cards.map(c => <CardArt key={c.id} card={c} />)}</>);
   const sources = [...r.container.querySelectorAll('.card-illustration image')].map(e => e.getAttribute('href'));

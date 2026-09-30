@@ -106,7 +106,7 @@ describe('complete character sheets',()=>{
  it.each(p.characters.map(c=>[c.id,c.name]))('renders all printed slots and racial rules for %s',id=>{
   const h=startingHero(id),d=character(p,id),r=render(<CharacterSheet hero={h} inspect={()=>{}}/>);
   expect(r.container.querySelectorAll('.character-slot')).toHaveLength(7);
-  for(const slot of d.slots)if(slot.printed)expect(screen.getByText(card(p,slot.printed).name)).toBeTruthy();
+  for(const slot of d.slots)if(slot.printed)expect(screen.getByRole('button',{name:`Inspect ${card(p,slot.printed).name}`})).toBeTruthy();
   const racial=r.container.querySelector('.racial-inscription .card-thumbnail');
   expect(racial).toBeTruthy();
   fireEvent.focus(racial!);
@@ -117,8 +117,8 @@ describe('complete character sheets',()=>{
   const h=startingHero(DEFAULT_SETUP.roster[0]);h.auctionItems=['auction-hood-of-shadow'];h.slots.push({addons:[]});
   const r=render(<CharacterSheet hero={h} inspect={()=>{}}/>);expect(r.container.querySelectorAll('.character-slot')).toHaveLength(8);
   fireEvent.click(screen.getByRole('button',{name:/^Spellbook/}));expect(r.container.querySelectorAll('.spell-entry')).toHaveLength(0);expect(screen.getByText(/Your spellbook is empty/)).toBeTruthy();
-  fireEvent.click(screen.getByRole('button',{name:/^Class deck/}));expect(r.container.querySelectorAll('.deck-card-entry')).toHaveLength(12);
+  fireEvent.click(screen.getByRole('button',{name:/^Class deck/}));expect(r.container.querySelectorAll('.deck-card-entry')).toHaveLength(6);
   fireEvent.click(screen.getByRole('button',{name:/^Bag/}));expect(r.container.querySelectorAll('.bag-empty')).toHaveLength(3);
-  expect(screen.getByText('Hood of Shadow')).toBeTruthy();fireEvent.click(screen.getByRole('button',{name:/^Talents/}));expect(r.container.querySelectorAll('.talent-slots>section')).toHaveLength(4);
+  expect(screen.getByRole('button',{name:'Inspect Hood of Shadow'})).toBeTruthy();fireEvent.click(screen.getByRole('button',{name:/^Talents/}));expect(r.container.querySelectorAll('.talent-slots>section')).toHaveLength(4);
  });
 });

@@ -7,7 +7,7 @@ import type { Card } from '../rules/model';
 import RulesText from './RulesText';
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { CardArt } from './Art';
+import CardPortrait from './CardPortrait';
 import { cardEnergyText } from './card-energy';
 export const pretty=(s:string)=>s.replace(/ · probn[oi]( quest)?/g,'');
 export const factionLabel=(f:string)=>f==='horde'?"Horde":f==='alliance'?"Alliance":"Draw";
@@ -55,7 +55,7 @@ export function CardThumbnail({card:c,disabled=false,onClick,selected=false,foot
  const kind=c.kind==='racial'?'Racial':c.kind==='talent'?'Talent':c.kind==='power'?'Power':c.type==='bag'?'Consumable':'Equipment';
  return <><button ref={anchor} type="button" className={`card-thumbnail ${selected?'selected':''} ${disabled?'unavailable':''} ${className}`} aria-label={actionLabel??`${onClick?'Inspect':'Preview'} ${pretty(c.name)}`} aria-describedby={open?id:undefined} aria-disabled={disabled||undefined} onPointerEnter={event=>{if(event.pointerType!=='touch'){cancel();timer.current=setTimeout(show,180);}}} onPointerLeave={leave} onFocus={show} onBlur={event=>{if(!preview.current?.contains(event.relatedTarget as Node|null))hide();}} onClick={()=>{if(disabled)return;if(onClick){hide();onClick();}else show();}}>
   <span className="card-thumbnail-top"><span>{kind}</span><b>LVL {c.level}</b></span>
-  <span className="card-thumbnail-art"><CardArt card={c}/></span>
+  <span className="card-thumbnail-art"><CardPortrait card={c}/></span>
   <strong className="card-thumbnail-name">{pretty(c.name)}</strong>
   <span className="card-thumbnail-footer"><span><GameIcon name="energy" size={12}/>{cardEnergyText(c)}</span><span>{footer??(c.printed?'Starting':c.kind==='talent'?'Permanent':`${c.price} gold`)}</span></span>
  </button>{open&&createPortal(<div ref={preview} id={id} role="tooltip" aria-label={`${pretty(c.name)} full card`} className="card-hover-preview" style={position} onPointerEnter={cancel} onPointerLeave={leave}><GameCard card={c} footer={footer}/><span className="card-preview-hint">{actionLabel?`${actionLabel} · `:onClick?'Click the thumbnail to inspect · ':''}Esc to close</span></div>,anchor.current?.closest('dialog')??document.body)}</>;

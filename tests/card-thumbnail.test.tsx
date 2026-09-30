@@ -8,7 +8,7 @@ import { card } from '../src/rules/common';
 afterEach(()=>{cleanup();vi.useRealTimers();vi.restoreAllMocks();});
 
 describe('compact card previews',()=>{
- it('keeps all rules out of the slot and reveals every strength on keyboard focus',()=>{
+ it('keeps a bounded face in the slot and reveals every strength on keyboard focus',()=>{
   const inspect=vi.fn(),r=render(<div style={{overflow:'hidden'}}><CardThumbnail card={card(p,'warrior-execute')} onClick={inspect}/></div>);
   expect(r.container.querySelector('.folio-card')).toBeNull();
   const trigger=screen.getByRole('button',{name:'Inspect Execute'});

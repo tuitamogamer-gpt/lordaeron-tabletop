@@ -27,4 +27,5 @@ import './campaign/quest-visibility.css';
 import './campaign/table-overview.css';
 import './campaign/thumbnail-cards.css';
 import './campaign/desktop-panels.css';
+import './campaign/card-gallery.css';
 createRoot(document.getElementById('root')!).render(<React.StrictMode><App /></React.StrictMode>);
