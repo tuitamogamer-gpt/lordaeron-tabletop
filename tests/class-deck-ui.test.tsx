@@ -18,7 +18,7 @@ describe('class deck and equipment interface',()=>{
  it('lets town recovery follow a purchase and includes the chosen order in the command',()=>{
   const h=mage(),send=vi.fn();h.health=1;render(<TownEditor hero={h} merchant={[]} send={send} busy={false}/>);
   fireEvent.click(screen.getByRole('button',{name:/Fireball/}));fireEvent.change(screen.getByRole('combobox',{name:'Recovery order'}),{target:{value:'1'}});
-  fireEvent.click(screen.getByRole('button',{name:/Confirm · 1 transactions/}));expect(send).toHaveBeenCalledWith({type:'town',hero:h.id,health:1,operations:[{op:'train',card:'mage-fireball'}],recoverAfter:1});
+  fireEvent.click(screen.getByRole('button',{name:/Confirm · 1 transaction/}));expect(send).toHaveBeenCalledWith({type:'town',hero:h.id,health:1,operations:[{op:'train',card:'mage-fireball'}],recoverAfter:1});
  });
  it('shows separate power and talent piles, level requirements, and free talent acquisition',()=>{
   render(<ClassDeck hero={mage()} inspect={()=>{}}/>);expect(screen.getByRole('button',{name:/Power deck.*12 in deck/})).toBeTruthy();expect(screen.getByRole('button',{name:/Talent deck.*12 in deck/})).toBeTruthy();

@@ -26,14 +26,18 @@ export function GameCard({card,disabled=false,onClick,selected=false,footer}:{ca
 export function CardThumbnail({card:c,disabled=false,onClick,selected=false,footer,className='',actionLabel}:{card:Card;disabled?:boolean;onClick?:()=>void;selected?:boolean;footer?:string;className?:string;actionLabel?:string}){
  const id=useId(),anchor=useRef<HTMLButtonElement>(null),preview=useRef<HTMLDivElement>(null);
  const timer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined),[open,setOpen]=useState(false),[position,setPosition]=useState({left:12,top:12});
- const cancel=()=>{clearTimeout(timer.current);};
+ const cancel=()=>{clearTimeout(timer.current);timer.current=undefined;};
  const show=()=>{cancel();window.dispatchEvent(new CustomEvent('card-preview-open',{detail:id}));setOpen(true);};
  const hide=()=>{cancel();setOpen(false);};
  const leave=()=>{cancel();timer.current=setTimeout(()=>{if(document.activeElement!==anchor.current)setOpen(false);},120);};
  useEffect(()=>{
   const another=(event:Event)=>{if((event as CustomEvent<string>).detail!==id){clearTimeout(timer.current);setOpen(false);}};
+  const dismiss=()=>{clearTimeout(timer.current);setOpen(false);};
+  const visibility=()=>{if(document.hidden)dismiss();};
   window.addEventListener('card-preview-open',another);
-  return()=>{clearTimeout(timer.current);window.removeEventListener('card-preview-open',another);};
+  window.addEventListener('blur',dismiss);
+  document.addEventListener('visibilitychange',visibility);
+  return()=>{clearTimeout(timer.current);window.removeEventListener('card-preview-open',another);window.removeEventListener('blur',dismiss);document.removeEventListener('visibilitychange',visibility);};
  },[id]);
  useLayoutEffect(()=>{
   if(!open)return;
@@ -45,12 +49,15 @@ export function CardThumbnail({card:c,disabled=false,onClick,selected=false,foot
    if(left+b.width>window.innerWidth-gap){left=a.left-b.width-gap;if(left<gap){left=a.left+(a.width-b.width)/2;top=a.bottom+gap;if(top+b.height>window.innerHeight-gap)top=a.top-b.height-gap;}}
    setPosition({left:Math.max(gap,Math.min(left,maxLeft)),top:Math.max(gap,Math.min(top,maxTop))});
   };
-  const escape=(event:KeyboardEvent)=>{if(event.key==='Escape'){event.preventDefault();event.stopPropagation();setOpen(false);}};
+  const dismiss=()=>{clearTimeout(timer.current);setOpen(false);};
+  const escape=(event:KeyboardEvent)=>{if(event.key==='Escape'){event.preventDefault();event.stopPropagation();dismiss();}};
+  const outside=(event:Event)=>{if(event.target instanceof Node&&!anchor.current?.contains(event.target)&&!preview.current?.contains(event.target))dismiss();};
   place();
   const observer=typeof ResizeObserver==='undefined'?undefined:new ResizeObserver(place);
   if(preview.current)observer?.observe(preview.current);
   window.addEventListener('resize',place);window.addEventListener('scroll',place,true);document.addEventListener('keydown',escape,true);
-  return()=>{observer?.disconnect();window.removeEventListener('resize',place);window.removeEventListener('scroll',place,true);document.removeEventListener('keydown',escape,true);};
+  document.addEventListener('pointerdown',outside,true);document.addEventListener('focusin',outside);
+  return()=>{observer?.disconnect();window.removeEventListener('resize',place);window.removeEventListener('scroll',place,true);document.removeEventListener('keydown',escape,true);document.removeEventListener('pointerdown',outside,true);document.removeEventListener('focusin',outside);};
  },[open]);
  const kind=c.kind==='racial'?'Racial':c.kind==='talent'?'Talent':c.kind==='power'?'Power':c.type==='bag'?'Consumable':'Equipment';
  return <><button ref={anchor} type="button" className={`card-thumbnail ${selected?'selected':''} ${disabled?'unavailable':''} ${className}`} aria-label={actionLabel??`${onClick?'Inspect':'Preview'} ${pretty(c.name)}`} aria-describedby={open?id:undefined} aria-disabled={disabled||undefined} onPointerEnter={event=>{if(event.pointerType!=='touch'){cancel();timer.current=setTimeout(show,180);}}} onPointerLeave={leave} onFocus={show} onBlur={event=>{if(!preview.current?.contains(event.relatedTarget as Node|null))hide();}} onClick={()=>{if(disabled)return;if(onClick){hide();onClick();}else show();}}>
@@ -58,5 +65,5 @@ export function CardThumbnail({card:c,disabled=false,onClick,selected=false,foot
   <span className="card-thumbnail-art"><CardPortrait card={c}/></span>
   <strong className="card-thumbnail-name">{pretty(c.name)}</strong>
   <span className="card-thumbnail-footer"><span><GameIcon name="energy" size={12}/>{cardEnergyText(c)}</span><span>{footer??(c.printed?'Starting':c.kind==='talent'?'Permanent':`${c.price} gold`)}</span></span>
- </button>{open&&createPortal(<div ref={preview} id={id} role="tooltip" aria-label={`${pretty(c.name)} full card`} className="card-hover-preview" style={position} onPointerEnter={cancel} onPointerLeave={leave}><GameCard card={c} footer={footer}/><span className="card-preview-hint">{actionLabel?`${actionLabel} · `:onClick?'Click the thumbnail to inspect · ':''}Esc to close</span></div>,anchor.current?.closest('dialog')??document.body)}</>;
+ </button>{open&&createPortal(<div ref={preview} id={id} role="tooltip" aria-label={`${pretty(c.name)} full card`} className="card-hover-preview" style={position} onPointerEnter={cancel} onPointerLeave={leave}><GameCard card={c} footer={footer}/><span className="card-preview-hint">{actionLabel?`${actionLabel} · `:onClick?'Click the thumbnail to inspect · ':''}Click outside or press Esc to close</span></div>,anchor.current?.closest('dialog')??document.body)}</>;
 }

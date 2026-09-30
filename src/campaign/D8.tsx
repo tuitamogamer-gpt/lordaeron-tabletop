@@ -19,15 +19,15 @@ const faces = [1, 2, 3, 4, 6, 5, 8, 7].map((value, i) => {
  };
 });
 
-export default function D8({ die, hit = false, selected = false, disabled = true, animate = true, index = 0, onSelect }: {
- die: Die; hit?: boolean; selected?: boolean; disabled?: boolean; animate?: boolean; index?: number; onSelect?: () => void;
+export default function D8({ die, hit = false, selected = false, selectionOrder, disabled = true, animate = true, index = 0, onSelect }: {
+ die: Die; hit?: boolean; selected?: boolean; selectionOrder?: number; disabled?: boolean; animate?: boolean; index?: number; onSelect?: () => void;
 }) {
  const result = die.removed ? 'removed' : die.value ? hit ? 'hit' : 'miss' : 'ready';
  const face = faces.find(f => f.value === die.value) ?? faces[0];
  const label = `${die.color} D8 ${die.value || 'prepared'}, ${result}${die.rerolled ? ', rerolled' : ''}${die.spotted ? ', spotted' : ''}`;
  const style = { '--die-tilt': `${(index % 3 - 1) * 9}deg`, '--die-delay': `${index % 7 * 20}ms` } as CSSProperties;
  return <button type="button" className={`combat-d8 ${die.color} ${result} ${selected ? 'selected' : ''}`} style={style}
-  aria-label={label} aria-pressed={selected} disabled={disabled || die.removed} onClick={onSelect} title={label}>
+  aria-label={label} aria-description={`Die #${die.id}${selected && selectionOrder ? ` · selection ${selectionOrder}` : ''}`} aria-pressed={selected} disabled={disabled || die.removed} onClick={onSelect} title={`${label} · #${die.id}`}>
   <span className="d8-ground" aria-hidden="true" />
   <span key={`${die.value}:${die.rerolled}`} className={`d8-tumble ${animate && die.value ? 'rolling' : ''}`} aria-hidden="true">
    <span className="d8-body" style={{ transform: `rotateX(-13deg) rotateY(16deg) rotateZ(var(--die-tilt)) ${face.facing}` }}>
@@ -39,5 +39,6 @@ export default function D8({ die, hit = false, selected = false, disabled = true
   </span>
   <span className="d8-result" aria-hidden="true">{die.removed ? 'Removed' : die.value ? `${die.value} · ${hit ? 'HIT' : 'MISS'}` : 'D8'}</span>
   {(die.spotted || die.rerolled) && <span className="d8-mark" aria-hidden="true">{die.spotted ? '✦' : '↻'}</span>}
+  {selected && selectionOrder && <span className="d8-selection-order" aria-hidden="true">{selectionOrder}</span>}
  </button>;
 }

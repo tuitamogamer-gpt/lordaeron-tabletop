@@ -93,7 +93,7 @@ describe('Town thumbnail transactions',()=>{
   fireEvent.click(screen.getByRole('button',{name:'Add purchase'}));
   expect(within(screen.getByRole('navigation',{name:'Town card pages'})).getByRole('button',{name:'Next'}).hasAttribute('disabled')).toBe(true);
   expect(r.container.querySelectorAll('.town-card-entry')).toHaveLength(6);
-  fireEvent.click(screen.getByRole('button',{name:'Confirm · 1 transactions · 1 action'}));
+  fireEvent.click(screen.getByRole('button',{name:'Confirm · 1 transaction · 1 action'}));
   expect(send).toHaveBeenCalledWith(expect.objectContaining({operations:[{op:'buy',card:merchant[12],discard:undefined}]}));
  });
  it('allows previewing unaffordable or busy cards without staging a transaction',()=>{

@@ -4,7 +4,7 @@
 .campaign-app .combat-room>.modal-head h2{font-size:23px;color:#e8dbc0;text-shadow:none;margin:2px 0 0}
 .campaign-app .combat-room>.modal-head .eyebrow{font-size:8px;color:#93a09c;letter-spacing:2px}
 .campaign-app .combat-room>.modal-head .icon-button{border:1px solid #53605f;background:#263238;border-radius:5px;color:#bdc9c6}
-.combat-room *{box-sizing:border-box}.combat-room button:focus-visible,.combat-room summary:focus-visible{outline:2px solid #efd49a;outline-offset:3px}
+.combat-room *{box-sizing:border-box}.combat-room button:focus-visible,.combat-room summary:focus-visible,.combat-room input:focus-visible,.combat-room select:focus-visible{outline:2px solid #efd49a;outline-offset:3px}
 .combat-room .blue,.combat-guide-dice .blue{--channel:#76bfff;--die-main:#1f6eb2;--die-deep:#134574;--die-edge:#9acfff}
 .combat-room .red,.combat-guide-dice .red{--channel:#f28e87;--die-main:#b84546;--die-deep:#762a32;--die-edge:#ffb7a5}
 .combat-room .green,.combat-guide-dice .green{--channel:#89d5ae;--die-main:#36946d;--die-deep:#225b48;--die-edge:#a7efd0}
@@ -54,6 +54,7 @@
 .combat-d8.hit .d8-ground{background:var(--channel);opacity:.25;filter:blur(8px)}
 .d8-result{position:absolute;bottom:3px;left:0;right:0;text-align:center;font:600 8px var(--sans);letter-spacing:.5px;color:#92a1a4;line-height:14px}
 .combat-d8.hit .d8-result{color:var(--channel)}.combat-d8.removed{opacity:.3!important}.combat-d8.removed .d8-result{text-decoration:line-through}
+.d8-selection-order{position:absolute;left:2px;top:2px;display:grid;place-items:center;min-width:15px;height:15px;padding:0 3px;border-radius:50%;background:#efdb9d;color:#172526;font:700 9px var(--sans)}
 .d8-mark{position:absolute;right:1px;top:2px;font-size:11px;color:#eddaa9}.d8-tumble.rolling{animation:d8-toss 1050ms cubic-bezier(.17,.67,.26,1) both;animation-delay:var(--die-delay)}
 .d8-tumble.rolling~.d8-result{animation:d8-reveal 1150ms both;animation-delay:var(--die-delay)}
 @keyframes d8-toss{0%{transform:translate3d(-12px,-26px,22px) rotateX(-330deg) rotateY(210deg) rotateZ(-130deg)}35%{transform:translate3d(8px,-35px,36px) rotateX(-170deg) rotateY(380deg) rotateZ(-55deg)}68%{transform:translate3d(0,2px,0) rotateX(30deg) rotateY(330deg) rotateZ(12deg)}83%{transform:translate3d(-2px,-7px,3px) rotateX(-12deg) rotateY(365deg) rotateZ(-4deg)}100%{transform:translate3d(0,0,0) rotateX(0) rotateY(360deg) rotateZ(0)}}

@@ -88,6 +88,13 @@
 .full-character-sheet .character-slot .equipped-heading>.icon{margin-right:12px}
 .card-detail>.full-image-card{align-self:flex-start}
 .card-detail>div{min-width:0}
+.rest-editor .rest-slider{margin-block:20px 12px}
+.rest-preview{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:20px 0}
+.rest-preview>div{display:flex;align-items:center;gap:10px;padding:14px;border:1px solid #796b44;border-radius:5px;background:#172622}
+.rest-preview>div>span:not(.game-icon){flex:1;min-width:0}.rest-preview>.game-icon,.rest-preview .game-icon{flex:none}.rest-preview small{display:block;color:#b8bcaa;font-size:11px;margin-bottom:5px}
+.rest-preview strong{font-size:17px;color:#efddb2;white-space:nowrap}.rest-preview em{font-size:12px;font-style:normal;color:#a4af9d}
+.rest-preview>div>b{color:#acd8ae;font-size:12px}.rest-notice{padding:12px;border:1px solid #9d804b66;border-radius:4px;background:#9d804b14;color:#decda5}
+.rest-curse-note{color:#b9d7b5}
 .card-detail .inscribed-rules{border:1px solid #9d804b;border-radius:5px}
 .card-detail .inscribed-rules p{font-size:15px}
 

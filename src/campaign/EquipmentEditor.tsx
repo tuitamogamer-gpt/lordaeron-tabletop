@@ -5,7 +5,7 @@ import { capacity, card, character } from '../rules/common';
 import { bagSize, equipped, fitsSlot, heroSlots, manage, petCapacity } from '../rules/inventory';
 import type { Command, Equipped, Hero } from '../rules/model';
 import { CardArt } from './Art';
-import { slotLabel } from './CharacterSheet';
+import { CardRules, slotLabel } from './CharacterSheet';
 import { energyLabel } from './ClassDeck';
 import { CardThumbnail, HeroPortrait } from './parts';
 
@@ -25,6 +25,7 @@ export default function EquipmentEditor({ hero, send, busy }: { hero: Hero; send
  try { manage(p, { merchant: [] }, preview, slots, discard, reEquip); } catch (e) { error = (e as Error).message; }
  const changed = slots.filter((slot, i) => JSON.stringify(slot) !== JSON.stringify(hero.slots[i])).length;
  const dirty = changed > 0 || reEquip.length > 0 || discard.length > 0;
+ const draftSummary = [changed > 0 ? `${changed} slot${changed === 1 ? '' : 's'} changed` : '', reEquip.length ? `${reEquip.length} pet refresh${reEquip.length === 1 ? '' : 'es'}` : '', discard.length ? `${discard.length} item${discard.length === 1 ? '' : 's'} to merchant` : ''].filter(Boolean).join(' · ');
  const selectedId = slots[selected].card ?? areas[selected].printed;
  const previousId = hero.slots[selected].card ?? areas[selected].printed;
  const compatible = owned.filter(id => fitsSlot(p, hero, card(p, id), areas[selected]));
@@ -32,7 +33,12 @@ export default function EquipmentEditor({ hero, send, busy }: { hero: Hero; send
  const choicePages = Math.max(1, Math.ceil(mainChoices.length / 4));
  const visiblePage = Math.min(choicePage, choicePages - 1);
  const update = (value: Equipped[], message: string) => {
-  setSlots(value); setDiscard([]);
+  const equippedNext = value.flatMap(slot => [slot.card, ...slot.addons].filter((id): id is string => !!id));
+  const bagNext = owned.filter(id => card(p, id).kind === 'item' && !equippedNext.includes(id));
+  const overflowNext = Math.max(0, bagSize(p, bagNext) - 3);
+  setSlots(value);
+  // Keep deliberate overflow choices when another slot changes; drop only choices that no longer apply.
+  setDiscard(ids => ids.filter(id => bagNext.includes(id) && !card(p, id).bagExempt).slice(0, overflowNext));
   setReEquip(ids => ids.filter(id => value.some(slot => slot.card === id || slot.addons.includes(id))));
   setAnnouncement(message);
  };
@@ -52,7 +58,7 @@ export default function EquipmentEditor({ hero, send, busy }: { hero: Hero; send
  const reset = () => { setSlots(structuredClone(hero.slots)); setDiscard([]); setReEquip([]); setAnnouncement('Changes reset. Your current equipment is restored.'); };
 
  return <div className="loadout-editor">
-  <header className="loadout-heading"><HeroPortrait id={hero.id} small /><div><span className="sheet-eyebrow">PREPARE FOR THE NEXT ENCOUNTER</span><h3>{def.name.split(' ')[0]}’s loadout</h3><p>Choose a slot → equip a card → confirm your loadout.</p></div><span className="loadout-draft">{dirty ? `${changed} slot${changed === 1 ? '' : 's'} changed${reEquip.length ? ' · pet refresh' : ''}` : 'Current loadout'}</span></header>
+  <header className="loadout-heading"><HeroPortrait id={hero.id} small /><div><span className="sheet-eyebrow">PREPARE FOR THE NEXT ENCOUNTER</span><h3>{def.name.split(' ')[0]}’s loadout</h3><p>Choose a slot → equip a card → confirm your loadout.</p></div><span className="loadout-draft">{draftSummary || 'Current loadout'}</span></header>
   <div className="loadout-layout">
    <section className="loadout-slots" aria-label="Equipment slots">{slots.map((slot, i) => {
     const id = slot.card ?? areas[i].printed, c = id ? card(p, id) : undefined;
@@ -73,9 +79,9 @@ export default function EquipmentEditor({ hero, send, busy }: { hero: Hero; send
       return <button type="button" key={id} className="loadout-choice" aria-label={`Equip ${c.name}`} aria-pressed={chosen} disabled={busy} onClick={() => equip(id)}><CardArt card={c} /><span><strong>{c.name}</strong><small>{energyLabel(c)}{at >= 0 && !chosen ? ` · move from slot ${at + 1}` : ''}</small></span>{chosen ? <Icon name="check" size={16} /> : <Icon name="plus" size={16} />}</button>;
      })}
     </div>
-    {choicePages>1&&<nav className="loadout-pagination" aria-label="Compatible card pages"><button className="quiet-button" disabled={!visiblePage} onClick={()=>setChoicePage(visiblePage-1)}>Previous</button><span>{visiblePage+1} / {choicePages}</span><button className="quiet-button" disabled={visiblePage+1>=choicePages} onClick={()=>setChoicePage(visiblePage+1)}>Next</button></nav>}
+    {choicePages>1&&<nav className="loadout-pagination" aria-label="Compatible card pages"><button className="quiet-button" disabled={busy || !visiblePage} onClick={()=>setChoicePage(visiblePage-1)}>Previous</button><span aria-live="polite">{visiblePage+1} / {choicePages}</span><button className="quiet-button" disabled={busy || visiblePage+1>=choicePages} onClick={()=>setChoicePage(visiblePage+1)}>Next</button></nav>}
     {!compatible.filter(id => !card(p, id).addon).length && <p className="loadout-empty-note">No other compatible cards. Learn powers with Train, or collect items from quests and the merchant.</p>}
-    {compatible.some(id => card(p, id).addon) && <div className="loadout-attachments"><h4>Attachments</h4>{compatible.filter(id => card(p, id).addon).map(id => <label key={id}><input type="checkbox" disabled={busy} checked={slots[selected].addons.includes(id)} onChange={() => attachment(id)} /><CardArt card={card(p, id)} /><span>{card(p, id).name}<small>{card(p, id).functionTrait} · one per function</small></span></label>)}</div>}
+    {compatible.some(id => card(p, id).addon) && <div className="loadout-attachments"><h4>Attachments</h4>{compatible.filter(id => card(p, id).addon).map(id => <div className="loadout-attachment-entry" key={id}><label><input type="checkbox" disabled={busy} checked={slots[selected].addons.includes(id)} onChange={() => attachment(id)} /><CardArt card={card(p, id)} /><span>{card(p, id).name}<small>{card(p, id).functionTrait} · one per function</small></span></label><details className="loadout-attachment-rules"><summary aria-label={`${card(p, id).name} rules`}>Read rules</summary><CardRules value={card(p, id)} /></details></div>)}</div>}
     {selectedId && <section className="loadout-card-preview" aria-label="Selected card preview"><CardThumbnail key={selectedId} card={card(p, selectedId)} footer={card(p, selectedId).printed ? 'Starting equipment · free' : energyLabel(card(p, selectedId))} /><p>Hover or focus to read all rules & strength options.</p></section>}
    </aside>
   </div>

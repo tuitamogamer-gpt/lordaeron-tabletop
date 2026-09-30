@@ -163,7 +163,51 @@ describe('combat room controls and dice', () => {
   expect((screen.getByRole('button', { name: 'Reroll selected (2)' }) as HTMLButtonElement).disabled).toBe(true);
   r.rerender(<Combat {...pr} busy />);
   expect(screen.getByLabelText('Dice tray').getAttribute('aria-busy')).toBe('true');
+  expect(screen.getByLabelText('Combat decisions').getAttribute('aria-busy')).toBe('true');
   expect((screen.getByRole('button', { name: 'Keep results' }) as HTMLButtonElement).disabled).toBe(true);
+ });
+ it('drops removed dice from the selection before dispatching the remaining reroll', () => {
+  const s = battle(); s.battle!.active!.reroll = 2;
+  const send = vi.fn(), r = render(<Combat {...props(s)} send={send} />);
+  fireEvent.click(screen.getByRole('button', { name: 'blue D8 8, hit' }));
+  fireEvent.click(screen.getByRole('button', { name: 'red D8 2, miss' }));
+  const next = structuredClone(s); next.battle!.active!.dice[0].removed = true;
+  r.rerender(<Combat {...props(next)} send={send} />);
+  expect(screen.getByRole('button', { name: 'red D8 2, removed' }).getAttribute('aria-pressed')).toBe('false');
+  expect(screen.getByRole('button', { name: 'blue D8 8, hit' }).getAttribute('aria-description')).toBe('Die #1 · selection 1');
+  fireEvent.click(screen.getByRole('button', { name: 'Reroll selected (1)' }));
+  expect(send).toHaveBeenCalledExactlyOnceWith({ type: 'reroll', dice: [1] });
+  expect(() => apply(p, next, send.mock.calls[0][0])).not.toThrow();
+ });
+ it('shows selection order and lets players clear the tray without taking a combat action', () => {
+  const pr = props(battle()); render(<Combat {...pr} />);
+  const blue = screen.getByRole('button', { name: 'blue D8 8, hit' }), red = screen.getByRole('button', { name: 'red D8 2, miss' });
+  fireEvent.click(blue); fireEvent.click(red);
+  expect(blue.querySelector('.d8-selection-order')?.textContent).toBe('1');
+  expect(red.querySelector('.d8-selection-order')?.textContent).toBe('2');
+  expect(red.getAttribute('aria-description')).toBe('Die #0 · selection 2');
+  fireEvent.click(screen.getByRole('button', { name: 'Clear selection' }));
+  expect(blue.getAttribute('aria-pressed')).toBe('false');
+  expect(red.getAttribute('aria-pressed')).toBe('false');
+  expect(screen.queryByRole('button', { name: 'Clear selection' })).toBeNull();
+  expect(pr.send).not.toHaveBeenCalled();
+ });
+ it('explains exactly how many Stun and Curse losses remain before confirming the selected dice', () => {
+  const s = battle(); s.battle!.stage = 'penalty'; s.heroes[0].stun = 1;
+  s.battle!.active!.dice.forEach(d => { d.value = 0; d.removed = false; });
+  const pr = props(s); render(<Combat {...pr} />);
+  expect(screen.getByText('Select 2 dice to complete your Stun / Curse losses.')).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: 'red D8 prepared, ready' }));
+  expect(screen.getByText('Select 1 die to complete your Stun / Curse losses.')).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: 'blue D8 prepared, ready' }));
+  fireEvent.click(screen.getByRole('button', { name: 'green D8 prepared, ready' }));
+  expect(screen.getByText('Deselect 1 die to confirm Stun / Curse losses.')).toBeTruthy();
+  expect((screen.getByRole('button', { name: 'Remove 3 / 2 dice' }) as HTMLButtonElement).disabled).toBe(true);
+  fireEvent.click(screen.getByRole('button', { name: 'green D8 prepared, ready' }));
+  expect(screen.getByText('2 dice selected. Confirm removal to roll the remaining dice.')).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: 'Remove 2 / 2 dice' }));
+  expect(pr.send).toHaveBeenCalledExactlyOnceWith({ type: 'penalty', dice: [0, 1] });
+  expect(apply(p, s, pr.send.mock.calls[0][0]).battle!.stage).toBe('after-pool');
  });
  it('does not turn a pending defense click into a wound choice when combat advances', () => {
   const s = battle(); s.battle!.participants = s.heroes.slice(0, 2).map(h => h.id);

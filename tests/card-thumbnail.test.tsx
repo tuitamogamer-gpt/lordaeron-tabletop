@@ -82,4 +82,56 @@ describe('compact card previews',()=>{
   fireEvent.click(trigger);
   expect(inspect).not.toHaveBeenCalled();
  });
+
+ it('dismisses a touch preview with an outside press even when focus does not move',()=>{
+  render(<><CardThumbnail card={card(p,'mage-fireball')}/><div>Table background</div></>);
+  const trigger=screen.getByRole('button',{name:'Preview Fireball'});
+  act(()=>trigger.focus());
+  fireEvent.click(trigger);
+  const tooltip=screen.getByRole('tooltip');
+  fireEvent.pointerDown(tooltip,{pointerType:'touch'});
+  expect(screen.getByRole('tooltip')).toBe(tooltip);
+  fireEvent.pointerDown(screen.getByText('Table background'),{pointerType:'touch'});
+  expect(document.activeElement).toBe(trigger);
+  expect(screen.queryByRole('tooltip')).toBeNull();
+  expect(trigger.hasAttribute('aria-describedby')).toBe(false);
+ });
+
+ it('cancels a queued hover when Escape closes an already focused preview',()=>{
+  vi.useFakeTimers();render(<CardThumbnail card={card(p,'mage-fireball')}/>);
+  const trigger=screen.getByRole('button',{name:'Preview Fireball'});
+  act(()=>trigger.focus());
+  fireEvent.pointerEnter(trigger,{pointerType:'mouse'});
+  fireEvent.keyDown(trigger,{key:'Escape'});
+  act(()=>vi.advanceTimersByTime(200));
+  expect(screen.queryByRole('tooltip')).toBeNull();
+ });
+
+ it('dismisses a hovered preview when focus moves to another surface',()=>{
+  vi.useFakeTimers();
+  render(<><CardThumbnail card={card(p,'mage-fireball')}/><button>Open quest</button></>);
+  fireEvent.pointerEnter(screen.getByRole('button',{name:'Preview Fireball'}),{pointerType:'mouse'});
+  act(()=>vi.advanceTimersByTime(180));
+  expect(screen.getByRole('tooltip')).toBeTruthy();
+  act(()=>screen.getByRole('button',{name:'Open quest'}).focus());
+  expect(screen.queryByRole('tooltip')).toBeNull();
+ });
+
+ it('clears visible and pending previews when the browser loses focus',()=>{
+  vi.useFakeTimers();render(<CardThumbnail card={card(p,'mage-fireball')}/>);
+  const trigger=screen.getByRole('button',{name:'Preview Fireball'});
+  fireEvent.focus(trigger);fireEvent.blur(window);
+  expect(screen.queryByRole('tooltip')).toBeNull();
+  fireEvent.pointerEnter(trigger,{pointerType:'mouse'});fireEvent.blur(window);
+  act(()=>vi.advanceTimersByTime(200));
+  expect(screen.queryByRole('tooltip')).toBeNull();
+ });
+
+ it('dismisses previews when the browser tab is hidden',()=>{
+  render(<CardThumbnail card={card(p,'mage-fireball')}/>);
+  fireEvent.focus(screen.getByRole('button',{name:'Preview Fireball'}));
+  vi.spyOn(document,'hidden','get').mockReturnValue(true);
+  fireEvent(document,new Event('visibilitychange'));
+  expect(screen.queryByRole('tooltip')).toBeNull();
+ });
 });

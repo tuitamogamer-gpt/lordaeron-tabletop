@@ -10,6 +10,8 @@ Novi UI prolaz dodaje izbor opreme po slotovima, animirani feedback, Threat leve
 
 Desktop paneli sada koriste thumbnail karte s velikim pregledom na hover ili fokus, character sheet na jednom ekranu i borbu s fazama pripreme, udarca i rezultata. [Detalji izmjena](docs/DESKTOP-CARDS-AND-COMBAT.md).
 
+Dodatna dorada donosi pregled rezultata odmora, trening bez gubitka odabira, pauzu AI tokom rada u panelima i pouzdanije kontrole kockica, opreme i modala. [Izmjene i provjere](docs/INTERACTION-POLISH.md).
+
 Igriva kampanja koristi sadržaj prenesen iz dostavljenih skenova: 16 likova, 108 moći, 108 talenata, 120 predmeta, 80 questova, 52 događaja, 13 vrsta stvorenja i tri Overlorda. Originali su lokalni izvori teksta i mehanika; **Warforged Chronicles** daje novi izgled ličnih listova i karata; centralna 2D mapa prati polja i granice originalne ploče. Nijedno proširenje nije uključeno.
 
 ## Pokretanje

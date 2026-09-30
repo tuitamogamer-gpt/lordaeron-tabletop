@@ -1,4 +1,9 @@
 /* Sheet text lives in the layout, never in the decorative artwork. */
+.loadout-attachment-entry{flex:1 1 180px;min-width:0}
+.loadout-attachment-rules>summary{width:fit-content;padding:5px 0;color:#dbc58e;font:500 10px/1.5 var(--sans);cursor:pointer}
+.loadout-attachment-rules>summary:focus-visible{outline:2px solid #e5c278;outline-offset:3px;border-radius:2px}
+.loadout-attachment-rules>.inscribed-rules{margin-top:5px;border:1px solid #92754b;border-radius:4px;padding:10px;font-size:12px;line-height:1.6}
+.loadout-attachment-rules .inscribed-rules p:last-child{margin-bottom:0}
 .town-recovery-order{display:flex;align-items:center;gap:16px;margin:20px 0;font:14px/1.6 var(--sans)}.town-recovery-order select{font:13px/1.6 var(--sans);padding:10px}
 .town-training-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}.town-training-cards .folio-card{width:100%;height:auto;min-height:0}.town-training-cards .folio-rules{font:15px/1.7 Georgia,serif;max-height:none;overflow:visible}.town-training-cards .folio-art>.card-illustration{width:82px;height:82px;object-fit:contain}.town-training-cards .folio-footer{font-size:11px}
 .inscribed-ability+.inscribed-ability{margin-top:16px}.ability-strengths{margin-top:10px}.ability-strengths summary{cursor:pointer;font:600 11px/1.6 var(--sans);color:#705027}.ability-strengths[open]>summary{margin-bottom:12px}.ability-strengths p{padding:10px 0;border-top:1px solid #93744955}

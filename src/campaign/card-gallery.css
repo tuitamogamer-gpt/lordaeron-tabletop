@@ -60,6 +60,21 @@
 .deck-empty{grid-column:1/-1;display:grid;place-items:center;min-height:var(--gallery-card-height);margin:0;color:#b8aa8d;font:12px/1.5 var(--sans)}
 
 @media(min-width:1000px){
+ /* Keep training actions in the frame; let complete card faces use the remaining height. */
+ .campaign-app .modal.training-modal[open]{display:flex;flex-direction:column;height:min(760px,calc(100dvh - 24px));overflow:hidden}
+ .campaign-app .training-modal>.modal-head{flex:none;position:relative;padding:10px 20px}
+ .campaign-app .training-modal>.modal-head h2{font-size:20px;margin-top:2px}
+ .campaign-app .modal.training-modal>.training-dialog{display:flex;flex-direction:column;flex:1;min-height:0;padding:10px 20px;overflow:hidden}
+ .training-modal .training-dialog>.class-deck{flex:1;min-height:0;gap:7px}
+ .training-modal .class-deck>div,.training-modal .class-deck>.sheet-help{flex-shrink:0}
+ .training-modal .portrait-class-deck>.class-deck-cards{flex:1;min-height:0;grid-template-rows:minmax(0,1fr)}
+ .training-modal .portrait-class-deck .deck-card-entry{height:100%;min-height:0}
+ .training-modal .portrait-class-deck .deck-card-entry>.card-thumbnail{height:auto;min-height:0;max-height:310px;flex:1}
+ .training-modal .deck-card-state,.training-modal .deck-card-action{flex:none}
+ .training-modal .training-dialog>.training-receipt{flex:none;flex-wrap:nowrap;position:static;margin:8px 0 0;padding:10px 12px;gap:12px}
+ .training-modal .training-receipt strong{font-size:13px}
+ .training-modal .training-receipt small{font-size:10px;margin-top:4px}
+ .training-modal .training-receipt button{flex-shrink:0;padding:10px 12px;font-size:11px}
  .workspace-classes:has(.character-control-handover) .portrait-class-deck{--gallery-card-height:clamp(190px,calc(100dvh - 516px),310px)}
  .campaign-app .town-modal .compact-town{padding:8px 18px}
  .campaign-app .town-modal .compact-town>p{margin-bottom:6px}
