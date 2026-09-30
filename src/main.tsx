@@ -24,4 +24,5 @@ import './campaign/rules-text.css';
 import './campaign/premium-ui.css';
 import './campaign/ability-cards.css';
 import './campaign/quest-visibility.css';
+import './campaign/table-overview.css';
 createRoot(document.getElementById('root')!).render(<React.StrictMode><App /></React.StrictMode>);

@@ -105,17 +105,33 @@ describe('table overview and map interaction',()=>{
   expect(tooltip.style.top).toBe('85px');expect(tooltip.style.left).toBe('748px');
  });
  it('keeps region units in an optional drawer instead of increasing the board’s height',()=>{
-  render(<Table/>);expect(screen.queryByRole('complementary',{name:'Region details: Brill'})).toBeNull();
+  render(<Table/>);expect(screen.queryByRole('button',{name:/^Region details/})).toBeNull();
+  fireEvent.click(screen.getByRole('button',{name:/Interact with map/}));
+  expect(screen.queryByRole('complementary',{name:'Region details: Brill'})).toBeNull();
   const toggle=screen.getByRole('button',{name:/^Region details/});expect(toggle.getAttribute('aria-expanded')).toBe('false');
   fireEvent.click(toggle);expect(screen.getByRole('complementary',{name:'Region details: Brill'})).toBeTruthy();expect(toggle.getAttribute('aria-expanded')).toBe('true');
   fireEvent.click(screen.getByRole('button',{name:'Close region details'}));expect(screen.queryByRole('complementary')).toBeNull();
  });
  it('previews a two-field route and only spends an action after explicit confirmation',()=>{
   const send=vi.fn();render(<Table send={send}/>);
+  fireEvent.click(screen.getByRole('button',{name:/Interact with map/}));
   fireEvent.click(screen.getByRole('button',{name:/^Agamand Mills · reachable/}));
   expect(send).not.toHaveBeenCalled();expect(screen.getByText('2 regions · 1 action')).toBeTruthy();
   fireEvent.click(screen.getByRole('button',{name:/Travel here/}));
   expect(send).toHaveBeenCalledWith({type:'travel',hero:DEFAULT_SETUP.roster[0],path:['stillwater','agamand']});
+ });
+ it('shows a live overview with hover help while reserving selection and travel for fullscreen',()=>{
+  const s=createGame(p,DEFAULT_SETUP),m=questMarkers(p,view(s))[0],select=vi.fn(),send=vi.fn(),selectHero=vi.fn(),quest=vi.fn();
+  render(<CampaignMap state={view(s)} heroId={s.heroes[0].id} selected="brill" legal={legalActions(p,s)} focused={false} onToggleFocus={()=>{}} onSelect={select} onMove={send} onHero={selectHero} onQuest={quest}/>);
+  const region=screen.getByRole('button',{name:/^Stillwater Pond · reachable/});
+  fireEvent.click(region);fireEvent.keyDown(region,{key:'Enter'});
+  const hero=screen.getByRole('button',{name:/^Grumbaz Crowsblood · level/});
+  fireEvent.click(hero);fireEvent.keyDown(hero,{key:' '});
+  const marker=screen.getByRole('button',{name:`${m.label} · ${m.quest.name} · ${m.remaining} objectives · ${p.regions.find(r=>r.id===m.region)!.name}`});
+  fireEvent.click(marker);fireEvent.keyDown(marker,{key:'Enter'});fireEvent.pointerEnter(marker);
+  expect(screen.getByRole('tooltip').textContent).toContain(m.quest.name);
+  expect(select).not.toHaveBeenCalled();expect(selectHero).not.toHaveBeenCalled();expect(quest).not.toHaveBeenCalled();expect(send).not.toHaveBeenCalled();
+  expect(screen.queryByRole('button',{name:/Travel here/})).toBeNull();
  });
  it('does not treat dragging across a region as a click on that region',()=>{
   render(<Table/>);fireEvent.click(screen.getByRole('button',{name:/Interact with map/}));
@@ -126,11 +142,21 @@ describe('table overview and map interaction',()=>{
  });
  it('uses the same quest reference on cards and map tokens and connects both selections',()=>{
   const s=createGame(p,DEFAULT_SETUP),v=view(s),m=questMarkers(p,v)[0],select=vi.fn();
-  render(<><QuestLedger state={v} selected={m.quest.id} onQuest={select} onInspect={()=>{}}/><CampaignMap state={v} heroId={s.heroes[0].id} selected={m.region} legal={[]} focused={false} onToggleFocus={()=>{}} onSelect={()=>{}} onMove={()=>{}} onQuest={select}/></>);
+  const r=render(<><QuestLedger state={v} selected={m.quest.id} onQuest={select} onInspect={()=>{}}/><CampaignMap state={v} heroId={s.heroes[0].id} selected={m.region} legal={[]} focused={false} onToggleFocus={()=>{}} onSelect={()=>{}} onMove={()=>{}} onQuest={select}/></>);
   const card=screen.getByRole('button',{name:`${m.label} · ${m.quest.name} · show on map`});fireEvent.click(card);
   expect(select).toHaveBeenLastCalledWith(m.quest.id,m.region);
-  const token=screen.getByRole('button',{name:`${m.label} · ${m.quest.name} · ${m.remaining} objectives · ${p.regions.find(r=>r.id===m.region)!.name}`});fireEvent.click(token);
+  r.rerender(<><QuestLedger state={v} selected={m.quest.id} onQuest={select} onInspect={()=>{}}/><CampaignMap state={v} heroId={s.heroes[0].id} selected={m.region} legal={[]} focused={true} onToggleFocus={()=>{}} onSelect={()=>{}} onMove={()=>{}} onQuest={select}/></>);
+  select.mockClear();const token=screen.getByRole('button',{name:`${m.label} · ${m.quest.name} · ${m.remaining} objectives · ${p.regions.find(r=>r.id===m.region)!.name}`});fireEvent.click(token);
   expect(select).toHaveBeenLastCalledWith(m.quest.id,m.region);
+ });
+ it('updates hero locations and quest figures in the overview when the game advances',()=>{
+  const s=createGame(p,DEFAULT_SETUP),id=s.heroes[0].id,m=questMarkers(p,view(s))[0];
+  const map=()=><CampaignMap state={view(s)} heroId={id} selected="brill" legal={[]} focused={false} onToggleFocus={()=>{}} onSelect={()=>{}} onMove={()=>{}}/>;
+  const r=render(map());expect(screen.getByRole('button',{name:/^Grumbaz Crowsblood · level 1 · Brill/})).toBeTruthy();
+  s.heroes[0].location='stillwater';s.enemies=s.enemies.filter(e=>e.quest!==m.quest.id);s.revision++;
+  r.rerender(map());expect(screen.getByRole('button',{name:/^Grumbaz Crowsblood · level 1 · Stillwater Pond/})).toBeTruthy();
+  expect(screen.queryByRole('button',{name:/^Grumbaz Crowsblood · level 1 · Brill/})).toBeNull();
+  expect(screen.queryByRole('button',{name:new RegExp(`^${m.label} · ${m.quest.name}`)})).toBeNull();
  });
  it('shows deck counts without permitting an out-of-turn draw, then enables the legal replacement',()=>{
   const s=createGame(p,DEFAULT_SETUP),send=vi.fn(),r=render(<QuestDecks state={view(s)} side="horde" send={send}/>);
