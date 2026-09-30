@@ -13,6 +13,7 @@ export default function EquipmentEditor({ hero, send, busy }: { hero: Hero; send
  const [slots, setSlots] = useState(() => structuredClone(hero.slots));
  const [selected, setSelected] = useState(0), [discard, setDiscard] = useState<string[]>([]), [reEquip, setReEquip] = useState<string[]>([]);
  const [choicePage, setChoicePage] = useState(0);
+ const [attachmentPage, setAttachmentPage] = useState(0), [slotPage, setSlotPage] = useState(0);
  const [announcement, setAnnouncement] = useState('Select a slot, then choose a card. Changes are saved when you confirm.');
  const areas = heroSlots(p, hero), def = character(p, hero.id);
  const owned = [...new Set([...hero.bag, ...hero.learned, ...hero.slots.flatMap(s => [s.card, ...s.addons].filter((id): id is string => !!id))])];
@@ -30,6 +31,9 @@ export default function EquipmentEditor({ hero, send, busy }: { hero: Hero; send
  const previousId = hero.slots[selected].card ?? areas[selected].printed;
  const compatible = owned.filter(id => fitsSlot(p, hero, card(p, id), areas[selected]));
  const mainChoices = compatible.filter(id => !card(p, id).addon);
+ const attachments = compatible.filter(id => card(p, id).addon);
+ const attachmentPages = Math.max(1, Math.ceil(attachments.length / 2)), visibleAttachmentPage = Math.min(attachmentPage, attachmentPages - 1);
+ const slotPages = Math.max(1, Math.ceil(slots.length / 8)), visibleSlotPage = Math.min(slotPage, slotPages - 1);
  const choicePages = Math.max(1, Math.ceil(mainChoices.length / 4));
  const visiblePage = Math.min(choicePage, choicePages - 1);
  const update = (value: Equipped[], message: string) => {
@@ -57,18 +61,19 @@ export default function EquipmentEditor({ hero, send, busy }: { hero: Hero; send
  };
  const reset = () => { setSlots(structuredClone(hero.slots)); setDiscard([]); setReEquip([]); setAnnouncement('Changes reset. Your current equipment is restored.'); };
 
- return <div className="loadout-editor">
+ return <div className="loadout-editor equipment-flow">
   <header className="loadout-heading"><HeroPortrait id={hero.id} small /><div><span className="sheet-eyebrow">PREPARE FOR THE NEXT ENCOUNTER</span><h3>{def.name.split(' ')[0]}’s loadout</h3><p>Choose a slot → equip a card → confirm your loadout.</p></div><span className="loadout-draft">{draftSummary || 'Current loadout'}</span></header>
   <div className="loadout-layout">
-   <section className="loadout-slots" aria-label="Equipment slots">{slots.map((slot, i) => {
+   <section className="loadout-slot-shelf" aria-label="Equipment slots"><div className="loadout-slots">{slots.slice(visibleSlotPage * 8, visibleSlotPage * 8 + 8).map((slot, pageIndex) => {
+    const i = visibleSlotPage * 8 + pageIndex;
     const id = slot.card ?? areas[i].printed, c = id ? card(p, id) : undefined;
     const edited = JSON.stringify(slot) !== JSON.stringify(hero.slots[i]);
-    return <button type="button" key={i} className={`loadout-slot ${edited ? 'changed' : ''}`} aria-label={`Slot ${i + 1}: ${slotLabel(areas[i])}, ${c?.name ?? 'empty'}`} aria-pressed={selected === i} disabled={busy} onClick={() => {setSelected(i);setChoicePage(0);}}>
+    return <button type="button" key={i} className={`loadout-slot ${edited ? 'changed' : ''}`} aria-label={`Slot ${i + 1}: ${slotLabel(areas[i])}, ${c?.name ?? 'empty'}`} aria-pressed={selected === i} disabled={busy} onClick={() => {setSelected(i);setChoicePage(0);setAttachmentPage(0);}}>
      <span className="loadout-slot-number">{String(i + 1).padStart(2, '0')}</span><span className="loadout-slot-type">{slotLabel(areas[i])}</span>
      <span className="loadout-slot-card" key={`${id}:${slot.addons.join(',')}`}>{c ? <CardArt card={c} /> : <span className="loadout-empty-icon"><Icon name="plus" size={24} /></span>}<strong>{c?.name ?? 'Open slot'}</strong><small>{c ? slot.card ? energyLabel(c) : 'Starting equipment' : 'Choose a compatible card'}</small></span>
      <span className="loadout-slot-bottom"><span>{slot.addons.length ? `${slot.addons.length} attachment${slot.addons.length === 1 ? '' : 's'}` : areas[i].traits.includes('all') ? 'All traits' : areas[i].traits.join(' / ')}</span>{edited && <span><Icon name="check" size={12} />Changed</span>}</span>
     </button>;
-   })}</section>
+   })}</div>{slotPages > 1 && <nav className="loadout-pagination" aria-label="Equipment slot pages"><button className="quiet-button" disabled={busy || !visibleSlotPage} onClick={() => {setSlotPage(visibleSlotPage - 1);setSelected((visibleSlotPage - 1) * 8);setChoicePage(0);setAttachmentPage(0);}}>Previous</button><span>{visibleSlotPage + 1} / {slotPages}</span><button className="quiet-button" disabled={busy || visibleSlotPage + 1 >= slotPages} onClick={() => {setSlotPage(visibleSlotPage + 1);setSelected((visibleSlotPage + 1) * 8);setChoicePage(0);setAttachmentPage(0);}}>Next</button></nav>}</section>
    <aside className="loadout-picker" aria-label={`Cards for slot ${selected + 1}`}>
     <div className="loadout-picker-title"><span className="sheet-eyebrow">SLOT {String(selected + 1).padStart(2, '0')}</span><h4>{slotLabel(areas[selected])}</h4><p>Cards from your bag & spellbook that fit this slot.</p></div>
     {selectedId !== previousId && <p className="loadout-comparison"><span>{previousId ? card(p, previousId).name : 'Empty slot'}</span><Icon name="arrow" size={13} /><strong>{selectedId ? card(p, selectedId).name : 'Empty slot'}</strong></p>}
@@ -81,13 +86,15 @@ export default function EquipmentEditor({ hero, send, busy }: { hero: Hero; send
     </div>
     {choicePages>1&&<nav className="loadout-pagination" aria-label="Compatible card pages"><button className="quiet-button" disabled={busy || !visiblePage} onClick={()=>setChoicePage(visiblePage-1)}>Previous</button><span aria-live="polite">{visiblePage+1} / {choicePages}</span><button className="quiet-button" disabled={busy || visiblePage+1>=choicePages} onClick={()=>setChoicePage(visiblePage+1)}>Next</button></nav>}
     {!compatible.filter(id => !card(p, id).addon).length && <p className="loadout-empty-note">No other compatible cards. Learn powers with Train, or collect items from quests and the merchant.</p>}
-    {compatible.some(id => card(p, id).addon) && <div className="loadout-attachments"><h4>Attachments</h4>{compatible.filter(id => card(p, id).addon).map(id => <div className="loadout-attachment-entry" key={id}><label><input type="checkbox" disabled={busy} checked={slots[selected].addons.includes(id)} onChange={() => attachment(id)} /><CardArt card={card(p, id)} /><span>{card(p, id).name}<small>{card(p, id).functionTrait} · one per function</small></span></label><details className="loadout-attachment-rules"><summary aria-label={`${card(p, id).name} rules`}>Read rules</summary><CardRules value={card(p, id)} /></details></div>)}</div>}
+    {attachments.length > 0 && <div className="loadout-attachments"><h4>Attachments <span>{attachments.length} compatible</span></h4>{attachments.slice(visibleAttachmentPage * 2, visibleAttachmentPage * 2 + 2).map(id => <div className="loadout-attachment-entry" key={id}><label><input type="checkbox" disabled={busy} checked={slots[selected].addons.includes(id)} onChange={() => attachment(id)} /><CardArt card={card(p, id)} /><span>{card(p, id).name}<small>{card(p, id).functionTrait} · one per function</small></span></label><details className="loadout-attachment-rules"><summary aria-label={`${card(p, id).name} rules`}>Read rules</summary><CardRules value={card(p, id)} /></details></div>)}{attachmentPages > 1 && <nav className="loadout-pagination" aria-label="Attachment pages"><button className="quiet-button" disabled={busy || !visibleAttachmentPage} onClick={() => setAttachmentPage(visibleAttachmentPage - 1)}>Previous</button><span>{visibleAttachmentPage + 1} / {attachmentPages}</span><button className="quiet-button" disabled={busy || visibleAttachmentPage + 1 >= attachmentPages} onClick={() => setAttachmentPage(visibleAttachmentPage + 1)}>Next</button></nav>}</div>}
     {selectedId && <section className="loadout-card-preview" aria-label="Selected card preview"><CardThumbnail key={selectedId} card={card(p, selectedId)} footer={card(p, selectedId).printed ? 'Starting equipment · free' : energyLabel(card(p, selectedId))} /><p>Hover or focus to read all rules & strength options.</p></section>}
    </aside>
   </div>
   <div className="loadout-announcement" role="status"><Icon name={dirty ? 'spark' : 'shield'} size={15} />{announcement}</div>
+  <div className="loadout-adjustments">
   <div className="equipment-refresh">{equipped(p, hero).filter(id => card(p, id).kind === 'power' && card(p, id).petHealth && next.includes(id)).map(id => <label className="addon-choice" key={id}><input type="checkbox" disabled={busy} checked={reEquip.includes(id)} onChange={e => setReEquip(v => e.target.checked ? [...v, id] : v.filter(x => x !== id))} /><span>Re-equip {card(p, id).name} · restore pet health ({hero.pets[id] ?? 0} / {petCapacity(p, hero, id)}) · pay equip cost again</span></label>)}</div>
   {excess > 0 && <section className="loadout-overflow" aria-label="Bag overflow"><h4>Make room in your bag</h4><p>Send {excess} item{excess === 1 ? '' : 's'} to the merchant · {discard.length} selected.</p><div className="discard-options">{bag.filter(id => !card(p, id).bagExempt).map(id => <label key={id}><input type="checkbox" disabled={busy || !discard.includes(id) && discard.length >= excess} checked={discard.includes(id)} onChange={e => setDiscard(v => e.target.checked ? [...v, id] : v.filter(a => a !== id))} />{card(p, id).name}</label>)}</div></section>}
+  </div>
   <footer className="loadout-footer">
    <div className="loadout-receipt" aria-live="polite"><span><Icon name="bolt" size={15} />{error ? `Energy available: ${hero.energy}` : `Energy: ${hero.energy} → ${preview.energy}`}<small>{error ? 'Resolve the selection below' : `After equipping · capacity ${capacity(p, preview).energy}`}</small></span><span><Icon name="layers" size={15} />Bag: {bagSize(p, bagAfter)} / 3<small>{bagAfter.length ? bagAfter.map(id => card(p, id).name).join(', ') : 'No stored items'}</small></span></div>
    {error && <p role="alert" className="loadout-error"><Icon name="help" size={15} />{error}</p>}

@@ -31,4 +31,8 @@ import './campaign/card-gallery.css';
 import './campaign/combat-choices.css';
 import './campaign/ability-choice.css';
 import './campaign/character-dossier.css';
+import './campaign/catalog-flow.css';
+import './campaign/equipment-flow.css';
+import './campaign/setup-flow.css';
+import './campaign/smooth-ui.css';
 createRoot(document.getElementById('root')!).render(<React.StrictMode><App /></React.StrictMode>);

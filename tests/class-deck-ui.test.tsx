@@ -67,6 +67,7 @@ describe('class deck and equipment interface',()=>{
   expect(within(picker).getAllByRole('option')).toHaveLength(6);
   for(const id of [DEFAULT_SETUP.roster[2],DEFAULT_SETUP.roster[5]]){fireEvent.change(picker,{target:{value:id}});expect((picker as HTMLSelectElement).value).toBe(id);}
   for(let i=0;i<2;i++)fireEvent.click(screen.getByRole('button',{name:/^Continue/}));
+  fireEvent.click(screen.getByRole('tab',{name:'Starting quests'}));
   expect(screen.getByRole('region',{name:'Starting quests and creature placement'})).toBeTruthy();
   fireEvent.click(screen.getByRole('button',{name:/Begin campaign/}));
   expect(start).toHaveBeenCalledWith(expect.objectContaining({roster:DEFAULT_SETUP.roster,variants:{overlordOnly:true}}),DEFAULT_SETUP.roster[5],true);
