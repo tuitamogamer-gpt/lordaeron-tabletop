@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import Campaign from '../src/Campaign';
 import Combat from '../src/campaign/Combat';
-import { DICE_SETTLE_MS, COMBAT_STEP_MS } from '../src/campaign/combat-flow';
+import { COMBAT_BEATS, DICE_SETTLE_MS, COMBAT_STEP_MS, REDUCED_COMBAT_MS, useCombatPresentation } from '../src/campaign/combat-flow';
 import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
 import { beginBattle, chooseAttacker } from '../src/rules/combat';
 import { apply, createGame } from '../src/rules/game';
@@ -30,6 +30,10 @@ function battle() {
  return s;
 }
 const props = (s: State) => ({ state: view(s), legal: legalActions(p, s), send: vi.fn(), busy: false, botReady: false, botStep: vi.fn(), auto: false, toggleBots: vi.fn() });
+function PresentedCombat({ state }: { state: State }) {
+ const presentation = useCombatPresentation(view(state));
+ return <Combat {...props(state)} presentation={presentation} />;
+}
 function saveAtPool() {
  let s = createGame(p, DEFAULT_SETUP); const session = newSession(p, DEFAULT_SETUP), hero = s.heroes[0].id;
  const send = (c: Command) => { s = apply(p, s, c); session.commands.push(c); };
@@ -41,6 +45,35 @@ function saveAtPool() {
 }
 
 describe('combat room controls and dice', () => {
+ it('holds the result through anticipation and strike, reveals impact, then unlocks decisions', () => {
+  vi.useFakeTimers();
+  const s = battle(); s.battle!.stage = 'defense'; delete s.battle!.active; s.battle!.boxes.horde.damage = 20;
+  const r = render(<StrictMode><PresentedCombat state={s} /></StrictMode>);
+  const next = apply(p, s, { type: 'advance' }); r.rerender(<StrictMode><PresentedCombat state={next} /></StrictMode>);
+  expect(screen.getByLabelText('Battle animation: anticipation')).toBeTruthy();
+  expect(screen.queryAllByText('Victory')).toHaveLength(0);
+  expect(screen.getByLabelText('Horde ranged hits').textContent).toBe('20');
+  const finish = () => screen.getByRole('button', { name: 'Finish combat & continue' }) as HTMLButtonElement;
+  expect(finish().disabled).toBe(true);
+  act(() => vi.advanceTimersByTime(COMBAT_BEATS.action));
+  expect(screen.getByLabelText('Battle animation: action')).toBeTruthy(); expect(finish().disabled).toBe(true);
+  act(() => vi.advanceTimersByTime(COMBAT_BEATS.impact - COMBAT_BEATS.action));
+  expect(screen.getByLabelText('Battle animation: impact')).toBeTruthy(); expect(screen.queryAllByText('Victory').length).toBeGreaterThan(0);
+  expect(finish().disabled).toBe(true);
+  act(() => vi.advanceTimersByTime(COMBAT_BEATS.complete - COMBAT_BEATS.impact));
+  expect(screen.getByLabelText('Ready for your decision')).toBeTruthy(); expect(finish().disabled).toBe(false);
+ });
+ it('uses a brief static result when reduced motion is requested and cleans up a pending exchange', () => {
+  vi.useFakeTimers(); vi.stubGlobal('matchMedia', () => ({ matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() }));
+  const s = battle(); s.battle!.stage = 'defense'; delete s.battle!.active; s.battle!.boxes.horde.damage = 20;
+  const r = render(<PresentedCombat state={s} />), next = apply(p, s, { type: 'advance' });
+  r.rerender(<PresentedCombat state={next} />);
+  expect(screen.getByLabelText('Battle animation: impact')).toBeTruthy();
+  act(() => vi.advanceTimersByTime(REDUCED_COMBAT_MS));
+  expect(screen.getByLabelText('Ready for your decision')).toBeTruthy();
+  r.unmount(); act(() => vi.runOnlyPendingTimers());
+  expect(screen.queryByRole('dialog')).toBeNull();
+ });
  it('explains that Ghoul blocks normal rerolls even when equipment grants a reroll value', () => {
   const s = battle(); s.enemies[0].creature = 'ghoul'; s.battle!.active!.reroll = 4;
   render(<Combat {...props(s)} />);
@@ -158,4 +191,32 @@ describe('combat room controls and dice', () => {
   expect(after.session.commands).toHaveLength(before.session.commands.length + 1);
   expect(after.state.battle?.stage).toBe('reroll');
  });
+ it('waits for every defense and wound animation before sending the next automated command', async () => {
+  const saved = saveAtPool(); let current = importSession(p, JSON.stringify(saved)).state;
+  for (const type of ['roll', 'advance', 'advance', 'monster', 'tokens']) {
+   const command = legalActions(p, current).find(c => c.type === type)!;
+   current = apply(p, current, command); saved.commands.push(command);
+  }
+  expect(current.battle!.stage).toBe('defense');
+  localStorage.setItem('lordaeron-base-save-v7', JSON.stringify(saved));
+  vi.useFakeTimers(); await act(async () => { render(<Campaign />); });
+  const commands = () => JSON.parse(localStorage.getItem('lordaeron-base-save-v7')!).commands as Command[];
+  const start = commands().length;
+  await act(async () => { vi.advanceTimersByTime(COMBAT_STEP_MS); });
+  expect(commands()).toHaveLength(start + 1);
+  expect(screen.getByLabelText('Battle animation: anticipation')).toBeTruthy();
+  await act(async () => { vi.advanceTimersByTime(COMBAT_BEATS.complete - 1); });
+  expect(commands()).toHaveLength(start + 1);
+  await act(async () => { vi.advanceTimersByTime(1); });
+  await act(async () => { vi.advanceTimersByTime(COMBAT_STEP_MS - 1); });
+  expect(commands()).toHaveLength(start + 1);
+  await act(async () => { vi.advanceTimersByTime(1); });
+  expect(commands()).toHaveLength(start + 2); expect(commands().at(-1)?.type).toBe('wound');
+  expect(screen.getByLabelText('Battle animation: anticipation')).toBeTruthy();
+  await act(async () => { vi.advanceTimersByTime(COMBAT_BEATS.complete - 1); });
+  expect(commands()).toHaveLength(start + 2);
+  fireEvent.click(screen.getByRole('switch', { name: /^Auto-resolve/ }));
+  await act(async () => { vi.advanceTimersByTime(COMBAT_BEATS.complete + COMBAT_STEP_MS); });
+  expect(commands()).toHaveLength(start + 2);
+ }, 15000);
 });

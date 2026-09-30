@@ -3,26 +3,33 @@ import { BASE_PACK as p } from '../data/base';
 import { capacity, card, character, faction } from '../rules/common';
 import { bagSize, townOperations } from '../rules/inventory';
 import type { Command, Hero, TownOperation } from '../rules/model';
-import { GameCard, pretty } from './parts';
-import { CardArt } from './Art';
+import { CardThumbnail, pretty } from './parts';
 
 type Submit = (c: Command) => void;
 
 export function TownEditor({hero,merchant,send,busy}:{hero:Hero;merchant:string[];send:Submit;busy:boolean}) {
  const [operations,setOperations]=useState<TownOperation[]>([]),[health,setHealth]=useState(Math.max(0,Math.min(hero.level,capacity(p,hero).health-hero.health))),[recoverAfter,setRecoverAfter]=useState(0),[error,setError]=useState('');
+ const [shelf,setShelf]=useState<'buy'|'sell'|'train'>(merchant.length?'buy':'train'),[discards,setDiscards]=useState<Record<string,string>>({}),[page,setPage]=useState(0);
  const preview=structuredClone(hero), market={merchant:[...merchant]};
  const beforeRecovery=structuredClone(hero);try{townOperations(p,{merchant:[...merchant]},beforeRecovery,0,operations.slice(0,Math.max(0,recoverAfter)),-1);}catch{/* The complete preview below reports transaction errors. */}
  const maxRecovery=Math.max(0,Math.min(hero.level,capacity(p,beforeRecovery).health-beforeRecovery.health)),recoveryHealth=recoverAfter<0?0:Math.min(health,maxRecovery);
  let invalid='';try{townOperations(p,market,preview,recoveryHealth,operations,recoverAfter);}catch(e){invalid=(e as Error).message;}
  const add=(op:TownOperation)=>{try{townOperations(p,{merchant:[...merchant]},structuredClone(hero),recoveryHealth,[...operations,op],recoverAfter);setOperations(v=>[...v,op]);setError('');}catch(e){setError((e as Error).message);}};
  const selling=[...preview.bag,...preview.slots.flatMap(s=>[s.card,...s.addons].filter((id):id is string=>!!id))].filter(id=>card(p,id).kind==='item'&&!card(p,id).soulbound);
- return <div className="dialog-content"><p>Build your transaction in order: sell, buy and learn multiple powers with one Town action. New equipment goes into your bag.</p>
+ const training=p.cards.filter(c=>c.kind==='power'&&!c.printed&&c.classId===character(p,hero.id).classId&&!preview.learned.includes(c.id)&&c.level<=hero.level);
+ const count=shelf==='buy'?market.merchant.length:shelf==='sell'?selling.length:training.length,pages=Math.max(1,Math.ceil(count/12)),visiblePage=Math.min(page,pages-1);
+ return <div className="dialog-content compact-town"><p>Sell, buy and learn powers with one Town action. Hover a card for its rules.</p>
   <label className="town-recovery-order">Recovery order<select aria-label="Recovery order" value={recoverAfter} onChange={e=>setRecoverAfter(Number(e.target.value))}><option value={-1}>Skip recovery</option><option value={0}>Before transactions</option>{operations.map((_,i)=><option key={i} value={i+1}>After transaction {i+1}</option>)}</select></label>
   {recoverAfter>=0&&<label className="rest-slider">Health recovery: {recoveryHealth} / {hero.level} · Remaining points restore energy<input type="range" min={0} max={maxRecovery} value={recoveryHealth} onChange={e=>setHealth(Number(e.target.value))}/></label>}
   <div className="transaction-summary"><strong>{preview.gold} gold after the transaction</strong><span>Bag {bagSize(p,preview.bag)} / 3</span></div>
-  <div className="transaction-columns"><section><h3>Buy</h3>{market.merchant.map(id=>{const c=card(p,id),discard=bagSize(p,[...preview.bag,id])>3?[...preview.bag,id].filter(v=>!card(p,v).bagExempt):[undefined];return <div className="transaction-item" key={id}><CardArt card={c}/><strong>{pretty(c.name)}</strong><small>Level {c.level} · {c.price} gold</small>{discard.map((d,i)=><button key={i} className="quiet-button" disabled={busy||preview.gold<c.price} onClick={()=>add({op:'buy',card:id,discard:d})}>{d?`Buy, discard ${pretty(card(p,d).name)}`:"Add purchase"}</button>)}</div>;})}</section>
-  <section><h3>Sell</h3>{selling.length?selling.map(id=><button key={id} className="quiet-button full-width" disabled={busy} onClick={()=>add({op:'sell',card:id})}>{pretty(card(p,id).name)} · +{Math.ceil(card(p,id).price/2)} gold</button>):<p>No items to sell.</p>}<h3>Class deck · learn powers</h3><p>Choose powers to add to this Town action. They will enter your spellbook.</p><div className="town-training-cards">{p.cards.filter(c=>c.kind==='power'&&!c.printed&&c.classId===character(p,hero.id).classId&&!preview.learned.includes(c.id)&&c.level<=hero.level).map(c=><GameCard key={c.id} card={c} disabled={busy||preview.gold<c.price} onClick={()=>add({op:'train',card:c.id})} footer={`Add training · ${c.price} gold`}/>)}</div></section></div>
-  <ol className="transaction-receipt">{operations.map((op,i)=><li key={i}>{op.op==='buy'?"Buy":op.op==='sell'?"Sell":"Learn"}: {pretty(card(p,op.card).name)}</li>)}</ol>
+  <nav className="town-shelves" aria-label="Town services">{(['buy','sell','train'] as const).map(id=><button key={id} className="quiet-button" aria-pressed={shelf===id} onClick={()=>{setShelf(id);setPage(0);}}>{id==='buy'?'Buy items':id==='sell'?'Sell items':'Learn powers'}</button>)}</nav>
+  <div className="town-card-grid">
+   {shelf==='buy'&&market.merchant.slice(visiblePage*12,(visiblePage+1)*12).map(id=>{const c=card(p,id),overflow=bagSize(p,[...preview.bag,id])>3,options=overflow?[...preview.bag,id].filter(v=>!card(p,v).bagExempt):[],discard=options.includes(discards[id])?discards[id]:options[0];return <div className="town-card-entry" key={id}><CardThumbnail card={c} footer={`${c.price} gold`}/>{overflow&&<select aria-label={`Discard to buy ${c.name}`} value={discard} onChange={e=>setDiscards(v=>({...v,[id]:e.target.value}))}>{options.map(d=><option key={d} value={d}>Discard {pretty(card(p,d).name)}</option>)}</select>}<button className="quiet-button" disabled={busy||preview.gold<c.price} onClick={()=>add({op:'buy',card:id,discard})}>Add purchase</button></div>;})}
+   {shelf==='sell'&&(selling.length?selling.slice(visiblePage*12,(visiblePage+1)*12).map(id=><CardThumbnail key={id} card={card(p,id)} disabled={busy} actionLabel={`Sell ${pretty(card(p,id).name)}`} onClick={()=>add({op:'sell',card:id})} footer={`Sell · +${Math.ceil(card(p,id).price/2)} gold`}/>):<p>No items to sell.</p>)}
+   {shelf==='train'&&training.slice(visiblePage*12,(visiblePage+1)*12).map(c=><CardThumbnail key={c.id} card={c} disabled={busy||preview.gold<c.price} actionLabel={`Learn ${pretty(c.name)}`} onClick={()=>add({op:'train',card:c.id})} footer={`Add training · ${c.price} gold`}/>)}
+  </div>
+  {pages>1&&<nav className="loadout-pagination" aria-label="Town card pages"><button className="quiet-button" disabled={!visiblePage} onClick={()=>setPage(visiblePage-1)}>Previous</button><span>{visiblePage+1} / {pages}</span><button className="quiet-button" disabled={visiblePage+1===pages} onClick={()=>setPage(visiblePage+1)}>Next</button></nav>}
+  <div className="transaction-receipt" aria-live="polite">{operations.length?<details className="transaction-review"><summary>Review {operations.length} staged transactions · last: {pretty(card(p,operations.at(-1)!.card).name)}</summary><ol>{operations.map((op,i)=><li key={i}>{op.op==='buy'?'Buy':op.op==='sell'?'Sell':'Learn'}: {pretty(card(p,op.card).name)}</li>)}</ol></details>:'No transactions staged'}</div>
   {(error||invalid)&&<p role="status" className="combat-warning">{error||invalid}</p>}
   <div className="settings-buttons"><button className="quiet-button" disabled={!operations.length||busy} onClick={()=>{setRecoverAfter(v=>Math.min(v,operations.length-1));setOperations(v=>v.slice(0,-1));setError('');}}>Remove last entry</button><button className="gold-button" disabled={!!invalid||busy} onClick={()=>send({type:'town',hero:hero.id,health:recoveryHealth,operations,...recoverAfter!==0?{recoverAfter}:{}})}>Confirm · {operations.length} transactions · 1 action</button></div>
  </div>;

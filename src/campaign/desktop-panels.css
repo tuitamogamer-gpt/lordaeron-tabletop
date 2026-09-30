@@ -1,0 +1,133 @@
+/* Desktop workspaces use bounded card slots; detailed rules live in the hover preview. */
+@media (min-width:1000px) {
+ .campaign-app .modal.workspace-modal{width:min(1480px,calc(100vw - 32px));max-height:calc(100dvh - 24px)}
+ .workspace-modal>.modal-head{padding:8px 18px;min-height:52px;position:relative}
+ .workspace-modal>.modal-head h2{font-size:20px;margin-top:2px}
+ .workspace-modal>.modal-head .eyebrow{font-size:7px}
+ .workspace-modal .workspace-toggles.inside{position:relative;flex-wrap:nowrap;padding:6px 16px;gap:6px;min-height:42px}
+ .workspace-modal .workspace-toggles.inside button{padding:5px 10px;font-size:10px;gap:6px}
+ .workspace-modal .workspace-toggles.inside .game-icon{width:21px;height:21px}
+ .workspace-modal .workspace-body{padding:10px 16px 12px}
+ .workspace-modal .character-roster{gap:6px;margin-bottom:8px;flex-wrap:nowrap}
+ .workspace-modal .character-roster button{min-width:0;min-height:42px;padding:4px 9px;gap:7px}
+ .workspace-modal .character-roster button>.portrait{width:30px;height:30px}
+ .workspace-modal .character-roster strong{font-size:11px;line-height:1.2}
+ .workspace-modal .character-roster small{font-size:9px;line-height:1.2;margin-top:2px}
+ .workspace-modal .character-control-handover{padding:6px 10px;margin-bottom:6px;min-height:36px}
+ .workspace-modal .character-control-handover small{display:none}
+ .workspace-modal .character-control-handover strong{font-size:11px}
+ .workspace-modal .character-control-handover .gold-button{padding:6px 10px;font-size:10px;min-height:28px}
+ .workspace-characters:has(.character-control-handover) .full-character-sheet.compact-character-sheet{height:min(520px,calc(100dvh - 276px))}
+ .workspace-modal .sheet-action-powers{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:6px 0 0}
+ .workspace-modal .sheet-action-powers h3{font-size:11px;margin:0}
+ .workspace-modal .sheet-action-powers>button{font-size:10px;padding:5px 8px;margin:0}
+ .workspace-modal .workspace-intro{padding:0 0 10px}
+ .workspace-modal .workspace-intro h3{font-size:23px;margin:5px 0}
+ .workspace-modal .workspace-intro p{font-size:11px;line-height:1.5}
+ .workspace-modal .merchant-stock{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px}
+ .workspace-modal .merchant-stock>.card-thumbnail{height:clamp(150px,23vh,210px)}
+ .campaign-app .modal.training-modal,.campaign-app .modal.town-modal{width:min(1240px,calc(100vw - 40px));max-width:none;max-height:calc(100dvh - 24px)}
+ .training-modal>.modal-head,.town-modal>.modal-head{padding:10px 20px}
+ .training-modal>.modal-head h2,.town-modal>.modal-head h2{margin-top:2px;font-size:20px}
+ .training-modal .training-dialog{padding:12px 20px}
+ .training-modal .training-receipt{margin-top:10px;padding:10px 0 0;position:relative}
+ .campaign-app .modal.equipment-modal{width:min(1280px,calc(100vw - 40px));max-height:calc(100dvh - 24px)}
+ .equipment-modal>.modal-head{padding:9px 20px}
+ .equipment-modal>.modal-head h2{font-size:20px;margin-top:2px}
+ .loadout-editor{padding:0 18px}
+ .loadout-heading{padding:10px 0;gap:10px}
+ .loadout-heading .portrait{width:38px;height:40px}
+ .loadout-heading h3{font-size:17px;margin:0}
+ .loadout-heading p{font-size:10px}
+ .loadout-draft{padding:6px 10px}
+ .loadout-layout{grid-template-columns:minmax(0,1.25fr) minmax(360px,1fr);gap:14px;align-items:stretch}
+ .loadout-slots{gap:8px;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:1fr}
+ .loadout-slot{padding:8px;align-content:flex-start;overflow:hidden}
+ .loadout-slot-type{font-size:9px}
+ .loadout-slot-card{padding-top:6px;min-height:0}
+ .loadout-slot-card>.card-illustration,.loadout-empty-icon{height:clamp(40px,7vh,68px);width:100%;margin-bottom:5px}
+ .loadout-slot-card strong{font-size:11px;line-height:1.3}
+ .loadout-slot-card small{font-size:9px;line-height:1.3;margin-top:3px}
+ .loadout-slot-bottom{padding-top:5px;margin-top:6px;font-size:8px}
+ .loadout-picker{padding:10px;display:grid;grid-template-columns:minmax(0,1fr) 112px;gap:7px 10px;align-content:start}
+ .loadout-picker-title{grid-column:1/-1;grid-row:1}
+ .loadout-picker-title h4{font-size:15px;display:inline;margin:0 0 0 8px}
+ .loadout-picker-title p{margin:3px 0 0;font-size:10px;line-height:1.4}
+ .loadout-comparison{grid-column:1/-1;grid-row:2;margin:0;padding:5px 7px;font-size:9px}
+ .loadout-choices{grid-column:1;grid-row:3;max-height:none;overflow:visible;padding:0;gap:5px;align-content:start}
+ .loadout-choice{padding:6px;gap:7px;min-height:42px}
+ .loadout-choice>.card-illustration{width:30px;height:30px}
+ .loadout-choice strong{font-size:10px;line-height:1.25}
+ .loadout-choice small{font-size:9px;line-height:1.3;margin-top:2px}
+ .loadout-card-preview{grid-column:2;grid-row:3;margin:0}
+ .loadout-card-preview>.card-thumbnail{height:145px}
+ .loadout-card-preview>p{font:9px/1.5 var(--sans);color:#afba9e;margin:6px 0 0}
+ .loadout-pagination{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:10px}
+ .loadout-picker>.loadout-pagination{grid-row:4}
+ .loadout-pagination button{padding:5px 8px;font-size:9px}
+ .loadout-empty-note{grid-column:1/-1;font-size:10px;padding:0;line-height:1.5}
+ .loadout-attachments{grid-column:1/-1;margin:0;display:flex;flex-wrap:wrap;gap:4px 10px}
+ .loadout-attachments h4{width:100%;font-size:11px;margin:0}
+ .loadout-attachments label{font-size:10px;padding:3px 0}
+ .loadout-attachments small{font-size:8px;margin:0}
+ .loadout-announcement{min-height:29px;padding:6px 0;font-size:10px;line-height:1.4}
+ .loadout-editor .addon-choice{font-size:10px;padding:4px 0;margin:0}
+ .loadout-overflow{padding:8px 10px;margin:4px 0 8px}
+ .loadout-overflow h4{font-size:11px;margin-bottom:3px}
+ .loadout-overflow p{font-size:10px;margin:0}
+ .loadout-overflow .discard-options{font-size:10px;margin:5px 0 0;gap:8px}
+ .loadout-footer{position:relative;padding:9px 18px;margin-inline:-18px;gap:6px 12px}
+ .loadout-receipt{gap:14px}
+ .loadout-receipt>span{font-size:11px;line-height:1.4}
+ .loadout-receipt small{font-size:9px;line-height:1.4;max-width:240px}
+ .loadout-confirm button{min-height:34px;font-size:10px;padding:8px 11px}
+ .loadout-error{font-size:10px;padding:5px 8px;margin:0}
+ .compact-town{padding:12px 20px}
+ .compact-town>p{margin-bottom:8px;line-height:1.4}
+ .compact-town .town-recovery-order{display:inline-flex;align-items:center;gap:10px;font-size:11px;margin:0}
+ .compact-town .town-recovery-order select{padding:5px;font-size:10px}
+ .compact-town .rest-slider{display:flex;gap:12px;align-items:center;font-size:11px;margin:8px 0}
+ .compact-town .rest-slider input{flex:1;margin:0;max-width:240px}
+ .compact-town .transaction-summary{padding:6px 0;font-size:12px}
+ .town-shelves{display:flex;gap:8px;margin:8px 0 12px}
+ .town-shelves button{padding:7px 14px;font-size:11px}
+ .town-shelves button[aria-pressed=true]{border-color:#dfbf7e;background:#8d743e33;color:#f3d9a3}
+ .town-card-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:9px;min-height:158px}
+ .town-card-grid>.card-thumbnail,.town-card-entry>.card-thumbnail{height:140px}
+ .town-card-entry{display:grid;gap:5px;align-content:start;min-width:0}
+ .town-card-entry>select{max-width:100%;font-size:9px;padding:4px}
+ .town-card-entry>button.quiet-button{font-size:10px;padding:6px}
+ .compact-town .transaction-receipt{padding:8px 0 0;font-size:11px;color:#d9c7a1}
+ .transaction-review{position:relative}
+ .transaction-review>summary{cursor:pointer}
+ .transaction-review>ol{position:absolute;bottom:100%;left:0;z-index:5;min-width:320px;max-width:100%;max-height:260px;overflow:auto;padding:12px 16px 12px 32px;border:1px solid #aa8c55;border-radius:5px;background:#18251ff7;box-shadow:0 -8px 30px #0008;line-height:1.7}
+ .compact-town .settings-buttons{margin:10px 0 0;gap:10px}
+ .compact-town .settings-buttons button{font-size:11px;padding:9px 14px}
+}
+@media (min-width:1000px) and (max-height:790px){
+ .workspace-characters:has(.character-control-handover) .compact-class-deck .card-thumbnail{height:100px}
+ .workspace-characters:has(.character-control-handover) .sheet-racial-thumbnail{height:66px}
+ .workspace-characters:has(.character-control-handover) .sheet-conditions{margin-top:5px;padding-block:6px 3px}
+}
+.compact-decision.world-decision{max-width:1160px!important;width:calc(100vw - 48px);max-height:calc(100dvh - 32px);padding:20px 24px;overflow:auto}
+.compact-decision>h2{font-size:25px;margin:4px 0 8px}
+.compact-decision>p{margin:0 0 12px;font-size:11px;line-height:1.5}
+.compact-decision .talent-choice-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.talent-choice{display:grid;gap:5px;min-width:0;align-content:start}
+.talent-choice .card-thumbnail{height:143px}
+.talent-choice>.gold-button{padding:7px 6px;font-size:10px;line-height:1.3;min-height:34px}
+.compact-decision .reward-previews{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;overflow:visible;max-height:none;margin:8px 0 12px;padding:0}
+.compact-decision .reward-previews>.card-thumbnail{height:168px}
+.compact-decision .decision-options{max-height:none;overflow:visible;gap:8px;margin-top:10px}
+.compact-decision .decision-bots{margin-top:12px;padding-top:10px;gap:8px}
+.compact-decision .decision-bots button{font-size:10px;padding:8px 12px}
+.compact-decision .catalog-pagination{margin-top:8px}
+.compact-decision .reward-quest-banner{padding:8px 12px}
+.compact-decision .reward-quest-banner h3{font-size:18px}
+.compact-decision .reward-steps{margin:8px 0;padding:8px 0}
+.compact-decision .reward-party-receipt{margin:8px 0;gap:8px}
+.compact-decision .reward-party-receipt>div{padding:6px}
+.compact-decision .reward-choice-heading{margin:8px 0}
+.compact-decision .reward-choice-heading h3{font-size:16px}
+.compact-decision .reward-claim-form{padding:10px;gap:10px;margin-top:8px}
+@media (prefers-reduced-motion:reduce){.loadout-slot{transition:none}}

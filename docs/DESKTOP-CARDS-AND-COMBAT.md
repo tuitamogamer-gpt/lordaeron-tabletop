@@ -1,0 +1,11 @@
+# Desktop cards and combat presentation
+
+The character sheet now uses a bounded equipment grid with seven slots (eight when granted by equipment). Class decks, learned powers, talents, rewards, merchant stock and town services use compact thumbnails. Full card rules appear on hover or keyboard focus; click-to-inspect remains available where the card is an inspection control. Escape dismisses the preview first. The preview is constrained to the viewport and rendered inside the native dialog's top layer when necessary.
+
+Talent selection keeps each card and its choice button together. Pending talents are resolved before showing the item reward form. Long inventories and merchant stocks use pages of twelve cards; compatible equipment uses pages of four, with confirmation and resource totals below the slot grid. Town buying, selling and training have separate tabs while retaining the ordered transaction and recovery rules.
+
+The combat scene sits above the dice in the main arena. It reacts to authoritative engine outcomes with preparation, ranged attacks, melee attacks, blocks, wounds, healing, ability activation and pooled hits. Each exchange has anticipation, action, impact and recovery phases. The previous game view stays visible until impact; results then appear while the animation settles. Manual commands and automatic play wait until the shared presentation lock clears, including when the combat panel is closed. Dice retain their own animation lock.
+
+Normal exchanges last 2.2 seconds (action at 420 ms, impact at 980 ms, recovery at 1.6 seconds); reduced motion shows the result with a brief 180 ms hold and suppresses movement effects. Bookkeeping steps pause for 750 ms. The game engine, random outcomes, costs and save format are unchanged.
+
+Validation: 889 tests pass across 29 files (`npx vitest run --maxWorkers=4 --testTimeout=15000`), production compilation and the server type check pass, and all 621 static rendering cases pass. Tests cover card previews, transactions, paging, combat timing, reduced motion and duplicate commands. Desktop browser checks cover 1366×768 and 1440×900; a real replay verifies that combat commands wait through each presentation phase and health changes appear at impact.

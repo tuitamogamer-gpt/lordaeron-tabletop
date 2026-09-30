@@ -25,4 +25,6 @@ import './campaign/premium-ui.css';
 import './campaign/ability-cards.css';
 import './campaign/quest-visibility.css';
 import './campaign/table-overview.css';
+import './campaign/thumbnail-cards.css';
+import './campaign/desktop-panels.css';
 createRoot(document.getElementById('root')!).render(<React.StrictMode><App /></React.StrictMode>);

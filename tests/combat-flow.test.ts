@@ -5,7 +5,7 @@ import { beginBattle, chooseAttacker, stats } from '../src/rules/combat';
 import { settleAutomatic } from '../src/rules/effects';
 import { legalActions } from '../src/rules/legal';
 import { view } from '../src/rules/view';
-import { bookkeepingCommand, combatAutomation, combatStep, rollSignature } from '../src/campaign/combat-flow';
+import { bookkeepingCommand, combatAutomation, combatCue, combatStep, rollSignature } from '../src/campaign/combat-flow';
 import type { BattleStage, Command, State } from '../src/rules/model';
 
 const hero = DEFAULT_SETUP.roster[0];
@@ -89,4 +89,19 @@ describe('combat automation without bypassing player decisions', () => {
   expect(combatStep(stage)).toBeGreaterThanOrEqual(0); expect(combatStep(stage)).toBeLessThan(5);
  });
  it('places PvP resolution wounds in the correct step', () => expect(combatStep('wounds', 'round-end')).toBe(3));
+ it('describes a ranged defeat without changing the authoritative outcome', () => {
+  const s = battle(); s.battle!.stage = 'defense'; delete s.battle!.active;
+  s.battle!.boxes.horde.damage = stats(p, s, 'enemy').health;
+  const before = view(s), next = apply(p, s, { type: 'advance' }), after = view(next);
+  const snapshot = JSON.stringify([before, after]);
+  const cue = combatCue(before, after);
+  expect(cue?.kind).toBe('ranged'); expect(cue?.detail).toContain('1 enemy falls');
+  expect(cue?.before.battle?.stage).toBe('defense'); expect(after.battle?.stage).toBe('over');
+  expect(JSON.stringify([before, after])).toBe(snapshot);
+ });
+ it('leaves simple bookkeeping unanimated so a reroll choice stays responsive', () => {
+  const s = battle(); s.battle!.stage = 'after-pool';
+  const next = apply(p, s, { type: 'advance' });
+  expect(next.battle!.stage).toBe('reroll'); expect(combatCue(view(s), view(next))).toBeUndefined();
+ });
 });

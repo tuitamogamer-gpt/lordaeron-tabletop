@@ -5,17 +5,22 @@ import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
 import { startingHero } from '../src/campaign/CharacterSheet';
 import EquipmentEditor from '../src/campaign/EquipmentEditor';
 import CombatScene from '../src/campaign/CombatScene';
+import { COMBAT_BEATS, useCombatPresentation } from '../src/campaign/combat-flow';
 import { AnimatedValue, challengeProfile, distinctChallenges, encounterProfile, ThreatLevel } from '../src/campaign/feedback';
 import { createGame } from '../src/rules/game';
 import { beginBattle, chooseAttacker, stats } from '../src/rules/combat';
 import { card, character } from '../src/rules/common';
 import { fitsSlot, heroSlots, manage } from '../src/rules/inventory';
-import { view } from '../src/rules/view';
+import { view, type GameView } from '../src/rules/view';
 import type { Command } from '../src/rules/model';
 import { Modal } from '../src/components';
 
 afterEach(() => { cleanup(); vi.useRealTimers(); vi.restoreAllMocks(); });
 const mage = () => { const h = startingHero(p.characters.find(c => c.classId === 'mage')!.id); h.learned = ['mage-fireball', 'mage-arcane-intellect']; return h; };
+function PresentedScene({ state }: { state: GameView }) {
+ const presentation = useCombatPresentation(state);
+ return <CombatScene state={state} busy={false} presentation={presentation} />;
+}
 
 describe('equipment selection and confirmation', () => {
  it('previews costs, moves a power once, and submits a valid loadout without changing the hero early', () => {
@@ -42,8 +47,12 @@ describe('equipment selection and confirmation', () => {
   expect((screen.getByRole('button', { name: 'Confirm equipment' }) as HTMLButtonElement).disabled).toBe(true);
   fireEvent.click(screen.getByRole('button', { name: 'Reset changes' }));
   expect(screen.queryByRole('alert')).toBeNull();
+  const printedSlot=character(p,h.id).slots.findIndex(s=>!!s.printed);
+  fireEvent.click(screen.getByRole('button',{name:new RegExp(`^Slot ${printedSlot+1}:`)}));
   r.rerender(<EquipmentEditor hero={h} send={send} busy />);
-  for (const button of screen.getAllByRole('button')) expect((button as HTMLButtonElement).disabled).toBe(true);
+  for (const button of r.container.querySelectorAll('.loadout-slot,.loadout-choice,.loadout-confirm button')) expect((button as HTMLButtonElement).disabled).toBe(true);
+  fireEvent.focus(screen.getByRole('button',{name:/^Preview /}));
+  expect(screen.getByRole('tooltip')).toBeTruthy();
   expect(send).not.toHaveBeenCalled();
  });
  it('requires an explicit overflow choice when unequipping into a full bag', () => {
@@ -127,23 +136,25 @@ describe('encounter feedback uses actual rules and outcomes', () => {
   vi.useFakeTimers(); const s = createGame(p, DEFAULT_SETUP); const [a, h] = s.heroes;
   s.enemies = [{ id: 'enemy', creature: 'gnoll', color: 'green', region: 'brill' }];
   beginBattle(s, 'pve', [a.id, h.id], ['enemy'], 'horde', 'brill'); chooseAttacker(p, s, a.id);
-  const r = render(<CombatScene state={view(s)} busy={false} />);
-  h.health--; s.revision++; r.rerender(<CombatScene state={view(s)} busy={false} />);
-  expect(screen.getByRole('status').textContent).toContain(`${character(p, h.id).name.split(' ')[0]} −1 health`);
+  const r = render(<PresentedScene state={view(s)} />);
+  h.health--; s.revision++; r.rerender(<PresentedScene state={view(s)} />);
+  expect(screen.getByRole('status').textContent).toContain('Brace for impact');
+  await act(async () => { vi.advanceTimersByTime(COMBAT_BEATS.impact); });
+  expect(screen.getByText(`${character(p, h.id).name.split(' ')[0]} −1 health`)).toBeTruthy();
   expect(screen.getByRole('img', { name: character(p, h.id).name })).toBeTruthy();
-  await act(async () => { vi.advanceTimersByTime(1600); });
-  expect(screen.getByRole('status').textContent).not.toContain('−1 health');
+  await act(async () => { vi.advanceTimersByTime(COMBAT_BEATS.complete - COMBAT_BEATS.impact); });
+  expect(screen.queryByText(`${character(p, h.id).name.split(' ')[0]} −1 health`)).toBeNull();
  });
  it('replaces successive combat cues without accumulating animation elements', () => {
   const errors = vi.spyOn(console, 'error').mockImplementation(() => {});
   const s = createGame(p, DEFAULT_SETUP), h = s.heroes[0];
   s.enemies = [{ id: 'enemy', creature: 'gnoll', color: 'green', region: 'brill' }];
   beginBattle(s, 'pve', [h.id], ['enemy'], 'horde', 'brill'); chooseAttacker(p, s, h.id);
-  const r = render(<CombatScene state={view(s)} busy={false} />);
+  const r = render(<PresentedScene state={view(s)} />);
   for (let i = 0; i < 5; i++) {
    s.battle!.boxes.horde.damage++; s.revision++;
-   r.rerender(<CombatScene state={view(s)} busy={false} />);
-   expect(r.container.querySelectorAll('.battle-motion')).toHaveLength(1);
+   r.rerender(<PresentedScene state={view(s)} />);
+   expect(r.container.querySelectorAll('.battle-exchange')).toHaveLength(1);
    expect(screen.getAllByRole('status')).toHaveLength(1);
   }
   expect(errors).not.toHaveBeenCalled();

@@ -1,0 +1,57 @@
+/* Thumbnails deliberately have no folio-card class: full-card rules cannot stretch a slot. */
+.card-thumbnail{display:flex;flex-direction:column;position:relative;flex:0 0 auto;width:100%;height:132px;min-width:0;min-height:0;padding:0;overflow:hidden;border:1px solid #9c814f;border-radius:5px;background:linear-gradient(145deg,#31382c,#121e1b);color:#ead7af;text-align:left;box-shadow:0 3px 7px #0005;cursor:pointer;transition:border-color .15s,box-shadow .15s,filter .15s}
+.card-thumbnail:hover,.card-thumbnail:focus-visible{border-color:#efd194;box-shadow:0 0 0 2px #d5b27355,0 5px 14px #0008;outline:0}
+.card-thumbnail.selected{border-color:#f3d28d;box-shadow:0 0 0 2px #cba25b,inset 0 0 12px #e9be571f}
+.card-thumbnail.unavailable{filter:saturate(.6);opacity:.72;cursor:default}
+.card-thumbnail-top{display:flex;justify-content:space-between;gap:4px;flex:none;align-items:center;padding:4px 7px;font:600 8px/1.2 var(--sans);letter-spacing:.65px;text-transform:uppercase;color:#ddc389;background:#15201ded}
+.card-thumbnail-top>b{font:inherit;white-space:nowrap;color:#b9b6a2}
+.card-thumbnail-art{display:block;flex:1;min-height:26px;overflow:hidden;background:#18241f}
+.card-thumbnail-art>.card-illustration,.card-thumbnail-art>.ability-art{display:block;width:100%;height:100%;max-width:none;border-radius:0;object-fit:cover!important;filter:none}
+.card-thumbnail-name{display:flex;align-items:center;justify-content:center;flex:none;min-height:30px;padding:4px 7px;background:linear-gradient(#51452e,#302d22);color:#ffedc7;text-align:center;text-wrap:balance;font:600 11px/1.18 var(--serif);overflow-wrap:anywhere}
+.card-thumbnail-footer{display:flex;align-items:center;justify-content:space-between;gap:5px;flex:none;min-width:0;padding:4px 7px;border-top:1px solid #a185483d;background:#14211c;color:#c8b48c;font:500 9px/1.2 var(--sans)}
+.card-thumbnail-footer>span{display:flex;align-items:center;gap:3px;min-width:0}.card-thumbnail-footer>span:first-child{flex-shrink:0;color:#afd3e4}.card-thumbnail-footer>span:last-child{text-align:right;justify-content:flex-end}
+.card-hover-preview{position:fixed;z-index:10050;width:306px;max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px);overflow:auto;overscroll-behavior:contain;border-radius:8px;box-shadow:0 16px 65px #000b,0 0 0 1px #c2a26b;background:#14211c;color:#eddbb5;animation:card-preview-arrive .15s ease-out;scrollbar-width:thin;scrollbar-color:#987849 #17231e}
+.card-hover-preview>.folio-card.full-image-card.ability-layout,.card-hover-preview>.folio-card{width:100%;min-width:0;max-width:none;min-height:0;height:auto;margin:0;box-shadow:none;transform:none;flex-basis:auto;border-radius:8px 8px 0 0}
+.card-hover-preview>.folio-card.full-image-card.ability-layout>.folio-rules{min-height:0;padding:12px 8%;gap:10px;font:400 12px/1.5 var(--sans)}
+.card-hover-preview>.folio-card.full-image-card.ability-layout>.folio-top{min-height:30px;padding:6px 8%}
+.card-hover-preview>.folio-card.full-image-card.ability-layout>.folio-title{min-height:50px;padding:9px 8%}
+.card-hover-preview>.folio-card.full-image-card.ability-layout>.folio-title>strong{font-size:18px}
+.card-hover-preview>.folio-card.full-image-card.ability-layout>.folio-footer{min-height:32px;padding:8px 8%}
+.card-preview-hint{display:block;padding:7px 10px;text-align:center;color:#b8ae96;background:#14211c;font:10px/1.4 var(--sans)}
+@keyframes card-preview-arrive{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* Six cards across keeps an entire class pile visible in the desktop sheet. */
+.class-deck.compact-class-deck{min-width:0;display:flex;flex-direction:column;gap:7px}
+.compact-class-deck .class-deck-heading{gap:10px;margin:0;min-height:25px}
+.compact-class-deck .class-deck-heading h3{margin:0;font:600 16px/1.25 var(--serif)}
+.compact-class-deck .class-deck-heading .sheet-eyebrow{display:none}
+.compact-class-deck .deck-purse{display:flex;gap:5px;font:600 15px/1.2 var(--serif)}
+.compact-class-deck .deck-purse .game-icon{width:20px;height:20px}.compact-class-deck .deck-purse small{font:9px/1.2 var(--sans)}
+.compact-class-deck .class-deck-piles{gap:8px;margin:0;grid-template-columns:repeat(2,minmax(0,1fr))}
+.compact-class-deck .class-deck-piles>button{gap:9px;padding:6px 9px;border-radius:4px;min-height:41px}
+.compact-class-deck .class-deck-back{width:24px;height:29px;box-shadow:2px 2px #6d5939;border-width:1px;border-radius:2px}
+.compact-class-deck .class-deck-back>.game-icon{width:20px;height:20px}
+.compact-class-deck .class-deck-piles strong{font:600 12px/1.2 var(--serif)}
+.compact-class-deck .class-deck-piles small{font:10px/1.2 var(--sans);margin:3px 0 0}.compact-class-deck .class-deck-piles em{display:none}
+.compact-class-deck .class-deck-piles>button>b{font:600 20px/1 var(--serif)}
+.compact-class-deck .sheet-help{font:10px/1.4 var(--sans);margin:0}
+.compact-class-deck .class-deck-toolbar{gap:8px;margin:0;flex-wrap:nowrap;min-height:26px}
+.compact-class-deck .class-deck-toolbar nav{gap:4px;flex-wrap:nowrap}
+.compact-class-deck .class-deck-toolbar nav>button{font:500 9px/1.3 var(--sans);padding:5px 7px;white-space:nowrap}
+.compact-class-deck .class-deck-toolbar>.gold-button{min-height:26px;font-size:10px;padding:6px 8px;white-space:nowrap}
+.compact-class-deck .class-deck-cards{grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;align-items:start}
+.compact-class-deck .deck-card-entry{min-width:0;gap:0;border-radius:4px}
+.compact-class-deck .deck-card-state{font:500 8px/1.2 var(--sans);padding:4px 5px;gap:4px;min-height:18px;box-sizing:border-box;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.compact-class-deck .deck-card-state>span{display:none}
+.compact-class-deck .card-thumbnail{height:114px;border-radius:0 0 4px 4px}
+.compact-class-deck .card-thumbnail-name{min-height:29px;padding:3px 5px;font-size:10px}
+.compact-class-deck .card-thumbnail-top{font-size:7px;padding:3px 5px}
+.compact-class-deck .card-thumbnail-footer{font-size:8px;padding:4px 5px}
+.compact-class-deck .deck-card-action{padding:0;border:0;background:none;gap:0}
+.compact-class-deck .deck-card-action>span{display:none}
+.compact-class-deck .deck-card-action>button{width:100%;min-height:26px;font:600 9px/1.2 var(--sans);padding:5px 4px;margin-top:3px;white-space:normal}
+.compact-character-sheet .compact-class-deck{gap:5px}
+.compact-character-sheet .compact-class-deck>.sheet-help{display:none}
+@media(max-width:900px){.compact-class-deck .class-deck-cards{grid-template-columns:repeat(4,minmax(0,1fr))}.compact-class-deck .class-deck-toolbar{flex-wrap:wrap}}
+@media(max-width:600px){.compact-class-deck .class-deck-cards{grid-template-columns:repeat(3,minmax(0,1fr))}.compact-class-deck .class-deck-toolbar nav{flex-wrap:wrap}.compact-class-deck .class-deck-piles>button>b{display:none}.card-thumbnail{height:124px}}
+@media(prefers-reduced-motion:reduce){.card-thumbnail{transition:none}.card-hover-preview{animation:none}}

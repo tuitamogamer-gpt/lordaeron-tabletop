@@ -29,8 +29,9 @@ describe('consistent new card artwork', () => {
   const slot = screen.getByRole('button', { name: /^Slot 1:/ });
   expect(slot.querySelector('image')?.getAttribute('href')).toBe('/assets/full-cards/v8/mage-fireball.webp');
   const preview = screen.getByRole('region', { name: 'Selected card preview' });
-  expect(preview.querySelector('.full-card-face')?.getAttribute('src')).toBe('/assets/full-cards/v8/mage-fireball.webp');
-  expect(within(preview).getAllByRole('img', { name: 'blue dice' }).length).toBeGreaterThan(0);
+  expect(preview.querySelector('image')?.getAttribute('href')).toBe('/assets/full-cards/v8/mage-fireball.webp');
+  fireEvent.focus(within(preview).getByRole('button',{name:'Preview Fireball'}));
+  expect(within(screen.getByRole('tooltip')).getAllByRole('img', { name: 'blue dice' }).length).toBeGreaterThan(0);
   expect(send).not.toHaveBeenCalled();
 
   const startingSlot = def.slots.findIndex(s => s.printed && s.types.includes('instant'));
@@ -38,19 +39,25 @@ describe('consistent new card artwork', () => {
   fireEvent.click(screen.getByRole('button', { name: 'Equip Fireball' }));
   const printed = card(p, def.slots[startingSlot].printed!);
   fireEvent.click(screen.getByRole('button', { name: new RegExp(`${printed.name}.*Restore starting equipment`) }));
-  expect(screen.getByRole('region', { name: 'Selected card preview' }).querySelector('.full-card-face')?.getAttribute('src')).toBe(`/assets/full-cards/v8/${printed.id}.webp`);
+  const restored=screen.getByRole('region', { name: 'Selected card preview' });
+  expect(restored.querySelector('image')?.getAttribute('href')).toBe(`/assets/full-cards/v8/${printed.id}.webp`);
+  fireEvent.focus(within(restored).getByRole('button',{name:`Preview ${printed.name}`}));
+  expect(screen.getByRole('tooltip').querySelector('.full-card-face')?.getAttribute('src')).toBe(`/assets/full-cards/v8/${printed.id}.webp`);
   expect(r.container.querySelector('img[src*="/card-art/"]')).toBeNull();
   fireEvent.click(screen.getByRole('button', { name: 'Confirm equipment' }));
   expect(send.mock.calls[0][0].slots[startingSlot].card).toBeUndefined();
  });
 
- it('shows new starting artwork and dice rules on the character sheet', () => {
+ it('keeps starting cards in their slots and reveals complete dice rules on focus', () => {
   const def = p.characters.find(c => c.classId === 'mage')!;
   const r = render(<CharacterSheet hero={startingHero(def.id)} inspect={() => {}} preview />);
   for (const slot of def.slots.filter(s => s.printed)) {
    expect(r.container.querySelector(`image[href="/assets/full-cards/v8/${slot.printed}.webp"]`)).toBeTruthy();
   }
-  expect(screen.getAllByRole('img', { name: /dice/ }).length).toBeGreaterThan(0);
+  expect(r.container.querySelector('.character-slot .inscribed-rules')).toBeNull();
+  const startingPower=def.slots.find(s=>s.printed&&s.types.includes('instant'))!.printed!;
+  fireEvent.focus(screen.getByRole('button',{name:`Inspect ${card(p,startingPower).name}`}));
+  expect(within(screen.getByRole('tooltip')).getAllByRole('img', { name: /dice/ }).length).toBeGreaterThan(0);
  });
 });
 
