@@ -3,8 +3,8 @@
 .ability-layout>.full-card-face{display:none}
 .folio-card.full-image-card.ability-layout>.folio-top{flex:none;min-height:40px;padding:8px 8%;box-sizing:border-box;background:url('/assets/ability-ui/header.webp') center/100% 100%;font:600 10px/1.3 var(--sans);letter-spacing:1px;color:#f8deb0}
 .ability-layout>.folio-top b{font:600 11px/1.3 var(--sans);letter-spacing:.5px;white-space:nowrap}
-.folio-card.full-image-card.ability-layout>.folio-art{display:block;flex:none;width:auto;height:auto;aspect-ratio:340/160;margin:0;padding:0 5.7%;box-sizing:border-box;background:#17251d}
-.ability-layout>.folio-art>.card-illustration{display:block;width:100%;height:100%;max-width:none;object-fit:cover;filter:none}
+.folio-card.full-image-card.ability-layout>.folio-art{display:block;flex:none;width:auto;height:auto;aspect-ratio:384/294;margin:0;padding:0 5.7%;box-sizing:border-box;background:#17251d}
+.ability-layout>.folio-art>.card-illustration{display:block;width:100%;height:100%;max-width:none;object-fit:contain;filter:none}
 .folio-card.full-image-card.ability-layout>.folio-title{flex:none;min-height:66px;align-self:stretch;padding:12px 8%;box-sizing:border-box;background:url('/assets/ability-ui/title.webp') center/100% 100%;gap:4px;text-align:center}
 .folio-card.full-image-card.ability-layout>.folio-title>strong{font:600 clamp(16px,6.4cqi,21px)/1.35 var(--serif);color:#fff0c5;text-wrap:balance;overflow-wrap:break-word;letter-spacing:0}
 .ability-layout>.folio-title>small{font:500 10px/1.4 var(--sans);color:#e7cfa6;text-transform:capitalize;letter-spacing:.4px;margin:0}

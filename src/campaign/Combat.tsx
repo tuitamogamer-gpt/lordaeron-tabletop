@@ -8,7 +8,8 @@ import { commandLabel } from '../rules/legal';
 import type { Attack, BattleStage, Color, Command, Die, Pool } from '../rules/model';
 import type { GameView } from '../rules/view';
 import { FactionCrest } from './Art';
-import CombatAbilities, { type AbilityCommand } from './CombatAbilities';
+import { type AbilityCommand } from './CombatAbilities';
+import CombatCharacterSheet from './CombatCharacterSheet';
 import CombatLoadout from './CombatLoadout';
 import { combatPool } from './combat-pool';
 import D8 from './D8';
@@ -116,7 +117,7 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
  const activeHero=state.heroes.find(h=>h.id===a?.heroId),pool=a&&activeHero?combatPool(p,activeHero,a,omit):undefined;
  const rollCommand:Command|undefined=roll&&pool?Object.values(pool.omit).some(Boolean)?{type:'roll',omit:pool.omit}:{type:'roll'}:undefined;
  const skillKeys=[...new Set(skills.map(c=>`${c.hero}:${c.card}`))].sort((x,y)=>Number(y===selectedPower)-Number(x===selectedPower));
- const choosePower=(key:string)=>{setSelectedPower(selectedPower===key?undefined:key);if(choicePane.current)choicePane.current.scrollTop=0;};
+ const choosePower=(key:string)=>{setSelectedPower(selectedPower===key?undefined:key);};
  const actionLabel = (c: Command) => c.type === 'closeBattle' ? 'Finish combat & continue' : c.type === 'advance' ? advanceLabels[b.stage] ?? 'Continue' : c.type === 'tokens' ? 'Bank successful hits' : c.type === 'monster' ? 'Resolve creature effect' : commandLabel(p, c);
 
  return <Modal title="Combat" wide className="combat-room player-driven-combat" onClose={close}>
@@ -137,28 +138,6 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
      <div className="combat-tray-note"><span><Icon name="target" size={13} />{shown ? `${shown.threat}+ scores a hit${greenEightOnly ? ' · green needs 8' : ''}` : 'One success = one hit'}</span><span>{a ? `${rerollsBlocked?'Normal rerolls blocked by Ghoul':`Rerolls ${Math.max(0, a.reroll)}`} · Attrition ${Math.max(0, a.attrition)}` : 'Hits are counted automatically'}</span></div>
     </section>
     {state.respawns.length > 0 && <p className="combat-warning">A character has no health. Use any available healing or choose a starting region or graveyard.</p>}
-    </div>
-   </div>
-    <section className="combat-decisions" aria-label="Combat decisions" aria-busy={locked}>
-     <div className="combat-decision-heading"><h4>{botResponsePending?'Your reaction':actingBot?'Bot turn':b.stage==='over'?'Review the outcome':'Your decision'}</h4><span>{skillKeys.length?`${skillKeys.length} powers available`:'Manual control'}</span></div>
-     <div className="combat-choice-content" ref={choicePane}>
-     <CombatLoadout state={state} skills={skills}/>
-     {!!skills.length && <div className="combat-skill-list">{skillKeys.map(key => <CombatAbilities key={`${b.round}:${b.stage}:${key}`} commands={skills.filter(c => `${c.hero}:${c.card}` === key)} state={state} dice={selectedIds} send={send} busy={locked} expanded={selectedPower===key} onToggle={()=>choosePower(key)} />)}</div>}
-     {!skills.length&&!actingBot&&b.stage!=='over'&&<p className="combat-no-powers">No optional powers available at this step. Continue when you are ready.</p>}
-     </div>
-     {a&&pool&&b.stage==='pool'&&roll&&<fieldset className="combat-pool-builder" disabled={locked}><legend>Choose your dice pool</legend><div>{channels.map(({color})=><label className={color} key={color}><span>{color}</span><input aria-label={`Roll ${color} dice`} type="number" min={0} max={pool.maximum[color]} value={pool.kept[color]} onChange={e=>setOmit(v=>({...v,[color]:pool.available[color]-Math.max(0,Math.min(pool.maximum[color],Math.floor(Number(e.target.value)||0)))}))}/><small>of {pool.available[color]}</small></label>)}</div><p><strong>{pool.total} D8 selected</strong> · Rerolls {Math.max(0,a.reroll)} · Attrition {Math.max(0,a.attrition)}</p>{!!pool.penalties.length&&<p>{pool.penalties.length} dice removed by equipment before this pool.</p>}{activeHero&&(activeHero.stun||activeHero.curse)>0&&(pool.total<activeHero.stun*2?<p className="combat-pool-danger" role="status">Stun requires {activeHero.stun*2} dice. Confirming this pool defeats {character(p,activeHero.id).name.split(' ')[0]} immediately.</p>:<p>Stun / Curse: choose {Math.min(pool.total,activeHero.stun*2+activeHero.curse)} dice to remove before rolling.</p>)}</fieldset>}
-     <div className="combat-action-row">
-      {rollCommand && <button className="gold-button combat-roll-button" disabled={locked} onClick={() => send(rollCommand)}><Icon name="spark" />{activeHero&&(activeHero.stun||activeHero.curse)>0?'Confirm pool · ':'Roll '}{pool?.total} D8 <Icon name="arrow" size={16} /></button>}
-      {botResponsePending&&<button className="gold-button" disabled={locked||!onPassHumanWindow} onClick={onPassHumanWindow}>Pass · continue bot turn</button>}
-      {usable('reroll') && <><button className="gold-button" disabled={!canReroll || locked} onClick={() => { send({ type: 'reroll', dice: selectedIds }); setSelected([]); }}><Icon name="reset" />Reroll selected ({selectedIds.length})</button><button className="quiet-button" disabled={locked} onClick={() => setSelected(a!.dice.filter(d => !hit(d) && rerollable(d)).slice(0, Math.max(0, a!.reroll)).map(d => d.id))}>Select misses</button></>}
-      {usable('penalty') && <button className="gold-button" disabled={selectedDice.length !== penaltyCount || locked} onClick={() => send({ type: 'penalty', dice: selectedIds })}>Remove {selectedIds.length} / {penaltyCount} dice</button>}
-      {!!selectedIds.length && <button className="quiet-button" disabled={locked} onClick={() => setSelected([])}>Clear selection</button>}
-      {choices.map(c => <button key={JSON.stringify([state.turn, b.round, b.stage, c])} className={c.type === 'closeBattle' ? 'gold-button' : 'quiet-button'} disabled={locked} onClick={() => send(c)}>{actionLabel(c)}{c.type === 'tokens' && c.toAttrition && <small>To attrition: {c.toAttrition.map(id => `#${id}`).join(', ')}</small>}{c.type === 'advance' && c.targets && <small>{state.enemies.find(e => e.id === c.targets?.[0])?.color} enemies first</small>}{c.type === 'loot' && c.discard && <small>Discard {pretty(card(p, c.discard).name)}</small>}{c.type === 'monster' && !!c.unequip?.length && <small>{c.unequip.map(id => card(p, id).name).join(', ')}</small>}</button>)}
-      {!legal.length && <p className="muted">{automationPending ? 'The bot is making its move.' : 'Waiting for the player or bot making this decision.'}</p>}
-     </div>
-     {usable('reroll') && !locked && <p className="dice-selection-help" role="status">{selectedIds.length > (a?.reroll ?? 0) ? `Choose at most ${a?.reroll ?? 0} dice. Deselect ${selectedIds.length - (a?.reroll ?? 0)} to reroll.` : selectedIds.length ? `${selectedIds.length} selected · up to ${Math.max(0, a?.reroll ?? 0)} rerolls available` : 'Click a die to select it, or use Select misses.'}</p>}
-     {usable('penalty') && !locked && <p className="dice-selection-help" role="status">{selectedIds.length === penaltyCount ? `${diceCount(penaltyCount)} selected. Confirm removal to roll the remaining dice.` : selectedIds.length > penaltyCount ? `Deselect ${diceCount(selectedIds.length - penaltyCount)} to confirm Stun / Curse losses.` : `Select ${diceCount(penaltyCount - selectedIds.length)} to complete your Stun / Curse losses.`}</p>}
-    </section>
    <aside className="combat-ledger" aria-label="Battle totals">
     {threat !== undefined && <div className="combat-threat-bar"><ThreatLevel value={threat} greenEightOnly={!!greenEightOnly} /><span>{a ? `${character(p, a.heroId).name.split(' ')[0]}’s current threshold` : 'Encounter threshold'}<small>Roll this number or higher to score one hit.</small></span></div>}
     <div className="combat-ledger-heading"><span className="sheet-eyebrow">THE SHARED POOL</span><h3>Battle totals</h3><p>Banked after abilities and creature effects.</p></div>
@@ -181,6 +160,26 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
     {rule && <details className="combat-enemy-rule"><summary>Encounter rule <Icon name="help" size={14} /></summary><p><RulesText>{rule}</RulesText></p></details>}
     {!!history.length && <details className="combat-roll-history"><summary>Roll history · {history.length}</summary>{[...history].reverse().map(r => <div key={`${r.round}:${r.attack.heroId}`}><strong>R{r.round} · {character(p, r.attack.heroId).name.split(' ')[0]}</strong><span>{r.attack.dice.map(d => <i key={d.id} className={`${d.color} ${d.removed ? 'removed' : ''}`}>{d.value || '—'}</i>)}</span></div>)}</details>}
    </aside>
+    </div>
+   </div>
+    <section className="combat-decisions" aria-label="Combat decisions" aria-busy={locked}>
+     <div className="combat-decision-heading"><h4>Character sheet</h4><span>{botResponsePending?'Your reaction':actingBot?'Bot turn':b.stage==='over'?'Review the outcome':'Your decision'}{skillKeys.length?` · ${skillKeys.length} powers available`:''}</span></div>
+     <CombatCharacterSheet state={state} skills={skills} dice={selectedIds} send={send} busy={locked} bots={bots} selectedPower={selectedPower} onChoosePower={choosePower} onChooseHero={()=>setSelectedPower(undefined)} contentRef={choicePane}>
+     {a&&pool&&b.stage==='pool'&&roll&&<fieldset className="combat-pool-builder" disabled={locked}><legend>Choose your dice pool</legend><div>{channels.map(({color})=><label className={color} key={color}><span>{color}</span><input aria-label={`Roll ${color} dice`} type="number" min={0} max={pool.maximum[color]} value={pool.kept[color]} onChange={e=>setOmit(v=>({...v,[color]:pool.available[color]-Math.max(0,Math.min(pool.maximum[color],Math.floor(Number(e.target.value)||0)))}))}/><small>of {pool.available[color]}</small></label>)}</div><p><strong>{pool.total} D8 selected</strong> · Rerolls {Math.max(0,a.reroll)} · Attrition {Math.max(0,a.attrition)}</p>{!!pool.penalties.length&&<p>{pool.penalties.length} dice removed by equipment before this pool.</p>}{activeHero&&(activeHero.stun||activeHero.curse)>0&&(pool.total<activeHero.stun*2?<p className="combat-pool-danger" role="status">Stun requires {activeHero.stun*2} dice. Confirming this pool defeats {character(p,activeHero.id).name.split(' ')[0]} immediately.</p>:<p>Stun / Curse: choose {Math.min(pool.total,activeHero.stun*2+activeHero.curse)} dice to remove before rolling.</p>)}</fieldset>}
+     <div className="combat-action-row">
+      {rollCommand && <button className="gold-button combat-roll-button" disabled={locked} onClick={() => send(rollCommand)}><Icon name="spark" />{activeHero&&(activeHero.stun||activeHero.curse)>0?'Confirm pool · ':'Roll '}{pool?.total} D8 <Icon name="arrow" size={16} /></button>}
+      {botResponsePending&&<button className="gold-button" disabled={locked||!onPassHumanWindow} onClick={onPassHumanWindow}>Pass · continue bot turn</button>}
+      {usable('reroll') && <><button className="gold-button" disabled={!canReroll || locked} onClick={() => { send({ type: 'reroll', dice: selectedIds }); setSelected([]); }}><Icon name="reset" />Reroll selected ({selectedIds.length})</button><button className="quiet-button" disabled={locked} onClick={() => setSelected(a!.dice.filter(d => !hit(d) && rerollable(d)).slice(0, Math.max(0, a!.reroll)).map(d => d.id))}>Select misses</button></>}
+      {usable('penalty') && <button className="gold-button" disabled={selectedDice.length !== penaltyCount || locked} onClick={() => send({ type: 'penalty', dice: selectedIds })}>Remove {selectedIds.length} / {penaltyCount} dice</button>}
+      {!!selectedIds.length && <button className="quiet-button" disabled={locked} onClick={() => setSelected([])}>Clear selection</button>}
+      {choices.map(c => <button key={JSON.stringify([state.turn, b.round, b.stage, c])} className={c.type === 'closeBattle' ? 'gold-button' : 'quiet-button'} disabled={locked} onClick={() => send(c)}>{actionLabel(c)}{c.type === 'tokens' && c.toAttrition && <small>To attrition: {c.toAttrition.map(id => `#${id}`).join(', ')}</small>}{c.type === 'advance' && c.targets && <small>{state.enemies.find(e => e.id === c.targets?.[0])?.color} enemies first</small>}{c.type === 'loot' && c.discard && <small>Discard {pretty(card(p, c.discard).name)}</small>}{c.type === 'monster' && !!c.unequip?.length && <small>{c.unequip.map(id => card(p, id).name).join(', ')}</small>}</button>)}
+      {!legal.length && <p className="muted">{automationPending ? 'The bot is making its move.' : 'Waiting for the player or bot making this decision.'}</p>}
+     </div>
+     {usable('reroll') && !locked && <p className="dice-selection-help" role="status">{selectedIds.length > (a?.reroll ?? 0) ? `Choose at most ${a?.reroll ?? 0} dice. Deselect ${selectedIds.length - (a?.reroll ?? 0)} to reroll.` : selectedIds.length ? `${selectedIds.length} selected · up to ${Math.max(0, a?.reroll ?? 0)} rerolls available` : 'Click a die to select it, or use Select misses.'}</p>}
+     {usable('penalty') && !locked && <p className="dice-selection-help" role="status">{selectedIds.length === penaltyCount ? `${diceCount(penaltyCount)} selected. Confirm removal to roll the remaining dice.` : selectedIds.length > penaltyCount ? `Deselect ${diceCount(selectedIds.length - penaltyCount)} to confirm Stun / Curse losses.` : `Select ${diceCount(penaltyCount - selectedIds.length)} to complete your Stun / Curse losses.`}</p>}
+     </CombatCharacterSheet>
+    </section>
+
   </div>
   <footer className="combat-room-footer">{controls}<div><span>{resolve ? 'Bots play automatically. Every player decision waits for confirmation.' : 'Bots paused. Your decisions remain manual.'}</span>{!resolve && <button className="quiet-button" disabled={!botReady || locked} onClick={botStep}>Step bot <Icon name="arrow" size={14} /></button>}</div></footer>
  </Modal>;

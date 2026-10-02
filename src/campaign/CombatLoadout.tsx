@@ -7,7 +7,7 @@ import { triggerLabels } from './design-system';
 import { effectText } from './rules-text';
 import RulesText from './RulesText';
 
-export default function CombatLoadout({state,skills,details=false}:{state:GameView;skills:AbilityCommand[];details?:boolean}){
+export default function CombatLoadout({state,skills,details=false,showBudget=true}:{state:GameView;skills:AbilityCommand[];details?:boolean;showBudget?:boolean}){
  const b=state.battle,a=b?.active,h=state.heroes.find(h=>h.id===a?.heroId);
  if(!b||!a||!h)return null;
  const available=availableCards(p,h).map(id=>card(p,id)),used=b.current[h.id]?.cards??[];
@@ -16,7 +16,7 @@ export default function CombatLoadout({state,skills,details=false}:{state:GameVi
  const waiting=available.filter(c=>c.abilities.some(v=>!v.automatic&&!v.judgement)&&!skills.some(cmd=>cmd.hero===h.id&&cmd.card===c.id));
  const cost=(c:typeof available[number])=>Math.min(...c.abilities.filter(v=>!v.automatic&&!v.judgement).map(v=>abilityEnergyCost(p,state,h,c.id,v.id)));
  if(!details)return <>
-  <div className="combat-energy-budget" aria-label={`${character(p,h.id).name} energy budget`}><span><strong>{character(p,h.id).name.split(' ')[0]}</strong><small>Available energy</small></span><b>{h.energy}<small> / {capacity(p,h).energy}</small></b></div>
+  {showBudget&&<div className="combat-energy-budget" aria-label={`${character(p,h.id).name} energy budget`}><span><strong>{character(p,h.id).name.split(' ')[0]}</strong><small>Available energy</small></span><b>{h.energy}<small> / {capacity(p,h).energy}</small></b></div>}
   {!!energy.length&&<div className="combat-applied-energy">{energy.map(({card:c,ability:v})=><p key={`${c.id}:${v.id}`}><strong>{c.name}</strong> · <RulesText>{v.effects.map(effectText).join(' · ')}</RulesText><span>Automatic · already applied</span></p>)}</div>}
  </>;
  return <>

@@ -1,5 +1,5 @@
 import { useId, useState } from 'react';
-import { CardArt } from './Art';
+import { CardThumbnail } from './parts';
 import { BASE_PACK as p } from '../data/base';
 import { card, character } from '../rules/common';
 import { abilityEnergyCost, availableCards, condition, previewAbilityDice } from '../rules/effects';
@@ -57,9 +57,10 @@ export default function CombatAbilities({commands,state,dice,send,busy,expanded,
   return [...enhancements,...triggered];
  });
  return <section className={`combat-skill-group combat-power-choice ${isOpen?'expanded':''}`} aria-label={`${c.name} power`}>
-  <button className="combat-power-summary" type="button" aria-label={`Choose ${c.name}`} aria-expanded={isOpen} aria-controls={reviewId} disabled={busy} onClick={()=>onToggle?onToggle():setLocalOpen(!localOpen)}>
-   <CardArt card={c}/><span><strong>{c.name}</strong><small>{character(p,h.id).name.split(' ')[0]} · {energyRange}{strengthOptions.length>1?` · ${strengthOptions.length} strengths`:''}</small></span><span className="combat-power-ready">{isOpen?'Reviewing':'Choose'}<b>{isOpen?'−':'+'}</b></span>
-  </button>
+  <div className="combat-power-summary">
+   <CardThumbnail card={c} className="combat-power-thumbnail" actionLabel={`Choose ${c.name}`} footer={isOpen?'Close ability review':'Choose ability'} selected={isOpen} disabled={busy} expanded={isOpen} controls={reviewId} onClick={()=>onToggle?onToggle():setLocalOpen(!localOpen)} />
+   <div className="combat-power-caption"><strong>{c.name}</strong><small>{character(p,h.id).name.split(' ')[0]} · {energyRange}{strengthOptions.length>1?` · ${strengthOptions.length} strengths`:''}</small><span className="combat-power-ready">{isOpen?'Reviewing':'Available'}<b>{isOpen?'−':'+'}</b></span></div>
+  </div>
   {isOpen&&<div id={reviewId} className="combat-power-review">
    <div className="combat-power-options">
     {strengthOptions.length>1&&<label>Effect strength<select aria-label={`Strength ${c.name}`} disabled={busy} value={chosen.ability} onChange={event=>{const matches=choices.filter(command=>command.ability===event.target.value);select(matches.find(command=>!!command.args?.free===!!chosen.args?.free)??matches[0]);}}>{strengthOptions.map((ability,index)=>{const options=choices.filter(command=>command.ability===ability.id),low=Math.min(...options.map(costFor)),high=Math.max(...options.map(costFor));return <option key={ability.id} value={ability.id}>Strength {index+1} · {low===high?low:`${low}–${high}`} energy · {ability.effects.map(effectText).join('; ')}</option>;})}</select></label>}

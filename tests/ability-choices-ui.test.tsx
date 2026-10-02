@@ -25,6 +25,27 @@ const abilities=(s:State,id:string)=>legalActions(p,s).filter((c):c is AbilityCo
 const choose=(name:string)=>fireEvent.click(screen.getByRole('button',{name:`Choose ${name}`}));
 
 describe('deliberate ability review',()=>{
+ it('previews every ready Execute strength before opening its review and prevents busy activation',()=>{
+  const {s}=fighter('warrior','warrior-execute');s.battle!.stage='after-tokens';
+  const commands=abilities(s,'warrior-execute'),send=vi.fn(),r=render(<CombatAbilities commands={commands} state={view(s)} dice={[]} send={send} busy={false}/>);
+  const trigger=screen.getByRole('button',{name:'Choose Execute'});
+  expect(trigger.getAttribute('aria-expanded')).toBe('false');
+  expect(trigger.querySelector('button')).toBeNull();
+  fireEvent.focus(trigger);
+  const preview=screen.getByRole('tooltip',{name:'Execute full card'});
+  expect(preview.querySelectorAll('.power-strength-option')).toHaveLength(5);
+  for(let amount=1;amount<=5;amount++)expect(preview.textContent).toContain(`${amount} energy`);
+  expect(send).not.toHaveBeenCalled();
+  fireEvent.click(trigger);
+  expect(screen.queryByRole('tooltip')).toBeNull();
+  expect(trigger.getAttribute('aria-expanded')).toBe('true');
+  expect(screen.getByRole('combobox',{name:'Strength Execute'})).toBeTruthy();
+  expect(send).not.toHaveBeenCalled();
+  r.rerender(<CombatAbilities commands={commands} state={view(s)} dice={[]} send={send} busy/>);
+  expect(trigger.getAttribute('aria-disabled')).toBe('true');
+  fireEvent.click(trigger);expect(trigger.getAttribute('aria-expanded')).toBe('true');
+  fireEvent.click(screen.getByRole('button',{name:'Use Execute · 1 energy'}));expect(send).not.toHaveBeenCalled();
+ });
  it.each([
   ['warrior','warrior-heroic-strike','warrior-improved-heroic-strike','red',2],
   ['warlock','warlock-shadow-bolt','warlock-improved-shadow-bolt','blue',2],

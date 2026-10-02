@@ -38,23 +38,14 @@ export function QuestSetupPreview({ state }: { state: QuestState }) {
 
 export function QuestReveal({ receipt, state, onClose, onLocate }: { receipt: QuestReceipt; state: QuestState; onClose: () => void; onLocate?: (region: string, quest: string) => void }) {
  const [selected, setSelected] = useState(receipt.quests[0]);
- const [sequence, setSequence] = useState(0);
- const [stage, setStage] = useState(0);
  const quest = p.quests.find(q => q.id === selected) ?? p.quests.find(q => q.id === receipt.quests[0])!;
  const placements = receipt.placements[quest.id];
  const objectives = questObjectives(quest, state);
- const total = placementTotals(receipt);
- useEffect(() => {
-  if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) { setStage(2); return; }
-  setStage(0);
-  const a = setTimeout(() => setStage(1), 450), b = setTimeout(() => setStage(2), 1100);
-  return () => { clearTimeout(a); clearTimeout(b); };
- }, [sequence, receipt]);
  const heading = receipt.kind === 'setup' ? 'Your starting quests are on the map' : receipt.kind === 'draw' ? 'A new quest enters play' : 'Your active quests';
  const locate = (region: string) => { onClose(); onLocate?.(region, quest.id); };
  return <Modal title={heading} wide className="quest-reveal-modal" onClose={onClose}>
-  <div className={`quest-reveal stage-${stage}`} key={sequence}>
-   <ol className="quest-reveal-stages" aria-label="Quest setup sequence"><li className="done"><Icon name="layers"/><span><b>{receipt.kind === 'overview' ? 'Active cards' : 'Cards drawn'}</b>{total.quests} {receipt.kind === 'draw' ? 'new' : 'active'} quests</span><Icon name="check" size={14}/></li><li className={stage >= 1 ? 'done' : ''}><Icon name="skull"/><span><b>{receipt.kind === 'overview' ? 'Live creatures' : 'Creatures placed'}</b>{total.creatures} {receipt.kind === 'overview' ? 'figures remaining' : 'figures placed'}</span><Icon name="check" size={14}/></li><li className={stage >= 2 ? 'done' : ''}><Icon name="flag"/><span><b>Markers linked</b>{total.tokens} quest locations</span><Icon name="check" size={14}/></li></ol>
+  <div className="quest-reveal">
+   <QuestPlacementSummary receipt={receipt}/>
    <p className="quest-reveal-intro">{receipt.kind === 'overview' ? 'Select a card to see its remaining objectives and their exact regions.' : `The game placed these figures automatically${receipt.kind === 'draw' ? ` on turn ${receipt.turn}` : ''}. Select any card to follow its objectives.`}</p>
    <div className="quest-reveal-grid"><div className="quest-reveal-journals" aria-label="Drawn quest cards">{(['horde', 'alliance'] as const).map(side => {
     const ids = receipt.quests.filter(id => p.quests.find(q => q.id === id)!.faction === side);
@@ -76,13 +67,13 @@ export function QuestReveal({ receipt, state, onClose, onLocate }: { receipt: Qu
      </article>;
     })}</div><p className="quest-reveal-rule"><Icon name="help" size={18}/>{placements.some(row => row.color === 'blue') ? 'Defeat every green and red objective to complete this quest. Blue creatures are separate encounters and stop your travel.' : 'Defeat every green and red objective to complete this quest. The matching faction marker identifies its region on the map.'}</p>
    </section></div>
-   <footer className="quest-reveal-footer"><p><Icon name="eye" size={16}/>Hover or focus map tokens to read their purpose. Open Quests at any time for current progress.</p>{receipt.kind !== 'overview' && <button className="quiet-button" onClick={() => setSequence(n => n + 1)}><Icon name="reset" size={15}/>Replay placement</button>}<button className="gold-button" onClick={onClose}>{receipt.kind === 'setup' ? 'Begin the first turn' : 'Return to the map'}<Icon name="arrow" size={15}/></button></footer>
+   <footer className="quest-reveal-footer"><p><Icon name="eye" size={16}/>Select a region to locate its objectives. Open Quests at any time for current progress.</p><button className="gold-button" onClick={onClose}>Return to the map<Icon name="arrow" size={15}/></button></footer>
   </div>
  </Modal>;
 }
 
 /** Keeps a placement receipt outside the quest workspace so automated draws stay visible. */
-export default function QuestActivity({ state, onLocate, suspended = false, autoRevealSetup = state.revision === 0, onOpenChange }: { state: GameView; onLocate?: (region: string, quest: string) => void; suspended?: boolean; autoRevealSetup?: boolean; onOpenChange?: (visible: boolean) => void }) {
+export default function QuestActivity({ state, onLocate, suspended = false, autoRevealSetup = false, onOpenChange }: { state: GameView; onLocate?: (region: string, quest: string) => void; suspended?: boolean; autoRevealSetup?: boolean; onOpenChange?: (visible: boolean) => void }) {
  const previous = useRef<QuestState>(state);
  const notifyVisibility = useRef(onOpenChange); notifyVisibility.current = onOpenChange;
  const [latest, setLatest] = useState<QuestReceipt>(() => questReceipt(state, state.revision === 0 ? 'setup' : 'overview'));
@@ -108,7 +99,7 @@ export default function QuestActivity({ state, onLocate, suspended = false, auto
  const close = () => { setOpen(false); setFresh(false); };
  return <div className={`quest-activity ${fresh ? 'fresh' : ''}`}>
   <button type="button" className="quest-activity-overview" onClick={() => { setOverview(true); setOpen(true); }} aria-label={`Quest overview · ${state.quests.length} active`}><Icon name="scroll" size={17}/><span><strong>{state.quests.length} active quests</strong><small>View cards, creatures and markers</small></span><Icon name="right" size={14}/></button>
-  {latest.kind !== 'overview' && <button type="button" className="quest-activity-replay" onClick={() => { setOverview(false); setOpen(true); }} aria-label={latest.kind === 'setup' ? 'Replay starting quest placement' : 'Review latest quest draw'} title={latest.kind === 'setup' ? 'Replay starting quest placement' : 'Review latest quest draw'}><Icon name={fresh ? 'spark' : 'reset'} size={16}/><span>{latest.kind === 'setup' ? 'Starting quest placement' : `${latest.quests.length} new quest${latest.quests.length === 1 ? '' : 's'} drawn`}</span>{fresh && <b>NEW</b>}</button>}
+  {latest.kind !== 'overview' && <button type="button" className="quest-activity-replay" onClick={() => { setOverview(false); setOpen(true); }} aria-label={latest.kind === 'setup' ? 'Review starting quest placement' : 'Review latest quest draw'} title={latest.kind === 'setup' ? 'Review starting quest placement' : 'Review latest quest draw'}><Icon name={fresh ? 'spark' : 'pin'} size={16}/><span>{latest.kind === 'setup' ? 'Starting quests' : `${latest.quests.length} new quest${latest.quests.length === 1 ? '' : 's'}`}</span>{fresh && <b>NEW</b>}</button>}
   {notice && <span className="quest-activity-status" role="status">{notice}</span>}
   {visible && <QuestReveal receipt={overview ? questReceipt(state) : latest} state={state} onClose={close} onLocate={onLocate}/>}
  </div>;

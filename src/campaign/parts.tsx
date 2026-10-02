@@ -1,5 +1,4 @@
 import { GameIcon } from './GameIcon';
-import { CardArt } from './Art';
 import { AbilityCard, CardFrame, triggerLabels } from './design-system';
 import { effectText, conditionText, staticCardText } from './rules-text';
 import { BASE_PACK as p } from '../data/base';
@@ -24,9 +23,9 @@ export function GameCard({card,disabled=false,onClick,selected=false,footer}:{ca
 }
 
 /** Compact cards occupy their slot; the complete rules live above the surrounding layout. */
-export function CardThumbnail({card:c,disabled=false,onClick,selected=false,footer,className='',actionLabel,art='card'}:{card:Card;disabled?:boolean;onClick?:()=>void;selected?:boolean;footer?:string;className?:string;actionLabel?:string;art?:'card'|'illustration'}){
- const id=useId(),anchor=useRef<HTMLButtonElement>(null),preview=useRef<HTMLDivElement>(null);
- const timer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined),[open,setOpen]=useState(false),[position,setPosition]=useState({left:12,top:12});
+export function CardThumbnail({card:c,disabled=false,onClick,selected=false,footer,className='',actionLabel,expanded,controls}:{card:Card;disabled?:boolean;onClick?:()=>void;selected?:boolean;footer?:string;className?:string;actionLabel?:string;art?:'card'|'illustration';expanded?:boolean;controls?:string}){
+ const id=useId(),anchor=useRef<HTMLButtonElement>(null),preview=useRef<HTMLDivElement>(null),previewContent=useRef<HTMLDivElement>(null);
+ const timer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined),[open,setOpen]=useState(false),[position,setPosition]=useState({left:12,top:12,width:360,height:0,scale:1});
  const cancel=()=>{clearTimeout(timer.current);timer.current=undefined;};
  const show=()=>{cancel();window.dispatchEvent(new CustomEvent('card-preview-open',{detail:id}));setOpen(true);};
  const hide=()=>{cancel();setOpen(false);};
@@ -42,29 +41,42 @@ export function CardThumbnail({card:c,disabled=false,onClick,selected=false,foot
  },[id]);
  useLayoutEffect(()=>{
   if(!open)return;
+  const node=preview.current;
+  // A modal's animated transform makes ordinary fixed children relative to the
+  // modal. The top layer escapes both that transform and its scrolling clips.
+  node?.showPopover?.();
   const place=()=>{
-   if(!anchor.current||!preview.current)return;
-   const a=anchor.current.getBoundingClientRect(),b=preview.current.getBoundingClientRect(),gap=12;
-   const maxLeft=Math.max(gap,window.innerWidth-b.width-gap),maxTop=Math.max(gap,window.innerHeight-b.height-gap);
-   let left=a.right+gap,top=a.top+(a.height-b.height)/2;
-   if(left+b.width>window.innerWidth-gap){left=a.left-b.width-gap;if(left<gap){left=a.left+(a.width-b.width)/2;top=a.bottom+gap;if(top+b.height>window.innerHeight-gap)top=a.top-b.height-gap;}}
-   setPosition({left:Math.max(gap,Math.min(left,maxLeft)),top:Math.max(gap,Math.min(top,maxTop))});
+   if(!anchor.current||!previewContent.current)return;
+   const a=anchor.current.getBoundingClientRect(),content=previewContent.current,b=content.getBoundingClientRect(),gap=12,viewport=window.visualViewport;
+   const viewportWidth=viewport?.width??window.innerWidth,viewportHeight=viewport?.height??window.innerHeight;
+   const viewportLeft=viewport?.offsetLeft??0,viewportTop=viewport?.offsetTop??0;
+   // Measure the unscaled content rather than the constrained shell. Otherwise
+   // a long card reports the clipped height and its footer never gets fitted.
+   const naturalWidth=content.offsetWidth||b.width||360,naturalHeight=content.offsetHeight||b.height||1;
+   const scale=Math.min(1,Math.max(1,viewportWidth-gap*2)/naturalWidth,Math.max(1,viewportHeight-gap*2)/naturalHeight);
+   const width=naturalWidth*scale,height=naturalHeight*scale,minLeft=viewportLeft+gap,minTop=viewportTop+gap;
+   const right=viewportLeft+viewportWidth-gap,bottom=viewportTop+viewportHeight-gap;
+   const maxLeft=Math.max(minLeft,right-width),maxTop=Math.max(minTop,bottom-height);
+   let left=a.right+gap,top=a.top+(a.height-height)/2;
+   if(left+width>right){left=a.left-width-gap;if(left<minLeft){left=a.left+(a.width-width)/2;top=a.bottom+gap;if(top+height>bottom)top=a.top-height-gap;}}
+   setPosition({left:Math.max(minLeft,Math.min(left,maxLeft)),top:Math.max(minTop,Math.min(top,maxTop)),width,height,scale});
   };
   const dismiss=()=>{clearTimeout(timer.current);setOpen(false);};
   const escape=(event:KeyboardEvent)=>{if(event.key==='Escape'){event.preventDefault();event.stopPropagation();dismiss();}};
   const outside=(event:Event)=>{if(event.target instanceof Node&&!anchor.current?.contains(event.target)&&!preview.current?.contains(event.target))dismiss();};
   place();
   const observer=typeof ResizeObserver==='undefined'?undefined:new ResizeObserver(place);
-  if(preview.current)observer?.observe(preview.current);
+  if(previewContent.current)observer?.observe(previewContent.current);
   window.addEventListener('resize',place);window.addEventListener('scroll',place,true);document.addEventListener('keydown',escape,true);
+  window.visualViewport?.addEventListener('resize',place);window.visualViewport?.addEventListener('scroll',place);
   document.addEventListener('pointerdown',outside,true);document.addEventListener('focusin',outside);
-  return()=>{observer?.disconnect();window.removeEventListener('resize',place);window.removeEventListener('scroll',place,true);document.removeEventListener('keydown',escape,true);document.removeEventListener('pointerdown',outside,true);document.removeEventListener('focusin',outside);};
+  return()=>{node?.hidePopover?.();observer?.disconnect();window.removeEventListener('resize',place);window.removeEventListener('scroll',place,true);window.visualViewport?.removeEventListener('resize',place);window.visualViewport?.removeEventListener('scroll',place);document.removeEventListener('keydown',escape,true);document.removeEventListener('pointerdown',outside,true);document.removeEventListener('focusin',outside);};
  },[open]);
  const kind=c.kind==='racial'?'Racial':c.kind==='talent'?'Talent':c.kind==='power'?'Power':c.type==='bag'?'Consumable':'Equipment';
- return <><button ref={anchor} type="button" className={`card-thumbnail ${selected?'selected':''} ${disabled?'unavailable':''} ${className}`} aria-label={actionLabel??`${onClick?'Inspect':'Preview'} ${pretty(c.name)}`} aria-describedby={open?id:undefined} aria-disabled={disabled||undefined} onPointerEnter={event=>{if(event.pointerType!=='touch'){cancel();timer.current=setTimeout(show,180);}}} onPointerLeave={leave} onFocus={show} onBlur={event=>{if(!preview.current?.contains(event.relatedTarget as Node|null))hide();}} onClick={()=>{if(disabled)return;if(onClick){hide();onClick();}else show();}}>
+ return <><button ref={anchor} type="button" className={`card-thumbnail ${selected?'selected':''} ${disabled?'unavailable':''} ${className}`} aria-label={actionLabel??`${onClick?'Inspect':'Preview'} ${pretty(c.name)}`} aria-describedby={open?id:undefined} aria-disabled={disabled||undefined} aria-expanded={expanded} aria-controls={controls} onPointerEnter={event=>{if(event.pointerType!=='touch'){cancel();timer.current=setTimeout(show,180);}}} onPointerLeave={leave} onFocus={show} onBlur={event=>{if(!preview.current?.contains(event.relatedTarget as Node|null))hide();}} onClick={()=>{if(disabled)return;if(onClick){hide();onClick();}else show();}}>
   <span className="card-thumbnail-top"><span>{kind}</span><b>LVL {c.level}</b></span>
-  <span className="card-thumbnail-art">{art==='illustration'?<CardArt card={c}/>:<CardPortrait card={c}/>}</span>
+  <span className="card-thumbnail-art"><CardPortrait card={c}/></span>
   <strong className="card-thumbnail-name">{pretty(c.name)}</strong>
   <span className="card-thumbnail-footer"><span><GameIcon name="energy" size={12}/>{cardEnergyText(c)}</span><span>{footer??(c.printed?'Starting':c.kind==='talent'?'Permanent':`${c.price} gold`)}</span></span>
- </button>{open&&createPortal(<div ref={preview} id={id} role="tooltip" aria-label={`${pretty(c.name)} full card`} className="card-hover-preview" style={position} onPointerEnter={cancel} onPointerLeave={leave}><GameCard card={c} footer={footer}/><span className="card-preview-hint">{actionLabel?`${actionLabel} · `:onClick?'Click the thumbnail to inspect · ':''}Click outside or press Esc to close</span></div>,anchor.current?.closest('dialog')??document.body)}</>;
+ </button>{open&&createPortal(<div ref={preview} id={id} popover={typeof HTMLElement.prototype.showPopover==='function'?'manual':undefined} role="tooltip" aria-label={`${pretty(c.name)} full card`} className="card-hover-preview" style={{left:position.left,top:position.top,width:position.width,height:position.height||undefined}} onPointerEnter={cancel} onPointerLeave={leave}><div ref={previewContent} className="card-preview-content" style={{transform:`scale(${position.scale})`}}><GameCard card={c} footer={footer}/><span className="card-preview-hint">{actionLabel?`${actionLabel} · `:onClick?'Click the thumbnail to inspect · ':''}Click outside or press Esc to close</span></div></div>,anchor.current?.closest('dialog')??document.body)}</>;
 }

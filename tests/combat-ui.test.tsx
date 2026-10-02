@@ -45,6 +45,39 @@ function saveAtPool() {
 }
 
 describe('combat room controls and dice', () => {
+ it('keeps the character sheet and its reroll controls visible through the shared defense step', () => {
+  const s = battle(), pr = props(s), r = render(<Combat {...pr} />);
+  const name = p.characters.find(c => c.id === s.heroes[0].id)!.name;
+  const sheet = screen.getByRole('article', { name: `${name} character sheet` });
+  expect(within(sheet).getByText('Powers & equipment')).toBeTruthy();
+  expect(within(sheet).getByRole('button', { name: 'Reroll selected (0)' })).toBeTruthy();
+  fireEvent.click(within(sheet).getByRole('button', { name: 'Select misses' }));
+  fireEvent.click(within(sheet).getByRole('button', { name: 'Reroll selected (1)' }));
+  expect(pr.send).toHaveBeenCalledExactlyOnceWith({ type: 'reroll', dice: [0] });
+  const next = structuredClone(s); next.battle!.stage = 'defense'; delete next.battle!.active;
+  r.rerender(<Combat {...props(next)} />);
+  expect(within(screen.getByRole('article', { name: `${name} character sheet` })).getByRole('button', { name: 'Resolve ranged & defense' })).toBeTruthy();
+ });
+ it('chooses a supporting character’s ability directly from their sheet and retains the busy lock', () => {
+  const priest = p.characters.find(c => c.classId === 'priest' && c.faction === 'horde')!;
+  const roster = [...DEFAULT_SETUP.roster]; roster[2] = priest.id;
+  let s = createGame(p, { ...DEFAULT_SETUP, roster }); const warrior = s.heroes[0], support = s.heroes[2];
+  support.level = 2; support.energy = 6; support.learned = ['priest-power-word-shield']; support.slots[1].card = 'priest-power-word-shield';
+  s.enemies = [{ id: 'enemy', creature: 'murloc', color: 'green', region: 'brill' }];
+  beginBattle(s, 'pve', [warrior.id, support.id], ['enemy'], 'horde', 'brill');
+  s = apply(p, s, { type: 'attacker', hero: warrior.id });
+  const pr = props(s), r = render(<Combat {...pr} />);
+  fireEvent.click(screen.getByRole('button', { name: `Show ${priest.name} character sheet` }));
+  const sheet = screen.getByRole('article', { name: `${priest.name} character sheet` });
+  fireEvent.click(within(sheet).getByRole('button', { name: 'Choose Power Word: Shield' }));
+  expect(pr.send).not.toHaveBeenCalled();
+  r.rerender(<Combat {...pr} busy />);
+  expect((within(sheet).getByRole('button', { name: 'Use Power Word: Shield · 1 energy' }) as HTMLButtonElement).disabled).toBe(true);
+  r.rerender(<Combat {...pr} />);
+  fireEvent.click(within(sheet).getByRole('button', { name: 'Use Power Word: Shield · 1 energy' }));
+  expect(pr.send).toHaveBeenCalledExactlyOnceWith({ type: 'ability', hero: support.id, card: 'priest-power-word-shield', ability: 'pool', args: {} });
+  expect(() => apply(p, s, pr.send.mock.calls[0][0])).not.toThrow();
+ });
  it('reviews Heroic Strike without spending, then confirms energy and an explicitly chosen dice pool', () => {
   let s = createGame(p, DEFAULT_SETUP); const h = s.heroes[0];
   h.learned = ['warrior-heroic-strike']; h.slots[1].card = 'warrior-heroic-strike';

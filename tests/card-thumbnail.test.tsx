@@ -5,7 +5,8 @@ import { CardThumbnail } from '../src/campaign/parts';
 import { BASE_PACK as p } from '../src/data/base';
 import { card } from '../src/rules/common';
 
-afterEach(()=>{cleanup();vi.useRealTimers();vi.restoreAllMocks();});
+const originalShowPopover=Object.getOwnPropertyDescriptor(HTMLElement.prototype,'showPopover'),originalHidePopover=Object.getOwnPropertyDescriptor(HTMLElement.prototype,'hidePopover');
+afterEach(()=>{cleanup();vi.useRealTimers();vi.restoreAllMocks();for(const [name,descriptor] of [['showPopover',originalShowPopover],['hidePopover',originalHidePopover]] as const){if(descriptor)Object.defineProperty(HTMLElement.prototype,name,descriptor);else delete (HTMLElement.prototype as unknown as Record<string,unknown>)[name];}});
 
 describe('compact card previews',()=>{
  it('keeps a bounded face in the slot and reveals every strength on keyboard focus',()=>{
@@ -71,6 +72,37 @@ describe('compact card previews',()=>{
   const preview=screen.getByRole('tooltip');
   expect(preview.style.left).toBe('902px');
   expect(preview.style.top).toBe('186px');
+ });
+
+ it('fits the whole natural card height in the top layer of a transformed, clipped dialog',()=>{
+  vi.spyOn(window,'innerWidth','get').mockReturnValue(1366);
+  vi.spyOn(window,'innerHeight','get').mockReturnValue(768);
+  const showPopover=vi.fn(function(this:HTMLElement){this.style.display='block';}),hidePopover=vi.fn();
+  Object.defineProperty(HTMLElement.prototype,'showPopover',{configurable:true,value:showPopover});
+  Object.defineProperty(HTMLElement.prototype,'hidePopover',{configurable:true,value:hidePopover});
+  vi.spyOn(HTMLElement.prototype,'getBoundingClientRect').mockImplementation(function(this:HTMLElement){
+   const values=this.classList.contains('card-thumbnail')?{left:1220,right:1340,top:650,bottom:750,width:120,height:100}:{left:0,right:360,top:0,bottom:1116,width:360,height:1116};
+   return {...values,x:values.left,y:values.top,toJSON:()=>values} as DOMRect;
+  });
+  const r=render(<dialog open style={{transform:'translateY(0)',overflow:'hidden'}}><CardThumbnail card={card(p,'warrior-execute')}/></dialog>);
+  fireEvent.focus(screen.getByRole('button',{name:'Preview Execute'}));
+  const tooltip=screen.getByRole('tooltip'),content=tooltip.querySelector<HTMLElement>('.card-preview-content')!;
+  expect(tooltip.getAttribute('popover')).toBe('manual');
+  expect(showPopover).toHaveBeenCalledOnce();
+  expect(tooltip.style.height).toBe('744px');
+  expect(tooltip.style.width).toBe('240px');
+  expect(tooltip.style.top).toBe('12px');
+  expect(content.style.transform).toBe(`scale(${2/3})`);
+  expect(Number.parseFloat(tooltip.style.top)+Number.parseFloat(tooltip.style.height)).toBeLessThan(768);
+  expect(tooltip.querySelectorAll('.power-strength-option')).toHaveLength(5);
+  expect(tooltip.querySelector('.folio-footer')).toBeTruthy();
+  r.unmount();expect(hidePopover).toHaveBeenCalledOnce();
+ });
+
+ it('keeps the complete card face even in character sheet illustration slots',()=>{
+  const r=render(<CardThumbnail card={card(p,'mage-fireball')} art="illustration"/>);
+  expect(r.container.querySelector('.card-portrait-face')).toBeTruthy();
+  expect(r.container.querySelector('.card-illustration')).toBeNull();
  });
 
  it('lets unavailable cards explain their rules without activating an action',()=>{

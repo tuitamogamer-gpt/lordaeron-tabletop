@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
 import { createGame } from '../src/rules/game';
 import { spawnQuest } from '../src/rules/rewards';
@@ -62,19 +62,27 @@ describe('actual quest placement receipts', () => {
 });
 
 describe('quest discovery without changing the game', () => {
- it('animates setup, can dismiss and reopen it, and locates the selected objective', () => {
-  vi.useFakeTimers();
-  const s = createGame(p, DEFAULT_SETUP), original = structuredClone(s), locate = vi.fn(), visibility = vi.fn();
-  const r = render(<QuestActivity state={view(s)} autoRevealSetup onLocate={locate} onOpenChange={visibility}/>);
-  expect(visibility).toHaveBeenLastCalledWith(true);
-  expect(screen.getByRole('dialog', { name: 'Your starting quests are on the map' })).toBeTruthy();
-  expect(r.container.querySelector('.quest-reveal')?.className).toContain('stage-0');
-  act(() => { vi.advanceTimersByTime(1100); });
-  expect(r.container.querySelector('.quest-reveal')?.className).toContain('stage-2');
-  fireEvent.click(screen.getByRole('button', { name: 'Begin the first turn' }));
+ it('starts on the map and keeps the exact starting placement available on demand', () => {
+  const s = createGame(p, DEFAULT_SETUP), original = structuredClone(s), visibility = vi.fn();
+  render(<QuestActivity state={view(s)} onOpenChange={visibility}/>);
   expect(screen.queryByRole('dialog')).toBeNull();
   expect(visibility).toHaveBeenLastCalledWith(false);
-  fireEvent.click(screen.getByRole('button', { name: 'Replay starting quest placement' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Review starting quest placement' }));
+  expect(screen.getByRole('dialog', { name: 'Your starting quests are on the map' })).toBeTruthy();
+  expect(screen.getByLabelText('Actual quest placement').textContent).toContain(`${s.quests.length} quests drawn`);
+  expect(screen.queryByRole('button', { name: 'Replay placement' })).toBeNull();
+  expect(s).toEqual(original);
+ });
+
+ it('can dismiss and reopen placement, and locates the selected objective', () => {
+  const s = createGame(p, DEFAULT_SETUP), original = structuredClone(s), locate = vi.fn(), visibility = vi.fn();
+  render(<QuestActivity state={view(s)} autoRevealSetup onLocate={locate} onOpenChange={visibility}/>);
+  expect(visibility).toHaveBeenLastCalledWith(true);
+  expect(screen.getByRole('dialog', { name: 'Your starting quests are on the map' })).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: 'Return to the map' }));
+  expect(screen.queryByRole('dialog')).toBeNull();
+  expect(visibility).toHaveBeenLastCalledWith(false);
+  fireEvent.click(screen.getByRole('button', { name: 'Review starting quest placement' }));
   const q = p.quests.find(q => q.id === s.quests[0])!;
   fireEvent.click(screen.getAllByRole('button', { name: regionName(q.spawns[0].region) })[0]);
   expect(locate).toHaveBeenCalledWith(q.spawns[0].region, q.id);
@@ -99,8 +107,10 @@ describe('quest discovery without changing the game', () => {
  it('shows complete placement immediately when reduced motion is requested', () => {
   vi.stubGlobal('matchMedia', () => ({ matches: true }));
   const s = createGame(p, DEFAULT_SETUP);
-  const r = render(<QuestReveal receipt={questReceipt(s, 'setup')} state={s} onClose={() => {}}/>);
-  expect(r.container.querySelector('.quest-reveal')?.className).toContain('stage-2');
+  render(<QuestReveal receipt={questReceipt(s, 'setup')} state={s} onClose={() => {}}/>);
+  const q = p.quests.find(q => q.id === s.quests[0])!;
+  expect(screen.getByRole('region', { name: `${q.name} placement` })).toBeTruthy();
+  expect(screen.getByLabelText('Actual quest placement')).toBeTruthy();
  });
 
  it('renders live remaining objectives in the persistent journal', () => {

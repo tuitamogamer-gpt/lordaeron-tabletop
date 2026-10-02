@@ -32,7 +32,11 @@ describe('consistent new card artwork', () => {
  it('uses the new full-card illustration for every playable card, including printed and racial abilities', () => {
   const r = render(<>{p.cards.map(c => <CardArt key={c.id} card={c} />)}</>);
   const sources = [...r.container.querySelectorAll('.card-illustration image')].map(e => e.getAttribute('href'));
-  expect(sources).toEqual(p.cards.map(c => `/assets/full-cards/v8/${c.id}.webp`));
+  expect(sources).toEqual(p.cards.map(c => `/assets/full-cards/${c.id}.webp`));
+  for(const scene of r.container.querySelectorAll('.card-illustration')){
+   expect(scene.getAttribute('viewBox')).toBe('22 60 340 294');
+   expect(scene.getAttribute('preserveAspectRatio')).toBe('xMidYMid meet');
+  }
   expect(r.container.querySelector('img[src*="/card-art/"]')).toBeNull();
  });
 
