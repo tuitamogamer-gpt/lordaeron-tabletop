@@ -22,12 +22,20 @@ describe('class deck and equipment interface',()=>{
  });
  it('shows separate power and talent piles, level requirements, and free talent acquisition',()=>{
   render(<ClassDeck hero={mage()} inspect={()=>{}}/>);expect(screen.getByRole('button',{name:/Power deck.*12 in deck/})).toBeTruthy();expect(screen.getByRole('button',{name:/Talent deck.*12 in deck/})).toBeTruthy();
-  fireEvent.click(screen.getByRole('button',{name:/^Talent deck/}));expect(screen.getAllByText('Free on level up')).toHaveLength(6);expect(screen.getByText('1–6 of 12 talents')).toBeTruthy();expect(screen.queryByText(/gold to learn/)).toBeNull();
-  fireEvent.click(screen.getByRole('button',{name:'Next class deck page'}));expect(screen.getAllByText('Free on level up')).toHaveLength(6);expect(screen.getByText('7–12 of 12 talents')).toBeTruthy();
-  fireEvent.click(screen.getByRole('button',{name:'Level 5'}));expect(screen.getAllByText('Free on level up')).toHaveLength(3);
+  const expectFreeTalents=(count:number)=>{
+   const cards=screen.getAllByRole('button',{name:/^Inspect /});expect(cards).toHaveLength(count);
+   for(const button of cards){
+    fireEvent.focus(button);
+    expect(within(screen.getByRole('tooltip')).getByRole('img',{name:/Free on level up/})).toBeTruthy();
+    fireEvent.keyDown(button,{key:'Escape'});
+   }
+  };
+  fireEvent.click(screen.getByRole('button',{name:/^Talent deck/}));expectFreeTalents(6);expect(screen.getByText('1–6 of 12 talents')).toBeTruthy();expect(screen.queryByText(/gold to learn/)).toBeNull();
+  fireEvent.click(screen.getByRole('button',{name:'Next class deck page'}));expectFreeTalents(6);expect(screen.getByText('7–12 of 12 talents')).toBeTruthy();
+  fireEvent.click(screen.getByRole('button',{name:'Level 5'}));expectFreeTalents(3);
  });
  it('stages several affordable powers and disables purchases above the remaining budget',()=>{
-  const r=render(<Training h={mage()}/>);const entry=(name:string)=>within([...r.container.querySelectorAll('.deck-card-entry')].find(e=>e.textContent?.includes(name))! as HTMLElement);
+  render(<Training h={mage()}/>);const entry=(name:string)=>within(screen.getByRole('button',{name:`Inspect ${name}`}).closest('.deck-card-entry')! as HTMLElement);
   fireEvent.click(entry('Fireball').getByRole('button',{name:'Add to training'}));fireEvent.click(entry('Frostbolt').getByRole('button',{name:'Add to training'}));
   expect(screen.getAllByRole('button',{name:'Remove from training'})).toHaveLength(2);expect((entry('Arcane Intellect').getByRole('button',{name:'Not enough gold'}) as HTMLButtonElement).disabled).toBe(true);
   fireEvent.click(entry('Fireball').getByRole('button',{name:'Remove from training'}));expect((entry('Arcane Intellect').getByRole('button',{name:'Add to training'}) as HTMLButtonElement).disabled).toBe(false);

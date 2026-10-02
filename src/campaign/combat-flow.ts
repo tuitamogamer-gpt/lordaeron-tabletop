@@ -48,7 +48,11 @@ export function combatCue(before: GameView, after: GameView): CombatCue | undefi
   const wounds = battle.wounds[side];
   return make(ranged ? 'ranged' : 'defend', ranged ? 'Ranged volley' : 'Hold the line', ranged ? 'Taking aim' : 'Shields at the ready', [defeated, wounds > 0 ? `${wounds} ${wounds === 1 ? 'wound' : 'wounds'} to assign` : battle.stage === 'over' ? 'The encounter is decided' : 'The party holds its ground'].filter(Boolean).join(' · '));
  }
- if (old.stage === 'resolution' && battle.stage !== 'resolution') return make('melee', 'Melee & attrition', 'Closing the distance', defeated || (battle.stage === 'over' ? 'The final exchange decides the battle' : 'Damage carries into the next round'));
+ if (old.stage === 'resolution' && battle.stage !== 'resolution') {
+  const wounds = (['horde', 'alliance'] as const).filter(f => battle.wounds[f] > 0).map(f => `${f === 'horde' ? 'Horde' : 'Alliance'}: ${battle.wounds[f]} ${battle.wounds[f] === 1 ? 'wound' : 'wounds'} to assign`).join(' · ');
+  const detail = defeated || (battle.stage === 'over' ? 'The final exchange decides the battle' : battle.kind === 'pve' ? 'Damage carries into the next round' : wounds || 'Both factions clear their hit tokens');
+  return make('melee', 'Melee & attrition', 'Closing the distance', detail);
+ }
  if (kills) return make('ranged', 'A decisive strike', 'Finding an opening', defeated);
  const total = battle.boxes[side], previous = old.boxes[side];
  const gained = total.damage + total.defense + total.armor + total.attrition - previous.damage - previous.defense - previous.armor - previous.attrition;

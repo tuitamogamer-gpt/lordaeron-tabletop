@@ -1,13 +1,7 @@
 /* D8 symbols follow the surrounding rules text, including compact cards and dark combat panels. */
 .rules-dice.rules-dice{display:inline-flex;align-items:center;gap:.08em;vertical-align:middle;white-space:nowrap;line-height:1;margin:-.15em .08em 0;padding:0;font-size:inherit;color:inherit}
-.rules-dice>.rule-die{display:block;flex:none;width:1.4em;height:1.6em;min-width:17px;min-height:19px;max-width:28px;max-height:32px;overflow:visible;filter:drop-shadow(0 1px 1px #0005);--die-fill:#aaa79d;--die-edge:#494a48}
-.rules-dice>.rule-die.blue{--die-fill:#208bc9;--die-edge:#13476a}
-.rules-dice>.rule-die.red{--die-fill:#d3554b;--die-edge:#6f272c}
-.rules-dice>.rule-die.green{--die-fill:#66a94f;--die-edge:#2d532e}
-.rule-die .die-silhouette{fill:var(--die-fill);stroke:var(--die-edge);stroke-width:2;stroke-linejoin:round}
-.rule-die .die-top{fill:#fff;fill-opacity:.4}
-.rule-die .die-left{fill:#fff;fill-opacity:.13}
-.rule-die .die-right{fill:#000;fill-opacity:.15}
-.rule-die .die-bottom{fill:#000;fill-opacity:.24}
-.rule-die .die-face{fill:var(--die-fill);stroke:#fff;stroke-opacity:.7;stroke-width:.8;stroke-linejoin:round}
+.rules-dice>.rule-die{display:block;flex:none;width:1.4em;height:1.6em;min-width:17px;min-height:19px;max-width:28px;max-height:32px;overflow:visible;filter:drop-shadow(0 1px 1px #0005)}
+.rule-die .die-facet{stroke:#071625a6;stroke-width:1.1;stroke-linejoin:round}
+.rule-die .die-top{stroke:#dbf1f6a6}
+.rule-die .die-numeral{fill:none;stroke:#fff9e9;stroke-width:2.15;stroke-linejoin:round}
 .rules-dice>.dice-conjunction{display:inline;font:inherit;font-size:.8em;line-height:1;padding:0 .06em;color:inherit}

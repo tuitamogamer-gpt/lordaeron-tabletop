@@ -1,27 +1,14 @@
-import { GameIcon } from './GameIcon';
-import type { CSSProperties, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import type { Card, Creature, EventCard, Overlord, Quest } from '../rules/model';
 import { BASE_PACK as p } from '../data/base';
-import { CardArt, EventArt, PaintedArt, creatureIcons } from './Art';
-import { eventText, overlordText, rewardText } from './event-text';
-import fullCards from '../data/full-cards.json';
-import abilityFaces from '../data/ability-card-faces.json';
-import RulesText from './RulesText';
-import { cardEnergyText } from './card-energy';
-const faces: Record<string, string> = fullCards;
-
+import { PaintedArt, creatureIcons } from './Art';
+import RasterCard from './RasterCard';
+export { triggerLabels, creatureRules } from './card-labels';
 /** Presentation never reads an imported scan. A scan can supply verified content, not layout. */
 export const DESIGN = {
  name:'Lordaeron · Warforged Chronicles',
  colors:{ink:'#101316',surface:'#252729',ivory:'#f4e4bf',gold:'#e2b969',horde:'#df6654',alliance:'#77bce8',energy:'#69bdf1',nature:'#a9cb6a',arcane:'#c79ef0'},
 } as const;
-export const triggerLabels:Record<string,string>={'round-start':"Round start",'after-tokens':"After placing hits",'energy-spent':"After spending energy",rest:"On Rest",learn:"Choose a talent",'turn-start':"Turn start",'combat-end':"Combat end",pool:"Preparation", 'after-pool':"After rolling",reroll:'Reroll','after-reroll':"After rerolls",tokens:"Hits",defense:"Defense",wound:"Before defeat",'round-end':"Round end",action:"During an action",equip:"Equipping"};
-export function CardFrame({kind,title,subtitle,rank,art,face,children,footer,accent='gold',onClick,disabled,selected=false,abilityLayout=false}:{kind:string;title:string;subtitle?:string;rank?:string|number;art?:ReactNode;face?:string;children:ReactNode;footer:ReactNode;accent?:string;onClick?:()=>void;disabled?:boolean;selected?:boolean;abilityLayout?:boolean}) {
- const style={'--card-accent':DESIGN.colors[accent as keyof typeof DESIGN.colors]??accent} as CSSProperties;
- const body=<>{face&&<img className="full-card-face" src={face} alt="" loading="lazy" width="384" height={abilityLayout?640:576}/>}<span className="folio-top"><span>{kind}</span><b>{abilityLayout?`LVL ${rank??1}`:rank??'◆'}</b></span><span className="folio-art" aria-hidden="true">{(!face||abilityLayout)&&<>{art}{!abilityLayout&&<><i/><i/></>}</>}</span><span className="folio-title"><strong>{title}</strong>{subtitle&&<small>{subtitle}</small>}</span><span className="folio-rules">{children}</span><span className="folio-footer">{footer}</span></>;
- const cls=`folio-card ${face?'full-image-card':''} ${abilityLayout?'ability-layout':''} ${selected?'selected':''}`;
- return onClick?<button className={cls} style={style} onClick={onClick} disabled={disabled}>{body}</button>:<article className={cls} style={style}>{body}</article>;
-}
 const glyphPaths:Record<string,string[]>={
  murloc:['M27 66 Q10 48 30 30 L33 15 L45 27 L61 20 L60 33 Q83 48 66 68 L47 83Z','M24 45 L10 36 L14 61 L28 58 M68 40 L84 27 L81 62 L70 57','M36 44h1 M58 43h1 M35 62Q48 71 62 59'],
  gnoll:['M23 28L19 12L37 25L50 20L65 23L80 11L73 35L71 64L50 85L28 66Z','M28 41L42 47 M69 39L55 47 M41 57L59 57L52 70L46 70Z','M28 66L21 82 M70 66L79 81'],
@@ -37,40 +24,23 @@ const glyphPaths:Record<string,string[]>={
  drake:['M20 77L31 55L25 29L43 41L57 27L57 10L69 24L80 20L72 39L90 51L69 60L53 53L43 75Z','M33 51L13 34L10 59L21 58 M45 48L40 21L26 17','M63 38H66 M70 49L80 49 M70 50L71 56'],
  infernal:['M35 34L30 14L46 25L60 9L69 28L78 41L70 59L76 82L50 90L25 81L31 58L19 40Z','M34 43L45 49L36 54 M64 42L55 49L65 54 M39 70L61 69','M41 58L51 53L59 58L51 65Z'],
 };
-/** Short, localized descriptions of the executable creature rules; source text stays in the data. */
-export const creatureRules:Record<Creature['rule'],string>={
- murloc:"After rerolls: lose 1 health for each red or blue die showing 1.",
- gnoll:"After rerolls: lose 1 energy for each red or blue die showing 1.",
- ghoul:"Your Reroll value is 0. Independent rerolls from abilities remain available.",
- crusader:"At the end of resolution, remove 1 hit from the damage box per surviving Crusader.",
- naga:"After rerolls: lose 1 health for each red or blue die showing 1 or 2.",
- spider:"After rerolls: gain 1 Stun per die showing 1 or 2. Attrition produces no tokens.",
- worgen:"At the end of resolution, remove 2 hits from the damage box per surviving Worgen.",
- wildkin:"After rerolls: unequip one power per die showing 1. Return these cards to your spellbook.",
- ogre:"After rerolls: lose 2 health per red or blue die showing 1 or 2.",
- wraith:"After rerolls: gain 1 Curse per die showing 1. Attrition produces no tokens.",
- doomguard:"After rerolls: each red or blue die showing 1 or 2 costs 1 health and is removed from the shared supply until combat ends.",
- drake:"Only green dice showing 8 produce armor. Other results and extra effects produce no armor tokens.",
- infernal:"After rerolls: each red or blue die showing 1 costs 2 health and 2 energy. At the end of resolution, the group removes 3 hits from the damage box.",
- none:"No special ability.",
-};
 export function CreatureGlyph({type,name,className=''}:{type:string;name?:string;className?:string}) {
  if (type in creatureIcons) return <PaintedArt index={creatureIcons[type]} atlas="bestiary" name={name??type} className={`creature-glyph ${className}`}/>;
  return <svg viewBox="0 0 100 100" className={`creature-glyph ${className}`} role="img" aria-label={name??type}><circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="40"/>{(glyphPaths[type]??glyphPaths.doomguard).map((d,i)=><path key={i} d={d} className={i===0?'glyph-body':''}/>)}</svg>;
 }
 export function CreatureCard({creature:c}:{creature:Creature}) {
- return <CardFrame kind="CREATURE" face={faces[`creature-${c.id}`]} title={c.name} subtitle="Lordaeron bestiary" art={<CreatureGlyph type={c.rule}/>} accent={['ghoul','wraith','doomguard'].includes(c.rule)?'arcane':'nature'} footer={<span>Threat / attack / health</span>}><span className="folio-effect"><b>ENEMY ENCOUNTER</b><RulesText>{creatureRules[c.rule]}</RulesText></span><span className="folio-stat-row">{(['green','blue','red'] as const).filter(color=>c.stock[color]>0).map(color=><span key={color} className={color}><i/>{c.stats[color].threat}+ / {c.stats[color].attack} / {c.stats[color].health}</span>)}</span></CardFrame>;
+ return <RasterCard id={`creature-${c.id}`} title={c.name}/>;
 }
 export function QuestCard({quest:q,onClick}:{quest:Quest;onClick?:()=>void}) {
- return <CardFrame kind="QUEST" face={faces[q.id]} title={q.name} subtitle={`${q.faction==='horde'?"Horde":"Alliance"} · ${q.tier}`} rank={q.level} accent={q.faction} art={<CreatureGlyph type={q.spawns.find(s=>s.color!=='blue')?.creature??'murloc'}/>} onClick={onClick} footer={<span>{rewardText(q.reward)}</span>}><span className="folio-effect"><b>OBJECTIVE</b>{q.spawns.filter(s=>s.color!=='blue').map(s=>`${s.count} × ${p.creatures.find(c=>c.id===s.creature)?.name} (${s.color}) · ${p.regions.find(r=>r.id===s.region)?.name}`).join(' / ')}</span><span className="folio-effect"><b>INDEPENDENT CREATURES</b>{q.spawns.filter(s=>s.color==='blue').map(s=>`${s.count} × ${p.creatures.find(c=>c.id===s.creature)?.name} · ${p.regions.find(r=>r.id===s.region)?.name}`).join(' / ')||"No blue creatures."}</span></CardFrame>;
+ return <RasterCard id={q.id} title={q.name} onClick={onClick}/>;
 }
 export function EventCardView({event:e}:{event:EventCard}) {
- return <CardFrame kind="EVENT" face={faces[e.id]} title={e.name} subtitle={e.overlord?'Kel’Thuzad':e.bonus?"Bonus event":'Lordaeron'} rank={e.fate} accent="arcane" art={<EventArt script={e.script}/>} footer={<><span>Fate {e.fate}</span><span>{e.bonus?"Draw another":"Remains until resolved"}</span></>}><span className="folio-effect">{e.boss&&<b>{e.boss.stats.threat}+ / {e.boss.stats.attack} / {e.boss.stats.health}</b>}{eventText(e)}</span></CardFrame>;
+ return <RasterCard id={e.id} title={e.name}/>;
 }
 export function OverlordCard({overlord:o,count=6}:{overlord:Overlord;count?:4|6}) {
- const s=o.stats[count];return <CardFrame kind="OVERLORD" face={faces[`overlord-${o.id}`]} title={o.name} subtitle={`${count} characters · ${p.regions.find(r=>r.id===o.region)?.name}`} accent="arcane" rank="V" art={<BossPortrait id={o.id}/>} footer={<span>Defeat this Overlord to win for your faction</span>}><span className="overlord-values"><b>{s.threat}+<small>THREAT</small></b><b>{s.attack}<small>ATTACK</small></b><b>{s.health}<small>HEALTH</small></b></span><span className="folio-effect"><RulesText>{overlordText(o)}</RulesText></span></CardFrame>;
+ return <RasterCard id={`overlord-${o.id}-${count}`} title={o.name}/>;
 }
 export function BossPortrait({id}:{id:string}){return <span className="boss-portrait" role="img" aria-label={p.overlords.find(o=>o.id===id)?.name??id} style={{backgroundImage:`url(/assets/portraits/${id}.webp)`,backgroundSize:'cover',backgroundPosition:'center 30%'}}/>;}
-export function AbilityCard({card:c,children,footer,onClick,disabled,selected}:{card:Card;children:ReactNode;footer?:string;onClick?:()=>void;disabled?:boolean;selected?:boolean}) {
- return <CardFrame abilityLayout face={abilityFaces[c.id as keyof typeof abilityFaces]} kind={c.kind==='racial'?'RACIAL':c.kind==='talent'?'TALENT':c.kind==='power'?"POWER":c.type==='bag'?"CONSUMABLE":"EQUIPMENT"} title={c.name.replace(/ · probn[oi]( quest)?/g,'')} subtitle={[c.classId,c.type,c.trait].filter(Boolean).join(' · ')} rank={c.level} accent={c.type==='instant'||c.type==='ranged'?'energy':c.type==='active'?'nature':'gold'} art={<CardArt card={c}/>} onClick={onClick} disabled={disabled} selected={selected} footer={<><span><GameIcon name="energy" size={18}/>{cardEnergyText(c)}</span><span>{footer??(c.printed?'Starting ability':c.kind==='talent'?'Free on level up':`${c.price} gold`)}</span></>}>{children}</CardFrame>;
+export function AbilityCard({card:c,onClick,disabled,selected}:{card:Card;children?:ReactNode;footer?:string;onClick?:()=>void;disabled?:boolean;selected?:boolean}) {
+ return <RasterCard id={c.id} title={c.name} onClick={onClick} disabled={disabled} selected={selected} ability/>;
 }

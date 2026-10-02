@@ -33,8 +33,9 @@ describe('deliberate ability review',()=>{
   expect(trigger.querySelector('button')).toBeNull();
   fireEvent.focus(trigger);
   const preview=screen.getByRole('tooltip',{name:'Execute full card'});
-  expect(preview.querySelectorAll('.power-strength-option')).toHaveLength(5);
-  for(let amount=1;amount<=5;amount++)expect(preview.textContent).toContain(`${amount} energy`);
+  const face=within(preview).getByRole('img',{name:/Execute/});
+  for(let amount=1;amount<=5;amount++)expect(face.getAttribute('alt')).toContain(`${amount} energy`);
+  expect(preview.querySelector('.power-strength-option, .folio-rules, foreignObject')).toBeNull();
   expect(send).not.toHaveBeenCalled();
   fireEvent.click(trigger);
   expect(screen.queryByRole('tooltip')).toBeNull();

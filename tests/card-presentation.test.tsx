@@ -20,9 +20,9 @@ describe('consistent new card artwork', () => {
   const r=render(<CharacterSheet hero={h} inspect={()=>{}} preview/>);
   fireEvent.click(screen.getByRole('button',{name:/Spellbook/}));
   expect(r.container.querySelectorAll('.sheet-card-grid .card-thumbnail')).toHaveLength(6);
-  const firstIds=[...r.container.querySelectorAll('.sheet-card-grid .card-portrait-face>image')].map(e=>e.getAttribute('href'));
+  const firstIds=[...r.container.querySelectorAll('.sheet-card-grid img.card-portrait-face')].map(e=>e.getAttribute('src'));
   fireEvent.click(within(screen.getByRole('navigation',{name:'Character card pages'})).getByRole('button',{name:'Next'}));
-  const lastIds=[...r.container.querySelectorAll('.sheet-card-grid .card-portrait-face>image')].map(e=>e.getAttribute('href'));
+  const lastIds=[...r.container.querySelectorAll('.sheet-card-grid img.card-portrait-face')].map(e=>e.getAttribute('src'));
   expect(new Set([...firstIds,...lastIds]).size).toBe(h.learned.length);
   fireEvent.click(screen.getByRole('button',{name:/^Talents/}));
   fireEvent.click(screen.getByRole('button',{name:'Browse all talents'}));
@@ -46,11 +46,11 @@ describe('consistent new card artwork', () => {
   const r = render(<EquipmentEditor hero={h} send={send} busy={false} />);
   fireEvent.click(screen.getByRole('button', { name: 'Equip Fireball' }));
   const slot = screen.getByRole('button', { name: /^Slot 1:/ });
-  expect(slot.querySelector('image')?.getAttribute('href')).toBe('/assets/full-cards/v8/mage-fireball.webp');
+  expect(slot.querySelector('img.card-portrait-face')?.getAttribute('src')).toBe('/assets/card-faces/v9/mage-fireball.webp');
   const preview = screen.getByRole('region', { name: 'Selected card preview' });
-  expect(preview.querySelector('image')?.getAttribute('href')).toBe('/assets/full-cards/v8/mage-fireball.webp');
+  expect(preview.querySelector('img.card-portrait-face')?.getAttribute('src')).toBe('/assets/card-faces/v9/mage-fireball.webp');
   fireEvent.focus(within(preview).getByRole('button',{name:'Preview Fireball'}));
-  expect(within(screen.getByRole('tooltip')).getAllByRole('img', { name: 'blue dice' }).length).toBeGreaterThan(0);
+  expect(within(screen.getByRole('tooltip')).getByRole('img', { name: /Fireball.*blue dice/s })).toBeTruthy();
   expect(send).not.toHaveBeenCalled();
 
   const startingSlot = def.slots.findIndex(s => s.printed && s.types.includes('instant'));
@@ -59,9 +59,9 @@ describe('consistent new card artwork', () => {
   const printed = card(p, def.slots[startingSlot].printed!);
   fireEvent.click(screen.getByRole('button', { name: new RegExp(`${printed.name}.*Restore starting equipment`) }));
   const restored=screen.getByRole('region', { name: 'Selected card preview' });
-  expect(restored.querySelector('image')?.getAttribute('href')).toBe(`/assets/full-cards/v8/${printed.id}.webp`);
+  expect(restored.querySelector('img.card-portrait-face')?.getAttribute('src')).toBe(`/assets/card-faces/v9/${printed.id}.webp`);
   fireEvent.focus(within(restored).getByRole('button',{name:`Preview ${printed.name}`}));
-  expect(screen.getByRole('tooltip').querySelector('.full-card-face')?.getAttribute('src')).toBe(`/assets/full-cards/v8/${printed.id}.webp`);
+  expect(screen.getByRole('tooltip').querySelector('.full-card-face')?.getAttribute('src')).toBe(`/assets/card-faces/v9/${printed.id}.webp`);
   expect(r.container.querySelector('img[src*="/card-art/"]')).toBeNull();
   fireEvent.click(screen.getByRole('button', { name: 'Confirm equipment' }));
   expect(send.mock.calls[0][0].slots[startingSlot].card).toBeUndefined();
@@ -71,33 +71,38 @@ describe('consistent new card artwork', () => {
   const def = p.characters.find(c => c.classId === 'mage')!;
   const r = render(<CharacterSheet hero={startingHero(def.id)} inspect={() => {}} preview />);
   for (const slot of def.slots.filter(s => s.printed)) {
-   expect(r.container.querySelector(`image[href="/assets/full-cards/v8/${slot.printed}.webp"]`)).toBeTruthy();
+   expect(r.container.querySelector(`img.card-portrait-face[src="/assets/card-faces/v9/${slot.printed}.webp"]`)).toBeTruthy();
   }
   expect(r.container.querySelector('.character-slot .inscribed-rules')).toBeNull();
   const startingPower=def.slots.find(s=>s.printed&&s.types.includes('instant'))!.printed!;
   fireEvent.focus(screen.getByRole('button',{name:`Inspect ${card(p,startingPower).name}`}));
-  expect(within(screen.getByRole('tooltip')).getAllByRole('img', { name: /dice/ }).length).toBeGreaterThan(0);
+  expect(within(screen.getByRole('tooltip')).getByRole('img', { name: /dice/ })).toBeTruthy();
  });
 });
 
 describe('graphical dice in authoritative rules', () => {
  it('keeps every Execute strength and its energy cost visible on the card', () => {
   const r = render(<GameCard card={card(p, 'warrior-execute')} />);
-  expect(r.container.textContent).toContain('Choose one strength · 5 options');
+  const face=screen.getByRole('img', { name: /Execute/ });
+  const description=face.getAttribute('alt');
   for (let amount = 1; amount <= 5; amount++) {
-   expect(r.container.textContent).toContain(`${amount} energy`);
-   expect(r.container.textContent).toContain(`+${amount} ranged hits`);
+   expect(description).toContain(`choose one (${amount}/5)`);
+   expect(description).toContain(`${amount} energy`);
+   expect(description).toContain(`+${amount} ranged hits`);
   }
-  expect(r.container.querySelectorAll('.power-strength-option')).toHaveLength(5);
-  expect(r.container.querySelector('.folio-footer')?.textContent).toContain('1–5 energy');
+  expect(description).toContain('1–5 energy');
+  expect(r.container.querySelectorAll('.raster-card img')).toHaveLength(1);
+  expect(r.container.querySelector('.folio-rules, .folio-title, .folio-footer, .power-strength-option, foreignObject')).toBeNull();
+  expect(r.container.querySelector('.raster-card')?.textContent).toBe('');
  });
 
- it('renders generated D8 art without dropping the readable dice noun or accessible color', () => {
+ it('renders triangular D8 faces without dropping the readable dice noun or accessible color', () => {
   const r = render(<RulesText>Roll 2 red/blue dice.</RulesText>);
   expect(screen.getByRole('img', { name: 'red/blue dice' })).toBeTruthy();
   expect(r.container.textContent).toContain('dice');
-  expect([...r.container.querySelectorAll('.rule-die image')].map(e => e.getAttribute('href')))
-   .toEqual(['/assets/ability-ui/d8-red.webp', '/assets/ability-ui/d8-blue.webp']);
+  expect([...r.container.querySelectorAll('.rule-die')].map(e => e.getAttribute('data-die-color'))).toEqual(['red', 'blue']);
+  for(const die of r.container.querySelectorAll('.rule-die'))expect(die.querySelectorAll('.die-facet').length).toBeGreaterThan(0);
+  expect(r.container.querySelector('.rule-die image')).toBeNull();
  });
 
  it('keeps counts, thresholds and both effect branches while illustrating each dice color', () => {
@@ -133,11 +138,12 @@ describe('graphical dice in authoritative rules', () => {
   for (const color of Object.keys(penalty.poolPenalty!)) expect(screen.getByRole('img', { name: `${color} dice` })).toBeTruthy();
  });
 
- it('uses the same dice explanation in the full card and detailed rules', () => {
+ it('keeps full-card accessible rules complete while detailed rules retain graphical dice', () => {
   const c = card(p, 'mage-fireball');
   const r = render(<GameCard card={c} />);
-  const summary = screen.getAllByRole('img').map(e => e.getAttribute('aria-label'));
+  const description = screen.getByRole('img', { name: /Fireball/ }).getAttribute('alt');
+  for(const ability of c.abilities)for(const effect of ability.effects)expect(description).toContain(effectText(effect));
   r.rerender(<CardRules value={c} />);
-  expect(screen.getAllByRole('img').map(e => e.getAttribute('aria-label'))).toEqual(summary);
+  expect(screen.getAllByRole('img', { name: 'blue dice' }).length).toBeGreaterThan(0);
  });
 });

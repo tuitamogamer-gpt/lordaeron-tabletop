@@ -1,0 +1,22 @@
+.player-driven-combat .combat-ledger>.combat-token-area{grid-column:1/-1}
+.combat-token-area{margin:0 0 13px;min-width:0}
+.combat-token-area>h4{display:flex;align-items:center;gap:8px;color:#dbc9a4;font:600 12px var(--serif);margin:0 0 9px}
+.combat-token-area>h4>.faction-crest{width:23px;height:23px}
+.combat-token-area>h4>span{margin-left:auto;font:8px var(--sans);letter-spacing:1.3px;color:#8e9b8e}
+.combat-token-boxes{display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:6px}
+.combat-token-box{min-width:0;border:1px solid #5b5946;border-top:3px solid var(--token-accent);border-radius:5px;padding:10px 8px;background:linear-gradient(140deg,#293330,#141e22);box-shadow:inset 0 0 12px #080d0e80}
+.combat-token-box.damage{--token-accent:#7bafd7}.combat-token-box.defense{--token-accent:#c98773}.combat-token-box.attrition{--token-accent:#d2b371}
+.combat-token-box>h5{display:flex;align-items:center;gap:5px;margin:0 0 9px;font:600 11px var(--serif);color:#e5d8bb}
+.combat-token-box>h5>svg{color:var(--token-accent);flex-shrink:0}
+.combat-token-count{display:grid;grid-template-columns:27px auto;align-items:center;justify-content:start;column-gap:7px}
+.combat-token-count+.combat-token-count{border-top:1px solid #46504a;margin-top:8px;padding-top:8px}
+.combat-counter-token{width:25px;height:25px;display:grid;place-items:center;border-radius:50%;border:2px solid #c5a575;outline:1px solid #352b20;background:radial-gradient(circle at 35% 25%,#eed9aa,#a47842 60%,#654527);color:#4f3020;box-shadow:0 2px 3px #0008,inset 0 0 0 2px #785937}
+.combat-token-count.armor>.combat-counter-token{border-color:#b5bcab;background:radial-gradient(circle at 35% 25%,#e4e9da,#81958c 60%,#3b5954);color:#233b38;box-shadow:0 2px 3px #0008,inset 0 0 0 2px #647c71}
+.combat-token-count>output{font:600 25px var(--serif);font-variant-numeric:tabular-nums;color:#f2dfaf;line-height:1.2}
+.combat-token-count.armor>output{color:#c7ddcd}
+.combat-token-count>small{grid-column:1/-1;margin-top:5px;font:9px/1.4 var(--sans);color:#afbbb0}
+.combat-token-flow{display:flex;align-items:flex-start;gap:7px;margin:9px 0 0;font:10px/1.5 var(--sans);color:#b4c2b8}
+.combat-token-flow>svg{margin-top:1px;flex-shrink:0;color:#ccb57f}
+.combat-token-area.resolving .combat-token-box.damage{box-shadow:inset 0 0 18px #77a3c22b,0 0 0 1px #77a3c25c}
+.combat-token-area.resolving .combat-token-flow{color:#e3d1a6}
+@media(max-width:420px){.combat-token-box{padding:9px 5px}.combat-token-box>h5{font-size:10px;gap:3px}.combat-token-count{column-gap:5px}.combat-token-count>output{font-size:22px}}

@@ -7,7 +7,7 @@ import { immune } from '../rules/effects';
 import { commandLabel } from '../rules/legal';
 import type { Attack, BattleStage, Color, Command, Die, Pool } from '../rules/model';
 import type { GameView } from '../rules/view';
-import { FactionCrest } from './Art';
+import CombatArea from './CombatArea';
 import { type AbilityCommand } from './CombatAbilities';
 import CombatCharacterSheet from './CombatCharacterSheet';
 import CombatLoadout from './CombatLoadout';
@@ -21,10 +21,10 @@ import { BossPortrait, CreatureGlyph, creatureRules } from './design-system';
 import { bossRules, regionName } from './event-text';
 import { factionLabel, HeroPortrait, phaseLabel, pretty } from './parts';
 
-const channels: { color: Color; title: string; icon: string; note: string }[] = [
- { color: 'blue', title: 'Ranged', icon: 'target', note: 'Strikes before the enemy attacks.' },
- { color: 'red', title: 'Melee / Defense', icon: 'swords', note: 'Blocks now. Strikes again in resolution.' },
- { color: 'green', title: 'Armor', icon: 'shield', note: 'Absorbs incoming damage.' },
+const channels: { color: Color; title: string; icon: string; note: string; pvpNote: string }[] = [
+ { color: 'blue', title: 'Ranged', icon: 'target', note: 'Strikes before the enemy attacks.', pvpNote: 'Deals wounds after armor is resolved.' },
+ { color: 'red', title: 'Melee / Defense', icon: 'swords', note: 'Blocks now. Strikes again in resolution.', pvpNote: 'Joins attrition during resolution.' },
+ { color: 'green', title: 'Armor', icon: 'shield', note: 'Absorbs incoming damage.', pvpNote: 'Removes opposing hit tokens.' },
 ];
 const guidance: Record<BattleStage, string> = {
  attacker: 'Choose who attacks next. Each participant contributes to the shared totals.',
@@ -119,6 +119,11 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
  const skillKeys=[...new Set(skills.map(c=>`${c.hero}:${c.card}`))].sort((x,y)=>Number(y===selectedPower)-Number(x===selectedPower));
  const choosePower=(key:string)=>{setSelectedPower(selectedPower===key?undefined:key);};
  const actionLabel = (c: Command) => c.type === 'closeBattle' ? 'Finish combat & continue' : c.type === 'advance' ? advanceLabels[b.stage] ?? 'Continue' : c.type === 'tokens' ? 'Bank successful hits' : c.type === 'monster' ? 'Resolve creature effect' : commandLabel(p, c);
+ const phaseGuidance = b.kind === 'pve' ? guidance[b.stage]
+  : b.stage === 'attacker' ? 'Factions alternate attackers until every participant has contributed to their own Combat Area.'
+  : b.stage === 'defense' ? 'Assign armor to opposing hits, then apply the remaining ranged damage.'
+  : b.stage === 'resolution' ? state.variants?.deadlyPvp ? 'Each faction takes wounds equal to the opposing melee and attrition hits.' : 'Compare both factions’ melee and attrition hits. The difference becomes wounds for the weaker side.'
+  : b.stage === 'round-end' ? 'Both Combat Areas are cleared. Prepare new dice for the next round.' : guidance[b.stage];
 
  return <Modal title="Combat" wide className="combat-room player-driven-combat" onClose={close}>
   <div className="combat-toolbar"><button className="combat-menu-toggle" aria-pressed="true" onClick={close}><Icon name="swords" />Combat <Icon name="x" size={14} /></button><span>{regionName(b.region)}<i />ROUND {String(b.round).padStart(2, '0')}</span><button className="quiet-button" onClick={close}><Icon name="map" size={15} />Back to map</button></div>
@@ -126,14 +131,14 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
    <div className="combat-arena">
     <div className="combat-arena-scroll">
     <header className="combat-encounter">{boss ? <BossPortrait id={boss.id} /> : creature ? <CreatureGlyph type={creature.rule} name={creature.name} /> : <Icon name="swords" size={38} />}<div><span className="sheet-eyebrow">{b.kind === 'pve' ? b.boss ? 'BOSS ENCOUNTER' : `${b.enemies.length} ENEMIES REMAIN` : 'FACTION BATTLE'}</span><h3>{title}</h3><p>{b.stage === 'over' ? b.winner === 'draw' ? 'The battle ends in a draw.' : `${factionLabel(b.winner ?? '')} wins the battle.` : 'Prepare your hand. Let the dice decide.'}</p></div>{b.kind === 'pve' && <dl><div><dt>ATTACK</dt><dd><AnimatedValue value={attack} /></dd></div><div><dt>HEALTH</dt><dd><AnimatedValue value={health} /></dd></div></dl>}</header>
-    <ol className="combat-timeline" aria-label="Combat sequence">{combatSteps.map((label, i) => <li key={label} className={`${i === step ? 'current' : ''} ${i < step ? 'complete' : ''}`} aria-current={i === step ? 'step' : undefined}><span>{i < step ? <Icon name="check" size={13} /> : `0${i + 1}`}</span><b>{label}</b></li>)}</ol>
-    <div className="combat-phase-note"><div key={`${b.round}:${b.stage}`} className="phase-copy"><span className="sheet-eyebrow">{b.stage === 'over' ? 'BATTLE COMPLETE' : actingBot ? 'BOT TURN' : 'CURRENT STEP'}</span><h4>{b.stage==='over'?(b.winner==='draw'?'Draw':b.kind==='pve'?(b.winner===b.first?'Victory':'Defeat'):`${factionLabel(b.winner??'')} victory`):phaseLabel[b.stage]}</h4><p>{b.kind !== 'pve' && b.stage === 'defense' ? 'Assign armor to opposing hits, then apply the remaining ranged damage.' : b.kind !== 'pve' && b.stage === 'round-end' ? 'Both factions prepare new dice for the next round.' : guidance[b.stage]}</p></div><span className={`combat-live-status ${automationPending || locked ? 'running' : ''}`} role="status"><i />{stateText}</span></div>
+    <ol className="combat-timeline" aria-label="Combat sequence">{combatSteps.map((label, i) => <li key={label} className={`${i === step ? 'current' : ''} ${i < step ? 'complete' : ''}`} aria-current={i === step ? 'step' : undefined}><span>{i < step ? <Icon name="check" size={13} /> : `0${i + 1}`}</span><b>{b.kind !== 'pve' && i === 2 ? 'Armor & ranged' : label}</b></li>)}</ol>
+    <div className="combat-phase-note"><div key={`${b.round}:${b.stage}`} className="phase-copy"><span className="sheet-eyebrow">{b.stage === 'over' ? 'BATTLE COMPLETE' : actingBot ? 'BOT TURN' : 'CURRENT STEP'}</span><h4>{b.stage==='over'?(b.winner==='draw'?'Draw':b.kind==='pve'?(b.winner===b.first?'Victory':'Defeat'):`${factionLabel(b.winner??'')} victory`):phaseLabel[b.stage]}</h4><p>{phaseGuidance}</p></div><span className={`combat-live-status ${automationPending || locked ? 'running' : ''}`} role="status"><i />{stateText}</span></div>
     <CombatScene state={state} busy={busy} presentation={presentation} />
     <section className="combat-dice-table" aria-label="Dice tray" aria-busy={locked}>
      <div className="combat-tray-heading"><span>{shown ? <><HeroPortrait id={shown.heroId} small /><strong>{character(p, shown.heroId).name.split(' ')[0]}</strong><small>{a ? bots.includes(a.heroId) ? 'BOT ROLL' : 'PLAYER ROLL' : 'LAST ROLL'}</small></> : <><Icon name="spark" /><strong>Ready for the next attacker</strong></>}</span><span>{a&&pool&&b.stage==='pool'?`${pool.total} SELECTED · ${Object.values(pool.available).reduce((sum,n)=>sum+n,0)} AVAILABLE`:shown ? `${shown.dice.filter(d => !d.removed).length} / 21 D8` : 'D8 DICE'}</span></div>
      {channels.map(channel => {
       const dice = shown?.dice.filter(d => d.color === channel.color) ?? [], hits = dice.filter(hit).length;
-      return <div key={channel.color} className={`combat-dice-lane ${channel.color}`}><div className="dice-lane-label"><Icon name={channel.icon} size={19} /><strong>{channel.title}</strong><small>{channel.note}</small></div><div className="dice-lane-roll">{dice.length ? dice.map((d, i) => <D8 key={`${shown!.heroId}:${b.round}:${d.id}`} die={d} hit={hit(d)} index={i} selected={!!a && selectedIds.includes(d.id)} selectionOrder={selectedIds.indexOf(d.id) + 1 || undefined} disabled={locked || !a || !selectable(d)} animate={!!a && busy} onSelect={() => setSelected(ids => ids.includes(d.id) ? ids.filter(id => id !== d.id) : [...ids, d.id])} />) : <span className="dice-lane-empty">{a ? `No ${channel.color} dice prepared` : 'Awaiting dice'}</span>}</div><div className="dice-lane-count" aria-label={`${channel.title}: ${busy ? 'rolling' : hits} rolled hits`}><b>{busy ? '…' : <AnimatedValue value={hits} />}</b><small>ROLLED HITS</small></div></div>;
+      return <div key={channel.color} className={`combat-dice-lane ${channel.color}`}><div className="dice-lane-label"><Icon name={channel.icon} size={19} /><strong>{channel.title}</strong><small>{b.kind === 'pve' ? channel.note : channel.pvpNote}</small></div><div className="dice-lane-roll">{dice.length ? dice.map((d, i) => <D8 key={`${shown!.heroId}:${b.round}:${d.id}`} die={d} hit={hit(d)} index={i} selected={!!a && selectedIds.includes(d.id)} selectionOrder={selectedIds.indexOf(d.id) + 1 || undefined} disabled={locked || !a || !selectable(d)} animate={!!a && busy} onSelect={() => setSelected(ids => ids.includes(d.id) ? ids.filter(id => id !== d.id) : [...ids, d.id])} />) : <span className="dice-lane-empty">{a ? `No ${channel.color} dice prepared` : 'Awaiting dice'}</span>}</div><div className="dice-lane-count" aria-label={`${channel.title}: ${busy ? 'rolling' : hits} rolled hits`}><b>{busy ? '…' : <AnimatedValue value={hits} />}</b><small>ROLLED HITS</small></div></div>;
      })}
      <div className="combat-tray-note"><span><Icon name="target" size={13} />{shown ? `${shown.threat}+ scores a hit${greenEightOnly ? ' · green needs 8' : ''}` : 'One success = one hit'}</span><span>{a ? `${rerollsBlocked?'Normal rerolls blocked by Ghoul':`Rerolls ${Math.max(0, a.reroll)}`} · Attrition ${Math.max(0, a.attrition)}` : 'Hits are counted automatically'}</span></div>
     </section>
@@ -142,15 +147,7 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
     {threat !== undefined && <div className="combat-threat-bar"><ThreatLevel value={threat} greenEightOnly={!!greenEightOnly} /><span>{a ? `${character(p, a.heroId).name.split(' ')[0]}’s current threshold` : 'Encounter threshold'}<small>Roll this number or higher to score one hit.</small></span></div>}
     <div className="combat-ledger-heading"><span className="sheet-eyebrow">THE SHARED POOL</span><h3>Battle totals</h3><p>Banked after abilities and creature effects.</p></div>
     {(['horde', 'alliance'] as const).filter(f => b.kind !== 'pve' || f === b.first).map(f => {
-     const box = b.boxes[f];
-     return <section key={f} className={`combat-faction-pool ${f}`} aria-label={`${factionLabel(f)} totals`}><h4><FactionCrest faction={f} />{factionLabel(f)}</h4>
-      <div className="combat-total blue"><Icon name="target" /><span>Ranged<small>First strike / carried damage</small></span><output aria-label={`${factionLabel(f)} ranged hits`}><AnimatedValue value={box.damage} /></output></div>
-      <div className="combat-total red"><Icon name="swords" /><span>Melee / Defense<small>Defend, then attack</small></span><output aria-label={`${factionLabel(f)} melee hits`}><AnimatedValue value={box.defense} /></output></div>
-      <div className="combat-total green"><Icon name="shield" /><span>Armor<small>Damage blocked</small></span><output aria-label={`${factionLabel(f)} armor`}><AnimatedValue value={box.armor} /></output></div>
-      <div className="combat-total amber"><Icon name="flame" /><span>Attrition<small>Added in resolution</small></span><output aria-label={`${factionLabel(f)} attrition`}><AnimatedValue value={box.attrition} /></output></div>
-      <details className="combat-equation-detail"><summary>How totals combine</summary><div className="combat-equation"><span>Defense available</span><strong>{box.defense} <i>+</i> {box.armor} <i>=</i> {box.defense + box.armor}</strong><span>Damage at resolution</span><strong>{box.damage} <i>+</i> {box.defense} <i>+</i> {box.attrition} <i>=</i> {box.damage + box.defense + box.attrition}</strong><small>Remaining hits · special effects may change totals.</small></div></details>
-      {b.wounds[f] > 0 && <div className="combat-wound-count"><Icon name="heart" /><strong>{b.wounds[f]}</strong> wounds to assign</div>}
-     </section>;
+     return <CombatArea key={f} battle={b} side={f} deadlyPvp={state.variants?.deadlyPvp} />;
     })}
     <div className="combat-party"><h4>In this battle</h4>{b.participants.map(id => {
      const h = state.heroes.find(h => h.id === id)!, max = capacity(p, h);

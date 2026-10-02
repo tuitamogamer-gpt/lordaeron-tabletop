@@ -274,7 +274,7 @@ describe('combat room controls and dice', () => {
   expect(screen.getByRole('button', { name: /^Combat\s*D8$/ }).getAttribute('aria-pressed')).toBe('false');
  });
  it('holds a human decision after rolling, including while the room is hidden', async () => {
-  const saved = saveAtPool(); render(<StrictMode><Campaign /></StrictMode>);
+  const saved = saveAtPool(); await act(async () => { render(<StrictMode><Campaign /></StrictMode>); });
   await screen.findByRole('dialog', { name: 'Combat' });
   vi.useFakeTimers(); fireEvent.click(screen.getByRole('button', { name: /Roll \d+ D8/ }));
   const commands = () => JSON.parse(localStorage.getItem('lordaeron-base-save-v7')!).commands as Command[];

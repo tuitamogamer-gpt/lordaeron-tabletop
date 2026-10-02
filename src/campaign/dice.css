@@ -1,0 +1,24 @@
+/* A d8 is an octahedron: a broad triangular top and two sloping side faces.
+   Keep these planes in one 3D context; filters on the body would flatten it. */
+.combat-d8.physical-d8{perspective:650px;perspective-origin:50% 32px}
+.physical-d8 .d8-tumble,.physical-d8 .d8-body{transform-style:preserve-3d}
+.physical-d8 .d8-face{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.physical-d8 .d8-face svg{overflow:visible}
+.physical-d8 .d8-face .d8-resin{stroke:#08121c99;stroke-width:.55;stroke-linejoin:round}
+.physical-d8 .d8-face .d8-lustre{stroke:none}
+.physical-d8 .d8-face .d8-bevel{fill:none;stroke:#eaf9ff50;stroke-width:.6;stroke-linecap:round;stroke-linejoin:round}
+.physical-d8 .d8-face text{fill:#fff9e9;font:700 22px/1 Arial,Helvetica,sans-serif;text-anchor:middle;stroke:#06141c66;stroke-width:.65;paint-order:stroke fill;text-shadow:0 .5px 0 #0009}
+.physical-d8 .d8-face .d8-six-mark{fill:none;stroke:#fff9e9;stroke-width:1.15;stroke-linecap:round}
+.physical-d8 .d8-ground{left:13%;right:13%;top:52px;height:11px;background:#000b;filter:blur(3px);transform:rotate(-8deg)}
+.combat-room .physical-d8 .d8-ground{top:44px;height:9px}
+.physical-d8.hit .d8-ground{background:#000b;opacity:1;filter:blur(3px)}
+.physical-d8 .d8-result{font-size:8px;font-weight:600;letter-spacing:.25px;color:#a9b9bb}
+.physical-d8 .d8-tumble.rolling{animation-name:physical-d8-toss;animation-duration:1050ms;animation-timing-function:cubic-bezier(.2,.65,.3,1);animation-fill-mode:both}
+@keyframes physical-d8-toss{
+ 0%{transform:translate3d(-9px,-23px,30px) rotateX(-270deg) rotateY(190deg) rotateZ(-100deg)}
+ 38%{transform:translate3d(5px,-30px,16px) rotateX(-135deg) rotateY(310deg) rotateZ(-36deg)}
+ 70%{transform:translate3d(0,1px,0) rotateX(15deg) rotateY(358deg) rotateZ(8deg)}
+ 85%{transform:translate3d(-1px,-4px,2px) rotateX(-6deg) rotateY(364deg) rotateZ(-3deg)}
+ 100%{transform:translate3d(0,0,0) rotateX(0) rotateY(360deg) rotateZ(0)}
+}
+@media(prefers-reduced-motion:reduce){.physical-d8 .d8-tumble.rolling,.physical-d8 .d8-tumble.rolling~.d8-result{animation:none}}

@@ -14,9 +14,18 @@ import { view } from '../src/rules/view';
 import RewardResolution from '../src/campaign/RewardResolution';
 afterEach(cleanup);
 describe('tabletop pieces and cards',()=>{
- it('renders a full raster card face with live rules for powers and events',()=>{
-  const a=render(<GameCard card={p.cards.find(c=>c.id==='mage-fireball')!}/>);expect(a.container.querySelector('.full-card-face')?.getAttribute('src')).toContain('/full-cards/v8/mage-fireball.webp');expect(a.container.querySelector('.folio-art svg image')?.getAttribute('href')).toContain('/full-cards/v8/mage-fireball.webp');expect(screen.getByText('Fireball')).toBeTruthy();a.unmount();
-  const e=render(<EventCardView event={p.events[0]}/>);expect(e.container.querySelector('.full-card-face')).toBeTruthy();expect(e.container.querySelector('.folio-art svg')).toBeNull();
+ it('renders one complete raster image for powers and events with no live text overlays',()=>{
+  const a=render(<GameCard card={p.cards.find(c=>c.id==='mage-fireball')!}/>);
+  expect(screen.getByRole('img',{name:/Fireball.*blue dice/s}).getAttribute('src')).toBe('/assets/card-faces/v9/mage-fireball.webp');
+  expect(a.container.querySelectorAll('.raster-card img')).toHaveLength(1);
+  expect(a.container.querySelector('.raster-card')?.textContent).toBe('');
+  expect(a.container.querySelector('.folio-art, .folio-rules, .folio-title, foreignObject')).toBeNull();
+  a.unmount();
+  const e=render(<EventCardView event={p.events[0]}/>);
+  expect(e.container.querySelectorAll('.raster-card img')).toHaveLength(1);
+  expect(screen.getByRole('img').getAttribute('alt')).toContain(p.events[0].name);
+  expect(e.container.querySelector('.raster-card')?.textContent).toBe('');
+  expect(e.container.querySelector('.folio-art, .folio-rules, .folio-title, foreignObject')).toBeNull();
  });
  it('keeps species and colors separate when counting minions',()=>{
   const s=createGame(p,DEFAULT_SETUP),e=s.enemies[0];

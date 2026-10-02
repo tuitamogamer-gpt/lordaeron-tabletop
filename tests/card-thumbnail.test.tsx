@@ -17,8 +17,9 @@ describe('compact card previews',()=>{
   const tooltip=screen.getByRole('tooltip',{name:'Execute full card'});
   expect(r.container.contains(tooltip)).toBe(false);
   expect(trigger.getAttribute('aria-describedby')).toBe(tooltip.id);
-  expect(tooltip.querySelectorAll('.power-strength-option')).toHaveLength(5);
-  for(let n=1;n<=5;n++)expect(tooltip.textContent).toContain(`${n} energy`);
+  const face=within(tooltip).getByRole('img',{name:/Execute/});
+  for(let n=1;n<=5;n++)expect(face.getAttribute('alt')).toContain(`${n} energy`);
+  expect(tooltip.querySelector('.power-strength-option, .folio-rules, foreignObject')).toBeNull();
   fireEvent.click(trigger);
   expect(inspect).toHaveBeenCalledOnce();
   expect(screen.queryByRole('tooltip')).toBeNull();
@@ -94,8 +95,10 @@ describe('compact card previews',()=>{
   expect(tooltip.style.top).toBe('12px');
   expect(content.style.transform).toBe(`scale(${2/3})`);
   expect(Number.parseFloat(tooltip.style.top)+Number.parseFloat(tooltip.style.height)).toBeLessThan(768);
-  expect(tooltip.querySelectorAll('.power-strength-option')).toHaveLength(5);
-  expect(tooltip.querySelector('.folio-footer')).toBeTruthy();
+  const face=within(tooltip).getByRole('img',{name:/Execute/});
+  for(let n=1;n<=5;n++)expect(face.getAttribute('alt')).toContain(`${n} energy`);
+  expect(face.getAttribute('src')).toBe('/assets/card-faces/v9/warrior-execute.webp');
+  expect(tooltip.querySelector('.folio-footer, .folio-rules, foreignObject')).toBeNull();
   r.unmount();expect(hidePopover).toHaveBeenCalledOnce();
  });
 
@@ -110,7 +113,7 @@ describe('compact card previews',()=>{
   const trigger=screen.getByRole('button',{name:'Inspect Fireball'});
   expect(trigger.getAttribute('aria-disabled')).toBe('true');
   fireEvent.focus(trigger);
-  expect(within(screen.getByRole('tooltip')).getAllByRole('img',{name:'blue dice'}).length).toBeGreaterThan(0);
+  expect(within(screen.getByRole('tooltip')).getByRole('img',{name:/Fireball.*blue dice/s})).toBeTruthy();
   fireEvent.click(trigger);
   expect(inspect).not.toHaveBeenCalled();
  });

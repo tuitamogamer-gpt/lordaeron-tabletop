@@ -10,8 +10,7 @@ import { factionLabel } from './parts';
 import { questLabel, questMarkers } from './map-state';
 import { questBrief, questObjectives } from './quest-design';
 import { rewardScript } from '../rules/reward-engine';
-import fullCards from '../data/full-cards.json';
-const questFaces:Record<string,string>=fullCards;
+import { rasterFace } from './RasterCard';
 
 const tiers: Exclude<Tier, 'grey'>[] = ['green', 'yellow', 'red'];
 const tierNames = { green: "Green", yellow: "Yellow", red: "Red" };
@@ -42,7 +41,7 @@ export default function QuestLedger({ state, selected, onQuest, onInspect }: { s
      const active = markers.filter(m => m.quest.id === q.id), objective = q.spawns.find(s => s.color !== 'blue')!, objectives=questObjectives(q,state),total=objectives.reduce((n,o)=>n+o.total,0),remaining=objectives.reduce((n,o)=>n+o.remaining,0);
      return <article className={`table-quest ${q.tier} ${selected === q.id ? 'selected' : ''}`} key={q.id} data-quest={q.id}>
       <button className="quest-locate" onClick={() => onQuest(q.id, active[0]?.region ?? objective.region)} aria-label={`${questLabel(p,q.id)} · ${q.name} · show on map`}>
-       <img className="quest-mini-face" src={questFaces[q.id]} alt="" loading="lazy"/><span className={`quest-reference ${side}`}>{questLabel(p,q.id)}</span><span><span className="quest-tier-line">LEVEL {q.level} · {q.tier}</span><strong>{q.name}</strong>{objectives.map(o=><span className="quest-objective-preview" key={`${o.creature}:${o.region}:${o.color}`}><i className={`creature-dot ${o.color}`}/><span>{o.remaining} × {o.name}<br/>{regionName(o.region)}</span></span>)}<span className="quest-progress" role="progressbar" aria-label={`${q.name} progress`} aria-valuenow={total-remaining} aria-valuemax={total} aria-valuemin={0}><i style={{width:`${(total-remaining)/Math.max(1,total)*100}%`}}/></span><span className="quest-progress-caption">{total-remaining} / {total} defeated</span>{remaining===0&&<span className="quest-ready"><Icon name="check" size={12}/>Objectives cleared</span>}<em>{q.reward.xp} XP · {q.reward.gold} gold {q.reward.items.map(i => ` · ${i.draw}${deckSymbol[i.deck]}`).join('')}</em></span>
+       <img className="quest-mini-face" src={rasterFace(q.id).src} alt="" loading="lazy"/><span className={`quest-reference ${side}`}>{questLabel(p,q.id)}</span><span><span className="quest-tier-line">LEVEL {q.level} · {q.tier}</span><strong>{q.name}</strong>{objectives.map(o=><span className="quest-objective-preview" key={`${o.creature}:${o.region}:${o.color}`}><i className={`creature-dot ${o.color}`}/><span>{o.remaining} × {o.name}<br/>{regionName(o.region)}</span></span>)}<span className="quest-progress" role="progressbar" aria-label={`${q.name} progress`} aria-valuenow={total-remaining} aria-valuemax={total} aria-valuemin={0}><i style={{width:`${(total-remaining)/Math.max(1,total)*100}%`}}/></span><span className="quest-progress-caption">{total-remaining} / {total} defeated</span>{remaining===0&&<span className="quest-ready"><Icon name="check" size={12}/>Objectives cleared</span>}<em>{q.reward.xp} XP · {q.reward.gold} gold {q.reward.items.map(i => ` · ${i.draw}${deckSymbol[i.deck]}`).join('')}</em></span>
       </button>
       <button className="quest-inspect" aria-label={`Quest details: ${q.name}`} title="View quest card" onClick={() => onInspect(q.id)}><Icon name="book" size={13}/></button>
      </article>;

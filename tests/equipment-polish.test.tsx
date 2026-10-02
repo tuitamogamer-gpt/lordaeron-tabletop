@@ -20,8 +20,8 @@ function Training({ hero }: { hero: Hero }) {
 
 describe('card and equipment polish', () => {
  it('announces the remaining training budget and restores it when a selection is removed', () => {
-  const hero = heroFor('mage'), result = render(<Training hero={hero} />);
-  const entry = within([...result.container.querySelectorAll('.deck-card-entry')].find(node => node.textContent?.includes('Fireball'))! as HTMLElement);
+  const hero = heroFor('mage'); render(<Training hero={hero} />);
+  const entry = within(screen.getByRole('button', { name: 'Inspect Fireball' }).closest('.deck-card-entry')! as HTMLElement);
   expect(screen.getByRole('status', { name: '5 gold available' })).toBeTruthy();
   fireEvent.click(entry.getByRole('button', { name: 'Add to training' }));
   expect(screen.getByRole('status', { name: `${hero.gold - card(p, 'mage-fireball').price} gold remaining after training` })).toBeTruthy();

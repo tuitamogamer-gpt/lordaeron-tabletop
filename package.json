@@ -13,6 +13,8 @@
     "audit:session": "tsx scripts/audit-session.ts",
     "check:server": "tsc -p tsconfig.server.json",
     "check:render": "tsx scripts/check-render.ts",
+    "cards:bake": "tsx scripts/bake-card-faces.ts",
+    "check:cards": "vitest run tests/raster-card-assets.test.ts",
     "render:map": "tsx scripts/render-map.ts"
   },
   "dependencies": {

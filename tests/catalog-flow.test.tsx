@@ -41,8 +41,10 @@ describe('one-row reference collections', () => {
   const opener = screen.getByRole('button', { name: 'Inspect Infernal' });
   opener.focus();fireEvent.click(opener);
   const dialog = screen.getByRole('dialog', { name: 'Infernal' });
-  expect(dialog.querySelector('.catalog-detail-rules')?.textContent).toContain('costs 2 health and 2 energy');
-  expect(dialog.querySelector('.catalog-detail-rules')?.textContent).toContain('removes 3 hits from the damage box');
+  const face=within(dialog).getByRole('img',{name:/Infernal/});
+  expect(face.getAttribute('alt')).toContain('costs 2 health and 2 energy');
+  expect(face.getAttribute('alt')).toContain('removes 3 hits from the damage box');
+  expect(dialog.querySelector('.catalog-detail-rules, .folio-rules, foreignObject')).toBeNull();
   expect(within(dialog).getByRole('link', { name: 'Original card ↗' }).getAttribute('href')).toBe(p.creatures.find(entry => entry.name === 'Infernal')!.source.url);
   expect(dialog.querySelector('.catalog-detail-art .full-card-face')).toBeTruthy();
   fireEvent.click(within(dialog).getByRole('button', { name: 'Close' }));

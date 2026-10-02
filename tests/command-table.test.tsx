@@ -110,7 +110,10 @@ describe('complete character sheets',()=>{
   const racial=r.container.querySelector('.racial-inscription .card-thumbnail');
   expect(racial).toBeTruthy();
   fireEvent.focus(racial!);
-  expect(screen.getByRole('tooltip').querySelector('.folio-rules')?.textContent?.length).toBeGreaterThan(10);
+  const tooltip=screen.getByRole('tooltip'),face=within(tooltip).getByRole('img');
+  expect(face.getAttribute('alt')).toContain(card(p,d.racial!).name);
+  expect(face.getAttribute('alt')!.length).toBeGreaterThan(10);
+  expect(tooltip.querySelector('.folio-rules, foreignObject')).toBeNull();
   expect(r.container.querySelectorAll('.sheet-levels>div')).toHaveLength(5);
  });
  it('shows the spellbook, three bag slots, four talent slots, and the Hood’s eighth slot',()=>{

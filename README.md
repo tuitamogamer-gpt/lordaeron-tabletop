@@ -4,6 +4,8 @@ Desktop adaptacija osnovne igre iz 2005. i službenog FAQ-a 1.4. React interfejs
 
 [Otvori igru](https://lordaeron-tabletop.vercel.app)
 
+Najnovija dorada: **573 potpune slike karata s utisnutim tekstom**, fizički oblikovane D8 i tri originalna polja borbe. Izvori, imagegen prompt i provjere: [PRINTED-CARDS-AND-DICE.md](docs/PRINTED-CARDS-AND-DICE.md).
+
 v0.7 donosi 521 potpuno ilustrirano lice karte, reljefnu mapu, portrete i brojače jedinica, novi quest journal, scripted reward engine i geometrijski ispravne d8. Promjene, izvori i provjere: [TABLETOP-V7.md](docs/TABLETOP-V7.md).
 
 Novi UI prolaz dodaje izbor opreme po slotovima, animirani feedback, Threat level s D8 pragom, grupne challenge vrijednosti i jasnije management korake. Detalji i provjere: [UI-POLISH.md](docs/UI-POLISH.md).

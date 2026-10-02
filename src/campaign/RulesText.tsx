@@ -1,19 +1,17 @@
 import { Fragment } from 'react';
 import type { Color } from '../rules/model';
+import { glyphFaces } from './dice-geometry';
 
 /** Only explicit dice phrases are illustrated; blue creatures and card names stay text. */
 const dicePhrase = /\b(?:(?:red|blue|green)(?:\s*(?:\/|,|or|and)\s*(?:red|blue|green))*|any color)\s+(?:dice|die)\b/gi;
 const colors = /\b(red|blue|green)\b/gi;
 
 function DieGlyph({ color }: { color?: Color }) {
- if(color)return <svg className={`rule-die ${color}`} viewBox="0 0 36 36" aria-hidden="true" focusable="false" data-die-color={color}><image href={`/assets/ability-ui/d8-${color}.webp`} width="36" height="36"/></svg>;
- return <svg className={`rule-die ${color ?? 'any'}`} viewBox="0 0 32 36" aria-hidden="true" focusable="false" data-die-color={color ?? 'any'}>
-  <path className="die-silhouette" d="M16 1.5 30 10v16L16 34.5 2 26V10Z" />
-  <path className="die-top" d="M16 1.5 30 10 16 13 2 10Z" />
-  <path className="die-left" d="M2 10 16 13 8 25 2 26Z" />
-  <path className="die-right" d="M30 10 30 26 24 25 16 13Z" />
-  <path className="die-bottom" d="M2 26 8 25 16 13 24 25 30 26 16 34.5Z" />
-  <path className="die-face" d="M16 13 24 25H8Z" />
+ return <svg className={`rule-die ${color ?? 'any'}`} viewBox="0 0 72 76" aria-hidden="true" focusable="false" data-die-color={color ?? 'any'}>
+  {glyphFaces.map(face => <g key={face.value}>
+   <polygon className={`die-facet${face.value === 8 ? ' die-top' : ''}`} points={face.points} style={{ fill: face.fill(color) }} />
+   {face.value === 8 && <path className="die-numeral" transform={face.plane} d="M24 17C17 17 17 25 24 25C31 25 31 17 24 17ZM24 25C16 25 16 34 24 34C32 34 32 25 24 25Z" />}
+  </g>)}
  </svg>;
 }
 
