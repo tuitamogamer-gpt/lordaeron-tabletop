@@ -50,9 +50,11 @@ type CombatProps = {
  open?: boolean; onClose?: () => void; bots?: string[];
  resolve?: boolean; toggleResolve?: () => void; automationPending?: boolean; presentation?: CombatPresentation;
  botResponsePending?:boolean; onPassHumanWindow?:()=>void;
+ /** Bookkeeping steps with a single outcome continue on their own while this is on. */
+ autoContinue?: boolean; toggleAutoContinue?: () => void; autoStep?: Command;
 };
 
-export default function CampaignCombat({ state: liveState, legal, send, busy, botStep, botReady, open = true, onClose, bots = [], resolve = true, toggleResolve, automationPending = false, presentation, botResponsePending=false, onPassHumanWindow }: CombatProps) {
+export default function CampaignCombat({ state: liveState, legal, send, busy, botStep, botReady, open = true, onClose, bots = [], resolve = true, toggleResolve, automationPending = false, presentation, botResponsePending=false, onPassHumanWindow, autoContinue = false, toggleAutoContinue, autoStep }: CombatProps) {
  const anticipating = presentation?.cue && ['anticipation', 'action'].includes(presentation.phase);
  const state = anticipating ? presentation.cue!.before : liveState;
  const locked = busy || !!presentation?.busy;
@@ -81,6 +83,7 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
 
  const controls = <div className="combat-switches">
   <button type="button" role="switch" aria-checked={resolve} onClick={toggleResolve} className="combat-switch" disabled={!toggleResolve}><i /><span>Auto-play bots<small>Your characters always wait for you</small></span></button>
+  <button type="button" role="switch" aria-checked={autoContinue} onClick={toggleAutoContinue} className="combat-switch" disabled={!toggleAutoContinue}><i /><span>Auto-continue steps<small>Steps with a single outcome advance on their own</small></span></button>
  </div>;
  if (!b) return <Modal title="Combat" wide className="combat-room" onClose={close}><div className="combat-idle">
   <span className="sheet-eyebrow">YOUR DICE. ONE CLEAR BATTLEFIELD.</span><h3>Every roll has a role.</h3><p>Start a Challenge on the map. This room opens automatically when combat begins.</p>
@@ -113,12 +116,14 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
  const canReroll = selectedDice.length > 0 && selectedDice.length <= (a?.reroll ?? 0) && selectedDice.every(rerollable);
  const penaltyCount = a ? Math.min(a.dice.filter(d => !d.removed).length, (state.heroes.find(h => h.id === a.heroId)?.stun ?? 0) * 2 + (state.heroes.find(h => h.id === a.heroId)?.curse ?? 0)) : 0;
  const step = combatStep(b.stage, b.afterWounds), actingBot = !!a && bots.includes(a.heroId);
- const stateText = busy ? 'Rolling D8s…' : presentation?.busy ? 'Battle in motion…' : botResponsePending?'Your reaction before the bot continues':automationPending ? 'AI is playing…' : b.stage === 'over' ? 'Result ready' : legal.length ? 'Your decision · waiting for you' : 'Waiting for another character';
+ const stateText = busy ? 'Rolling D8s…' : presentation?.busy ? 'Battle in motion…' : autoStep ? 'Continuing automatically…' : botResponsePending?'Your reaction before the bot continues':automationPending ? 'AI is playing…' : b.stage === 'over' ? 'Result ready' : legal.length ? 'Your decision · waiting for you' : 'Waiting for another character';
  const activeHero=state.heroes.find(h=>h.id===a?.heroId),pool=a&&activeHero?combatPool(p,activeHero,a,omit):undefined;
  const rollCommand:Command|undefined=roll&&pool?Object.values(pool.omit).some(Boolean)?{type:'roll',omit:pool.omit}:{type:'roll'}:undefined;
  const skillKeys=[...new Set(skills.map(c=>`${c.hero}:${c.card}`))].sort((x,y)=>Number(y===selectedPower)-Number(x===selectedPower));
  const choosePower=(key:string)=>{setSelectedPower(selectedPower===key?undefined:key);};
- const actionLabel = (c: Command) => c.type === 'closeBattle' ? 'Finish combat & continue' : c.type === 'advance' ? advanceLabels[b.stage] ?? 'Continue' : c.type === 'tokens' ? 'Bank successful hits' : c.type === 'monster' ? 'Resolve creature effect' : commandLabel(p, c);
+ const actionLabel = (c: Command) => c.type === 'closeBattle' ? 'Finish combat & continue' : c.type === 'advance' ? advanceLabels[b.stage] ?? 'Continue' : c.type === 'tokens' ? 'Bank successful hits' : c.type === 'monster' ? 'Resolve creature effect'
+  : c.type === 'wound' ? `${character(p, c.hero).name.split(' ')[0]} takes a wound${c.pet ? ' on the pet' : ''}`
+  : c.type === 'respawn' ? `Revive ${character(p, c.hero).name.split(' ')[0]} at ${regionName(c.region)}` : commandLabel(p, c);
  const phaseGuidance = b.kind === 'pve' ? guidance[b.stage]
   : b.stage === 'attacker' ? 'Factions alternate attackers until every participant has contributed to their own Combat Area.'
   : b.stage === 'defense' ? 'Assign armor to opposing hits, then apply the remaining ranged damage.'
@@ -135,7 +140,7 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
     <div className="combat-phase-note"><div key={`${b.round}:${b.stage}`} className="phase-copy"><span className="sheet-eyebrow">{b.stage === 'over' ? 'BATTLE COMPLETE' : actingBot ? 'BOT TURN' : 'CURRENT STEP'}</span><h4>{b.stage==='over'?(b.winner==='draw'?'Draw':b.kind==='pve'?(b.winner===b.first?'Victory':'Defeat'):`${factionLabel(b.winner??'')} victory`):phaseLabel[b.stage]}</h4><p>{phaseGuidance}</p></div><span className={`combat-live-status ${automationPending || locked ? 'running' : ''}`} role="status"><i />{stateText}</span></div>
     <CombatScene state={state} busy={busy} presentation={presentation} />
     <section className="combat-dice-table" aria-label="Dice tray" aria-busy={locked}>
-     <div className="combat-tray-heading"><span>{shown ? <><HeroPortrait id={shown.heroId} small /><strong>{character(p, shown.heroId).name.split(' ')[0]}</strong><small>{a ? bots.includes(a.heroId) ? 'BOT ROLL' : 'PLAYER ROLL' : 'LAST ROLL'}</small></> : <><Icon name="spark" /><strong>Ready for the next attacker</strong></>}</span><span>{a&&pool&&b.stage==='pool'?`${pool.total} SELECTED · ${Object.values(pool.available).reduce((sum,n)=>sum+n,0)} AVAILABLE`:shown ? `${shown.dice.filter(d => !d.removed).length} / 21 D8` : 'D8 DICE'}</span></div>
+     <div className="combat-tray-heading"><span>{shown ? <><HeroPortrait id={shown.heroId} small /><strong>{character(p, shown.heroId).name.split(' ')[0]}</strong><small>{a ? bots.includes(a.heroId) ? 'BOT ROLL' : 'PLAYER ROLL' : 'LAST ROLL'}</small></> : <><Icon name="spark" /><strong>Ready for the next attacker</strong></>}</span><span className="combat-tray-meta">{threat !== undefined && <ThreatLevel value={threat} compact greenEightOnly={!!greenEightOnly} />}<em>{a&&pool&&b.stage==='pool'?`${pool.total} SELECTED · ${Object.values(pool.available).reduce((sum,n)=>sum+n,0)} AVAILABLE`:shown ? `${shown.dice.filter(d => !d.removed).length} / 21 D8` : 'D8 DICE'}</em></span></div>
      {channels.map(channel => {
       const dice = shown?.dice.filter(d => d.color === channel.color) ?? [], hits = dice.filter(hit).length;
       return <div key={channel.color} className={`combat-dice-lane ${channel.color}`}><div className="dice-lane-label"><Icon name={channel.icon} size={19} /><strong>{channel.title}</strong><small>{b.kind === 'pve' ? channel.note : channel.pvpNote}</small></div><div className="dice-lane-roll">{dice.length ? dice.map((d, i) => <D8 key={`${shown!.heroId}:${b.round}:${d.id}`} die={d} hit={hit(d)} index={i} selected={!!a && selectedIds.includes(d.id)} selectionOrder={selectedIds.indexOf(d.id) + 1 || undefined} disabled={locked || !a || !selectable(d)} animate={!!a && busy} onSelect={() => setSelected(ids => ids.includes(d.id) ? ids.filter(id => id !== d.id) : [...ids, d.id])} />) : <span className="dice-lane-empty">{a ? `No ${channel.color} dice prepared` : 'Awaiting dice'}</span>}</div><div className="dice-lane-count" aria-label={`${channel.title}: ${busy ? 'rolling' : hits} rolled hits`}><b>{busy ? '…' : <AnimatedValue value={hits} />}</b><small>ROLLED HITS</small></div></div>;
@@ -144,8 +149,6 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
     </section>
     {state.respawns.length > 0 && <p className="combat-warning">A character has no health. Use any available healing or choose a starting region or graveyard.</p>}
    <aside className="combat-ledger" aria-label="Battle totals">
-    {threat !== undefined && <div className="combat-threat-bar"><ThreatLevel value={threat} greenEightOnly={!!greenEightOnly} /><span>{a ? `${character(p, a.heroId).name.split(' ')[0]}’s current threshold` : 'Encounter threshold'}<small>Roll this number or higher to score one hit.</small></span></div>}
-    <div className="combat-ledger-heading"><span className="sheet-eyebrow">THE SHARED POOL</span><h3>Battle totals</h3><p>Banked after abilities and creature effects.</p></div>
     {(['horde', 'alliance'] as const).filter(f => b.kind !== 'pve' || f === b.first).map(f => {
      return <CombatArea key={f} battle={b} side={f} deadlyPvp={state.variants?.deadlyPvp} />;
     })}

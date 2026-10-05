@@ -10,6 +10,8 @@ import { apply } from '../rules/game';
 
 export const DICE_SETTLE_MS = 1350;
 export const COMBAT_STEP_MS = 750;
+/** A bookkeeping step stays visible for a beat before it continues on its own. */
+export const AUTO_CONTINUE_MS = 900;
 export const COMBAT_BEATS = { action: 420, impact: 980, recovery: 1600, complete: 2200 } as const;
 export const REDUCED_COMBAT_MS = 180;
 export type CombatCue = {
@@ -93,6 +95,19 @@ export function useCombatPresentation(state: GameView): CombatPresentation {
   return () => timers.forEach(clearTimeout);
  }, [cue, reducedMotion]);
  return { cue, phase, busy: !!cue };
+}
+
+const BOOKKEEPING: Command['type'][] = ['advance', 'tokens', 'monster', 'attacker', 'wound'];
+/** The single legal continuation of a combat step is bookkeeping, not a decision.
+ * Rolling, rerolls, abilities, the outcome and any choice between targets or
+ * characters stay with the player. Pending bot moves and other seats' options
+ * keep the step manual, so a shared party decision is never taken on their behalf. */
+export function bookkeepingStep(state: GameView, human: Command[], all: Command[], botPending: boolean): Command | undefined {
+ const b = state.battle;
+ if (state.phase !== 'combat' || !b || b.stage === 'over' || botPending || human.length !== 1) return;
+ const step = human[0];
+ if (!BOOKKEEPING.includes(step.type)) return;
+ return all.filter(c => c.type !== 'ability').length === 1 ? step : undefined;
 }
 
 export const combatSteps = ['Prepare', 'Roll & abilities', 'Ranged & defense', 'Melee & attrition', 'Outcome'];

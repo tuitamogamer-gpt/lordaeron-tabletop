@@ -26,11 +26,11 @@ import RestEditor from './campaign/RestEditor';
 import CampaignSetup from './campaign/CampaignSetup';
 import QuestActivity from './campaign/QuestReveal';
 import CharacterSheet, { CardRules, startingHero } from './campaign/CharacterSheet';
-import { combatCandidates, COMBAT_STEP_MS, DICE_SETTLE_MS, rollSignature, useCombatPresentation } from './campaign/combat-flow';
+import { AUTO_CONTINUE_MS, bookkeepingStep, combatCandidates, COMBAT_STEP_MS, DICE_SETTLE_MS, rollSignature, useCombatPresentation } from './campaign/combat-flow';
 import { challengeProfile, distinctChallenges, ThreatLevel } from './campaign/feedback';
 const CampaignCombat=lazy(()=>import('./campaign/Combat'));
 const DesignGallery=lazy(()=>import('./campaign/DesignGallery'));
-const SAVE='lordaeron-base-save-v7',LEGACY_SAVE='lordaeron-base-save-v6',BOTS='lordaeron-base-bots-v3';
+const SAVE='lordaeron-base-save-v7',LEGACY_SAVE='lordaeron-base-save-v6',BOTS='lordaeron-base-bots-v3',AUTO_CONTINUE='lordaeron-base-auto-continue';
 function legacy(){try{return localStorage.getItem(LEGACY_SAVE)??localStorage.getItem('lordaeron-base-save-v4')??localStorage.getItem('lordaeron-base-save-v3');}catch{return null;}}
 function previousCampaign(){try{return localStorage.getItem(`${SAVE}-before-new`);}catch{return null;}}
 function downloadSession(raw:string,name:string){const url=URL.createObjectURL(new Blob([raw],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);}
@@ -42,6 +42,8 @@ export default function Campaign(){
  const[bots,setBots]=useState<string[]>(()=>{try{const value=JSON.parse(localStorage.getItem(BOTS)??'null');return Array.isArray(value)?value:DEFAULT_SETUP.roster.slice(1);}catch{return DEFAULT_SETUP.roster.slice(1);}}),[auto,setAuto]=useState(false),[difficulty,setDifficulty]=useState<Difficulty>('balanced'),[botReason,setBotReason]=useState('');
  const[training,setTraining]=useState<string[]>([]),[exportJSON,setExportJSON]=useState(''),[codexHero,setCodexHero]=useState(DEFAULT_SETUP.roster[0]),[mapFocus,setMapFocus]=useState(false),[detailOpen,setDetailOpen]=useState(false);
  const[combatOpen,setCombatOpen]=useState(false),[combatResolve,setCombatResolve]=useState(true),[settledRoll,setSettledRoll]=useState('');
+ const[autoContinue,setAutoContinue]=useState(()=>{try{return localStorage.getItem(AUTO_CONTINUE)!=='false';}catch{return true;}});
+ useEffect(()=>{try{localStorage.setItem(AUTO_CONTINUE,String(autoContinue));}catch{/* The preference only lasts this session. */}},[autoContinue]);
  const[questSession,setQuestSession]=useState(0),[revealSetup,setRevealSetup]=useState(false),[questOpen,setQuestOpen]=useState(false),[workspaceOpen,setWorkspaceOpen]=useState(false);
  const file=useRef<HTMLInputElement>(null),current=useRef(game);current.current=game;
  const currentBots=useRef(bots);currentBots.current=bots;
@@ -86,6 +88,9 @@ export default function Campaign(){
  useEffect(()=>{if(!rollingKey){setSettledRoll('');return;}const t=setTimeout(()=>setSettledRoll(rollingKey),DICE_SETTLE_MS);return()=>clearTimeout(t);},[rollingKey]);
  useEffect(()=>{setCombatOpen(state.phase==='combat');},[state.phase]);
  const automaticCombat=useMemo(()=>combatCandidates(p,state,allLegal,bots,{resolve:combatResolve,campaignAuto:auto,difficulty}),[game.state,allLegal,bots,combatResolve,auto,difficulty]);
+ // A player's lone bookkeeping continuation advances by itself; every real decision still waits.
+ const autoStep=autoContinue?bookkeepingStep(state,legal,allLegal,availableBotMoves.length>0):undefined;
+ useEffect(()=>{if(!autoStep||diceRolling||presentation.busy||automationPaused||!combatOpen)return;const source=game.state;const t=setTimeout(()=>{if(current.current.state===source)send(autoStep);},AUTO_CONTINUE_MS);return()=>clearTimeout(t);},[autoStep,diceRolling,presentation.busy,automationPaused,combatOpen,game.state]);
  useEffect(()=>{if(!automaticCombat.length||diceRolling||presentation.busy||automationPaused)return;let cancelled=false;const source=game.state;const t=setTimeout(()=>{if(cancelled||current.current.state!==source)return;const allowed=combatCandidates(p,view(source),allLegal,currentBots.current,{resolve:combatResolve,campaignAuto:auto,difficulty});if(!allowed.length)return;if(allowed.length===1)send(allowed[0]);else void planMove(allowed,()=>!cancelled);},COMBAT_STEP_MS);return()=>{cancelled=true;clearTimeout(t);};},[automaticCombat,diceRolling,presentation.busy,automationPaused,game.state]);
  const chooseHero=(id:string)=>{setHeroId(id);setSelected(state.heroes.find(h=>h.id===id)!.location);};
  const open=(next:Panel)=>{if(next==='train')setTraining([]);setDetailOpen(false);setPanel(next);};
@@ -110,7 +115,7 @@ export default function Campaign(){
  {page==='rules'&&<RulesGuide onSetup={()=>open('new')} onDesign={()=>setPage('design')}/>}
  </main>
  {toast&&<div className="toast" role="status"><Icon name="help"/>{toast}<button className="icon-button" aria-label="Dismiss notification" onClick={()=>setToast('')}><Icon name="x" size={14}/></button></div>}
- {!game.needsSetup&&<Suspense fallback={combatOpen?<p>Preparing combat…</p>:null}><CampaignCombat state={state} legal={state.battle?.stage==='over'?[...legal,...allLegal.filter(c=>c.type==='closeBattle'&&!legal.some(h=>h.type==='closeBattle'))]:legal} busy={diceRolling} presentation={presentation} send={sendCombat} botStep={botStep} botReady={botReady} auto={auto} toggleBots={()=>setAuto(v=>!v)} open={combatOpen} onClose={()=>setCombatOpen(false)} bots={bots} resolve={combatResolve} toggleResolve={()=>setCombatResolve(v=>!v)} botResponsePending={botResponsePending} onPassHumanWindow={passHumanResponse} automationPending={!!automaticCombat.length}/></Suspense>}
+ {!game.needsSetup&&<Suspense fallback={combatOpen?<p>Preparing combat…</p>:null}><CampaignCombat state={state} legal={state.battle?.stage==='over'?[...legal,...allLegal.filter(c=>c.type==='closeBattle'&&!legal.some(h=>h.type==='closeBattle'))]:legal} busy={diceRolling} presentation={presentation} send={sendCombat} botStep={botStep} botReady={botReady} auto={auto} toggleBots={()=>setAuto(v=>!v)} open={combatOpen} onClose={()=>setCombatOpen(false)} bots={bots} resolve={combatResolve} toggleResolve={()=>setCombatResolve(v=>!v)} botResponsePending={botResponsePending} onPassHumanWindow={passHumanResponse} automationPending={!!automaticCombat.length} autoContinue={autoContinue} toggleAutoContinue={()=>setAutoContinue(v=>!v)} autoStep={autoStep}/></Suspense>}
  {state.phase==='combat'&&!combatOpen&&<button className="combat-docked" onClick={()=>setCombatOpen(true)}><Icon name="swords"/><span>Return to combat<small>Round {state.battle?.round} · {phaseLabel[state.battle?.stage??'combat']}</small></span><Icon name="arrow" size={14}/></button>}
  {decision&&<WorldDecision key={`${state.phase}-${state.eventFlow?.event}-${state.eventFlow?.steps[0]?.hero}-${state.heroes.find(h=>h.talentChoices.length)?.id}-${state.reward?.offered.join()}`} state={state} legal={legal} send={send} inspect={inspect} botStep={botStep} botReady={botReady} auto={auto} toggleBots={()=>setAuto(v=>!v)}/>}
  {state.phase==='finished'&&<div className="victory-strip"><Icon name="trophy" size={38}/><h2>{state.winner==='draw'?"The campaign ends in a draw":`${factionLabel(state.winner??'')} wins!`}</h2><p>{state.turn} turns</p><button className="gold-button" onClick={()=>open('new')}>New campaign</button></div>}

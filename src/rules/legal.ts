@@ -184,8 +184,8 @@ export function commandLabel(p: ContentPack, c: Command): string {
   case 'ability': return `${name}: ${card(p, c.card).name}${c.args?.target ? ` → ${p.characters.find(h => h.id === c.args?.target)?.name ?? c.args.target}` : ''}`;
   case 'challenge': return `${name}: Challenge${c.allies.length ? ` (+${c.allies.length} allies)` : ''}`;
   case 'attacker': return `${name} attacks`;
-  case 'wound': return `${name}: wound${c.pet ? " to pet" : ''}`;
-  case 'respawn': return `${name}: ${p.regions.find(r => r.id === c.region)?.name}`;
+  case 'wound': return `${name}: take a wound${c.pet ? " on the pet" : ''}`;
+  case 'respawn': return `${name}: revive at ${p.regions.find(r => r.id === c.region)?.name}`;
   case 'talent': return `${name}: ${card(p, c.card).name}`;
   case 'reward': return `${name}: take ${card(p, c.card).name}`;
   case 'quest': return `New ${c.tier} quest`;

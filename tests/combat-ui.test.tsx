@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import Campaign from '../src/Campaign';
 import Combat from '../src/campaign/Combat';
-import { COMBAT_BEATS, DICE_SETTLE_MS, COMBAT_STEP_MS, REDUCED_COMBAT_MS, useCombatPresentation } from '../src/campaign/combat-flow';
+import { AUTO_CONTINUE_MS, COMBAT_BEATS, DICE_SETTLE_MS, COMBAT_STEP_MS, REDUCED_COMBAT_MS, useCombatPresentation } from '../src/campaign/combat-flow';
 import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
 import { beginBattle, chooseAttacker } from '../src/rules/combat';
 import { apply, createGame } from '../src/rules/game';
@@ -41,6 +41,8 @@ function saveAtPool() {
  const challenge = legalActions(p, s).find(c => c.type === 'challenge' && c.hero === hero)!;
  send(challenge); send({ type: 'attacker', hero });
  localStorage.setItem('lordaeron-base-save-v7', JSON.stringify(session));
+ // These flows verify the fully manual room; auto-continue has its own test below.
+ localStorage.setItem('lordaeron-base-auto-continue', 'false');
  return session;
 }
 
@@ -253,7 +255,7 @@ describe('combat room controls and dice', () => {
   r.rerender(<Combat {...props(next)} send={send} />);
   fireEvent.mouseUp(defense); fireEvent.click(defense);
   expect(send).not.toHaveBeenCalled();
-  fireEvent.click(screen.getByRole('button', { name: 'Grumbaz: wound' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Grumbaz takes a wound' }));
   expect(send).toHaveBeenCalledExactlyOnceWith({ type: 'wound', hero: s.heroes[0].id });
  });
  it('retains the last roll when hits are banked and displays authoritative totals', () => {
@@ -333,7 +335,7 @@ describe('combat room controls and dice', () => {
   expect(commands()).toHaveLength(start + 1);
   await act(async () => { vi.advanceTimersByTime(1); });
   expect(commands()).toHaveLength(start + 1);
-  fireEvent.click(screen.getByRole('button',{name:'Grumbaz: wound'}));
+  fireEvent.click(screen.getByRole('button',{name:'Grumbaz takes a wound'}));
   expect(commands()).toHaveLength(start + 2); expect(commands().at(-1)?.type).toBe('wound');
   expect(screen.getByLabelText('Battle animation: anticipation')).toBeTruthy();
   await act(async () => { vi.advanceTimersByTime(COMBAT_BEATS.complete - 1); });
@@ -341,5 +343,29 @@ describe('combat room controls and dice', () => {
   fireEvent.click(screen.getByRole('switch', { name: /^Auto-play bots/ }));
   await act(async () => { vi.advanceTimersByTime(COMBAT_BEATS.complete + COMBAT_STEP_MS); });
   expect(commands()).toHaveLength(start + 2);
+ }, 15000);
+ it('continues a lone bookkeeping step by itself after a beat, but never a decision', async () => {
+  const saved = saveAtPool(); localStorage.removeItem('lordaeron-base-auto-continue');
+  vi.useFakeTimers(); await act(async () => { render(<Campaign />); });
+  const commands = () => JSON.parse(localStorage.getItem('lordaeron-base-save-v7')!).commands as Command[];
+  const stage = () => importSession(p, localStorage.getItem('lordaeron-base-save-v7')!).state.battle?.stage;
+  expect(screen.getByRole('switch', { name: /^Auto-continue steps/ }).getAttribute('aria-checked')).toBe('true');
+  await act(async () => { vi.advanceTimersByTime(AUTO_CONTINUE_MS * 3); });
+  expect(commands()).toHaveLength(saved.commands.length);
+  expect(stage()).toBe('pool');
+  fireEvent.click(screen.getByRole('button', { name: /Roll \d+ D8/ }));
+  await act(async () => { vi.advanceTimersByTime(DICE_SETTLE_MS); });
+  expect(stage()).toBe('after-pool');
+  expect(screen.getByText('Continuing automatically…')).toBeTruthy();
+  await act(async () => { vi.advanceTimersByTime(AUTO_CONTINUE_MS - 1); });
+  expect(stage()).toBe('after-pool');
+  await act(async () => { vi.advanceTimersByTime(1); });
+  expect(stage()).toBe('reroll');
+  expect(commands().at(-1)).toEqual({ type: 'advance' });
+  fireEvent.click(screen.getByRole('switch', { name: /^Auto-continue steps/ }));
+  const count = commands().length;
+  await act(async () => { vi.advanceTimersByTime(AUTO_CONTINUE_MS * 3); });
+  expect(commands()).toHaveLength(count);
+  expect(localStorage.getItem('lordaeron-base-auto-continue')).toBe('false');
  }, 15000);
 });

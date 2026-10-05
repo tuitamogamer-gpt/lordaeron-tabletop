@@ -5,7 +5,7 @@ import { beginBattle, chooseAttacker, stats } from '../src/rules/combat';
 import { settleAutomatic } from '../src/rules/effects';
 import { legalActions } from '../src/rules/legal';
 import { view } from '../src/rules/view';
-import { combatCandidates, combatAutomation, combatCue, combatStep, rollSignature } from '../src/campaign/combat-flow';
+import { bookkeepingStep, combatCandidates, combatAutomation, combatCue, combatStep, rollSignature } from '../src/campaign/combat-flow';
 import type { BattleStage, Command, State } from '../src/rules/model';
 
 const hero = DEFAULT_SETUP.roster[0];
@@ -152,5 +152,34 @@ describe('combat automation without bypassing player decisions', () => {
   const s = battle(); s.battle!.stage = 'after-pool';
   const next = apply(p, s, { type: 'advance' });
   expect(next.battle!.stage).toBe('reroll'); expect(combatCue(view(s), view(next))).toBeUndefined();
+ });
+});
+
+describe('automatic continuation of bookkeeping steps', () => {
+ const advance: Command = { type: 'advance' }, wound: Command = { type: 'wound', hero };
+ const at = (stage: BattleStage) => { const s = view(battle()); s.battle!.stage = stage; return s; };
+ it('continues the only legal advance, token placement, creature effect or lone attacker', () => {
+  expect(bookkeepingStep(at('after-pool'), [advance], [advance], false)).toEqual(advance);
+  const tokens: Command = { type: 'tokens' }, monster: Command = { type: 'monster' }, attacker: Command = { type: 'attacker', hero };
+  expect(bookkeepingStep(at('tokens'), [tokens], [tokens], false)).toEqual(tokens);
+  expect(bookkeepingStep(at('after-reroll'), [monster], [monster], false)).toEqual(monster);
+  expect(bookkeepingStep(at('attacker'), [attacker], [attacker], false)).toEqual(attacker);
+  expect(bookkeepingStep(at('wounds'), [wound], [wound], false)).toEqual(wound);
+ });
+ it('never continues a roll, a reroll choice, an ability window, the outcome or a shared choice', () => {
+  const roll: Command = { type: 'roll' }, reroll: Command = { type: 'reroll', dice: [0] }, ability: Command = { type: 'ability', hero, card: 'printed-melee', ability: 'pool' };
+  expect(bookkeepingStep(at('pool'), [roll], [roll], false)).toBeUndefined();
+  expect(bookkeepingStep(at('reroll'), [advance, reroll], [advance, reroll], false)).toBeUndefined();
+  expect(bookkeepingStep(at('after-pool'), [advance, ability], [advance, ability], false)).toBeUndefined();
+  expect(bookkeepingStep(at('over'), [{ type: 'closeBattle' }], [{ type: 'closeBattle' }], false)).toBeUndefined();
+  const allyWound: Command = { type: 'wound', hero: DEFAULT_SETUP.roster[1] };
+  expect(bookkeepingStep(at('wounds'), [wound], [wound, allyWound], false)).toBeUndefined();
+  expect(bookkeepingStep(at('wounds'), [wound, allyWound], [wound, allyWound], false)).toBeUndefined();
+ });
+ it('yields to a pending bot move, to bot-owned steps and to phases outside combat', () => {
+  expect(bookkeepingStep(at('after-pool'), [advance], [advance], true)).toBeUndefined();
+  expect(bookkeepingStep(at('after-pool'), [], [advance], false)).toBeUndefined();
+  const s = view(createGame(p, DEFAULT_SETUP));
+  expect(bookkeepingStep(s, [advance], [advance], false)).toBeUndefined();
  });
 });
