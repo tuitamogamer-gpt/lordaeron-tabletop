@@ -12,7 +12,7 @@ import { creatureStacks, MapPortraitToken, type TokenHelp, type ShowTokenHelp } 
 import { encounterProfile, ThreatLevel } from './feedback';
 import { eventText, overlordText } from './event-text';
 
-type Props = { focused: boolean; onToggleFocus: () => void; state: GameView; selected: string; heroId: string; legal: Command[]; onSelect: (id: string) => void; onMove: (c: Command) => void; selectedQuest?: string; onQuest?: (id: string, region: string) => void; onInspectQuest?: (id: string) => void; onHero?: (id: string) => void; };
+type Props = { focused: boolean; onToggleFocus: () => void; state: GameView; selected: string; heroId: string; legal: Command[]; onSelect: (id: string) => void; onMove: (c: Command) => void; selectedQuest?: string; onQuest?: (id: string, region: string) => void; onInspectQuest?: (id: string) => void; onHero?: (id: string) => void; controlled?: string[]; };
 const ratio = board.width / board.height;
 const centers = Object.fromEntries(BOARD_SHAPES.map(s => [s.id, s.center]));
 const points = (id: string) => BOARD_SHAPE_BY_ID[id].points.map(p => p.join(',')).join(' ');
@@ -24,7 +24,7 @@ function labelLines(name: string) {
  return lines;
 }
 
-export default function CampaignMap({ state, selected, heroId, legal, onSelect, onMove, focused, onToggleFocus, selectedQuest, onQuest, onInspectQuest, onHero }: Props) {
+export default function CampaignMap({ state, selected, heroId, legal, onSelect, onMove, focused, onToggleFocus, selectedQuest, onQuest, onInspectQuest, onHero, controlled }: Props) {
  const [camera,setCamera]=useState(OVERVIEW_CAMERA),[dragging,setDragging]=useState(false),[routeIndex,setRouteIndex]=useState(0),[showLabels,setShowLabels]=useState(true),[showRules,setShowRules]=useState(false),[strongBorders,setStrongBorders]=useState(false),[showDetails,setShowDetails]=useState(false);
  const [tokenHelp,setTokenHelp]=useState<(TokenHelp&{x:number;y:number;below:boolean})|null>(null);
  const canvas=useRef<HTMLDivElement>(null),entryButton=useRef<HTMLButtonElement>(null),tooltip=useRef<HTMLDivElement>(null);
@@ -82,7 +82,7 @@ export default function CampaignMap({ state, selected, heroId, legal, onSelect, 
  useEffect(()=>setTokenHelp(null),[state.revision,selected]);
  const allRoute=move?[me.location,...move.path]:[];
  const flight=(a:string,b:string)=>!regionById[a].neighbors.includes(b);
- const blockedReason=selected===me.location?"Your hero is here.":destination.home&&destination.home!==character(p,heroId).faction?"The opposing faction’s starting region.":state.enemies.some(e=>e.region===me.location&&e.color==='blue')?"Blue creatures: resolve the mandatory Challenge first.":me.actions<1?"This hero has used both actions.":character(p,heroId).faction!==state.faction?"It is not this hero’s faction’s turn.":!moves.length?"Travel is currently unavailable.":"Outside this action’s range or blocked by blue creatures.";
+ const blockedReason=selected===me.location?"Your hero is here.":controlled&&!controlled.includes(heroId)?`The AI controls ${character(p,heroId).name.split(' ')[0]}. Select one of your own characters, or take control in Characters.`:destination.home&&destination.home!==character(p,heroId).faction?"The opposing faction’s starting region.":state.enemies.some(e=>e.region===me.location&&e.color==='blue')?"Blue creatures: resolve the mandatory Challenge first.":me.actions<1?"This hero has used both actions.":character(p,heroId).faction!==state.faction?"It is not this hero’s faction’s turn.":state.phase!=='actions'?"Travel is available during the party’s action phase.":!moves.length?"Travel is currently unavailable.":"Outside this action’s range or blocked by blue creatures.";
  const questHelp=(m:QuestMarker):TokenHelp=>({title:m.quest.name,category:`${m.quest.faction==='horde'?'Horde':'Alliance'} quest · ${m.label}`,summary:`${m.remaining} remaining objective${m.remaining===1?'':'s'} in ${regionById[m.region].name}.`,details:creatureStacks(state.enemies.filter(e=>e.quest===m.quest.id&&e.region===m.region&&e.color!=='blue')).map(s=>`${s.count} × ${p.creatures.find(c=>c.id===s.creature)!.name} · ${s.color}`),hint:'Select to track this quest on the map. Blue creatures are not quest objectives.'});
  const creatureHelp=(stack:ReturnType<typeof creatureStacks>[number],region:string):TokenHelp=>{
   const enemies=state.enemies.filter(e=>e.region===region&&e.creature===stack.creature&&e.color===stack.color),creature=p.creatures.find(c=>c.id===stack.creature)!,stats=encounterProfile(state,enemies[0].id)!;

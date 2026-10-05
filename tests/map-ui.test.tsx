@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
 import { Modal } from '../src/components';
+import { character } from '../src/rules/common';
 import { createGame } from '../src/rules/game';
 import { legalActions } from '../src/rules/legal';
 import { view } from '../src/rules/view';
@@ -119,6 +120,12 @@ describe('table overview and map interaction',()=>{
   expect(send).not.toHaveBeenCalled();expect(screen.getByText('2 regions · 1 action')).toBeTruthy();
   fireEvent.click(screen.getByRole('button',{name:/Travel here/}));
   expect(send).toHaveBeenCalledWith({type:'travel',hero:DEFAULT_SETUP.roster[0],path:['stillwater','agamand']});
+ });
+ it('explains that the AI controls an inspected character instead of calling travel unavailable',()=>{
+  const s=createGame(p,DEFAULT_SETUP),id=s.heroes[1].id;
+  render(<CampaignMap state={view(s)} heroId={id} selected="brightwater" legal={[]} controlled={[s.heroes[0].id]} focused onToggleFocus={()=>{}} onSelect={()=>{}} onMove={()=>{}}/>);
+  expect(screen.getByText(`The AI controls ${character(p,id).name.split(' ')[0]}. Select one of your own characters, or take control in Characters.`)).toBeTruthy();
+  expect(screen.queryByText('Travel is currently unavailable.')).toBeNull();
  });
  it('shows a live overview with hover help while reserving selection and travel for fullscreen',()=>{
   const s=createGame(p,DEFAULT_SETUP),m=questMarkers(p,view(s))[0],select=vi.fn(),send=vi.fn(),selectHero=vi.fn(),quest=vi.fn();

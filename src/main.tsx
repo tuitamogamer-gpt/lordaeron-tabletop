@@ -38,4 +38,5 @@ import './campaign/smooth-ui.css';
 import './campaign/raster-cards.css';
 import './campaign/dice.css';
 import './campaign/combat-area.css';
+import './campaign/screen-fit.css';
 createRoot(document.getElementById('root')!).render(<React.StrictMode><App /></React.StrictMode>);

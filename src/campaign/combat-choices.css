@@ -60,7 +60,7 @@
 .combat-sheet-controls .combat-pool-builder{margin-top:5px}.combat-sheet-controls>.combat-action-row:first-child{border-top:0;margin-top:2px;padding-top:4px}.combat-sheet-controls .dice-selection-help{margin-bottom:2px}
 @media(min-width:1450px){.campaign-app .modal.player-driven-combat{width:min(1600px,calc(100vw - 48px))}.campaign-app .player-driven-combat .combat-workbench{grid-template-columns:minmax(0,1fr) minmax(520px,.85fr)}}
 @media(min-width:801px) and (max-width:1050px){.campaign-app .player-driven-combat .combat-workbench{grid-template-columns:minmax(0,1fr) 420px}.player-driven-combat .combat-dice-lane{grid-template-columns:65px minmax(0,1fr) 35px}.player-driven-combat .combat-ledger{display:block}.player-driven-combat .combat-phase-note{flex-direction:column;align-items:flex-start}.player-driven-combat .combat-live-status{font-size:9px}.combat-sheet-card .card-thumbnail{height:230px}}
-@media(max-height:760px) and (min-width:801px){
+@media(max-height:800px) and (min-width:801px){
  .campaign-app .player-driven-combat .combat-decisions{padding:8px 12px}
  .player-driven-combat .combat-decision-heading{padding-bottom:5px;margin-bottom:4px}.player-driven-combat .combat-decision-heading h4{font-size:15px}
  .combat-character-sheet{display:grid;grid-template-columns:minmax(0,1fr) 152px;grid-template-rows:auto auto minmax(0,1fr) auto;column-gap:10px}

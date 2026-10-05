@@ -58,11 +58,20 @@ describe('guided campaign setup',()=>{
   expect((screen.getByRole('button',{name:/^Begin campaign/}) as HTMLButtonElement).disabled).toBe(false);
  });
 });
-function Table({initial=createGame(p,DEFAULT_SETUP),send=vi.fn(),bots=[],takeControl}:{initial?:State;send?:(c:unknown)=>void;bots?:string[];takeControl?:(id:string)=>void}){
+function Table({initial=createGame(p,DEFAULT_SETUP),send=vi.fn(),bots=[],takeControl,toggleBots=()=>{}}:{initial?:State;send?:(c:unknown)=>void;bots?:string[];takeControl?:(id:string)=>void;toggleBots?:()=>void}){
  const [id,setId]=useState(initial.heroes[0].id),[selected,setSelected]=useState('brill');
- return <Tabletop state={view(initial,initial.heroes.map(h=>h.id))} h={initial.heroes.find(h=>h.id===id)!} legal={legalActions(p,initial)} controlled={initial.heroes.map(h=>h.id).filter(id=>!bots.includes(id))} bots={bots} auto={false} botReady={false} botReason="" selectHero={setId} selected={selected} selectRegion={setSelected} inspect={()=>{}} open={()=>{}} send={send} botStep={()=>{}} toggleBots={()=>{}} focused={false} toggleFocus={()=>{}} notify={()=>{}} takeControl={takeControl}/>;
+ return <Tabletop state={view(initial,initial.heroes.map(h=>h.id))} h={initial.heroes.find(h=>h.id===id)!} legal={legalActions(p,initial)} controlled={initial.heroes.map(h=>h.id).filter(id=>!bots.includes(id))} bots={bots} auto={false} botReady={false} botReason="" selectHero={setId} selected={selected} selectRegion={setSelected} inspect={()=>{}} open={()=>{}} send={send} botStep={()=>{}} toggleBots={toggleBots} focused={false} toggleFocus={()=>{}} notify={()=>{}} takeControl={takeControl}/>;
 }
 describe('on-demand game panels',()=>{
+ it('tells the player when the active faction is played entirely by the AI and offers to run it',()=>{
+  const initial=createGame(p,DEFAULT_SETUP),horde=initial.heroes.filter(h=>character(p,h.id).faction==='horde').map(h=>h.id),toggleBots=vi.fn();
+  render(<Table initial={initial} bots={horde} toggleBots={toggleBots}/>);
+  const notice=screen.getByRole('region',{name:'Next campaign step'});
+  expect(notice.textContent).toContain('Horde’s turn belongs to the AI');
+  fireEvent.click(within(notice).getByRole('button',{name:/Play AI turn/}));expect(toggleBots).toHaveBeenCalledOnce();
+  cleanup();render(<Table initial={initial}/>);
+  expect(screen.queryByRole('region',{name:'Next campaign step'})).toBeNull();
+ });
  it('offers a direct handover from AI to the player for the selected character',()=>{
   const initial=createGame(p,DEFAULT_SETUP),takeControl=vi.fn(),id=initial.heroes[0].id;render(<Table initial={initial} bots={[id]} takeControl={takeControl}/>);
   fireEvent.click(screen.getByRole('button',{name:/^Characters/}));const dialog=screen.getByRole('dialog',{name:'Characters'});

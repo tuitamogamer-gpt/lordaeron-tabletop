@@ -1,0 +1,89 @@
+/* Desktop screen fit · October 2026.
+ * Measured in Chromium at 1280×720, 1366×768 and 1920×1080: the combat room, the
+ * character dossier, the setup draft and the quest ledger previously clipped or
+ * overlapped their frames on the most common laptop heights. These rules load
+ * last and only adjust sizing; the game rules and components are unchanged. */
+
+/* ---------- Combat room · arena ---------- */
+.campaign-app .combat-room .combat-arena-scroll{display:flex;flex-direction:column;overflow-y:auto;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:#5d6f6c #0f181c;padding:9px 12px 10px 18px}
+.combat-room .combat-arena-scroll>*{flex:none}
+.combat-room .combat-encounter{margin-bottom:4px;min-height:0}.combat-room .combat-encounter h3{font-size:20px;margin:2px 0}
+.combat-room .combat-timeline{margin-bottom:5px}.combat-room .combat-timeline li{padding-block:3px}
+.combat-room .combat-phase-note{margin-bottom:5px;min-height:26px}
+.combat-room .cinematic-scene{min-height:72px;margin-bottom:7px;padding:10px 26px 6px}
+/* On short laptop screens the dice and the shared totals matter more than the stage banner. */
+@media(max-height:740px){.combat-room .cinematic-scene{display:none}}
+.combat-room .cinematic-scene .battle-fighter .portrait,.combat-room .cinematic-scene .battle-fighter .boss-portrait,.combat-room .cinematic-scene .battle-fighter .creature-glyph{width:42px;height:42px}
+.combat-room .cinematic-scene .battle-scene-center>strong{font-size:14px}
+.combat-room .cinematic-scene .battle-scene-center>small{min-height:0}
+.combat-room .cinematic-scene .battle-beats{display:none}
+@media(max-height:800px){.combat-room .combat-token-flow{display:none}}
+.player-driven-combat .combat-dice-lane{min-height:68px}
+.combat-room .combat-tray-meta{display:flex;align-items:center;gap:10px}.combat-room .combat-tray-meta>em{font-style:normal}
+.combat-room .combat-tray-meta .threat-level.compact{padding:1px 6px;border:1px solid #c7b27e44;border-radius:4px;background:#0a1216}
+.player-driven-combat .combat-ledger{margin-top:6px;padding:8px 11px 6px}
+.player-driven-combat .combat-ledger>.combat-token-area{margin-bottom:6px}
+.combat-token-area>h4{margin-bottom:5px;font-size:11px}
+.combat-token-box{padding:6px 8px}.combat-token-box>h5{margin-bottom:4px;font-size:10px}
+.combat-token-count{grid-template-columns:22px auto;column-gap:6px}.combat-counter-token{width:20px;height:20px}
+.combat-token-count>output{font-size:20px;line-height:1.15}.combat-token-count>small{margin-top:1px;font-size:8px}
+.combat-token-count+.combat-token-count{margin-top:4px;padding-top:4px}
+.combat-token-flow{margin-top:5px;font-size:9px}
+.combat-room .combat-wound-count{margin-top:6px;padding:6px 8px}
+.combat-room .combat-party{padding-top:6px}.combat-room .combat-party>h4{margin-bottom:3px}
+.combat-room .combat-enemy-rule,.combat-room .combat-roll-history{padding-top:6px;margin-top:6px}
+
+/* ---------- Combat room · character sheet and decisions ---------- */
+.combat-sheet-heroes:has(>button:only-child){display:none}
+.combat-sheet-profile{padding:5px 0 7px;gap:9px}
+.combat-sheet-profile>.portrait{width:42px;height:48px}
+.combat-sheet-profile h3{font-size:17px;margin:2px 0}
+.combat-sheet-vitals{padding-bottom:8px;margin-bottom:7px}
+/* The first row of cards always fits the space left by the controls below it. */
+.combat-choice-content{container-type:size}
+.combat-sheet-card .card-thumbnail{height:clamp(150px,calc(100cqh - 66px),270px)}
+.combat-sheet-card .combat-power-thumbnail{height:clamp(140px,calc(100cqh - 100px),270px)}
+.combat-sheet-card .combat-power-choice.expanded .combat-power-thumbnail{height:150px}
+/* A percentage here resolves against the auto grid row and clips the buttons; use a fixed cap. */
+.combat-sheet-controls{max-height:min(240px,36dvh)}
+.combat-sheet-controls .combat-pool-builder{padding:6px 9px 7px;margin-top:4px}
+.combat-sheet-controls .combat-pool-builder legend{font-size:11px}
+.combat-sheet-controls .combat-pool-builder>div{gap:8px}
+.combat-sheet-controls .combat-pool-builder label{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:6px}
+.combat-sheet-controls .combat-pool-builder label>span{grid-column:1;grid-row:1}
+.combat-sheet-controls .combat-pool-builder label>input{grid-column:2;grid-row:1;text-align:center}
+.combat-sheet-controls .combat-pool-builder label>small{grid-column:3;grid-row:1}
+.campaign-app .combat-sheet-controls .combat-pool-builder input[type=number]{min-height:28px;height:28px;padding:2px 6px;font-size:14px}
+.combat-sheet-controls .combat-pool-builder p{margin:5px 0 0;font-size:10px;line-height:1.4}
+.combat-switches{gap:16px}.combat-switch small{margin-top:3px}
+
+/* ---------- Character dossier · keep content inside the painted frame ---------- */
+@media(min-width:1000px){
+ .full-character-sheet.compact-character-sheet.premium-character-sheet,
+ .character-codex .full-character-sheet.compact-character-sheet.premium-character-sheet,
+ .workspace-characters:has(.character-control-handover) .full-character-sheet.compact-character-sheet.premium-character-sheet{
+  --dossier-inset:max(27px,calc(min(660px,100dvh - 266px) * .063));
+  padding:var(--dossier-inset) 3.6%;gap:18px}
+ .premium-character-sheet .sheet-profile{min-height:100px}
+ .premium-character-sheet .sheet-racial-thumbnail{height:clamp(96px,calc(100dvh - 644px),160px)}
+ .premium-character-sheet .sheet-equipment-grid{grid-template-rows:minmax(228px,1fr);min-height:228px}
+ .premium-character-sheet .sheet-slot-card>.card-thumbnail{min-height:186px}
+ .premium-character-sheet .sheet-slot-card .card-thumbnail-art,.premium-character-sheet .sheet-slot-card .card-portrait-face{min-height:150px}
+ .premium-character-sheet .sheet-pane{container-type:size}
+ .premium-character-sheet .sheet-card-grid .card-thumbnail,.premium-character-sheet .sheet-pane .bag-empty{height:clamp(170px,calc(100cqh - 32px),360px)}
+ .premium-character-sheet .talent-slots{min-height:0}
+ .premium-character-sheet .talent-slots .card-thumbnail{min-height:0;height:clamp(140px,calc(100cqh - 46px),330px)}
+}
+
+/* ---------- Setup · the character choice stays visible above the draft grid ---------- */
+.setup-flow .setup-stage-1 .setup-stage-content{display:flex;flex-direction:column;overflow:hidden}
+.setup-flow .setup-stage-1 .draft-factions{flex:1;min-height:0;align-content:start;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#7b6848 #18201b;padding-right:2px}
+.setup-flow .setup-stage-1 .setup-draft-footer{flex:none;margin-top:9px;padding-top:9px;border-top:1px solid #8b734747}
+.setup-flow .draft-factions button{min-height:52px}
+.setup-flow .draft-factions>section>header{margin-bottom:8px;padding-bottom:7px}
+
+/* ---------- Quest ledger · no stray frame corner inside the workspace ---------- */
+.workspace-quests .quest-ledger.table-frame:before,.workspace-quests .quest-ledger.table-frame:after{display:none}
+
+/* ---------- Table · the AI turn notice ---------- */
+.campaign-app .command-table>.turn-guidance.ai-turn{border-left-color:#8fb0c4}
