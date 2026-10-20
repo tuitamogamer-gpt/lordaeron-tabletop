@@ -4,7 +4,9 @@ Desktop adaptacija osnovne igre iz 2005. i službenog FAQ-a 1.4. React interfejs
 
 [Otvori igru](https://lordaeron-tabletop.vercel.app)
 
-Najnoviji prolaz je prvi provjeren u pravom Chromiumu na 1280×720, 1366×768 i 1920×1080: borba staje na ekran (kockice, totali i karte bez rezanja), knjigovodstveni koraci borbe idu sami uz prekidač **Auto-continue steps**, lični listovi ostaju unutar naslikanog okvira, a setup, mapa i sto jasnije vode igrača. Detalji i provjere: [SCREEN-FIT-2026-10-05.md](docs/SCREEN-FIT-2026-10-05.md).
+Najnoviji prolaz poboljšava nastavak kampanje: backup prije uvoza, **Restore previous campaign**, preuzimanje oštećenog autosavea i trajna obavijest kada čuvanje nije dostupno. AI pouzdanije otkazuje zastarjele poteze i oporavlja se nakon greške, a izvoz mape ponovo radi. Detalji i provjere: [RELIABILITY-2026-10-20.md](docs/RELIABILITY-2026-10-20.md).
+
+Prethodni prolaz rasporeda provjeren je u Chromiumu na 1280×720, 1366×768 i 1920×1080: borba staje na ekran (kockice, totali i karte bez rezanja), knjigovodstveni koraci borbe idu sami uz prekidač **Auto-continue steps**, lični listovi ostaju unutar naslikanog okvira, a setup, mapa i sto jasnije vode igrača. Detalji i provjere: [SCREEN-FIT-2026-10-05.md](docs/SCREEN-FIT-2026-10-05.md).
 
 Prethodna dorada: **573 potpune slike karata s utisnutim tekstom**, fizički oblikovane D8 i tri originalna polja borbe. Izvori, imagegen prompt i provjere: [PRINTED-CARDS-AND-DICE.md](docs/PRINTED-CARDS-AND-DICE.md).
 
@@ -68,7 +70,9 @@ Prečice: **1–5** akcije, **F** interakcija s mapom, **Esc** povratak. Unutar 
 
 ## Provjera i granice
 
-Aktuelni prolaz popravlja Vanish bonuse, duplirane figure pri recikliranju questova i ponovno zatvaranje borbe. **838 testova**, build, render i tri nove AI partije s 4.312 naredbi i identičnim replayom prolaze: [ENGINE-SCRIPT-AUDIT.md](docs/ENGINE-SCRIPT-AUDIT.md). Prethodna provjera svih event karata, klasnih moći, talenata i smjene Horda → Alijansa kroz svih 30 poteza: [CARD-EVENT-TURN-AUDIT.md](docs/CARD-EVENT-TURN-AUDIT.md).
+Aktuelni prolaz ima **1.043 testa**, build, render 621 komponente, izvoz mape i završenu Nefarian kampanju s nezavisnim replay auditom: [RELIABILITY-2026-10-20.md](docs/RELIABILITY-2026-10-20.md).
+
+Raniji audit enginea popravlja Vanish bonuse, duplirane figure pri recikliranju questova i ponovno zatvaranje borbe. Tadašnjih 838 testova, build, render i tri AI partije s 4.312 naredbi i identičnim replayom: [ENGINE-SCRIPT-AUDIT.md](docs/ENGINE-SCRIPT-AUDIT.md). Prethodna provjera svih event karata, klasnih moći, talenata i smjene Horda → Alijansa kroz svih 30 poteza: [CARD-EVENT-TURN-AUDIT.md](docs/CARD-EVENT-TURN-AUDIT.md).
 
 Automatizovane provjere uključuju setup, opremanje, špilove, višestruki trening, varijante, borbu, mapu, scripted rewards, AI odluke i React interakcije. Novi AI engine bira ciljeve i sastav ekipe prema stanju, procjenjuje borbu, uspoređuje pune konfiguracije opreme i provjerava učinke sposobnosti prije upotrebe. Planiranje u browseru radi u Web Workeru. Karte klase su katalog za kupovinu/trening; moći se prvo uče i opremaju. Izvori, pretraživanje i granice: [AI-ENGINE.md](docs/AI-ENGINE.md). Pregled pravila: [RULES-AUDIT-V6.md](docs/RULES-AUDIT-V6.md).
 

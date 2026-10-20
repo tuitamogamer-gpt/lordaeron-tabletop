@@ -1,12 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { PlannerClient } from '../src/ai/client';
+import { AI_PLAN_TIMEOUT_MS, PlannerClient } from '../src/ai/client';
 import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
 import { createGame } from '../src/rules/game';
 import { view } from '../src/rules/view';
 
-afterEach(()=>vi.unstubAllGlobals());
+afterEach(()=>{vi.unstubAllGlobals();vi.useRealTimers();});
 function worker(){
- const fake={onmessage:undefined as Worker['onmessage']|undefined,onerror:undefined as Worker['onerror']|undefined,postMessage:vi.fn(),terminate:vi.fn()};
+ const fake={onmessage:undefined as Worker['onmessage']|undefined,onerror:undefined as Worker['onerror']|undefined,onmessageerror:undefined as Worker['onmessageerror']|undefined,postMessage:vi.fn(),terminate:vi.fn()};
  vi.stubGlobal('Worker',class{});
  return {fake,client:new PlannerClient(()=>fake as unknown as Worker)};
 }
@@ -31,5 +31,37 @@ describe('asynchronous AI',()=>{
   const {fake,client}=worker();const result=client.plan(view(createGame(p,DEFAULT_SETUP)),[],'balanced');
   const rejection=expect(result).rejects.toThrow('AI planning failed');fake.onerror!.call(fake as unknown as Worker,{} as ErrorEvent);await rejection;
   expect(fake.terminate).toHaveBeenCalledOnce();client.dispose();
+ });
+ it('terminates a silent worker, rejects all queued plans and can retry',async()=>{
+  vi.useFakeTimers();const {fake,client}=worker(),state=view(createGame(p,DEFAULT_SETUP));
+  const a=client.plan(state,[],'balanced'),b=client.plan(state,[],'balanced');
+  const failures=Promise.all([expect(a).rejects.toThrow('timed out'),expect(b).rejects.toThrow('timed out')]);
+  await vi.advanceTimersByTimeAsync(AI_PLAN_TIMEOUT_MS);await failures;
+  expect(fake.terminate).toHaveBeenCalledOnce();expect(vi.getTimerCount()).toBe(0);
+  const retry=client.plan(state,[],'balanced'),id=fake.postMessage.mock.calls.at(-1)![0].id;
+  fake.onmessage!.call(fake as unknown as Worker,{data:{id}} as MessageEvent);
+  expect(await retry).toBeUndefined();expect(vi.getTimerCount()).toBe(0);client.dispose();
+ });
+ it('releases failed message transfers instead of leaving a pending plan',async()=>{
+  vi.useFakeTimers();const {fake,client}=worker();
+  fake.postMessage.mockImplementationOnce(()=>{throw new DOMException('Cannot clone','DataCloneError');});
+  await expect(client.plan(view(createGame(p,DEFAULT_SETUP)),[],'balanced')).rejects.toThrow('could not start');
+  expect(fake.terminate).toHaveBeenCalledOnce();expect(vi.getTimerCount()).toBe(0);client.dispose();
+ });
+ it('reports unreadable worker replies and clears pending timers on disposal',async()=>{
+  vi.useFakeTimers();const {fake,client}=worker(),state=view(createGame(p,DEFAULT_SETUP));
+  const result=client.plan(state,[],'balanced'),failure=expect(result).rejects.toThrow('could not be read');
+  fake.onmessageerror!.call(fake as unknown as Worker,{} as MessageEvent);await failure;
+  expect(vi.getTimerCount()).toBe(0);
+  const pending=client.plan(state,[],'balanced');client.dispose();
+  expect(await pending).toBeUndefined();expect(vi.getTimerCount()).toBe(0);
+ });
+ it('ignores late errors from a terminated worker after a retry',async()=>{
+  const first=worker().fake,second=worker().fake,factory=vi.fn().mockReturnValueOnce(first).mockReturnValueOnce(second),client=new PlannerClient(factory),state=view(createGame(p,DEFAULT_SETUP));
+  const cancelled=client.plan(state,[],'balanced');client.dispose();expect(await cancelled).toBeUndefined();
+  const pending=client.plan(state,[],'balanced');first.onerror!.call(first as unknown as Worker,{} as ErrorEvent);
+  expect(second.terminate).not.toHaveBeenCalled();
+  second.onmessage!.call(second as unknown as Worker,{data:{id:second.postMessage.mock.calls[0][0].id}} as MessageEvent);
+  expect(await pending).toBeUndefined();client.dispose();
  });
 });

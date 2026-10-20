@@ -4,7 +4,7 @@ import { BASE_PACK as p, DEFAULT_SETUP } from './data/base';
 import { card, character, faction } from './rules/common';
 import { apply, createGame } from './rules/game';
 import { legalActions } from './rules/legal';
-import { importSession, newSession } from './rules/session';
+import { importSession, MAX_SESSION_SIZE, newSession } from './rules/session';
 import { view } from './rules/view';
 import type { Command, Setup } from './rules/model';
 import { type Difficulty } from './ai/planner';
@@ -23,63 +23,76 @@ import RulesGuide from './campaign/RulesGuide';
 import ClassDeck from './campaign/ClassDeck';
 import WorldDecision from './campaign/WorldDecision';
 import RestEditor from './campaign/RestEditor';
+import SaveManager from './campaign/SaveManager';
 import CampaignSetup from './campaign/CampaignSetup';
 import QuestActivity from './campaign/QuestReveal';
 import CharacterSheet, { CardRules, startingHero } from './campaign/CharacterSheet';
 import { AUTO_CONTINUE_MS, bookkeepingStep, combatCandidates, COMBAT_STEP_MS, DICE_SETTLE_MS, rollSignature, useCombatPresentation } from './campaign/combat-flow';
 import { challengeProfile, distinctChallenges, ThreatLevel } from './campaign/feedback';
+import { BOTS_KEY as BOTS, loadBots, loadCampaign, PREVIOUS_SAVE_KEY, readSave, RECOVERY_SAVE_KEY, recoverySave, SAVE_KEY as SAVE } from './campaign/saves';
 const CampaignCombat=lazy(()=>import('./campaign/Combat'));
 const DesignGallery=lazy(()=>import('./campaign/DesignGallery'));
-const SAVE='lordaeron-base-save-v7',LEGACY_SAVE='lordaeron-base-save-v6',BOTS='lordaeron-base-bots-v3',AUTO_CONTINUE='lordaeron-base-auto-continue';
+const LEGACY_SAVE='lordaeron-base-save-v6',AUTO_CONTINUE='lordaeron-base-auto-continue';
 function legacy(){try{return localStorage.getItem(LEGACY_SAVE)??localStorage.getItem('lordaeron-base-save-v4')??localStorage.getItem('lordaeron-base-save-v3');}catch{return null;}}
-function previousCampaign(){try{return localStorage.getItem(`${SAVE}-before-new`);}catch{return null;}}
 function downloadSession(raw:string,name:string){const url=URL.createObjectURL(new Blob([raw],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);}
 type Panel=TablePanel|'new'|'settings'|null;
-function load():ReturnType<typeof importSession>&{needsSetup?:boolean}{try{const raw=localStorage.getItem(SAVE);if(raw){try{return importSession(p,raw);}catch{localStorage.setItem(`${SAVE}-recovery-${Date.now()}`,raw);}}}catch{/* File export also works without browser storage. */}return{state:createGame(p,DEFAULT_SETUP),session:newSession(p,DEFAULT_SETUP),needsSetup:true};}
 export default function Campaign(){
- const[legacySave]=useState(legacy),[previousSave,setPreviousSave]=useState(previousCampaign);
- const[game,setGame]=useState(load),[page,setPage]=useState('board'),[panel,setPanel]=useState<Panel>(()=>game.needsSetup?'new':null),[heroId,setHeroId]=useState(DEFAULT_SETUP.roster[0]),[selected,setSelected]=useState('brill'),[toast,setToast]=useState(()=>{try{return legacySave&&!localStorage.getItem(SAVE)?"Equipment and combat rules have been updated. Your previous game is preserved; download a copy in Settings.":'';}catch{return '';}}),[detailCard,setDetailCard]=useState(p.cards[0].id);
- const[bots,setBots]=useState<string[]>(()=>{try{const value=JSON.parse(localStorage.getItem(BOTS)??'null');return Array.isArray(value)?value:DEFAULT_SETUP.roster.slice(1);}catch{return DEFAULT_SETUP.roster.slice(1);}}),[auto,setAuto]=useState(false),[difficulty,setDifficulty]=useState<Difficulty>('balanced'),[botReason,setBotReason]=useState('');
+ const[legacySave]=useState(legacy),[previousSave,setPreviousSave]=useState(()=>readSave(PREVIOUS_SAVE_KEY));
+ const[game,setGame]=useState(loadCampaign),[page,setPage]=useState('board'),[panel,setPanel]=useState<Panel>(()=>game.needsSetup?'new':null),[heroId,setHeroId]=useState(DEFAULT_SETUP.roster[0]),[selected,setSelected]=useState('brill'),[toast,setToast]=useState(()=>{try{return legacySave&&!localStorage.getItem(SAVE)?"Equipment and combat rules have been updated. Your previous game is preserved; download a copy in Settings.":'';}catch{return '';}}),[detailCard,setDetailCard]=useState(p.cards[0].id);
+ const[recoveredSave]=useState(()=>game.unreadableSave??recoverySave()),[saveUnavailable,setSaveUnavailable]=useState(!!game.storageUnavailable),[importBusy,setImportBusy]=useState(false);
+ const[bots,setBots]=useState<string[]>(()=>loadBots(game.session.setup.roster)),[auto,setAuto]=useState(false),[difficulty,setDifficulty]=useState<Difficulty>('balanced'),[botReason,setBotReason]=useState('');
  const[training,setTraining]=useState<string[]>([]),[exportJSON,setExportJSON]=useState(''),[codexHero,setCodexHero]=useState(DEFAULT_SETUP.roster[0]),[mapFocus,setMapFocus]=useState(false),[detailOpen,setDetailOpen]=useState(false);
  const[combatOpen,setCombatOpen]=useState(false),[combatResolve,setCombatResolve]=useState(true),[settledRoll,setSettledRoll]=useState('');
  const[autoContinue,setAutoContinue]=useState(()=>{try{return localStorage.getItem(AUTO_CONTINUE)!=='false';}catch{return true;}});
  useEffect(()=>{try{localStorage.setItem(AUTO_CONTINUE,String(autoContinue));}catch{/* The preference only lasts this session. */}},[autoContinue]);
  const[questSession,setQuestSession]=useState(0),[revealSetup,setRevealSetup]=useState(false),[questOpen,setQuestOpen]=useState(false),[workspaceOpen,setWorkspaceOpen]=useState(false);
- const file=useRef<HTMLInputElement>(null),current=useRef(game);current.current=game;
+ const file=useRef<HTMLInputElement>(null),importRequest=useRef(0),current=useRef(game);current.current=game;
  const currentBots=useRef(bots);currentBots.current=bots;
- const planner=useRef<PlannerClient|null>(null);
- useEffect(()=>()=>{planner.current?.dispose();planner.current=null;},[bots,difficulty]);
+ const planner=useRef<PlannerClient|null>(null),botRequest=useRef<symbol|null>(null);
+ useEffect(()=>()=>{planner.current?.dispose();planner.current=null;botRequest.current=null;},[bots,difficulty,panel,detailOpen,workspaceOpen,questOpen,mapFocus,page,importBusy,auto,combatResolve]);
+ useEffect(()=>{if(botRequest.current){planner.current?.dispose();planner.current=null;botRequest.current=null;}},[game.state]);
  const controlled=game.state.heroes.filter(h=>!bots.includes(h.id)).map(h=>h.id);
  const state=useMemo(()=>view(game.state,controlled),[game.state,bots]),allLegal=useMemo(()=>legalActions(p,game.state),[game.state]);
  const presentation=useCombatPresentation(state);
  const legal=allLegal.filter(c=>decisionOwners(p,state,c).some(id=>controlled.includes(id)));
  const h=state.heroes.find(h=>h.id===heroId)??state.heroes[0];
- const automationPaused=!!panel||detailOpen||workspaceOpen||questOpen||mapFocus||page!=='board';
+ const automationPaused=importBusy||!!panel||detailOpen||workspaceOpen||questOpen||mapFocus||page!=='board';
  const can=(type:Command['type'])=>legal.some(c=>c.type===type&&(!('hero'in c)||c.hero===h.id));
- const nextPhase=legal.find(c=>c.type==='endActions'||c.type==='endManagement');
+ const nextPhase=game.needsSetup?undefined:legal.find(c=>c.type==='endActions'||c.type==='endManagement');
  const availableBotMoves=state.phase==='combat'?combatCandidates(p,state,allLegal,bots,{resolve:true,campaignAuto:auto,difficulty}):allLegal.filter(c=>botOwns(p,game.state,c,bots));
  const botReady=availableBotMoves.length>0;
  const afterHumanResponse=state.phase==='combat'?combatCandidates(p,state,allLegal,bots,{resolve:true,campaignAuto:auto,difficulty,humanResponsePassed:true}):[];
  const botResponsePending=!availableBotMoves.length&&afterHumanResponse.length>0;
- useEffect(()=>{if(game.needsSetup)return;try{localStorage.setItem(SAVE,JSON.stringify(game.session));localStorage.setItem(BOTS,JSON.stringify(bots));}catch{setToast("Autosave is unavailable. Export a copy of your game in Settings.");}},[game,bots]);
+ useEffect(()=>{
+  try{
+   // Preserve backups before replacing the autosave, including when storage is full.
+   if(recoveredSave)localStorage.setItem(RECOVERY_SAVE_KEY,recoveredSave);
+   if(previousSave)localStorage.setItem(PREVIOUS_SAVE_KEY,previousSave);
+   if(game.needsSetup)return;
+   localStorage.setItem(SAVE,JSON.stringify(game.session));localStorage.setItem(BOTS,JSON.stringify(bots));setSaveUnavailable(false);
+  }catch{setSaveUnavailable(true);}
+ },[game,bots,recoveredSave,previousSave]);
  useEffect(()=>{if(!toast)return;const t=setTimeout(()=>setToast(''),8000);return()=>clearTimeout(t);},[toast]);
  useEffect(()=>{const next=state.heroes.find(h=>faction(p,h.id)===state.faction&&controlled.includes(h.id))??state.heroes.find(h=>faction(p,h.id)===state.faction);if(next){setHeroId(next.id);setSelected(next.location);}},[state.faction]);
  useEffect(()=>{window.scrollTo(0,0);},[page]);
- const send=(c:Command)=>{try{const before=current.current;const next={state:apply(p,before.state,c),session:{...before.session,commands:[...before.session.commands,c]}};current.current=next;setGame(next);return true;}catch(e){setToast((e as Error).message);return false;}};
+ const send=(c:Command)=>{if(current.current.needsSetup)return false;try{const before=current.current;const next={state:apply(p,before.state,c),session:{...before.session,commands:[...before.session.commands,c]}};current.current=next;setGame(next);return true;}catch(e){setToast((e as Error).message);return false;}};
  // A rendered combat control must never act on a newer combat state.
  const sendCombat=(c:Command)=>{const human=decisionOwners(p,state,c).some(id=>!currentBots.current.includes(id));const acknowledge=state.battle?.stage==='over'&&c.type==='closeBattle';if(!diceRolling&&!presentation.busy&&current.current.state===game.state&&(human||acknowledge))send(c);};
  const planMove=async(candidates:Command[],valid=()=>true,humanResponsePassed=false)=>{
+  if(botRequest.current||current.current.needsSetup||importBusy)return;
   const source=current.current.state;
   const seats=currentBots.current;
   if(!candidates.length){setToast("A human player acts next.");return;}
+  const request=Symbol();botRequest.current=request;
   try{
    planner.current??=new PlannerClient();
    const decision=await planner.current.plan(view(source,bots),candidates,difficulty);
-   if(decision&&valid()&&current.current.state===source&&currentBots.current===seats&&botOwns(p,source,decision.command,currentBots.current)){
+   if(decision&&botRequest.current===request&&valid()&&current.current.state===source&&currentBots.current===seats&&botOwns(p,source,decision.command,currentBots.current)){
     const stillBotWindow=source.phase!=='combat'||combatCandidates(p,view(source),legalActions(p,source),currentBots.current,{resolve:true,campaignAuto:auto,difficulty,humanResponsePassed}).length>0;
-    if(stillBotWindow){setBotReason(decision.reason);send(decision.command);}
+    if(stillBotWindow){botRequest.current=null;setBotReason(decision.reason);send(decision.command);}
    }
-  }catch(e){if(valid()&&current.current.state===source)setToast((e as Error).message);}
+  }catch(e){if(botRequest.current===request&&valid()&&current.current.state===source){setAuto(false);setCombatResolve(false);setToast((e as Error).message);}}
+  finally{if(botRequest.current===request)botRequest.current=null;}
  };
  const botStep=()=>{if(state.phase==='combat'&&(diceRolling||presentation.busy))return;void planMove(availableBotMoves);};
  const passHumanResponse=()=>{if(!botResponsePending||diceRolling||presentation.busy)return;void planMove(afterHumanResponse,()=>true,true);};
@@ -96,18 +109,35 @@ export default function Campaign(){
  const open=(next:Panel)=>{if(next==='train')setTraining([]);setDetailOpen(false);setPanel(next);};
  const inspect=(id:string)=>{setDetailCard(id);setDetailOpen(true);};
  const closeAfter=(c:Command)=>{if(send(c)){setPanel(null);if(c.type==='manage')setToast(`${character(p,c.hero).name.split(' ')[0]}’s equipment is ready. Loadout saved.`);if(c.type==='train')setToast('Powers learned. Equip them during equipment management.');}};
- const reset=(setup:Setup,human:string,newBots:boolean)=>{try{const state=createGame(p,setup);if(!game.needsSetup){const backup=JSON.stringify(game.session);setPreviousSave(backup);try{localStorage.setItem(`${SAVE}-before-new`,backup);}catch{/* The in-memory backup remains downloadable. */}}const next={state,session:newSession(p,setup)};current.current=next;setGame(next);const humanId=setup.roster.includes(human)?human:setup.roster[0];setBots(newBots?setup.roster.filter(id=>id!==humanId):[]);setHeroId(humanId);setSelected(state.heroes.find(h=>h.id===humanId)!.location);setAuto(false);setMapFocus(false);setBotReason('');setQuestSession(n=>n+1);setRevealSetup(false);setQuestOpen(false);setPanel(null);setPage('board');}catch(e){setToast((e as Error).message);}};
+ const replaceCampaign=(next:ReturnType<typeof importSession>,human:string,nextBots:string[])=>{
+  if(!current.current.needsSetup)setPreviousSave(JSON.stringify(current.current.session));
+  planner.current?.dispose();planner.current=null;botRequest.current=null;
+  current.current=next;setGame(next);setBots(nextBots);setHeroId(human);setSelected(next.state.heroes.find(hero=>hero.id===human)!.location);
+  setAuto(false);setMapFocus(false);setBotReason('');setTraining([]);setExportJSON('');setDetailOpen(false);setWorkspaceOpen(false);
+  setCombatOpen(next.state.phase==='combat');setSettledRoll('');setQuestSession(n=>n+1);setRevealSetup(false);setQuestOpen(false);setPanel(null);setPage('board');
+ };
+ const reset=(setup:Setup,human:string,newBots:boolean)=>{try{const next={state:createGame(p,setup),session:newSession(p,setup)},humanId=setup.roster.includes(human)?human:setup.roster[0];importRequest.current++;setImportBusy(false);replaceCampaign(next,humanId,newBots?setup.roster.filter(id=>id!==humanId):[]);}catch(e){setToast((e as Error).message);}};
  useEffect(()=>{const handler=(e:KeyboardEvent)=>{if(e.ctrlKey||e.metaKey||e.altKey||(e.target as HTMLElement).closest('input,select,textarea,dialog,[contenteditable=true]')||panel||game.needsSetup||document.querySelector('dialog[open]'))return;const action=(['travel','rest','train','town','challenge'] as const)[Number(e.key)-1];if(action&&page==='board'&&can(action)){e.preventDefault();if(action==='travel')setMapFocus(true);else open(action);}if(e.key.toLowerCase()==='f'&&page==='board')setMapFocus(v=>!v);if(e.key==='Escape'&&mapFocus)setMapFocus(false);};window.addEventListener('keydown',handler);return()=>window.removeEventListener('keydown',handler);});
- const exportSave=()=>{const raw=JSON.stringify(game.session,null,2);setExportJSON(raw);downloadSession(raw,`lordaeron-${game.state.turn}.json`);};
- const importFile=async(f?:File)=>{if(!f)return;try{const next=importSession(p,await f.text());current.current=next;setGame(next);setBots([]);setAuto(false);setQuestSession(n=>n+1);setRevealSetup(false);setQuestOpen(false);setHeroId(next.state.heroes[0].id);setSelected(next.state.heroes[0].location);setPanel(null);setToast("Game verified by replaying every move.");}catch(e){setToast((e as Error).message);}if(file.current)file.current.value='';};
+ const exportSave=()=>{const raw=JSON.stringify(game.session,null,2);setExportJSON(raw);try{downloadSession(raw,`lordaeron-${game.state.turn}.json`);}catch{setPanel('settings');setToast('Copy the game backup below and save it as a JSON file.');}};
+ const importFile=async(f?:File)=>{
+  if(!f)return;const request=++importRequest.current,source=current.current;setImportBusy(true);setAuto(false);
+  try{
+   if(f.size>MAX_SESSION_SIZE)throw new Error('The game file is too large. Choose a file smaller than 4 MB.');
+   const text=await f.text();if(request!==importRequest.current)return;
+   if(current.current!==source)throw new Error('Your campaign changed while the file was opening. Import it again to continue.');
+   const next=importSession(p,text),human=next.state.heroes.find(hero=>faction(p,hero.id)===next.state.faction)??next.state.heroes[0];
+   replaceCampaign(next,human.id,[]);setToast('Game verified by replaying every move. All characters are under your control; assign AI in Settings.');
+  }catch(e){if(request===importRequest.current)setToast((e as Error).message);}
+  finally{if(request===importRequest.current){setImportBusy(false);if(file.current)file.current.value='';}}
+ };
  const title=panel==='new'?"New campaign":panel==='settings'?"Your game":panel==='rest'?"Rest":panel==='train'?"Train":panel==='town'?"Town market":panel==='challenge'?"Choose a challenge":panel==='manage'?"Character management":panel==='trade'?"Trade with an ally":card(p,detailCard).name;
  const decision=(state.phase==='reward'||!!state.auction||!!state.eventFlow?.steps.length||state.heroes.some(h=>h.talentChoices.length)||state.respawns.length>0)&&state.phase!=='combat';
  useEffect(()=>{if(page!=='board'||panel||detailOpen||decision||state.phase==='combat')setMapFocus(false);},[page,panel,detailOpen,decision,state.phase]);
  return <div className={`campaign-app campaign-page-${page} ${page==='board'?'desktop-tabletop':''}`}>
- <header className="topbar"><button className="wordmark" onClick={()=>setPage('board')}><span className="brand-crest"><GameIcon name="melee" size={35}/></span><span><strong>WORLD <small>of</small> WARCRAFT</strong><em>THE BOARD GAME <i/> 2005 + FAQ</em></span></button><nav className="topnav" aria-label="Main navigation">{[['board',"Campaign"],['cards',"Card library"],['heroes',"Heroes"],['journal',"Chronicle"],['rules',"Rules"]].map(([id,label])=><button key={id} className={page===id?'active':''} aria-current={page===id?'page':undefined} onClick={()=>setPage(id)}>{label}</button>)}</nav><div className="header-right"><span className="session-badge"><i/>LOCAL GAME</span><button className="icon-button" aria-label="New game" title="Set up a new campaign" onClick={()=>open('new')}><Icon name="plus"/></button><button className="icon-button" aria-label="Settings" onClick={()=>open('settings')}><Icon name="settings"/></button></div></header>
+ <header className="topbar"><button className="wordmark" onClick={()=>setPage('board')}><span className="brand-crest"><GameIcon name="melee" size={35}/></span><span><strong>WORLD <small>of</small> WARCRAFT</strong><em>THE BOARD GAME <i/> 2005 + FAQ</em></span></button><nav className="topnav" aria-label="Main navigation">{[['board',"Campaign"],['cards',"Card library"],['heroes',"Heroes"],['journal',"Chronicle"],['rules',"Rules"]].map(([id,label])=><button key={id} className={page===id?'active':''} aria-current={page===id?'page':undefined} onClick={()=>setPage(id)}>{label}</button>)}</nav><div className="header-right"><button className={`session-badge ${saveUnavailable?'save-unavailable':''}`} onClick={()=>open('settings')} title={saveUnavailable?'Autosave is unavailable. Export your game before closing this tab.':'Local game · Manage saved games'}><i/>{saveUnavailable?'SAVE UNAVAILABLE':'LOCAL GAME'}</button><button className="icon-button" aria-label="New game" title="Set up a new campaign" onClick={()=>open('new')}><Icon name="plus"/></button><button className="icon-button" aria-label="Settings" onClick={()=>open('settings')}><Icon name="settings"/></button></div></header>
  <main className="campaign-main"><div className="campaign-title"><div><div className="eyebrow"><span className="chapter-dot"/>LORDAERON <span className="slash">/</span> A WAR OF TWO FACTIONS</div><h1>Fate of the kingdom<span>{phaseLabel[state.phase]}</span></h1></div><div className="campaign-turn"><FactionCrest faction={state.faction}/><span className={state.faction}>{factionLabel(state.faction)}</span><b>{state.turn}<small> / 30{state.lap?` · lap ${state.lap}`:''}</small></b><button className="quiet-button" disabled={!nextPhase} onClick={()=>nextPhase&&send(nextPhase)}>{state.phase==='actions'?"Management":"End turn"}<Icon name="arrow"/></button></div></div>
  {page==='board'&&game.needsSetup&&<section className="campaign-welcome"><span className="sheet-eyebrow">A WAR OF TWO FACTIONS</span><h2>Your adventure begins here.</h2><p>Prepare the table, choose your characters and discover how your first turn works.</p><button className="gold-button" onClick={()=>open('new')}>Set up a campaign <Icon name="arrow"/></button></section>}
- {page==='board'&&!game.needsSetup&&<Tabletop state={state} h={h} legal={legal} controlled={controlled} bots={bots} takeControl={id=>{setBots(previous=>previous.filter(bot=>bot!==id));chooseHero(id);}} auto={auto} botReady={botReady} botReason={botReason} selectHero={chooseHero} selected={selected} selectRegion={setSelected} inspect={inspect} open={open} send={send} botStep={botStep} toggleBots={()=>setAuto(v=>!v)} focused={mapFocus} toggleFocus={()=>setMapFocus(v=>!v)} notify={setToast} combatOpen={combatOpen} toggleCombat={()=>setCombatOpen(v=>!v)} onWorkspaceChange={setWorkspaceOpen} questActivity={<QuestActivity key={questSession} state={state} autoRevealSetup={revealSetup} suspended={!!panel||detailOpen||workspaceOpen||decision||state.phase==='combat'} onOpenChange={visible=>{setQuestOpen(visible);if(visible)setRevealSetup(false);}} onLocate={region=>{setSelected(region);setMapFocus(true);}}/>}/>}
+ {page==='board'&&!game.needsSetup&&<Tabletop key={questSession} state={state} h={h} legal={legal} controlled={controlled} bots={bots} takeControl={id=>{setBots(previous=>previous.filter(bot=>bot!==id));chooseHero(id);}} auto={auto} botReady={botReady} botReason={botReason} selectHero={chooseHero} selected={selected} selectRegion={setSelected} inspect={inspect} open={open} send={send} botStep={botStep} toggleBots={()=>setAuto(v=>!v)} focused={mapFocus} toggleFocus={()=>setMapFocus(v=>!v)} notify={setToast} combatOpen={combatOpen} toggleCombat={()=>setCombatOpen(v=>!v)} onWorkspaceChange={setWorkspaceOpen} questActivity={<QuestActivity key={questSession} state={state} autoRevealSetup={revealSetup} suspended={!!panel||detailOpen||workspaceOpen||decision||state.phase==='combat'} onOpenChange={visible=>{setQuestOpen(visible);if(visible)setRevealSetup(false);}} onLocate={region=>{setSelected(region);setMapFocus(true);}}/>}/>}
  {page==='cards'&&<BaseCatalog inspect={inspect}/>}
  {page==='heroes'&&<section className="character-codex"><div className="character-roster">{p.characters.map(c=><button key={c.id} aria-pressed={codexHero===c.id} onClick={()=>setCodexHero(c.id)}><HeroPortrait id={c.id} small/><span><strong>{c.name.split(' ')[0]}</strong><small>{c.classId} · {factionLabel(c.faction)}</small></span></button>)}</div><CharacterSheet key={codexHero} hero={state.heroes.find(h=>h.id===codexHero)??startingHero(codexHero)} inspect={inspect} preview/></section>}
  {page==='design'&&<Suspense fallback={<p>Loading…</p>}><DesignGallery/></Suspense>}
@@ -127,8 +157,8 @@ export default function Campaign(){
  {panel==='manage'&&<EquipmentEditor key={h.id} hero={h} busy={!can('manage')} send={closeAfter}/>}
  {panel==='trade'&&<TradeEditor hero={h} heroes={state.heroes} busy={false} send={closeAfter}/>}
  {panel==='challenge'&&<div className="dialog-content"><p>Each invited ally spends one action. Blue creatures take priority.</p><div className="challenge-list">{distinctChallenges(state,legal.filter((c):c is Extract<Command,{type:'challenge'}>=>c.type==='challenge'&&c.hero===h.id)).map((c,i)=>{const e=state.enemies.find(e=>e.id===c.target),creature=p.creatures.find(a=>a.id===e?.creature);const profile=challengeProfile(state,c);const name=creature?.name??p.events.find(e=>e.id===c.target)?.name??p.overlords.find(o=>o.id===c.target)?.name??(c.target==='pvp'?"Enemy party":"Kazzak clue");return <button key={i} className="merchant-row" onClick={()=>closeAfter(c)}>{creature?<CreatureGlyph type={creature.rule}/>:<Icon name="swords" size={30}/>}<span><strong>{profile&&profile.count>1?`${profile.count} × `:""}{name}</strong>{profile&&<span className="challenge-stats"><ThreatLevel value={profile.threat} compact/><span><Icon name="swords" size={13}/>{profile.attack} attack</span><span><Icon name="heart" size={13}/>{profile.health} health</span></span>}<small>{c.region?`${regionName(c.region)} · Intercept · `:''}{c.allies.length?c.allies.map(id=>character(p,id).name.split(' ')[0]).join(' + '):"Solo challenge"}</small></span><Icon name="arrow"/></button>;})}</div></div>}
- {panel==='settings'&&<div className="dialog-content"><div className="settings-buttons"><button className="quiet-button" onClick={exportSave}><Icon name="download"/>Export game</button><button className="quiet-button" onClick={()=>file.current?.click()}><Icon name="upload"/>Import game</button></div>{previousSave&&<button className="quiet-button" onClick={()=>downloadSession(previousSave,'lordaeron-previous-campaign.json')}>Download previous campaign</button>}{legacySave&&<p className="legacy-save-note">Your previous game uses an earlier rules version. It is preserved in a separate save. <button className="quiet-button" onClick={()=>downloadSession(legacySave,'lordaeron-previous-rules-backup.json')}><Icon name="download"/>Download previous game</button></p>}{exportJSON&&<textarea className="save-text" value={exportJSON} readOnly aria-label="Game backup" onFocus={e=>e.target.select()}/>}<label className="setting-row">Bot play style<select value={difficulty} onChange={e=>setDifficulty(e.target.value as Difficulty)}><option value="balanced">Balanced</option><option value="cautious">Cautious</option><option value="aggressive">Aggressive</option></select></label><div className="bot-seats">{state.heroes.map(hero=><label key={hero.id}><HeroPortrait id={hero.id} small/><span>{character(p,hero.id).name}</span><input type="checkbox" checked={bots.includes(hero.id)} onChange={e=>setBots(v=>e.target.checked?[...v,hero.id]:v.filter(id=>id!==hero.id))}/>AI</label>)}</div><button className="gold-button full-width" onClick={()=>open('new')}>New campaign</button><p className="muted">Online rooms are not yet available. Your local game saves automatically in this browser.</p></div>}
- {panel==='new'&&<CampaignSetup onStart={reset} onCancel={()=>setPanel(null)} existing={!game.needsSetup}/>}
+ {panel==='settings'&&<div className="dialog-content"><SaveManager needsSetup={!!game.needsSetup} unavailable={saveUnavailable} importing={importBusy} previous={previousSave} recovered={recoveredSave} legacy={legacySave} exported={exportJSON} onExport={exportSave} onImport={()=>file.current?.click()} onDownload={(raw,name)=>{setExportJSON(raw);try{downloadSession(raw,name);}catch{setToast('Copy the game backup below and save it as a JSON file.');}}} onRestore={()=>{if(!previousSave)return;try{const next=importSession(p,previousSave),human=next.state.heroes.find(hero=>faction(p,hero.id)===next.state.faction)??next.state.heroes[0];importRequest.current++;setImportBusy(false);replaceCampaign(next,human.id,[]);setToast('Previous campaign restored. All characters are under your control; assign AI in Settings.');}catch(e){setToast((e as Error).message);}}}/><label className="setting-row">Bot play style<select value={difficulty} onChange={e=>setDifficulty(e.target.value as Difficulty)}><option value="balanced">Balanced</option><option value="cautious">Cautious</option><option value="aggressive">Aggressive</option></select></label><div className="bot-seats">{state.heroes.map(hero=><label key={hero.id}><HeroPortrait id={hero.id} small/><span>{character(p,hero.id).name}</span><input type="checkbox" checked={bots.includes(hero.id)} onChange={e=>setBots(v=>e.target.checked?[...v,hero.id]:v.filter(id=>id!==hero.id))}/>AI</label>)}</div><button className="gold-button full-width" onClick={()=>open('new')}>New campaign</button><p className="muted">Online rooms are not yet available. Export a backup to continue on another device.</p></div>}
+ {panel==='new'&&<>{game.unreadableSave&&<p className="setup-recovery-notice" role="alert">Your saved game could not be opened. Its original file is preserved. <button className="quiet-button" onClick={()=>open('settings')}>Open save recovery</button></p>}<CampaignSetup onStart={reset} onCancel={()=>setPanel(null)} existing={!game.needsSetup}/></>}
  </Modal>}
  {detailOpen&&<Modal title={card(p,detailCard).name} onClose={()=>setDetailOpen(false)}><div className="card-detail"><GameCard card={card(p,detailCard)}/><div>{panel==='train'&&<button className="quiet-button" onClick={()=>setDetailOpen(false)}>← Back to training</button>}<h3>{card(p,detailCard).name}</h3><p>Level {card(p,detailCard).level} · {card(p,detailCard).trait||card(p,detailCard).type} · {card(p,detailCard).energy} energy</p><CardRules value={card(p,detailCard)}/><a className="source-link" href={card(p,detailCard).source.url} target="_blank" rel="noreferrer">Original card ↗</a></div></div></Modal>}
  </div>;

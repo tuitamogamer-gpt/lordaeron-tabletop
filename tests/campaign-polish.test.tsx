@@ -74,4 +74,62 @@ describe('Campaign panel polish', () => {
   await act(async () => { vi.advanceTimersByTime(600); });
   expect(planner.plan).toHaveBeenCalledOnce();
  });
+
+ it('accepts only one manual AI request at a time and discards it when leaving its panel', async () => {
+  let finish!: () => void;
+  planner.plan.mockImplementation((_state, legal) => new Promise(resolve => { finish = () => resolve({ command: legal[0], reason: 'Test move' }); }));
+  render(<Campaign />);
+  fireEvent.click(screen.getByRole('button', { name: /^Party controls/ }));
+  const step = screen.getByRole('button', { name: 'One bot move' });
+  fireEvent.click(step); fireEvent.click(step); fireEvent.click(step);
+  expect(planner.plan).toHaveBeenCalledOnce();
+  fireEvent.click(screen.getByRole('button', { name: 'Close' })); settings();
+  await act(async () => { finish(); });
+  expect(JSON.parse(localStorage.getItem('lordaeron-base-save-v7')!).commands).toEqual([]);
+ });
+
+ it('stops automatic retries after an AI error and leaves a readable message', async () => {
+  planner.plan.mockRejectedValue(new Error('AI planning timed out. Try Step bot again.'));
+  render(<Campaign />); vi.useFakeTimers();
+  fireEvent.click(screen.getByRole('button', { name: 'Run AI' }));
+  await act(async () => { await vi.advanceTimersByTimeAsync(600); });
+  expect(screen.getByRole('button', { name: 'Run AI' })).toBeTruthy();
+  expect(screen.getByText(/AI planning timed out/)).toBeTruthy();
+  await act(async () => { await vi.advanceTimersByTimeAsync(3000); });
+  expect(planner.plan).toHaveBeenCalledOnce();
+ });
+
+ it('resumes after pausing an in-flight AI plan without waiting for the cancelled result', async () => {
+  const finish: (() => void)[] = [];
+  planner.plan.mockImplementation((_state, legal) => new Promise(resolve => { finish.push(() => resolve({ command: legal[0], reason: 'Test move' })); }));
+  render(<Campaign />); vi.useFakeTimers();
+  fireEvent.click(screen.getByRole('button', { name: 'Run AI' }));
+  await act(async () => { vi.advanceTimersByTime(600); });
+  fireEvent.click(screen.getByRole('button', { name: 'Pause AI' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Run AI' }));
+  await act(async () => { vi.advanceTimersByTime(600); });
+  expect(planner.plan).toHaveBeenCalledTimes(2);
+  await act(async () => { finish[0](); });
+  expect(JSON.parse(localStorage.getItem('lordaeron-base-save-v7')!).commands).toEqual([]);
+  await act(async () => { finish[1](); });
+  expect(JSON.parse(localStorage.getItem('lordaeron-base-save-v7')!).commands).toHaveLength(1);
+ });
+
+ it('replans after a human takes an action while an AI plan is pending', async () => {
+  const finish: (() => void)[] = [];
+  planner.plan.mockImplementation((_state, legal) => new Promise(resolve => { finish.push(() => resolve({ command: legal[0], reason: 'Test move' })); }));
+  render(<Campaign />); vi.useFakeTimers();
+  fireEvent.click(screen.getByRole('button', { name: 'Run AI' }));
+  await act(async () => { vi.advanceTimersByTime(600); });
+  fireEvent.click(screen.getByRole('button', { name: /^Rest.*Recover health/ }));
+  fireEvent.click(screen.getByRole('button', { name: 'Rest · 1 action' }));
+  await act(async () => { vi.advanceTimersByTime(600); });
+  expect(planner.plan).toHaveBeenCalledTimes(2);
+  await act(async () => { finish[0](); });
+  expect(JSON.parse(localStorage.getItem('lordaeron-base-save-v7')!).commands).toEqual([{ type: 'rest', hero: DEFAULT_SETUP.roster[0], health: 0 }]);
+  await act(async () => { finish[1](); });
+  expect(JSON.parse(localStorage.getItem('lordaeron-base-save-v7')!).commands).toHaveLength(2);
+ });
 });
+
+function settings() { fireEvent.click(screen.getByRole('button', { name: 'Settings' })); }

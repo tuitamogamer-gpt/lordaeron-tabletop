@@ -1,0 +1,15 @@
+.campaign-app .session-badge.save-unavailable{display:flex;color:#f4cc86;cursor:pointer}
+.campaign-app .session-badge.save-unavailable i{background:#e5a548;box-shadow:0 0 8px #e5a54855}
+.save-manager{display:grid;gap:12px}
+.save-manager .settings-buttons{margin:0}
+.save-status{display:flex;align-items:center;gap:8px;margin:0;color:#bbc9bc;font-size:12px;line-height:1.6}
+.save-status svg{flex-shrink:0}
+.save-status-warning,.save-recovery-note{color:#f4cc86}
+.save-backup-actions,.save-recovery-note{padding:12px;border:1px solid #bca46b33;border-radius:8px;background:#080d1280}
+.save-backup-actions p,.save-recovery-note p{margin:0 0 10px;font-size:12px;line-height:1.6}
+.save-backup-actions button{margin:0 6px 6px 0}
+.save-copy-label{display:grid;gap:6px;font-size:12px}
+.save-copy-label small{color:#a8a8a8}
+.save-copy-label .save-text{width:100%;max-height:140px}
+.setup-recovery-notice{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;margin:0;padding:10px 20px;background:#392919;color:#f4cc86;font-size:12px}
+.setup-recovery-notice button{flex-shrink:0}

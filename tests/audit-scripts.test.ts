@@ -1,10 +1,27 @@
 import { describe, expect, it } from 'vitest';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { BASE_PACK, DEFAULT_SETUP } from '../src/data/base';
 import { createGame } from '../src/rules/game';
 import { assertState } from '../scripts/assert-state';
 import { simulationOptions } from '../scripts/simulation-options';
+import Map from '../src/campaign/Map';
+import { legalActions } from '../src/rules/legal';
+import { view } from '../src/rules/view';
 
 describe('audit script inputs and invariant checks', () => {
+ it('renders the focused map for image export without requiring a browser document', () => {
+  const state = createGame(BASE_PACK, DEFAULT_SETUP);
+  const html = renderToStaticMarkup(createElement(Map, {
+   state: view(state), selected: 'stillwater', heroId: state.heroes[0].id,
+   legal: legalActions(BASE_PACK, state), focused: true,
+   onToggleFocus() {}, onSelect() {}, onMove() {},
+  }));
+  expect(html).toContain('<svg viewBox=');
+  expect(html).toContain('Travel here');
+  expect(html).toContain('LORDAERON');
+  expect(html).not.toContain('map-fullscreen-dialog');
+ });
  it('parses flags independently of positional arguments and reports the actual roster', () => {
   expect(simulationOptions(['--trace', '71', 'nefarian', 'casters', '--output', 'run.json'])).toMatchObject({ seed: 71, overlord: 'nefarian', roster: 'casters', trace: true, output: 'run.json', maxCommands: 12000 });
   expect(simulationOptions(['2005', 'kelthuzad', '--trace']).roster).toBe('default');

@@ -161,5 +161,5 @@ export default function CampaignMap({ state, selected, heroId, legal, onSelect, 
   {!here.length&&!localMarkers.length&&<p className="region-empty">No creatures or quest objectives in this region.</p>}</aside>}
   </>}
  </section>;
- return focused?createPortal(<dialog ref={fullscreen} className="campaign-app map-fullscreen-dialog" aria-label="Interact with map" aria-modal="true" onCancel={e=>{e.preventDefault();onToggleFocus();}} onKeyDown={e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();onToggleFocus();}}}>{map}</dialog>,document.body):map;
+ return focused&&typeof document!=='undefined'?createPortal(<dialog ref={fullscreen} className="campaign-app map-fullscreen-dialog" aria-label="Interact with map" aria-modal="true" onCancel={e=>{e.preventDefault();onToggleFocus();}} onKeyDown={e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();onToggleFocus();}}}>{map}</dialog>,document.body):map;
 }
