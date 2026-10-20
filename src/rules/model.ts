@@ -151,6 +151,7 @@ export type Command =
  | { type: 'respawn'; hero: string; region: string }
  | { type: 'reward'; hero: string; card: string; discard?: string }
  | { type: 'quest'; tier: Exclude<Tier, 'grey'> }
+ | { type: 'skip-quest' }
  | { type: 'bid'; hero: string; amount: number }
  | { type: 'loot'; hero: string; from: string; card: string; discard?: string }
  | { type: 'closeBattle' };

@@ -63,3 +63,15 @@ export function replacement(p:ContentPack,s:State,tier:'green'|'yellow'|'red'){
  assert(drawQuest(p,s,s.reward.replacementFaction??s.reward.faction,tier),"A quest cannot currently be placed from this deck.");s.reward.replacement=false;
  if(s.reward.resolution){s.reward.resolution.status='complete';s.reward.resolution.receipts.push({kind:'quest',card:s.quests.at(-1),text:`A new ${tier} quest enters play.`});}
 }
+/** Long Overlord campaigns can exhaust all replacement decks. No cards are recycled. */
+export function skipReplacement(s:State){
+ const reward=s.reward;
+ assert(s.phase==='reward'&&reward?.replacement,"No quest to replace.");
+ assert(!reward.offered.length&&!reward.items.length&&!reward.special.length&&!reward.extraItems?.length&&!reward.relic,"Distribute rewards first.");
+ const decks=s.questDecks[reward.replacementFaction??reward.faction];
+ assert((['green','yellow','red'] as const).every(tier=>!decks[tier].length),"A replacement quest deck is still available.");
+ reward.replacement=false;
+ const text='No replacement quests remain for this faction. The campaign continues without drawing a quest.';
+ if(reward.resolution){reward.resolution.status='complete';reward.resolution.receipts.push({kind:'skip',text});}
+ note(s,text);
+}

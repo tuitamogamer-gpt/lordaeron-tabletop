@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-20",
+  "unitTests": {
+    "passed": 1056,
+    "files": 47
+  },
+  "renderedComponents": 621,
+  "productionDependencyVulnerabilities": 0,
+  "completedCampaigns": [
+    {
+      "overlord": "nefarian",
+      "seed": 20261021,
+      "roster": "casters",
+      "commands": 883,
+      "checkedStates": 884,
+      "replayIdentical": true,
+      "phase": "finished",
+      "turn": 22,
+      "winner": "draw"
+    }
+  ],
+  "recoveredCampaigns": [
+    {
+      "overlord": "kelthuzad",
+      "seed": 20261020,
+      "roster": "default",
+      "originalStall": "reward: empty replacement quest decks",
+      "boss": "kelthuzad",
+      "startingCommands": 3417,
+      "additionalCommands": 201,
+      "totalCommands": 3618,
+      "phase": "combat",
+      "turn": 27,
+      "lap": 3,
+      "phases": [
+        "reward",
+        "actions",
+        "combat",
+        "management",
+        "event"
+      ],
+      "replayIdentical": true,
+      "invariants": true,
+      "independentAudit": {
+        "auditMode": "bounded-continuation",
+        "commands": 3618,
+        "checkedStates": 3619,
+        "replayIdentical": true,
+        "phase": "combat",
+        "turn": 27,
+        "completedCampaign": false
+      },
+      "completedCampaign": false
+    },
+    {
+      "overlord": "kazzak",
+      "seed": 20261022,
+      "roster": "casters",
+      "originalStall": "reward: empty replacement quest decks",
+      "boss": "kazzak",
+      "startingCommands": 3371,
+      "additionalCommands": 201,
+      "totalCommands": 3572,
+      "phase": "combat",
+      "turn": 8,
+      "lap": 4,
+      "phases": [
+        "reward",
+        "actions",
+        "combat",
+        "management"
+      ],
+      "replayIdentical": true,
+      "invariants": true,
+      "independentAudit": {
+        "auditMode": "bounded-continuation",
+        "commands": 3572,
+        "checkedStates": 3573,
+        "replayIdentical": true,
+        "phase": "combat",
+        "turn": 8,
+        "completedCampaign": false
+      },
+      "completedCampaign": false
+    }
+  ]
+}

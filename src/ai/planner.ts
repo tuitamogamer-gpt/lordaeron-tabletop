@@ -132,6 +132,7 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
    case 'reward': score=itemGain(h!,command.card,command.discard);reason="Assigning the reward by its improvement to each hero’s complete equipment.";break;
    case 'talent': score = itemValue(p, command.card,h!); reason = "Choosing a talent that supports learned powers and equipment."; break;
    case 'quest': { const level = s.heroes.filter(h => faction(p, h.id) === s.reward?.faction).reduce((n,h) => n + h.level,0) / (s.heroes.length/2); score = 5 - Math.abs((command.tier === 'green' ? 2 : command.tier === 'yellow' ? 3 : 4) - level) * 3; reason = "Choosing quest difficulty for the faction’s level."; break; }
+   case 'skip-quest': score=5;reason='All replacement quest decks are empty; continuing the campaign.';break;
    case 'bid': {
     const value=s.auction?cardValue(p,s.auction.item,h!):0;
     const reserve=h!.level<4?3:1,limit=Math.max(0,Math.min(h!.gold-reserve,Math.floor(value*.8)));

@@ -1,7 +1,7 @@
 import { assert, capacity, card, character, faction, hero, integer, note, other, region, shuffle, unique } from './common.js';
 import { activate, automatic, effects, settleAutomatic, spendEnergy } from './effects.js';
 import { beginBattle, chooseAttacker, continueWounds, creatureRule, defeat, defense, enforceDicePenalties, finishAttack, living, monsterEffect, nextRound, omitDice, placeTokens, poolPenalties, removePenalty, reroll, resolution, wound } from './combat.js';
-import { battleEvents, bid, checkWars, drawEvents, eventChoice, finishEvent, nextNefarianBattle, purify, removeWorld, replacement } from './events.js';
+import { battleEvents, bid, checkWars, drawEvents, eventChoice, finishEvent, nextNefarianBattle, purify, removeWorld, replacement, skipReplacement } from './events.js';
 import { bagSize, equipped, manage, receiveItem, rest, townOperations, train, unequip } from './inventory.js';
 import { canLeaveBlue, independents, respawnRegions, travel } from './movement.js';
 import { drawQuest, finalAttacker, nextItem, rewards } from './rewards.js';
@@ -216,6 +216,7 @@ export function apply(p: ContentPack, state: State, command: Command): State {
    claimReward(p, s, c.hero, c.card, c.discard); finishRewards(p, s); break;
   }
   case 'quest': assert(s.phase === 'reward' && s.reward && !s.reward.offered.length, "Distribute rewards first."); replacement(p, s, c.tier); finishRewards(p, s); break;
+  case 'skip-quest': skipReplacement(s); finishRewards(p,s); break;
   case 'bid': assert(s.phase === 'event', "No auction is active."); bid(p, s, c.hero, c.amount); break;
   default: assert(false, "Unknown command.");
  }

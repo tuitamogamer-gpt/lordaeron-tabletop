@@ -161,6 +161,7 @@ export function legalActions(p: ContentPack, s: State): Command[] {
   if(s.reward.relic)for(const id of s.reward.eligible)list.push({type:'claim-relic',hero:id});
   for (const id of s.reward.eligible) for (const c of s.reward.offered) for (const discard of discards(p, hero(s, id), c)) list.push({ type: 'reward', hero: id, card: c, discard });
   for (const tier of ['green','yellow','red'] as const) list.push({ type: 'quest', tier });
+  list.push({type:'skip-quest'});
  } else if(s.eventFlow?.steps.length)list.push(...eventCommands(p,s));
  else if (s.auction) for (const h of s.heroes) for (let amount = 0; amount <= Math.min(h.gold, 50); amount++) list.push({ type: 'bid', hero: h.id, amount });
  const bonus:Command[]=[];for(const cmd of list){if(cmd.type!=='ability')continue;const h=hero(s,cmd.hero),c=card(p,cmd.card);if(c.type==='instant'&&availableCards(p,h).some(id=>card(p,id).freeInstantOnce))bonus.push({...cmd,args:{...cmd.args,free:true}});if(c.abilities.some(a=>a.effects.some(e=>e.op==='heal-reaction'))&&availableCards(p,h).some(id=>card(p,id).healSplash?.cards.includes(c.id)))for(const id of s.battle?.participants??[])if(faction(p,id)===faction(p,h.id)&&id!==cmd.args?.target)bonus.push({...cmd,args:{...cmd.args,secondaryTarget:id}});}list.push(...bonus);
@@ -189,6 +190,7 @@ export function commandLabel(p: ContentPack, c: Command): string {
   case 'talent': return `${name}: ${card(p, c.card).name}`;
   case 'reward': return `${name}: take ${card(p, c.card).name}`;
   case 'quest': return `New ${c.tier} quest`;
+  case 'skip-quest': return 'Continue without a replacement quest';
   case 'bid': return `${name}: bid ${c.amount} gold`;
   case 'manage': return `${name}: confirm equipment`;
   case 'roll': return "Roll dice"; case 'reroll': return "Reroll selected die"; case 'penalty': return "Remove selected dice";

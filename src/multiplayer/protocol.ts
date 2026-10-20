@@ -33,6 +33,7 @@ const schema = z.discriminatedUnion('type', [
  z.object({type:z.literal('wound'),hero:id,pet:id.optional()}).strict(),z.object({type:z.literal('respawn'),hero:id,region:id}).strict(),
  z.object({type:z.literal('reward'),hero:id,card:id,discard:id.optional()}).strict(),
  z.object({type:z.literal('quest'),tier:z.enum(['green','yellow','red'])}).strict(),
+ z.object({type:z.literal('skip-quest')}).strict(),
  z.object({type:z.literal('bid'),hero:id,amount:n}).strict(),
  z.object({type:z.literal('loot'),hero:id,from:id,card:id,discard:id.optional()}).strict(),
  z.object({type:z.literal('closeBattle')}).strict(),

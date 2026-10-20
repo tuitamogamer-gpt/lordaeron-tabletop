@@ -10,7 +10,7 @@ import { CardThumbnail } from './parts';
 import { eventText, regionName } from './event-text';
 import { QuestDecks } from './QuestLedger';
 import RewardResolution from './RewardResolution';
-const choicesTypes=['talent','reward','quest','event-choice','respawn','claim-relic'];
+const choicesTypes=['talent','reward','quest','skip-quest','event-choice','respawn','claim-relic'];
 function Retrain({hero,send}:{hero:Hero;send:(c:Command)=>void}){
  const [talents,setTalents]=useState([...hero.talents]);
  return <div className="retrain-editor"><h3>Replace talents</h3>{hero.talents.map((id,i)=><label key={id}>{card(p,id).name}<select aria-label={`Replacement for ${card(p,id).name}`} value={talents[i]} onChange={e=>setTalents(v=>v.map((t,j)=>j===i?e.target.value:t))}>{p.cards.filter(c=>c.kind==='talent'&&c.classId===character(p,hero.id).classId&&c.level<=card(p,id).level).map(c=><option key={c.id} value={c.id}>{c.name} · level {c.level}</option>)}</select></label>)}<button className="gold-button" disabled={new Set(talents).size!==talents.length} onClick={()=>send({type:'event-choice',hero:hero.id,choice:{mode:'talents',talents}})}>Confirm talents</button></div>;
