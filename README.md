@@ -4,7 +4,9 @@ Desktop adaptacija osnovne igre iz 2005. i službenog FAQ-a 1.4. React interfejs
 
 [Otvori igru](https://lordaeron-tabletop.vercel.app)
 
-Najnoviji prolaz poboljšava nastavak kampanje: backup prije uvoza, **Restore previous campaign**, preuzimanje oštećenog autosavea i trajna obavijest kada čuvanje nije dostupno. AI pouzdanije otkazuje zastarjele poteze i oporavlja se nakon greške, a izvoz mape ponovo radi. Duge kampanje više ne zapinju nakon iscrpljenih quest špilova: dostupno je **Continue without a replacement quest**. Detalji i provjere: [RELIABILITY-2026-10-20.md](docs/RELIABILITY-2026-10-20.md).
+Najnoviji prolaz uči AI da napada Overlorda kada ima stvarnu šansu. Kampanje protiv Kel’Thuzada koje ranije nisu završavale ni nakon hiljada naredbi sada završavaju pobjedom, a AI gubi znatno manje likova po borbi. Automatika više ne staje kod svakog novog questa, a Crocolisk Steak i Meditation pišu **Recover all health · Recover all energy**. Detalji i provjere: [AI-OVERLORD-2026-10-22.md](docs/AI-OVERLORD-2026-10-22.md).
+
+Prethodni prolaz poboljšava nastavak kampanje: backup prije uvoza, **Restore previous campaign**, preuzimanje oštećenog autosavea i trajna obavijest kada čuvanje nije dostupno. AI pouzdanije otkazuje zastarjele poteze i oporavlja se nakon greške, a izvoz mape ponovo radi. Duge kampanje više ne zapinju nakon iscrpljenih quest špilova: dostupno je **Continue without a replacement quest**. Detalji i provjere: [RELIABILITY-2026-10-20.md](docs/RELIABILITY-2026-10-20.md).
 
 Prethodni prolaz rasporeda provjeren je u Chromiumu na 1280×720, 1366×768 i 1920×1080: borba staje na ekran (kockice, totali i karte bez rezanja), knjigovodstveni koraci borbe idu sami uz prekidač **Auto-continue steps**, lični listovi ostaju unutar naslikanog okvira, a setup, mapa i sto jasnije vode igrača. Detalji i provjere: [SCREEN-FIT-2026-10-05.md](docs/SCREEN-FIT-2026-10-05.md).
 
@@ -70,7 +72,7 @@ Prečice: **1–5** akcije, **F** interakcija s mapom, **Esc** povratak. Unutar 
 
 ## Provjera i granice
 
-Aktuelni prolaz ima **1.056 testova**, build, render 621 komponente, izvoz mape i završenu Nefarian kampanju s nezavisnim replay auditom i provjeren nastavak dvije zaglavljene kampanje: [RELIABILITY-2026-10-20.md](docs/RELIABILITY-2026-10-20.md).
+Aktuelni prolaz ima **1.062 testa**, build, sedam završenih AI kampanja protiv sva tri Overlorda i nezavisni replay audit dvije od njih: [AI-OVERLORD-2026-10-22.md](docs/AI-OVERLORD-2026-10-22.md). Prethodni prolaz dodaje render 621 komponente, izvoz mape i nastavak dvije zaglavljene kampanje: [RELIABILITY-2026-10-20.md](docs/RELIABILITY-2026-10-20.md).
 
 Raniji audit enginea popravlja Vanish bonuse, duplirane figure pri recikliranju questova i ponovno zatvaranje borbe. Tadašnjih 838 testova, build, render i tri AI partije s 4.312 naredbi i identičnim replayom: [ENGINE-SCRIPT-AUDIT.md](docs/ENGINE-SCRIPT-AUDIT.md). Prethodna provjera svih event karata, klasnih moći, talenata i smjene Horda → Alijansa kroz svih 30 poteza: [CARD-EVENT-TURN-AUDIT.md](docs/CARD-EVENT-TURN-AUDIT.md).
 

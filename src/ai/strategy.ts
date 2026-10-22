@@ -4,7 +4,7 @@ import { apply } from '../rules/game.js';
 import { abilityCommands } from '../rules/legal.js';
 import { availableCards, immune } from '../rules/effects.js';
 import { activeEvent } from '../rules/world.js';
-import type { Boxes, ContentPack, Enemy, Faction, Hero, Reward, State } from '../rules/model.js';
+import type { Boxes, ContentPack, DiceFilter, Die, Effect, Enemy, Faction, Hero, Reward, State } from '../rules/model.js';
 import type { GameView } from '../rules/view.js';
 import { abilityScore, chance, dieHazard, projectedBoxes } from './tactics.js';
 import { factionView, publicState } from './public-state.js';
@@ -56,7 +56,7 @@ export function objectives(p: ContentPack, v: GameView, side: Faction): Objectiv
  return result;
 }
 
-function encounterState(p: ContentPack, view: GameView, o: Objective, party: Hero[]): State {
+export function encounterState(p: ContentPack, view: GameView, o: Objective, party: Hero[]): State {
  const s = publicState(view);
  for (const h of party) s.heroes[s.heroes.findIndex(v => v.id === h.id)] = structuredClone(h);
  s.respawns = []; delete s.reward; delete s.pendingPortal; delete s.energySpent;
@@ -66,7 +66,7 @@ function encounterState(p: ContentPack, view: GameView, o: Objective, party: Her
 interface Profile { box: Boxes; hazard: number; energy: number; }
 const profileCaches = new WeakMap<ContentPack, Map<string, Profile>>();
 
-function profile(p: ContentPack, frame: State, h: Hero): Profile {
+export function profile(p: ContentPack, frame: State, h: Hero): Profile {
  let cache=profileCaches.get(p);if(!cache){cache=new Map();profileCaches.set(p,cache);}
  const b=frame.battle!;
  const key=JSON.stringify([h.id,b.boss,b.region,b.kind,frame.overlord,frame.world,
@@ -116,21 +116,126 @@ function profile(p: ContentPack, frame: State, h: Hero): Profile {
  }
  // Post-roll manipulation has value beyond a raw pool: an 8 converter can turn
  // a miss into a hit; conditional Spot effects are discounted by trigger chance.
- for (const id of availableCards(p, h)) for (const ability of card(p, id).abilities) {
-  if (!['after-pool', 'after-reroll'].includes(ability.timing) || ability.cost || card(p, id).type === 'instant') continue;
-  for (const e of ability.effects) {
-   if (e.op === 'change' && (e.value === 8 || e.delta)) {
-    const n = Math.min(e.count, live.filter(d => !e.filter.colors || e.filter.colors.includes(d.color)).length);
-    const value = n * (e.value === 8 ? 1 - hit : .125);
-    if (e.color === 'green') box.armor += value; else box.damage += value * .7;
+ // A usage group offers alternative strengths: only the best one is played, never all of them.
+ for (const id of availableCards(p, h)) {
+  const best = new Map<string, { armor: number; damage: number }>();
+  for (const ability of card(p, id).abilities) {
+   if (!['after-pool', 'after-reroll'].includes(ability.timing) || ability.cost || card(p, id).type === 'instant') continue;
+   const gain = { armor: 0, damage: 0 };
+   for (const e of ability.effects) {
+    if (e.op === 'change' && (e.value === 8 || e.delta)) {
+     const n = Math.min(e.count, live.filter(d => !e.filter.colors || e.filter.colors.includes(d.color)).length);
+     const value = n * (e.value === 8 ? 1 - hit : .125);
+     if (e.color === 'green') gain.armor += value; else gain.damage += value * .7;
+    }
    }
+   const key = ability.usageGroup ?? ability.id, previous = best.get(key);
+   if (!previous || gain.armor + gain.damage > previous.armor + previous.damage) best.set(key, gain);
+  }
+  for (const gain of best.values()) { box.armor += gain.armor; box.damage += gain.damage; }
+ }
+ const late = lateTokens(p, h, live, rule, s.heroes.find(v => v.id === h.id)!.energy);
+ for (const k of Object.keys(box) as (keyof Boxes)[]) box[k] += late.box[k];
+ let hazard = sum(live.map(d => dieHazard(p, s, h, d))) / 1.6;
+ // Rerolls go to hazardous faces first: count how many such faces remain after up to `rerolls` targeted rerolls.
+ const risky = live.map(d => Array.from({ length: 8 }, (_, i) => dieHazard(p, s, h, { ...d, value: i + 1 }) > 0 ? 1 : 0).reduce((a: number, b) => a + b, 0) / 8);
+ const exposed = sum(risky);
+ if (exposed > 0 && rerolls > 0) {
+  const q = exposed / risky.length;
+  const left = matchCounts(risky).reduce((total, chanceOfCount, count) => total + chanceOfCount * (Math.max(0, count - rerolls) + q * Math.min(count, rerolls)), 0);
+  hazard *= left / exposed;
+ }
+ if (immune(p, h, rule)) hazard = frame.battle?.boss ? hazard : 0;
+ const result={ box, hazard, energy: Math.max(0, h.energy - s.heroes.find(v => v.id === h.id)!.energy) + late.energy + (rule === 'gnoll' ? redBlue / 8 : 0) };
+ if(cache.size>=768)cache.delete(cache.keys().next().value!);cache.set(key,result);return result;
+}
+/** The five nearest objectives, plus the Overlord wherever it is: it decides the campaign,
+ * so a distant lair must never be crowded out by nearby quests. Input is sorted by distance. */
+export function candidateObjectives(sorted: Objective[], overlord: string): Objective[] {
+ return [...sorted.slice(0, 5), ...sorted.slice(5).filter(o => o.boss === overlord)];
+}
+export const BOSS_COMMITMENT = 1.2;
+type UpsetRound ={ hits: number; guard: number; wounds: number; hazard: number; heal: number };
+/** Standard normal CDF (Abramowitz–Stegun 7.1.26). */
+function normal(z: number) {
+ const t = 1 / (1 + .3275911 * Math.abs(z) / Math.SQRT2);
+ const erf = 1 - (((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - .284496736) * t + .254829592) * t * Math.exp(-z * z / 2);
+ return z >= 0 ? (1 + erf) / 2 : (1 - erf) / 2;
+}
+/** Chance to finish the foe in some round while the party still stands, treating each die as an
+ * independent success at `hit`. Hits must outpace regeneration; wounds vary with the guard dice. */
+export function upsetChance(rounds: UpsetRound[], health: number, hp: number, hit: number) {
+ let hits = 0, hitVariance = 0, taken = 0, takenVariance = 0, regenerated = 0, best = 0;
+ for (const r of rounds) {
+  hits += r.hits; hitVariance += r.hits * (1 - hit);
+  taken += r.wounds; takenVariance += r.guard * (1 - hit) + r.hazard;
+  const finish = normal((hits - health - regenerated + .5) / Math.sqrt(hitVariance + 1));
+  const standing = normal((hp - taken - .5) / Math.sqrt(takenVariance + 1));
+  best = Math.max(best, finish * standing);
+  regenerated += r.heal;
+ }
+ return best;
+}
+const LATE_TIMINGS = ['after-pool', 'after-reroll', 'tokens', 'after-tokens', 'defense'];
+const emptyBox = (): Boxes => ({ damage: 0, defense: 0, armor: 0, attrition: 0 });
+/** Chance that one rolled die satisfies a Spot filter. */
+function filterChance(d: Die, f: DiceFilter) {
+ if (f.colors && !f.colors.includes(d.color)) return 0;
+ const faces = Array.from({ length: 8 }, (_, i) => i + 1).filter(v => (!f.values || f.values.includes(v)) && (f.min === undefined || v >= f.min));
+ return faces.length / 8;
+}
+/** Exact distribution of how many independent dice match, for small pools. */
+function matchCounts(probabilities: number[]) {
+ let dist = [1];
+ for (const q of probabilities) { const next = new Array(dist.length + 1).fill(0); dist.forEach((v, m) => { next[m] += v * (1 - q); next[m + 1] += v * q; }); dist = next; }
+ return dist;
+}
+type LateOption = { box: Boxes; cost: number; spot?: { filter: DiceFilter; count: number } };
+/** A late option is plain token gains, optionally behind one Spot requirement. Anything else is left to live combat play. */
+function lateOption(cost: number, effects: Effect[]): LateOption | undefined {
+ const box = emptyBox(); let spot: LateOption['spot'];
+ const add = (list: Effect[]): boolean => list.every(e => {
+  if (e.op === 'token') { box[e.box] += e.amount; return true; }
+  if (e.op === 'spot' && !spot) { spot = { filter: e.filter, count: e.count }; return add(e.effects); }
+  // Cleansing and resource gains never make the option worse, so they do not hide its tokens.
+  return (e.op === 'condition' && e.amount <= 0) || (e.op === 'resource' && e.amount > 0) || e.op === 'heal-pet';
+ });
+ return add(effects) && sum(Object.values(box)) > 0 ? { box, cost, spot } : undefined;
+}
+/** Expected tokens from powers that act after the pool is rolled: Spot bonuses, automatic token gains and
+ * affordable token powers. The player picks the best realizable strength after seeing the dice. */
+export function lateTokens(p: ContentPack, h: Hero, live: Die[], rule: string, energy: number): { box: Boxes; energy: number } {
+ const total = emptyBox(); let spent = 0;
+ for (const id of availableCards(p, h)) {
+  const groups = new Map<string, LateOption[]>(), c = card(p, id);
+  for (const a of c.abilities) {
+   if (!LATE_TIMINGS.includes(a.timing) || a.condition || a.requires || a.reaction || a.freeIf) continue;
+   if (a.effects.some(e => e.op === 'flag' || e.op === 'discard-self')) continue;
+   // Same default payment as the reducer: unpaid powers cost their printed energy, talents and actives are free.
+   const option = lateOption(a.cost ?? (c.type === 'active' || c.kind === 'talent' || c.kind === 'racial' ? 0 : c.energy), a.effects);
+   if (!option || option.cost > energy - spent) continue;
+   const key = a.usageGroup ?? a.id, list = groups.get(key) ?? [];
+   list.push(option); groups.set(key, list);
+  }
+  for (const options of groups.values()) {
+   const filters = [...new Set(options.filter(o => o.spot).map(o => JSON.stringify(o.spot!.filter)))];
+   // Mixed Spot filters within one choice are rare; value only the plain options there.
+   const filter = filters.length === 1 ? options.find(o => o.spot)!.spot!.filter : undefined;
+   const dist = filter ? matchCounts(live.map(d => filterChance(d, filter))) : [1];
+   let expected = emptyBox(), cost = 0;
+   dist.forEach((chanceOfCount, matched) => {
+    const usable = options.filter(o => !o.spot || (filter && o.spot.count <= matched));
+    if (!usable.length) return;
+    const best = usable.reduce((a, b) => sum(Object.values(b.box)) > sum(Object.values(a.box)) ? b : a);
+    for (const k of Object.keys(expected) as (keyof Boxes)[]) expected[k] += best.box[k] * chanceOfCount;
+    cost += best.cost * chanceOfCount;
+   });
+   if (rule === 'drake') expected = { ...expected, armor: 0 };
+   for (const k of Object.keys(total) as (keyof Boxes)[]) total[k] += expected[k];
+   spent += cost;
   }
  }
- let hazard = sum(live.map(d => dieHazard(p, s, h, d))) / 1.6;
- hazard *= 1 - Math.min(.7, rerolls / Math.max(1, live.length) * .7);
- if (immune(p, h, rule)) hazard = frame.battle?.boss ? hazard : 0;
- const result={ box, hazard, energy: Math.max(0, h.energy - s.heroes.find(v => v.id === h.id)!.energy) + (rule === 'gnoll' ? redBlue / 8 : 0) };
- if(cache.size>=768)cache.delete(cache.keys().next().value!);cache.set(key,result);return result;
+ return { box: total, energy: spent };
 }
 function oRule(p: ContentPack, s: State) { return p.creatures.find(c => c.id === s.enemies.find(e => e.id === s.battle?.enemies[0])?.creature)?.rule ?? 'none'; }
 
@@ -153,31 +258,42 @@ export function createStrategy(p: ContentPack, s: GameView, risk: number) {
    const opponents = s.heroes.filter(h => o.pvp!.includes(h.id));
    foes = [{ health: sum(opponents.map(h => h.health)), attack: sum(opponents.map(h => h.level + 2)), threat: Math.max(...opponents.map(h => h.level)) + 2 }];
   }
-  const rule = oRule(p, frame), initialHealth = sum(foes.map(e => e.health));
-  const energy = party.map(h => h.energy);
+  const rule = oRule(p, frame), initialHealth = sum(foes.map(e => e.health)), threat = Math.max(...foes.map(e => e.threat));
+  const energy = party.map(h => h.energy), history: UpsetRound[] = [];
+  // Measured against real AI-played Overlord fights: parties bank about 1.13–1.23× the forecast tokens,
+  // because a short boss fight rewards emptying energy in round one and chaining powers (e.g. an 8 converter
+  // feeding a Spot bonus). Ordinary fights keep the unscaled estimate.
+  const commitment = o.boss ? BOSS_COMMITMENT : 1;
   let stored = 0, wounds = 0, round = 0, totalDamage = 0;
   const kill = () => { foes = foes.filter(e => { if (stored + 1e-6 < e.health) return true; stored -= e.health; return false; }); };
   foes.sort((a, b) => a.health - b.health);
   while (foes.length && round < 7) {
    round++;
    const boxes = { damage: 0, defense: 0, armor: 0, attrition: 0 };
+   let hazard = 0;
    profiles.forEach((a, i) => {
     const sustain = a.energy <= energy[i] ? 1 : .5;
     energy[i] = Math.max(0, energy[i] - a.energy);
-    for (const k of Object.keys(boxes) as (keyof Boxes)[]) boxes[k] += a.box[k] * sustain;
-    wounds += a.hazard;
+    for (const k of Object.keys(boxes) as (keyof Boxes)[]) boxes[k] += a.box[k] * sustain * commitment;
+    hazard += a.hazard;
    });
-   totalDamage += boxes.damage + boxes.defense + boxes.attrition;
+   wounds += hazard;
+   const hits = boxes.damage + boxes.defense + boxes.attrition, guard = boxes.defense + boxes.armor;
+   totalDamage += hits;
    stored += boxes.damage; kill();
    if (!foes.length) break;
-   wounds += Math.max(0, sum(foes.map(e => e.attack)) - boxes.defense - boxes.armor);
+   const struck = Math.max(0, sum(foes.map(e => e.attack)) - guard);
+   wounds += struck;
    stored += boxes.defense + boxes.attrition; kill();
    const event = p.events.find(e => e.id === o.boss)?.boss?.combat;
    const heal = o.boss === 'kelthuzad' ? s.heroes.length : event === 'dungin' ? 4 : event === 'zaeldarr' ? 2 : event === 'daecris' ? 3 * party.length : rule === 'crusader' ? foes.length : rule === 'worgen' ? foes.length * 2 : rule === 'infernal' ? 3 : 0;
+   history.push({ hits, guard, wounds: hazard + struck, hazard, heal: foes.length ? heal : 0 });
    if (foes.length) stored = Math.max(0, stored - heal);
   }
   const margin = hp - wounds;
   let win = (foes.length ? .02 : 1) / (1 + Math.exp(-margin / Math.max(1.5, hp * .22)));
+  // The average roll may never finish a regenerating boss, yet hot dice still can. Value that real chance.
+  if (foes.length) win = Math.max(win, upsetChance(history, initialHealth, hp, chance(threat)));
   // A pooled party must not hide a fragile member likely to die to their own dice.
   if (profiles.some((v, i) => v.hazard >= party[i].health)) win *= .5;
   const result = { win, wounds, rounds: round, damage: totalDamage / Math.max(1, round), health: initialHealth };
@@ -185,7 +301,8 @@ export function createStrategy(p: ContentPack, s: GameView, risk: number) {
  };
  const rewardValue = (o: Objective, party: Hero[]) => {
   if (o.clue) return party.some(h => h.level >= 3) ? 7 : 0;
-  if (o.boss === s.overlord.id) return 65 + (!s.variants?.overlordOnly ? s.turn * .7 : 0);
+  // Urgency grows toward the end of a 30-turn game; in Defeat the Overlord it grows with each extra lap instead.
+  if (o.boss === s.overlord.id) return 65 + (!s.variants?.overlordOnly ? s.turn * .7 : ((s.lap ?? 1) - 1) * 21 + ((s.lap ?? 1) > 1 ? s.turn * .7 : 0));
   if (!o.reward) return o.enemies.some(e => e.color === 'blue') ? 3 : 5;
   const q = p.quests.find(q => q.id === o.quest), r = o.reward;
   const left = q ? s.enemies.filter(e => e.quest === q.id).length : o.enemies.length;
@@ -200,11 +317,11 @@ export function createStrategy(p: ContentPack, s: GameView, risk: number) {
   if (plans.has(key)) return plans.get(key);
   const side = faction(p, h.id), friends = s.heroes.filter(a => faction(p, a.id) === side && a.id !== h.id && a.health > 0);
   let best: Plan | undefined;
-  const nearby=targets(side).filter(o=>{
+  const eligible=targets(side).filter(o=>{
    if (o.boss && !o.reward && h.level < 3) return false;
    return o.enemies[0]?.color !== 'blue' || o.region === h.location || s.enemies.some(e => e.region === o.region && e.faction === side);
-  }).sort((a,b)=>distance(h.location,a.region,side)-distance(h.location,b.region,side)).slice(0,5);
-  for (const o of nearby) {
+  }).sort((a,b)=>distance(h.location,a.region,side)-distance(h.location,b.region,side));
+  for (const o of candidateObjectives(eligible, s.overlord.id)) {
    const d = distance(h.location, o.region, side);
    for (let mask = 0; mask < 1 << friends.length; mask++) {
     const party = [h, ...friends.filter((_, i) => mask & (1 << i))];

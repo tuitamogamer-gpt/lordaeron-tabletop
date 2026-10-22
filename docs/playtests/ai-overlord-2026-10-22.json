@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-22",
+  "unitTests": { "passed": 1062, "files": 48 },
+  "forecastCalibration": {
+    "method": "16-20 real AI-played fights per party against the named Overlord, full health, no world events",
+    "meanAbsoluteError": { "before": 0.46, "after": 0.18 },
+    "parties": [
+      { "overlord": "kelthuzad", "seed": 3, "faction": "horde", "actual": 0.30, "before": 0.000002, "after": 0.011 },
+      { "overlord": "kelthuzad", "seed": 3, "faction": "alliance", "actual": 0.0, "before": 0.27, "after": 0.19 },
+      { "overlord": "kazzak", "seed": 22, "faction": "horde", "actual": 0.88, "before": 0.11, "after": 0.60 },
+      { "overlord": "kazzak", "seed": 22, "faction": "alliance", "actual": 0.88, "before": 0.10, "after": 0.69 },
+      { "overlord": "kelthuzad", "seed": 23, "roster": "casters", "faction": "horde", "actual": 0.69, "before": 0.23, "after": 0.76 },
+      { "overlord": "kelthuzad", "seed": 23, "roster": "casters", "faction": "alliance", "actual": 0.44, "before": 0.02, "after": 0.40 }
+    ]
+  },
+  "campaigns": [
+    { "overlord": "kelthuzad", "seed": 1, "roster": "default", "before": { "finished": false, "commands": 6000 }, "after": { "finished": true, "winner": "alliance", "commands": 4645, "deathsPerChallenge": 0.06 } },
+    { "overlord": "kelthuzad", "seed": 23, "roster": "casters", "before": { "finished": false, "commands": 2500 }, "after": { "finished": true, "winner": "horde", "commands": 3809, "deathsPerChallenge": 0.08, "auditedStates": 3810, "replayIdentical": true } },
+    { "overlord": "kazzak", "seed": 22, "roster": "default", "before": { "finished": true, "winner": "alliance", "commands": 2698, "deathsPerChallenge": 0.19 }, "after": { "finished": true, "winner": "alliance", "commands": 3302, "deathsPerChallenge": 0.04, "auditedStates": 3303, "replayIdentical": true } },
+    { "overlord": "kazzak", "seed": 3, "roster": "default", "before": { "finished": true, "winner": "alliance", "commands": 3145, "deathsPerChallenge": 0.35 }, "after": { "finished": true, "winner": "alliance", "commands": 3142, "deathsPerChallenge": 0.09 } },
+    { "overlord": "nefarian", "seed": 2, "roster": "default", "before": { "finished": true, "winner": "draw", "commands": 1501, "deathsPerChallenge": 0.33 }, "after": { "finished": true, "winner": "alliance", "commands": 1723, "deathsPerChallenge": 0.08 } },
+    { "overlord": "nefarian", "seed": 24, "roster": "default", "before": { "finished": true, "winner": "horde", "commands": 1820, "deathsPerChallenge": 0.31 }, "after": { "finished": true, "winner": "alliance", "commands": 1772, "deathsPerChallenge": 0.06 } },
+    { "overlord": "nefarian", "seed": 21, "roster": "casters", "before": { "finished": true, "winner": "draw", "commands": 730, "deathsPerChallenge": 0.69 }, "after": { "finished": true, "winner": "draw", "commands": 844, "deathsPerChallenge": 0.60 } }
+  ],
+  "browser": {
+    "engine": "Chromium (Playwright)",
+    "viewport": "1366x768",
+    "humanFlow": "setup, panels, travel, challenge, combat, rewards, talent choice; no console errors",
+    "allAiAutoplay": { "turns": 13, "seconds": 600, "stalls": 0, "consoleErrors": 0 }
+  }
+}
