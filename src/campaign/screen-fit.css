@@ -65,7 +65,27 @@
   --dossier-inset:max(27px,calc(min(660px,100dvh - 266px) * .063));
   padding:var(--dossier-inset) 3.6%;gap:18px}
  .premium-character-sheet .sheet-profile{min-height:100px}
- .premium-character-sheet .sheet-racial-thumbnail{height:clamp(96px,calc(100dvh - 644px),160px)}
+ /* The frame art stretches with the sheet; its lower-left ornament covers about a fifth of the sheet's height.
+    The identity column ends above it, and the dossier actions live in the heading. */
+ .premium-character-sheet .sheet-identity{padding-bottom:max(0px,calc(max(440px,min(660px,100dvh - 266px)) * .19 - var(--dossier-inset)))}
+ .premium-character-sheet .sheet-dossier-heading{justify-content:flex-start}
+ .premium-character-sheet .sheet-dossier-heading>div:first-child{margin-right:auto}
+ .premium-character-sheet .sheet-dossier-heading .sheet-controls{display:flex;gap:6px}
+ .premium-character-sheet .sheet-dossier-heading .sheet-controls>button{min-height:30px;padding:5px 12px;font-size:11px;white-space:nowrap}
+ .premium-character-sheet .racial-row{display:grid;grid-template-columns:52px minmax(0,1fr);gap:9px;align-items:center;padding:5px;border:1px solid #a58a5133;background:#111a166b}
+ .premium-character-sheet .sheet-racial-thumbnail{display:block;width:52px;height:78px;padding:0;margin:0;border:0;background:none}
+ .premium-character-sheet .racial-caption{display:flex;flex-direction:column;gap:3px;min-width:0}
+ .premium-character-sheet .racial-caption strong{font:600 13px/1.2 var(--serif);color:#f2dfb7}
+ .premium-character-sheet .racial-caption small{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;font:11px/1.35 var(--sans);color:#c9bb9c}
+ /* Two-digit health such as 12 / 12 stays on one line beside its label. */
+ .premium-character-sheet .sheet-vitals{gap:8px}
+ .premium-character-sheet .resource-heading{gap:5px}
+ .premium-character-sheet .resource-heading>span{gap:4px;min-width:0}
+ .premium-character-sheet .resource-heading .game-icon{width:16px;height:16px}
+ .premium-character-sheet .resource-heading b{flex:none;white-space:nowrap}
+ /* Long names stay whole words, and the class line yields to the name when the portrait is short. */
+ .premium-character-sheet .sheet-profile{container-type:size}
+ .premium-character-sheet .sheet-nameplate h2{font-size:clamp(17px,1.5vw,23px);overflow-wrap:normal;word-break:normal;hyphens:none}
  .premium-character-sheet .sheet-equipment-grid{grid-template-rows:minmax(228px,1fr);min-height:228px}
  .premium-character-sheet .sheet-slot-card>.card-thumbnail{min-height:186px}
  .premium-character-sheet .sheet-slot-card .card-thumbnail-art,.premium-character-sheet .sheet-slot-card .card-portrait-face{min-height:150px}
@@ -73,6 +93,9 @@
  .premium-character-sheet .sheet-card-grid .card-thumbnail,.premium-character-sheet .sheet-pane .bag-empty{height:clamp(170px,calc(100cqh - 32px),360px)}
  .premium-character-sheet .talent-slots{min-height:0}
  .premium-character-sheet .talent-slots .card-thumbnail{min-height:0;height:clamp(140px,calc(100cqh - 46px),330px)}
+}
+@container (max-height:200px){
+ .premium-character-sheet .sheet-nameplate .sheet-class{display:none}
 }
 
 /* ---------- Setup · the character choice stays visible above the draft grid ---------- */
@@ -87,3 +110,9 @@
 
 /* ---------- Table · the AI turn notice ---------- */
 .campaign-app .command-table>.turn-guidance.ai-turn{border-left-color:#8fb0c4}
+
+/* ---------- Setup · the single optional rule uses the full row ---------- */
+.setup-flow .setup-variants{grid-template-columns:1fr}
+
+/* ---------- Combat scene · the decorative corner caption sat under the hero portrait at every size ---------- */
+.cinematic-scene .battle-scene-caption{display:none}

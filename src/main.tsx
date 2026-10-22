@@ -40,4 +40,6 @@ import './campaign/dice.css';
 import './campaign/combat-area.css';
 import './campaign/screen-fit.css';
 import './campaign/saves.css';
+import './campaign/decision-flow.css';
+import './campaign/readability.css';
 createRoot(document.getElementById('root')!).render(<React.StrictMode><App /></React.StrictMode>);

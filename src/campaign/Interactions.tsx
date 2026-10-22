@@ -64,7 +64,17 @@ export function TradeEditor({hero,heroes,send,busy}:{hero:Hero;heroes:Hero[];sen
  </div>;
 }
 
-export function AuctionChoices({heroes,send,busy}:{heroes:Hero[];send:Submit;busy:boolean}) {
+/** Sealed bids: each bidder sees only their own gold and amount; submitted bids stay hidden. */
+export function AuctionChoices({heroes,submitted=[],send,busy}:{heroes:Hero[];submitted?:string[];send:Submit;busy:boolean}) {
  const [bids,setBids]=useState<Record<string,number>>({});
- return <div className="auction-choices">{heroes.map(h=><form key={h.id} onSubmit={e=>{e.preventDefault();send({type:'bid',hero:h.id,amount:bids[h.id]??0});}}><label>{character(p,h.id).name}<input aria-label={`Bid: ${character(p,h.id).name}`} type="number" min={0} max={h.gold} value={bids[h.id]??0} onChange={e=>setBids(v=>({...v,[h.id]:Number(e.target.value)}))}/></label><button className="gold-button" disabled={busy}>Bid / max {h.gold}</button></form>)}</div>;
+ const set=(h:Hero,value:number)=>setBids(v=>({...v,[h.id]:Math.max(0,Math.min(h.gold,Math.round(value)||0))}));
+ return <div className="auction-choices">
+  {heroes.map(h=>{const name=character(p,h.id).name,bid=bids[h.id]??0;return <form key={h.id} className={`auction-bidder ${faction(p,h.id)}`} onSubmit={e=>{e.preventDefault();send({type:'bid',hero:h.id,amount:bid});}}>
+   <HeroPortrait id={h.id} small/>
+   <span className="auction-bidder-name"><strong>{name}</strong><small>{h.gold} gold available</small></span>
+   <span className="auction-stepper"><button type="button" aria-label={`Lower bid: ${name}`} disabled={busy||bid<=0} onClick={()=>set(h,bid-1)}>−</button><input aria-label={`Bid: ${name}`} type="number" min={0} max={h.gold} value={bid} onChange={e=>set(h,Number(e.target.value))}/><button type="button" aria-label={`Raise bid: ${name}`} disabled={busy||bid>=h.gold} onClick={()=>set(h,bid+1)}>+</button></span>
+   <button className="gold-button" disabled={busy}>Seal bid</button>
+  </form>;})}
+  {submitted.map(id=><div key={id} className={`auction-bidder sealed ${faction(p,id)}`}><HeroPortrait id={id} small/><span className="auction-bidder-name"><strong>{character(p,id).name}</strong><small>Bid sealed</small></span><Icon name="lock" size={16}/></div>)}
+ </div>;
 }

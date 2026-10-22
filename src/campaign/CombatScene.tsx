@@ -11,7 +11,7 @@ export default function CombatScene({ state, busy, presentation }: { state: Game
  const heroId = cue?.heroId ?? b.active?.heroId ?? b.participants.find(id => !b.defeated.includes(id)) ?? b.participants[0];
  const hero = state.heroes.find(h => h.id === heroId);
  const enemy = state.enemies.find(e => b.enemies.includes(e.id)) ?? cue?.before.enemies.find(e => cue.before.battle?.enemies.includes(e.id)) ?? b.killed?.[0];
- const creature = p.creatures.find(c => c.id === enemy?.creature), boss = p.overlords.find(o => o.id === b.boss);
+ const creature = p.creatures.find(c => c.id === enemy?.creature), boss = p.overlords.find(o => o.id === b.boss) ?? p.events.find(e => e.id === b.boss && e.boss);
  const opponent = b.kind !== 'pve' ? b.participants.find(id => faction(p, id) !== faction(p, heroId)) : undefined;
  const over = b.stage === 'over', won = b.winner === b.first;
  const result = b.winner === 'draw' ? 'Draw' : b.kind === 'pve' ? won ? 'Victory' : 'Defeat' : `${factionLabel(b.winner ?? '')} victory`;

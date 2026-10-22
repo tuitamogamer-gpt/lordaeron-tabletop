@@ -1,0 +1,83 @@
+/* Readability floor, the final type layer: sizes are !important because earlier layers stack ever more
+   specific selectors (e.g. .campaign-app.desktop-tabletop .table-control-rail .compact-stat small).
+   Readability floor. A desktop sweep measured hundreds of labels at 6–8px; these selectors raise
+   exactly those groups. Uppercase tracked labels stop at 9–9.5px, sentence text at 10px.
+   Map and dice SVG text scale with their view boxes and are deliberately left alone. */
+
+/* Frame and navigation */
+.campaign-app .modal-head .eyebrow,
+.campaign-app .catalog-intro .eyebrow,
+.campaign-app .campaign-destination .eyebrow{font-size:9.5px!important}
+.campaign-app .topbar .wordmark em{font-size:9px!important}
+.campaign-app .header-right .session-badge{font-size:9.5px!important}
+.campaign-app .map-interact kbd{font-size:9.5px!important}
+.campaign-app .campaign-map .map-legend,
+.campaign-app .campaign-map .map-legend>span{font-size:9.5px!important}
+
+/* Table rail and action bar */
+.campaign-app .compact-vitals .compact-stat small,
+.campaign-app .active-character-summary .summary-name small,
+.campaign-app .active-character-summary .summary-actions small,
+.campaign-app .overlord-summary-button small{font-size:9.5px!important}
+.campaign-app .threat-level .threat-copy small{font-size:9px!important;line-height:1.15}
+.campaign-app .campaign-map .world-view-label,
+.campaign-app .campaign-map .world-view-label>span{font-size:9.5px!important}
+.campaign-app .table-action-footer .current-location small{font-size:10px!important}
+
+/* Quests */
+.campaign-app .table-quest .quest-tier-line{font-size:9.5px!important}
+.campaign-app .quest-decks .quest-deck small{font-size:9px!important}
+.campaign-app .quest-reveal-spawn small{font-size:9.5px!important}
+
+/* Character dossier and roster */
+.campaign-app .character-slot>header small{font-size:9.5px!important}
+.campaign-app .character-slot .slot-placeholder>span{font-size:9.5px!important}
+.campaign-app .sheet-levels>div>small{font-size:9.5px!important}
+.campaign-app .sheet-currency small{font-size:9.5px!important}
+.campaign-app .sheet-identity .sheet-eyebrow,
+.campaign-app .sheet-dossier-heading .sheet-eyebrow{font-size:9.5px!important}
+.campaign-app .sheet-portrait .sheet-level>small{font-size:8.5px!important}
+.campaign-app .character-roster>button small{font-size:10px!important}
+.campaign-app .setup-flow .draft-factions button em{font-size:9.5px!important}
+
+/* Combat room */
+.campaign-app .combat-timeline>li>b{font-size:10px!important}
+.campaign-app .combat-encounter .sheet-eyebrow,
+.campaign-app .combat-encounter dl dt{font-size:9.5px!important}
+.campaign-app .battle-scene .battle-scene-caption,
+.campaign-app .battle-scene .battle-health>small{font-size:9px!important}
+.campaign-app .combat-dice-lane .dice-lane-label>small{font-size:10px!important}
+.campaign-app .combat-dice-lane .dice-lane-count>small{font-size:9px!important;letter-spacing:.6px}
+.campaign-app .combat-d8 .d8-result{font-size:9.5px!important}
+.campaign-app .combat-dice-table .combat-tray-note>span{font-size:10px!important}
+.campaign-app .combat-dice-table .combat-tray-heading small{font-size:9.5px!important}
+.campaign-app .combat-token-box .combat-token-count>small{font-size:10px!important}
+.campaign-app .combat-token-area>h4>span{font-size:9.5px!important}
+.campaign-app .combat-party small{font-size:9.5px!important}
+.campaign-app .combat-hero-vitals>i{font-size:9.5px!important}
+.campaign-app .combat-sheet-profile .sheet-eyebrow{font-size:9.5px!important}
+.campaign-app .combat-sheet-profile .combat-sheet-conditions>span{font-size:10px!important}
+.campaign-app .combat-sheet-card .combat-sheet-slot-label,
+.campaign-app .combat-sheet-card .combat-sheet-card-status{font-size:10px!important}
+.campaign-app .combat-sheet-card-heading>span,
+.campaign-app .combat-sheet-controls-heading,
+.campaign-app .combat-sheet-controls .dice-selection-help{font-size:10px!important}
+.campaign-app .combat-switch>span>small{font-size:10px!important}
+.campaign-app .combat-idle .sheet-eyebrow{font-size:9.5px!important}
+
+/* Large desktop screens keep the same layout, so the key labels grow a step instead. */
+@media(min-width:1700px) and (min-height:950px){
+ .campaign-app .compact-vitals .compact-stat small,
+ .campaign-app .active-character-summary .summary-name small,
+ .campaign-app .overlord-summary-button small,
+ .campaign-app .header-right .session-badge{font-size:10.5px!important}
+ .campaign-app .table-action-footer .current-location small,
+ .campaign-app .character-roster>button small,
+ .campaign-app .combat-dice-lane .dice-lane-label>small,
+ .campaign-app .combat-token-box .combat-token-count>small{font-size:11px!important}
+ .campaign-app .campaign-map .world-view-label,
+ .campaign-app .campaign-map .world-view-label>span,
+ .campaign-app .character-slot>header small,
+ .campaign-app .sheet-levels>div>small{font-size:10.5px!important}
+ .campaign-app .combat-timeline>li>b{font-size:11px!important}
+}

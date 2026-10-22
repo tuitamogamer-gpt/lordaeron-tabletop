@@ -40,7 +40,12 @@ export function EventCardView({event:e}:{event:EventCard}) {
 export function OverlordCard({overlord:o,count=6}:{overlord:Overlord;count?:4|6}) {
  return <RasterCard id={`overlord-${o.id}-${count}`} title={o.name}/>;
 }
-export function BossPortrait({id}:{id:string}){return <span className="boss-portrait" role="img" aria-label={p.overlords.find(o=>o.id===id)?.name??id} style={{backgroundImage:`url(/assets/portraits/${id}.webp)`,backgroundSize:'cover',backgroundPosition:'center 30%'}}/>;}
+/** Overlords have their own portraits; event bosses share the painted boss encounter scene. */
+export function BossPortrait({id}:{id:string}){
+ const overlord=p.overlords.find(o=>o.id===id),event=overlord?undefined:p.events.find(e=>e.id===id&&e.boss);
+ const src=event?'/assets/event-art/boss.webp':`/assets/portraits/${id}.webp`;
+ return <span className={`boss-portrait ${event?'event-boss-portrait':''}`} role="img" aria-label={overlord?.name??event?.name??id} style={{backgroundImage:`url(${src})`,backgroundSize:'cover',backgroundPosition:event?'center 35%':'center 30%'}}/>;
+}
 export function AbilityCard({card:c,onClick,disabled,selected}:{card:Card;children?:ReactNode;footer?:string;onClick?:()=>void;disabled?:boolean;selected?:boolean}) {
  return <RasterCard id={c.id} title={c.name} onClick={onClick} disabled={disabled} selected={selected} ability/>;
 }
