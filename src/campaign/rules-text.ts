@@ -22,12 +22,14 @@ function rawConditionText(c:Condition):string{
   case 'used':return `used this round: ${c.cardId}`;case 'used-any':return `used this round: ${c.cards.join(' / ')}`;
  }
 }
+/** Cards such as Crocolisk Steak recover up to capacity; the data expresses that as an amount no capacity can exceed. */
+export const FULL_RECOVERY=100;
 export const effectText=(e:Effect):string=>readable(rawEffectText(e));
 function rawEffectText(e:Effect):string{
  switch(e.op){
   case 'dice':return `+${e.amount} ${colorName[e.color]} dice`;
   case 'stat':return `${e.amount>=0?'+':''}${e.amount} ${e.stat==='reroll'?'Reroll':e.stat==='attrition'?'Attrition':e.stat==='armor'?'Armor':'Threat'}`;
-  case 'resource':return `${e.amount<0?"Spend":e.gain?"Gain":"Recover"} ${Math.abs(e.amount)} ${e.resource==='health'?"health":e.resource==='energy'?"energy":"gold"}${e.target==='friendly'?" for an ally":''}${e.gain?" (may exceed capacity)":''}`;
+  case 'resource':{const name=e.resource==='health'?"health":e.resource==='energy'?"energy":"gold";if(e.amount>=FULL_RECOVERY&&!e.gain&&e.resource!=='gold')return `Recover all ${name}${e.target==='friendly'?" for an ally":''}`;return `${e.amount<0?"Spend":e.gain?"Gain":"Recover"} ${Math.abs(e.amount)} ${name}${e.target==='friendly'?" for an ally":''}${e.gain?" (may exceed capacity)":''}`;}
   case 'spot':return `Spot ${e.count} (${filterText(e.filter)}) → ${e.effects.map(effectText).join('; ')}`;
   case 'remove':return `Remove ${e.count} (${filterText(e.filter)}) → ${e.effects.map(effectText).join('; ')}`;
   case 'change':return `Change ${e.count} (${filterText(e.filter)}) → ${e.delta?`value +${e.delta}, up to 8`:e.value??"same value"}${e.colorChoice?', any available color':e.color?`, ${colorName[e.color]} dice`:''}`;

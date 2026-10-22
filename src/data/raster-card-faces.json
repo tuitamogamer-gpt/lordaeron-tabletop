@@ -1214,8 +1214,8 @@
     "src": "/assets/card-faces/v9/priest-meditation.webp",
     "width": 768,
     "height": 1152,
-    "description": "Meditation\nTALENT\nLEVEL 3\npriest · general\nOn Rest · passive: Recover 100 health · Recover 100 energy\n0 energy · Free on level up",
-    "fingerprint": "72570b3678dc106136ae8a4af0a20776fd45a77a906310b36f527ef9c6e749f1"
+    "description": "Meditation\nTALENT\nLEVEL 3\npriest · general\nOn Rest · passive: Recover all health · Recover all energy\n0 energy · Free on level up",
+    "fingerprint": "84b11fe3932ffaab70b289a82d2cac07b1b4b5e22f4a47aca2c058d89bae6d63"
   },
   "priest-shadowform": {
     "src": "/assets/card-faces/v9/priest-shadowform.webp",
@@ -2180,8 +2180,8 @@
     "src": "/assets/card-faces/v9/triangle-30-crocolisk-steak.webp",
     "width": 768,
     "height": 1152,
-    "description": "Crocolisk Steak\nCONSUMABLE\nLEVEL 1\nbag · Food\nOn Rest: Recover 100 health · Recover 100 energy · Discard this card\nDoes not occupy a bag slot.\n0 energy · 2 gold",
-    "fingerprint": "eecb1497802ea98661279b98afaac21440f3ae948a5e88644b71ca907f14fe03"
+    "description": "Crocolisk Steak\nCONSUMABLE\nLEVEL 1\nbag · Food\nOn Rest: Recover all health · Recover all energy · Discard this card\nDoes not occupy a bag slot.\n0 energy · 2 gold",
+    "fingerprint": "405f9ae8e26675fa06c7fc57cc75c83a4cfd97db4981bb2aad2db8e8c3e1e4b1"
   },
   "triangle-31-scimitar": {
     "src": "/assets/card-faces/v9/triangle-31-scimitar.webp",
@@ -2278,8 +2278,8 @@
     "src": "/assets/card-faces/v9/triangle-44-crocolisk-steak.webp",
     "width": 768,
     "height": 1152,
-    "description": "Crocolisk Steak\nCONSUMABLE\nLEVEL 1\nbag · Food\nOn Rest: Recover 100 health · Recover 100 energy · Discard this card\nDoes not occupy a bag slot.\n0 energy · 2 gold",
-    "fingerprint": "76b3e4f4a750fa229de1239b6adcd6f0c3d1cf8eb548a531182e2f62a116837c"
+    "description": "Crocolisk Steak\nCONSUMABLE\nLEVEL 1\nbag · Food\nOn Rest: Recover all health · Recover all energy · Discard this card\nDoes not occupy a bag slot.\n0 energy · 2 gold",
+    "fingerprint": "d0de953f273893ea53e54d46677bca6bcdb45787c3030609131582f87e9a2d92"
   },
   "triangle-45-footman-tunic": {
     "src": "/assets/card-faces/v9/triangle-45-footman-tunic.webp",

@@ -104,6 +104,25 @@ describe('quest discovery without changing the game', () => {
   expect(screen.getByRole('button', { name: new RegExp(`${questLabel(p, q.id)}.*${q.name}`) })).toBeTruthy();
  });
 
+ it('announces a live draw without opening the reveal while campaign automation is running', () => {
+  const s = createGame(p, DEFAULT_SETUP); s.revision = 5;
+  const visibility = vi.fn();
+  const r = render(<QuestActivity state={view(s)} autoRevealSetup={false} announceOnly onOpenChange={visibility}/>);
+  const next = structuredClone(s), q = p.quests.find(q => !s.quests.includes(q.id) && q.faction === 'horde' && q.tier === 'green')!;
+  spawnQuest(p, next, q); next.revision++;
+  r.rerender(<QuestActivity state={view(next)} autoRevealSetup={false} announceOnly onOpenChange={visibility}/>);
+  expect(screen.queryByRole('dialog')).toBeNull();
+  expect(visibility).toHaveBeenLastCalledWith(false);
+  expect(screen.getByRole('status').textContent).toContain(`${q.name} drawn`);
+  expect(screen.getByText('NEW')).toBeTruthy();
+  // The draw stays available on demand, and stopping automation never reopens it by itself.
+  r.rerender(<QuestActivity state={view(next)} autoRevealSetup={false} onOpenChange={visibility}/>);
+  expect(screen.queryByRole('dialog')).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Review latest quest draw' }));
+  expect(screen.getByRole('dialog', { name: 'A new quest enters play' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: new RegExp(`${questLabel(p, q.id)}.*${q.name}`) })).toBeTruthy();
+ });
+
  it('shows complete placement immediately when reduced motion is requested', () => {
   vi.stubGlobal('matchMedia', () => ({ matches: true }));
   const s = createGame(p, DEFAULT_SETUP);

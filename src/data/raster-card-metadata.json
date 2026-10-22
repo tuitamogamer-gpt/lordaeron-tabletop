@@ -19304,7 +19304,7 @@
       }
     },
     "priest-meditation": {
-      "fingerprint": "72570b3678dc106136ae8a4af0a20776fd45a77a906310b36f527ef9c6e749f1",
+      "fingerprint": "84b11fe3932ffaab70b289a82d2cac07b1b4b5e22f4a47aca2c058d89bae6d63",
       "sourceFingerprint": "5323f01e4f0f19e548857ec9189bd41c7bf6611eb3f88d0106821e2d1b437485",
       "artFingerprint": "9e8b9af8a00ea762904097415dd81ffbe25bcfd6acccafeacbeab96a262c7f22",
       "category": "ability",
@@ -19319,7 +19319,7 @@
         "sections": [
           {
             "label": "On Rest · passive",
-            "text": "Recover 100 health · Recover 100 energy"
+            "text": "Recover all health · Recover all energy"
           }
         ],
         "art": "priest-meditation",
@@ -19376,7 +19376,7 @@
             "width": 208.11353759765623
           },
           {
-            "text": "Recover 100 health · Recover 100 energy",
+            "text": "Recover all health · Recover all energy",
             "x": 72,
             "y": 671,
             "size": 28,
@@ -19384,7 +19384,7 @@
             "family": "Arial",
             "fill": "#302419",
             "anchor": "start",
-            "width": 532.8558593749999
+            "width": 494.51445312499993
           },
           {
             "text": "0 energy · Free on level up",
@@ -34395,7 +34395,7 @@
       }
     },
     "triangle-30-crocolisk-steak": {
-      "fingerprint": "eecb1497802ea98661279b98afaac21440f3ae948a5e88644b71ca907f14fe03",
+      "fingerprint": "405f9ae8e26675fa06c7fc57cc75c83a4cfd97db4981bb2aad2db8e8c3e1e4b1",
       "sourceFingerprint": "5323f01e4f0f19e548857ec9189bd41c7bf6611eb3f88d0106821e2d1b437485",
       "artFingerprint": "510d362a21a6608273d02366e0cb6604d85729d6a21cb1d1968acb77d69c1802",
       "category": "ability",
@@ -34410,7 +34410,7 @@
         "sections": [
           {
             "label": "On Rest",
-            "text": "Recover 100 health · Recover 100 energy · Discard this card"
+            "text": "Recover all health · Recover all energy · Discard this card"
           },
           {
             "label": "",
@@ -34471,7 +34471,7 @@
             "width": 95.67484130859374
           },
           {
-            "text": "Recover 100 health · Recover 100 energy ·",
+            "text": "Recover all health · Recover all energy · Discard",
             "x": 72,
             "y": 671,
             "size": 28,
@@ -34479,10 +34479,10 @@
             "family": "Arial",
             "fill": "#302419",
             "anchor": "start",
-            "width": 550.386962890625
+            "width": 617.30224609375
           },
           {
-            "text": "Discard this card",
+            "text": "this card",
             "x": 72,
             "y": 707,
             "size": 28,
@@ -34490,7 +34490,7 @@
             "family": "Arial",
             "fill": "#302419",
             "anchor": "start",
-            "width": 213.72250976562498
+            "width": 108.46582031249999
           },
           {
             "text": "Does not occupy a bag slot.",
@@ -35891,7 +35891,7 @@
       }
     },
     "triangle-44-crocolisk-steak": {
-      "fingerprint": "76b3e4f4a750fa229de1239b6adcd6f0c3d1cf8eb548a531182e2f62a116837c",
+      "fingerprint": "d0de953f273893ea53e54d46677bca6bcdb45787c3030609131582f87e9a2d92",
       "sourceFingerprint": "5323f01e4f0f19e548857ec9189bd41c7bf6611eb3f88d0106821e2d1b437485",
       "artFingerprint": "e3dfce7c17dfb103ee4cbbf4d71dd0df43f5bdebcceaa95b81d63165a599f570",
       "category": "ability",
@@ -35906,7 +35906,7 @@
         "sections": [
           {
             "label": "On Rest",
-            "text": "Recover 100 health · Recover 100 energy · Discard this card"
+            "text": "Recover all health · Recover all energy · Discard this card"
           },
           {
             "label": "",
@@ -35967,7 +35967,7 @@
             "width": 95.67484130859374
           },
           {
-            "text": "Recover 100 health · Recover 100 energy ·",
+            "text": "Recover all health · Recover all energy · Discard",
             "x": 72,
             "y": 671,
             "size": 28,
@@ -35975,10 +35975,10 @@
             "family": "Arial",
             "fill": "#302419",
             "anchor": "start",
-            "width": 550.386962890625
+            "width": 617.30224609375
           },
           {
-            "text": "Discard this card",
+            "text": "this card",
             "x": 72,
             "y": 707,
             "size": 28,
@@ -35986,7 +35986,7 @@
             "family": "Arial",
             "fill": "#302419",
             "anchor": "start",
-            "width": 213.72250976562498
+            "width": 108.46582031249999
           },
           {
             "text": "Does not occupy a bag slot.",

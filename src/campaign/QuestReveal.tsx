@@ -73,8 +73,9 @@ export function QuestReveal({ receipt, state, onClose, onLocate }: { receipt: Qu
 }
 
 /** Keeps a placement receipt outside the quest workspace so automated draws stay visible. */
-export default function QuestActivity({ state, onLocate, suspended = false, autoRevealSetup = false, onOpenChange }: { state: GameView; onLocate?: (region: string, quest: string) => void; suspended?: boolean; autoRevealSetup?: boolean; onOpenChange?: (visible: boolean) => void }) {
+export default function QuestActivity({ state, onLocate, suspended = false, autoRevealSetup = false, announceOnly = false, onOpenChange }: { state: GameView; onLocate?: (region: string, quest: string) => void; suspended?: boolean; autoRevealSetup?: boolean; /** Announce live draws without opening the reveal, so running automation is never blocked by a modal. */ announceOnly?: boolean; onOpenChange?: (visible: boolean) => void }) {
  const previous = useRef<QuestState>(state);
+ const quiet = useRef(announceOnly); quiet.current = announceOnly;
  const notifyVisibility = useRef(onOpenChange); notifyVisibility.current = onOpenChange;
  const [latest, setLatest] = useState<QuestReceipt>(() => questReceipt(state, state.revision === 0 ? 'setup' : 'overview'));
  const [open, setOpen] = useState(autoRevealSetup);
@@ -93,7 +94,7 @@ export default function QuestActivity({ state, onLocate, suspended = false, auto
   if (receipt) {
    setLatest(receipt); setFresh(true); setOverview(false);
    setNotice(`${receipt.quests.map(id => p.quests.find(q => q.id === id)!.name).join(', ')} drawn. ${placementTotals(receipt).creatures} creatures placed on the map.`);
-   setOpen(true);
+   if (!quiet.current) setOpen(true);
   } else if (finished.length) setNotice(`${finished.map(id => p.quests.find(q => q.id === id)!.name).join(', ')} completed. Resolve rewards, then choose a replacement quest.`);
  }, [state]);
  const close = () => { setOpen(false); setFresh(false); };
