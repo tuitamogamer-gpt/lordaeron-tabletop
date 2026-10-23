@@ -72,6 +72,16 @@ describe('on-demand game panels',()=>{
   cleanup();render(<Table initial={initial}/>);
   expect(screen.queryByRole('region',{name:'Next campaign step'})).toBeNull();
  });
+ it('lists the selected character’s faction quests in the rail and opens a quest from it',()=>{
+  const initial=createGame(p,DEFAULT_SETUP),horde=initial.quests.filter(id=>p.quests.find(q=>q.id===id)!.faction==='horde');
+  render(<Table initial={initial}/>);
+  const journal=screen.getByRole('region',{name:'Horde quest journal'});
+  expect(within(journal).getAllByRole('listitem')).toHaveLength(horde.length);
+  const q=p.quests.find(q=>q.id===horde[0])!;
+  expect(within(journal).getByRole('button',{name:`${q.name}: show on map`})).toBeTruthy();
+  fireEvent.click(within(journal).getByRole('button',{name:`Open ${q.name}`}));
+  expect(screen.getByRole('dialog',{name:q.name})).toBeTruthy();
+ });
  it('offers a direct handover from AI to the player for the selected character',()=>{
   const initial=createGame(p,DEFAULT_SETUP),takeControl=vi.fn(),id=initial.heroes[0].id;render(<Table initial={initial} bots={[id]} takeControl={takeControl}/>);
   fireEvent.click(screen.getByRole('button',{name:/^Characters/}));const dialog=screen.getByRole('dialog',{name:'Characters'});

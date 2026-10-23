@@ -28,6 +28,18 @@ Preostala tri su natpis „LEVEL” u bedžu nivoa širine 35 px. Na sve tri vel
 | `npm run check:render` | 621 komponenta, bez `undefined` / `NaN` |
 | Chromium, 3 veličine × 39 ekrana | bez odsječenog teksta, elemenata izvan ekrana i grešaka u konzoli |
 
+## Drugi krug · 23. 10. 2026.
+
+- **Dnevnik u koloni stola.** Na ekranima od 900 px visine, ispod Overlord kartice, prikazuju se aktivni questovi frakcije odabranog lika s oznakom, regijama i napretkom. Klik pokazuje quest na mapi, a knjiga otvara ciljeve i nagrade. Na nižim ekranima kolona ostaje nepromijenjena.
+- **Nagrade.** Karta je veća i stoji pored panela za preuzimanje. Primalac se bira portretom sa stanjem torbe umjesto padajuće liste, a zaglavlje nagrade je sabijeno da sve stane na laptop ekran.
+- **Novi talent.** Dijalog prati broj ponuđenih talenata i centrira karte, umjesto stranice sa šest kolona koju tri karte pune do pola.
+- **Dosije na 1280×720.** Sedma kolona opreme klizila je ispod desnog okvira. Svih sedam kolona sada staje unutar okvira, a dugme dodatka opreme je visoko 24 px umjesto 18.
+
+| Provjera | Rezultat |
+| --- | --- |
+| `npm test` | 1.067 testova u 49 datoteka prolaze |
+| Chromium, 3 veličine × 39 ekrana | bez odsječenog teksta, elemenata izvan ekrana, premalih dugmadi i grešaka u konzoli |
+
 ## Granice
 
-Uvećanje cijelog interfejsa na velikim ekranima nije izvedivo bez prepravke rasporeda: CSS `zoom` skalira i `100dvh`, pa raspored vezan za visinu ekrana prelazi ekran. Donja polovina desne kolone na 1920×1080 i dalje je prazna.
+Uvećanje cijelog interfejsa na velikim ekranima nije izvedivo bez prepravke rasporeda: CSS `zoom` skalira i `100dvh`, pa raspored vezan za visinu ekrana prelazi ekran. Na visokim ekranima taj prostor sada koristi dnevnik questova.

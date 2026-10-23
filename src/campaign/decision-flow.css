@@ -35,3 +35,52 @@
 .quest-swap-tier:disabled{opacity:.35;cursor:default}
 .quest-swap-skip{grid-column:1/-1;justify-self:start;margin-top:4px}
 @media(max-width:999px){.quest-swap-choices{grid-template-columns:1fr}}
+
+/* ---------- Table rail · a faction quest journal fills the free height on tall screens ---------- */
+.campaign-app .table-control-rail>.rail-quests{display:none}
+@media(min-height:900px) and (min-width:1000px){
+ .campaign-app.desktop-tabletop .table-control-rail>.rail-quests{display:flex;flex:1 1 0;flex-direction:column;min-height:150px;padding:10px;border:1px solid #8b74484d;border-top:2px solid #b75a43;border-radius:3px;background:#0f1714b0}
+ .campaign-app.desktop-tabletop .table-control-rail>.rail-quests.alliance{border-top-color:#71a4c1}
+ .rail-quests>header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+ .rail-quests>header .sheet-eyebrow{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:#cfb174}
+ .rail-quests>header>.quiet-button{min-height:26px;padding:3px 10px;font-size:11px}
+ .rail-quests>ul{display:flex;flex-direction:column;gap:6px;margin:0;padding:0 2px 0 0;list-style:none;overflow-y:auto;min-height:0;scrollbar-width:thin;scrollbar-color:#8b774d #17221b}
+ .rail-quests li{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:4px;border:1px solid #8b734740;border-radius:2px;background:#18211c}
+ .rail-quests li.selected{border-color:#d7b878;background:#2a2a1f}
+ .rail-quest{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:9px;width:100%;min-width:0;padding:7px 4px 7px 8px;border:0;background:none;color:inherit;text-align:left;cursor:pointer}
+ .rail-quest:hover strong{color:#fff3d6}
+ .rail-quest>span:nth-child(2){display:flex;flex-direction:column;gap:2px;min-width:0}
+ .rail-quest strong{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font:600 12px/1.25 var(--serif);color:#f0dcb3;overflow-wrap:normal}
+ .rail-quest small{font:11px/1.3 var(--sans);color:#ab9f86;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .rail-quest>b{font:600 12px/1 var(--sans);color:#d9c79f}
+ .rail-quests li>.icon-button{width:30px;height:30px;margin-right:4px}
+}
+
+/* ---------- Party rewards · cards beside the claim panel, recipients as portraits ---------- */
+.compact-decision .reward-claim-layout{display:grid;grid-template-columns:auto minmax(280px,1fr);gap:22px;align-items:start;margin-top:4px}
+.compact-decision .reward-claim-layout>.reward-previews{display:flex;flex-wrap:wrap;gap:12px;margin:0}
+.compact-decision .reward-claim-layout>.reward-previews>.card-thumbnail{width:clamp(130px,min(15vw,calc((100dvh - 540px) * .667)),200px);height:auto;aspect-ratio:2/3}
+.compact-decision .reward-claim-layout>.reward-claim-form{display:grid;grid-template-columns:1fr 1fr;align-items:stretch;gap:8px 10px;margin:0;padding:12px;border:1px solid #8b734766;background:#121815b8}
+.reward-recipients{grid-column:1/-1;display:flex;flex-direction:column;gap:6px}
+.reward-recipients>span{font:600 10px/1.3 var(--sans);letter-spacing:1.4px;text-transform:uppercase;color:#cfb174}
+.reward-recipients>button{display:grid;grid-template-columns:38px minmax(0,1fr);align-items:center;gap:10px;padding:6px 9px;border:1px solid #8b734766;border-radius:2px;background:#1a211c;color:inherit;text-align:left;cursor:pointer}
+.reward-recipients>button>.portrait{width:38px;height:38px}
+.reward-recipients>button strong{display:block;font:600 13px/1.25 var(--serif);color:#f0dcb3}
+.reward-recipients>button small{font:11px/1.3 var(--sans);color:#ab9f86}
+.reward-recipients>button.selected{border-color:#d7b878;background:#3a3120;box-shadow:inset 3px 0 0 #d7b878}
+.reward-recipients>button:hover:not(.selected){border-color:#b39a62}
+.compact-decision .reward-claim-layout .reward-claim-form>label{grid-column:1/-1;display:flex;flex-direction:column;gap:5px;font-size:11px}
+.compact-decision .reward-claim-layout .reward-claim-form>.gold-button,.compact-decision .reward-claim-layout .reward-claim-form>.quiet-button{width:100%}
+/* The reward header stays compact so the cards and the claim panel fit one laptop screen. */
+.compact-decision .reward-resolution{margin:6px 0}
+.compact-decision .reward-quest-banner{padding:7px 12px}
+.compact-decision .reward-quest-banner h3{margin:4px 0;font-size:20px}
+.compact-decision .reward-steps{margin:2px 0;padding:8px 0}
+.compact-decision .reward-party-receipt{margin:2px 0 4px}
+.compact-decision .reward-choice-heading{margin:6px 0}
+.compact-decision .reward-choice-heading h3{margin:0 0 2px}
+@media(max-width:999px){.compact-decision .reward-claim-layout{grid-template-columns:1fr}}
+
+/* ---------- New talent · the dialog fits the offered cards instead of a six-column page ---------- */
+.compact-decision.world-decision.talent-decision{width:min(calc(100vw - 48px),calc(var(--talent-count,3) * 214px + 60px))!important;min-width:min(calc(100vw - 48px),620px)}
+.compact-decision.talent-decision .talent-choice-grid{grid-template-columns:repeat(var(--talent-count,3),minmax(0,200px));justify-content:center}

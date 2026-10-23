@@ -86,7 +86,7 @@
  /* Long names stay whole words, and the class line yields to the name when the portrait is short. */
  .premium-character-sheet .sheet-profile{container-type:size}
  .premium-character-sheet .sheet-nameplate h2{font-size:clamp(17px,1.5vw,23px);overflow-wrap:normal;word-break:normal;hyphens:none}
- .premium-character-sheet .sheet-equipment-grid{grid-template-rows:minmax(228px,1fr);min-height:228px}
+ .premium-character-sheet .sheet-equipment-grid{grid-template-rows:minmax(228px,1fr);min-height:228px;grid-auto-columns:minmax(116px,1fr)}
  .premium-character-sheet .sheet-slot-card>.card-thumbnail{min-height:186px}
  .premium-character-sheet .sheet-slot-card .card-thumbnail-art,.premium-character-sheet .sheet-slot-card .card-portrait-face{min-height:150px}
  .premium-character-sheet .sheet-pane{container-type:size}
@@ -116,3 +116,6 @@
 
 /* ---------- Combat scene · the decorative corner caption sat under the hero portrait at every size ---------- */
 .cinematic-scene .battle-scene-caption{display:none}
+
+/* ---------- Dossier · equipment add-on chips are comfortable pointer targets ---------- */
+.premium-character-sheet .sheet-slot-extras .sheet-addon{min-height:24px}
