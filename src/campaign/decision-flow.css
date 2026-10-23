@@ -84,3 +84,34 @@
 /* ---------- New talent · the dialog fits the offered cards instead of a six-column page ---------- */
 .compact-decision.world-decision.talent-decision{width:min(calc(100vw - 48px),calc(var(--talent-count,3) * 214px + 60px))!important;min-width:min(calc(100vw - 48px),620px)}
 .compact-decision.talent-decision .talent-choice-grid{grid-template-columns:repeat(var(--talent-count,3),minmax(0,200px));justify-content:center}
+
+/* ---------- Campaign summary · how the campaign ended, how long it ran and who fought it ---------- */
+.campaign-summary{position:fixed;z-index:9;left:50%;top:50%;transform:translate(-50%,-50%);width:min(780px,calc(100vw - 32px));max-height:calc(100dvh - 110px);overflow-y:auto;display:flex;flex-direction:column;gap:16px;padding:22px 26px;border:20px solid transparent;border-image:url('/assets/warcraft/frame.webp') 210 stretch;background:linear-gradient(#31322cf2,#101a20f5),url('/assets/warcraft/warhall.webp') center / cover;box-shadow:0 15px 60px #000d;scrollbar-width:thin;scrollbar-color:#8b774d #17221b}
+.campaign-summary>header{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:18px}
+.campaign-summary>header>.boss-portrait{display:block;width:76px;height:76px;flex:none;border:2px solid #b39a62;border-radius:50%;box-shadow:0 0 0 4px #00000066}
+.campaign-summary>header>svg{color:#e7c67b;align-self:start}
+.campaign-summary>header .sheet-eyebrow{font:600 11px/1.3 var(--sans);letter-spacing:1.8px;text-transform:uppercase;color:#cfb174}
+.campaign-summary h2{margin:4px 0 6px;font:600 30px/1.15 var(--serif);color:#f3d493}
+.campaign-summary>header p{margin:0;font:14px/1.45 var(--sans);color:#d8c9a6}
+.summary-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0}
+.summary-stats>div{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 8px;border:1px solid #8b734766;border-top:2px solid #cfb174;background:#121815c4;text-align:center}
+.summary-stats>div.horde{border-top-color:#b75a43}.summary-stats>div.alliance{border-top-color:#71a4c1}
+.summary-stats dt{order:1;font:600 11px/1.3 var(--sans);letter-spacing:1.2px;text-transform:uppercase;color:#cfb174}
+.summary-stats dd{order:0;margin:0;font:600 30px/1.1 var(--serif);color:#f6e6bf}
+.summary-stats small{order:2;font:12px/1.3 var(--sans);color:#ab9f86}
+.summary-factions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.summary-factions>section{padding:10px 12px;border:1px solid #8b734766;border-left:3px solid #b75a43;background:#121815c4}
+.summary-factions>section.alliance{border-left-color:#71a4c1}
+.summary-factions>section.winner{border-color:#d7b878;background:linear-gradient(120deg,#3a3120d9,#121815c4);box-shadow:inset 0 0 24px #d7b87822}
+.summary-factions h3{display:flex;align-items:center;gap:8px;margin:0 0 8px;font:600 16px/1.2 var(--serif);color:#f0dcb3}
+.summary-factions h3 .faction-crest{width:24px;height:24px}
+.summary-factions h3 small{margin-left:auto;padding:2px 8px;border:1px solid #d7b878;border-radius:2px;font:600 10px/1.4 var(--sans);letter-spacing:1.2px;text-transform:uppercase;color:#f3d493}
+.summary-factions ul{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none}
+.summary-factions li{display:grid;grid-template-columns:38px minmax(0,1fr);align-items:center;gap:10px}
+.summary-factions li>.portrait{width:38px;height:38px}
+.summary-factions li strong{display:block;font:600 13px/1.25 var(--serif);color:#f0dcb3}
+.summary-factions li small{font:12px/1.3 var(--sans);color:#ab9f86}
+.campaign-summary>footer{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px}
+.campaign-summary>footer>button{min-height:36px}
+@media(max-width:640px){.campaign-summary>header{grid-template-columns:auto minmax(0,1fr)}.campaign-summary>header>svg{display:none}.summary-factions{grid-template-columns:1fr}.campaign-summary h2{font-size:24px}}
+.campaign-app .summary-docked{bottom:84px}

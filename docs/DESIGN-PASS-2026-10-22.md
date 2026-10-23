@@ -40,6 +40,19 @@ Preostala tri su natpis „LEVEL” u bedžu nivoa širine 35 px. Na sve tri vel
 | `npm test` | 1.067 testova u 49 datoteka prolaze |
 | Chromium, 3 veličine × 39 ekrana | bez odsječenog teksta, elemenata izvan ekrana, premalih dugmadi i grešaka u konzoli |
 
+## Treći krug · 23. 10. 2026.
+
+- **Završni ekran kampanje.** Umjesto natpisa „Alliance wins! 10 turns” prikazuje se sažetak: pobjednik i način završetka (pad Overlorda s imenima heroja koji su ostali na nogama, finalna PvP bitka ili Nefarianov neriješen ishod), broj odigranih poteza, završeni questovi po frakciji i heroji obje frakcije s nivoom i zlatom. Pobjednička frakcija je istaknuta. Dugmad vode u Chronicle, na sto ili u novu kampanju; sa stola se sažetak vraća dugmetom **Campaign summary**.
+- **Tačno trajanje.** U kampanjama Defeat the Overlord traka od 30 polja kreće ispočetka, a ekran je prikazivao samo trenutni potez. Sačuvana partija koja je završila u 3. krugu na 10. potezu sada pokazuje **70 turns played · Lap 3 · turn 10 of 30**.
+- **Sto nakon kraja.** Podnožje stola piše „The campaign is over” umjesto „1 of 2 actions remaining”.
+- **Učitavanje.** React (69 KB gzip) i biblioteke zod i lucide (31 KB gzip) idu u zasebne pakete. Oni se rijetko mijenjaju, pa ostaju u kešu preglednika: nakon deploya se ponovo preuzima 244 KB umjesto 346 KB (gzip). Lijeno učitavanje stranica Card library, Rules i Chronicle nije urađeno jer zajedno imaju oko 12 KB; najveći dio paketa su podaci igre, engine i React.
+
+| Provjera | Rezultat |
+| --- | --- |
+| `npm test` | 1.071 test u 50 datoteka prolazi; 4 nova u `campaign-summary.test.tsx` |
+| `npm run build`, `npm run check:render` | prolaze; 621 komponenta |
+| Chromium, 3 veličine × 39 ekrana | bez odsječenog teksta, elemenata izvan ekrana, premalih dugmadi i grešaka u konzoli; sažetak staje i na 1280×720 |
+
 ## Granice
 
 Uvećanje cijelog interfejsa na velikim ekranima nije izvedivo bez prepravke rasporeda: CSS `zoom` skalira i `100dvh`, pa raspored vezan za visinu ekrana prelazi ekran. Na visokim ekranima taj prostor sada koristi dnevnik questova.

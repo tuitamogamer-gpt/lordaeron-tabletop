@@ -26,6 +26,7 @@ import RestEditor from './campaign/RestEditor';
 import SaveManager from './campaign/SaveManager';
 import CampaignSetup from './campaign/CampaignSetup';
 import QuestActivity from './campaign/QuestReveal';
+import CampaignSummary from './campaign/CampaignSummary';
 import CharacterSheet, { CardRules, startingHero } from './campaign/CharacterSheet';
 import { AUTO_CONTINUE_MS, bookkeepingStep, combatCandidates, COMBAT_STEP_MS, DICE_SETTLE_MS, rollSignature, useCombatPresentation } from './campaign/combat-flow';
 import { challengeProfile, distinctChallenges, ThreatLevel } from './campaign/feedback';
@@ -41,7 +42,7 @@ export default function Campaign(){
  const[game,setGame]=useState(loadCampaign),[page,setPage]=useState('board'),[panel,setPanel]=useState<Panel>(()=>game.needsSetup?'new':null),[heroId,setHeroId]=useState(DEFAULT_SETUP.roster[0]),[selected,setSelected]=useState('brill'),[toast,setToast]=useState(()=>{try{return legacySave&&!localStorage.getItem(SAVE)?"Equipment and combat rules have been updated. Your previous game is preserved; download a copy in Settings.":'';}catch{return '';}}),[detailCard,setDetailCard]=useState(p.cards[0].id);
  const[recoveredSave]=useState(()=>game.unreadableSave??recoverySave()),[saveUnavailable,setSaveUnavailable]=useState(!!game.storageUnavailable),[importBusy,setImportBusy]=useState(false);
  const[bots,setBots]=useState<string[]>(()=>loadBots(game.session.setup.roster)),[auto,setAuto]=useState(false),[difficulty,setDifficulty]=useState<Difficulty>('balanced'),[botReason,setBotReason]=useState('');
- const[training,setTraining]=useState<string[]>([]),[exportJSON,setExportJSON]=useState(''),[codexHero,setCodexHero]=useState(DEFAULT_SETUP.roster[0]),[mapFocus,setMapFocus]=useState(false),[detailOpen,setDetailOpen]=useState(false);
+ const[training,setTraining]=useState<string[]>([]),[exportJSON,setExportJSON]=useState(''),[codexHero,setCodexHero]=useState(DEFAULT_SETUP.roster[0]),[mapFocus,setMapFocus]=useState(false),[detailOpen,setDetailOpen]=useState(false),[summaryHidden,setSummaryHidden]=useState(false);
  const[combatOpen,setCombatOpen]=useState(false),[combatResolve,setCombatResolve]=useState(true),[settledRoll,setSettledRoll]=useState('');
  const[autoContinue,setAutoContinue]=useState(()=>{try{return localStorage.getItem(AUTO_CONTINUE)!=='false';}catch{return true;}});
  useEffect(()=>{try{localStorage.setItem(AUTO_CONTINUE,String(autoContinue));}catch{/* The preference only lasts this session. */}},[autoContinue]);
@@ -113,7 +114,7 @@ export default function Campaign(){
   if(!current.current.needsSetup)setPreviousSave(JSON.stringify(current.current.session));
   planner.current?.dispose();planner.current=null;botRequest.current=null;
   current.current=next;setGame(next);setBots(nextBots);setHeroId(human);setSelected(next.state.heroes.find(hero=>hero.id===human)!.location);
-  setAuto(false);setMapFocus(false);setBotReason('');setTraining([]);setExportJSON('');setDetailOpen(false);setWorkspaceOpen(false);
+  setAuto(false);setMapFocus(false);setBotReason('');setTraining([]);setExportJSON('');setDetailOpen(false);setWorkspaceOpen(false);setSummaryHidden(false);
   setCombatOpen(next.state.phase==='combat');setSettledRoll('');setQuestSession(n=>n+1);setRevealSetup(false);setQuestOpen(false);setPanel(null);setPage('board');
  };
  const reset=(setup:Setup,human:string,newBots:boolean)=>{try{const next={state:createGame(p,setup),session:newSession(p,setup)},humanId=setup.roster.includes(human)?human:setup.roster[0];importRequest.current++;setImportBusy(false);replaceCampaign(next,humanId,newBots?setup.roster.filter(id=>id!==humanId):[]);}catch(e){setToast((e as Error).message);}};
@@ -148,7 +149,7 @@ export default function Campaign(){
  {!game.needsSetup&&<Suspense fallback={combatOpen?<p>Preparing combat…</p>:null}><CampaignCombat state={state} legal={state.battle?.stage==='over'?[...legal,...allLegal.filter(c=>c.type==='closeBattle'&&!legal.some(h=>h.type==='closeBattle'))]:legal} busy={diceRolling} presentation={presentation} send={sendCombat} botStep={botStep} botReady={botReady} auto={auto} toggleBots={()=>setAuto(v=>!v)} open={combatOpen} onClose={()=>setCombatOpen(false)} bots={bots} resolve={combatResolve} toggleResolve={()=>setCombatResolve(v=>!v)} botResponsePending={botResponsePending} onPassHumanWindow={passHumanResponse} automationPending={!!automaticCombat.length} autoContinue={autoContinue} toggleAutoContinue={()=>setAutoContinue(v=>!v)} autoStep={autoStep}/></Suspense>}
  {state.phase==='combat'&&!combatOpen&&<button className="combat-docked" onClick={()=>setCombatOpen(true)}><Icon name="swords"/><span>Return to combat<small>Round {state.battle?.round} · {phaseLabel[state.battle?.stage??'combat']}</small></span><Icon name="arrow" size={14}/></button>}
  {decision&&<WorldDecision key={`${state.phase}-${state.eventFlow?.event}-${state.eventFlow?.steps[0]?.hero}-${state.heroes.find(h=>h.talentChoices.length)?.id}-${state.reward?.offered.join()}`} state={state} legal={legal} send={send} inspect={inspect} botStep={botStep} botReady={botReady} auto={auto} toggleBots={()=>setAuto(v=>!v)}/>}
- {state.phase==='finished'&&<div className="victory-strip"><Icon name="trophy" size={38}/><h2>{state.winner==='draw'?"The campaign ends in a draw":`${factionLabel(state.winner??'')} wins!`}</h2><p>{state.turn} turns</p><button className="gold-button" onClick={()=>open('new')}>New campaign</button></div>}
+ {state.phase==='finished'&&page==='board'&&(summaryHidden?<button className="combat-docked summary-docked" onClick={()=>setSummaryHidden(false)}><Icon name="trophy"/><span>Campaign summary<small>{state.winner==='draw'?'Draw':`${factionLabel(state.winner??'')} wins`}</small></span><Icon name="arrow" size={14}/></button>:<CampaignSummary state={state} onNew={()=>open('new')} onChronicle={()=>setPage('journal')} onHide={()=>setSummaryHidden(true)}/>)}
  <input ref={file} type="file" accept=".json,application/json" hidden onChange={e=>void importFile(e.target.files?.[0])}/>
  {panel&&<Modal title={title} wide={['new','town','manage','trade','train'].includes(panel)} className={panel==='new'?'setup-modal':panel==='manage'?'equipment-modal':panel==='train'?'training-modal':panel==='town'?'town-modal':''} onClose={()=>setPanel(null)}>
  {panel==='rest'&&<RestEditor key={h.id} state={game.state} hero={h} legal={legal} send={closeAfter}/>}
