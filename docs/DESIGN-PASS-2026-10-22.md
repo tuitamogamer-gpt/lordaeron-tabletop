@@ -53,6 +53,17 @@ Preostala tri su natpis „LEVEL” u bedžu nivoa širine 35 px. Na sve tri vel
 | `npm run build`, `npm run check:render` | prolaze; 621 komponenta |
 | Chromium, 3 veličine × 39 ekrana | bez odsječenog teksta, elemenata izvan ekrana, premalih dugmadi i grešaka u konzoli; sažetak staje i na 1280×720 |
 
+## Četvrti krug · 23. 10. 2026.
+
+- **Undo.** Pogrešan Travel ili Rest više nije konačan. Nakon poteza se pored **End turn** pojavljuje dugme **Undo travel**, **Undo rest** i slično; isto radi Ctrl+Z (Cmd+Z na Macu). Može se vratiti do 12 uzastopnih poteza.
+- **Bez varanja.** Vraćaju se samo Travel, Rest, Train, Town, Trade i opremanje, i to samo ako potez nije koristio slučajnost, nije promijenio nijedan skriveni špil ni stvorenja na mapi i nije otvorio borbu, događaj, aukciju ili nagradu. Challenge, kraj poteza i potezi AI-ja zatvaraju historiju poništavanja, pa se kockice ne mogu ponovo bacati, a karta se ne može vidjeti pa vratiti. U sačuvanoj partiji od 3.302 naredbe svih 512 takvih poteza ispunjava taj uslov.
+- **Izbor sljedećeg questa.** Na 1366×768 i 1280×720 dugmad ispod karata špilova bila su ispod ruba dijaloga. Prazan red opcija više ne zauzima prostor, a karte špilova se smanjuju prema visini ekrana; dijalog staje bez skrolanja na sve tri veličine.
+
+| Provjera | Rezultat |
+| --- | --- |
+| `npm test` | 1.074 testa u 51 datoteci prolaze; 3 nova u `undo.test.ts` |
+| Chromium | Rest → Ctrl+Z vraća akciju i autosave na prethodno stanje; 3 veličine × 39 ekrana bez odsječenog teksta, elemenata izvan ekrana i grešaka u konzoli |
+
 ## Granice
 
 Uvećanje cijelog interfejsa na velikim ekranima nije izvedivo bez prepravke rasporeda: CSS `zoom` skalira i `100dvh`, pa raspored vezan za visinu ekrana prelazi ekran. Na visokim ekranima taj prostor sada koristi dnevnik questova.

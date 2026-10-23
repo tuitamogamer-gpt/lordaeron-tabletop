@@ -4,7 +4,9 @@ Desktop adaptacija osnovne igre iz 2005. i službenog FAQ-a 1.4. React interfejs
 
 [Otvori igru](https://lordaeron-tabletop.vercel.app)
 
-Najnoviji prolaz dodaje završni ekran kampanje: pobjednik, kako je partija završila (npr. „Lord Kazzak falls in Deep Elem Mine to Artumnis, Brandon and Burbon”), tačan broj odigranih poteza kroz sve krugove trake, završeni questovi po frakciji i heroji s nivoom i zlatom. Ranije je pisalo samo „10 turns” i kada je partija trajala 70 poteza. React i ostale biblioteke sada se učitavaju kao zasebni paketi koji ostaju u kešu preglednika između deployeva. Detalji: [DESIGN-PASS-2026-10-22.md](docs/DESIGN-PASS-2026-10-22.md#treći-krug--23-10-2026).
+Najnoviji prolaz dodaje **Undo**: Travel, Rest, Train, Town, Trade i opremanje mogu se vratiti dugmetom pored End turn ili sa Ctrl+Z, sve dok potez nije bacio kockice ni otkrio kartu. Dijalog za izbor sljedećeg questa sada staje na laptop ekran. Detalji: [DESIGN-PASS-2026-10-22.md](docs/DESIGN-PASS-2026-10-22.md#četvrti-krug--23-10-2026).
+
+Prethodni prolaz dodaje završni ekran kampanje: pobjednik, kako je partija završila (npr. „Lord Kazzak falls in Deep Elem Mine to Artumnis, Brandon and Burbon”), tačan broj odigranih poteza kroz sve krugove trake, završeni questovi po frakciji i heroji s nivoom i zlatom. Ranije je pisalo samo „10 turns” i kada je partija trajala 70 poteza. React i ostale biblioteke sada se učitavaju kao zasebni paketi koji ostaju u kešu preglednika između deployeva. Detalji: [DESIGN-PASS-2026-10-22.md](docs/DESIGN-PASS-2026-10-22.md#treći-krug--23-10-2026).
 
 Prethodni dizajnerski prolaz podiže sitan tekst od 6–8 px na čitljivu veličinu, oslobađa lični list od ukrasa okvira, daje bossovima događaja ime i sliku u borbi i preuređuje aukciju, nagrade, izbor talenta i New Horizons. Na visokim ekranima kolona stola prikazuje dnevnik questova. Provjereno na 1280×720, 1366×768 i 1920×1080: [DESIGN-PASS-2026-10-22.md](docs/DESIGN-PASS-2026-10-22.md).
 
@@ -76,7 +78,7 @@ Prečice: **1–5** akcije, **F** interakcija s mapom, **Esc** povratak. Unutar 
 
 ## Provjera i granice
 
-Aktuelni prolaz ima **1.071 test**, build, render 621 komponente i dizajnerski audit 39 ekrana na tri veličine: [DESIGN-PASS-2026-10-22.md](docs/DESIGN-PASS-2026-10-22.md). AI prolaz dodaje sedam završenih AI kampanja protiv sva tri Overlorda i nezavisni replay audit dvije od njih: [AI-OVERLORD-2026-10-22.md](docs/AI-OVERLORD-2026-10-22.md). Prethodni prolaz dodaje render 621 komponente, izvoz mape i nastavak dvije zaglavljene kampanje: [RELIABILITY-2026-10-20.md](docs/RELIABILITY-2026-10-20.md).
+Aktuelni prolaz ima **1.074 testa**, build, render 621 komponente i dizajnerski audit 39 ekrana na tri veličine: [DESIGN-PASS-2026-10-22.md](docs/DESIGN-PASS-2026-10-22.md). AI prolaz dodaje sedam završenih AI kampanja protiv sva tri Overlorda i nezavisni replay audit dvije od njih: [AI-OVERLORD-2026-10-22.md](docs/AI-OVERLORD-2026-10-22.md). Prethodni prolaz dodaje render 621 komponente, izvoz mape i nastavak dvije zaglavljene kampanje: [RELIABILITY-2026-10-20.md](docs/RELIABILITY-2026-10-20.md).
 
 Raniji audit enginea popravlja Vanish bonuse, duplirane figure pri recikliranju questova i ponovno zatvaranje borbe. Tadašnjih 838 testova, build, render i tri AI partije s 4.312 naredbi i identičnim replayom: [ENGINE-SCRIPT-AUDIT.md](docs/ENGINE-SCRIPT-AUDIT.md). Prethodna provjera svih event karata, klasnih moći, talenata i smjene Horda → Alijansa kroz svih 30 poteza: [CARD-EVENT-TURN-AUDIT.md](docs/CARD-EVENT-TURN-AUDIT.md).
 
