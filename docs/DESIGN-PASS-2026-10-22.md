@@ -86,8 +86,22 @@ Igra je imala fiksnu minimalnu širinu od 1.024 px. Na tabletu u uspravnom polo�
 | `npm test`, `npm run build` | 1.074 testa prolaze; build prolazi |
 | Chromium, 1366×768, 1280×720, 1920×1080 | nepromijenjeno: bez odsječenog teksta, elemenata izvan ekrana i grešaka u konzoli |
 
+## Šesti krug · 24. 10. 2026.
+
+- **Zumiranje s dva prsta.** Na mapi preko cijelog ekrana razmicanje prstiju zumira oko tačke gdje je pokret počeo, a pomjeranje oba prsta pomjera mapu. Kad se jedan prst digne, drugi nastavlja pomjerati mapu bez skoka. Dodir i dalje bira regiju, a miš, točkić i tastatura rade kao ranije. Provjereno u Chromiumu sa simuliranim dodirom: 200% → 400% razmicanjem, 400% → 120% skupljanjem, pomjeranje jednim prstom i izbor regije dodirom.
+- **Upute na mapi.** Na uređajima na dodir piše „Drag · pan, Pinch · zoom, Tap · select” umjesto uputa za točkić i Shift.
+- **Instaliranje na početni ekran.** Dodani su manifest, ikone 192 i 512 px (i maskirana verzija za Android) i ikona za iOS. Ikona je grb iz zaglavlja igre. Igra se otvara preko cijelog ekrana, bez trake preglednika. Chromium ne prijavljuje nijednu prepreku za instaliranje.
+- **Kraj kampanje.** Dugme **Run AI** se više ne prikazuje kada je kampanja završena.
+- **Sitan tekst na telefonu.** Opisi akcija, likova u borbi, izbora likova i Overlorda u setupu podignuti su na 9,5–10 px. Na 390×844 tekst od 8,5 px ili manje pao je sa 76 na 0, a na 820×1180 sa 61 na 0.
+
+| Provjera | Rezultat |
+| --- | --- |
+| `npm test` | 1.076 testova u 52 datoteke prolaze; 2 nova u `map-pinch.test.ts` |
+| `npm run build`, `npm run check:render` | prolaze; 621 komponenta |
+| Chromium, 3 desktop veličine × 39 ekrana | nepromijenjeno, bez grešaka u konzoli |
+
 ## Granice
 
-Na telefonu dio sitnih natpisa (oznake kockica, statistike u borbi) ostaje ispod 9 px, a mapa se zumira dugmadima +/− jer pinch-zoom nije podržan.
+Igra nema offline režim: slike karata zauzimaju oko 230 MB, pa ih service worker ne može unaprijed sačuvati. Partije su ipak lokalne i ne trebaju server.
 
 Uvećanje cijelog interfejsa na velikim ekranima nije izvedivo bez prepravke rasporeda: CSS `zoom` skalira i `100dvh`, pa raspored vezan za visinu ekrana prelazi ekran. Na visokim ekranima taj prostor sada koristi dnevnik questova.

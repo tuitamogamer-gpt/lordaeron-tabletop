@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { type PointerEvent, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon, useModalDialog } from '../components';
 import { BASE_PACK as p } from '../data/base';
@@ -6,7 +6,7 @@ import { BOARD_BORDERS, BOARD_SHAPE_BY_ID, BOARD_SHAPES, BOARD_VIEW as board, ZO
 import { capacity, card, character } from '../rules/common';
 import type { Command, Color } from '../rules/model';
 import type { GameView } from '../rules/view';
-import { clampCamera, OVERVIEW_CAMERA, panCamera, questMarkers, zoomCamera, questLabel, type QuestMarker } from './map-state';
+import { clampCamera, OVERVIEW_CAMERA, panCamera, pinchCamera, questMarkers, zoomCamera, questLabel, type Pinch, type QuestMarker } from './map-state';
 import { BoardTokenArt } from './Art';
 import { creatureStacks, MapPortraitToken, type TokenHelp, type ShowTokenHelp } from './MapTokens';
 import { encounterProfile, ThreatLevel } from './feedback';
@@ -31,6 +31,16 @@ export default function CampaignMap({ state, selected, heroId, legal, onSelect, 
  const fullscreen=useRef<HTMLDialogElement>(null);
  useModalDialog(fullscreen,focused);
  const drag=useRef<{x:number;y:number;panX:number;panY:number}|null>(null),didDrag=useRef(false),previousSelection=useRef(selected),wasFocused=useRef(false);
+ // Touch points on the fullscreen map: one finger pans, two fingers pinch to zoom.
+ const pointers=useRef(new Map<number,{x:number;y:number}>()),pinch=useRef<Pinch|null>(null),cameraNow=useRef(camera);cameraNow.current=camera;
+ const gesture=()=>{const el=canvas.current!,r=el.getBoundingClientRect(),[a,b]=[...pointers.current.values()];return {mid:{x:(a.x+b.x)/2-r.left-r.width/2,y:(a.y+b.y)/2-r.top-r.height/2},distance:Math.hypot(a.x-b.x,a.y-b.y)};};
+ const release=(e:PointerEvent<HTMLDivElement>)=>{
+  pointers.current.delete(e.pointerId);if(e.currentTarget.hasPointerCapture(e.pointerId))e.currentTarget.releasePointerCapture(e.pointerId);
+  const rest=[...pointers.current.values()][0];
+  if(pinch.current&&pointers.current.size<2){pinch.current=null;drag.current=rest?{x:rest.x,y:rest.y,panX:cameraNow.current.x,panY:cameraNow.current.y}:null;}
+  else if(!rest)drag.current=null;
+  if(!rest)setDragging(false);
+ };
  const markers=useMemo(()=>questMarkers(p,state),[state.quests,state.enemies]);
  const me=state.heroes.find(h=>h.id===heroId)!;
  const moves=legal.filter((c):c is Extract<Command,{type:'travel'}>=>c.type==='travel'&&c.hero===heroId);
@@ -66,6 +76,7 @@ export default function CampaignMap({ state, selected, heroId, legal, onSelect, 
  },[focused]);
  useEffect(()=>{
   setTokenHelp(null);
+  pointers.current.clear();pinch.current=null;
   if(!focused){reset();drag.current=null;setDragging(false);if(wasFocused.current)entryButton.current?.focus();}
   else {canvas.current?.focus();focusRegion(selected);}
   wasFocused.current=focused;
@@ -101,10 +112,14 @@ export default function CampaignMap({ state, selected, heroId, legal, onSelect, 
   <div ref={canvas} className={`campaign-map-scroll ${dragging?'dragging':''}`} tabIndex={0} role="region" aria-label={focused?"Interactive map: scroll or drag to pan, Control and wheel or plus and minus to zoom, 0 for overview, Escape to exit":"Entire board overview"}
    onKeyDownCapture={e=>{if(!focused&&(e.key==='Enter'||e.key===' ')){e.preventDefault();e.stopPropagation();}}}
    onKeyDown={e=>{if(!focused)return;if(['+','=','-','0','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Escape'].includes(e.key)){e.preventDefault();e.stopPropagation();if(e.key==='Escape')onToggleFocus();else if(e.key==='0')reset();else if(e.key==='+'||e.key==='=')changeZoom(.25);else if(e.key==='-')changeZoom(-.25);else setCamera(c=>clamp({...c,x:c.x+(e.key==='ArrowLeft'?70:e.key==='ArrowRight'?-70:0),y:c.y+(e.key==='ArrowUp'?70:e.key==='ArrowDown'?-70:0)}));}}}
-   onPointerDown={e=>{didDrag.current=false;if(!focused||e.button!==0)return;setTokenHelp(null);drag.current={x:e.clientX,y:e.clientY,panX:camera.x,panY:camera.y};}}
-   onPointerMove={e=>{const start=drag.current;if(!start)return;if(Math.hypot(e.clientX-start.x,e.clientY-start.y)>5){didDrag.current=true;setDragging(true);e.currentTarget.setPointerCapture(e.pointerId);setCamera(c=>clamp({...c,x:start.panX+e.clientX-start.x,y:start.panY+e.clientY-start.y}));}}}
-   onPointerUp={e=>{drag.current=null;setDragging(false);if(e.currentTarget.hasPointerCapture(e.pointerId))e.currentTarget.releasePointerCapture(e.pointerId);}}
-   onPointerCancel={()=>{drag.current=null;didDrag.current=false;setDragging(false);}}
+   onPointerDown={e=>{if(!focused||e.button!==0){didDrag.current=false;return;}setTokenHelp(null);pointers.current.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(pointers.current.size===2){drag.current=null;didDrag.current=true;setDragging(true);for(const id of pointers.current.keys())try{e.currentTarget.setPointerCapture(id);}catch{/* the pointer already lifted */}pinch.current={camera:cameraNow.current,...gesture()};}
+    else if(pointers.current.size===1){didDrag.current=false;drag.current={x:e.clientX,y:e.clientY,panX:camera.x,panY:camera.y};}}}
+   onPointerMove={e=>{if(!pointers.current.has(e.pointerId))return;pointers.current.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    const el=canvas.current;if(pinch.current&&pointers.current.size>=2&&el){const g=gesture();setCamera(pinchCamera(pinch.current,g.mid,g.distance,el.clientWidth,el.clientHeight,ratio));return;}
+    const start=drag.current;if(!start)return;if(Math.hypot(e.clientX-start.x,e.clientY-start.y)>5){didDrag.current=true;setDragging(true);e.currentTarget.setPointerCapture(e.pointerId);setCamera(c=>clamp({...c,x:start.panX+e.clientX-start.x,y:start.panY+e.clientY-start.y}));}}}
+   onPointerUp={release}
+   onPointerCancel={e=>{release(e);if(!pointers.current.size)didDrag.current=false;}}
    onClickCapture={e=>{if(!focused||didDrag.current){e.preventDefault();e.stopPropagation();didDrag.current=false;}}}>
    <svg viewBox={`${board.x} ${board.y} ${board.width} ${board.height}`} style={{transform:`translate(${camera.x}px,${camera.y}px) scale(${camera.zoom})`}} role="group" aria-label="2D board with 67 bordered regions">
     <defs>
@@ -145,7 +160,7 @@ export default function CampaignMap({ state, selected, heroId, legal, onSelect, 
     <g className="map-cartouche" transform="translate(1080,965)" pointerEvents="none"><text textAnchor="middle">LORDAERON</text><text textAnchor="middle" y="21" className="cartouche-small">THE WAR TABLE · 2005</text></g>
    </svg>
    {!focused&&<span className="world-view-label">LIVE BOARD <span>Fullscreen to interact</span></span>}
-   {focused&&<span className="map-gesture-hint">SCROLL / DRAG · PAN &nbsp; SHIFT · HORIZONTAL &nbsp; CTRL + SCROLL · ZOOM</span>}
+   {focused&&<span className="map-gesture-hint"><span className="pointer-hint">SCROLL / DRAG · PAN &nbsp; SHIFT · HORIZONTAL &nbsp; CTRL + SCROLL · ZOOM</span><span className="touch-hint">DRAG · PAN &nbsp; PINCH · ZOOM &nbsp; TAP · SELECT</span></span>}
    {tokenHelp&&!dragging&&<div ref={tooltip} className={`map-token-tooltip ${tokenHelp.below?'below':'above'}`} role="tooltip" style={{left:tokenHelp.x,top:tokenHelp.y}}><small>{tokenHelp.category}</small><strong>{tokenHelp.title}</strong><p>{tokenHelp.summary}</p>{!!tokenHelp.details?.length&&<ul>{tokenHelp.details.filter(Boolean).map((detail,i)=><li key={i}>{detail}</li>)}</ul>}{tokenHelp.hint&&<em>{tokenHelp.hint}</em>}</div>}
   </div>
   <div className="map-legend"><span><i className="legend-border passable"/>Passable</span><span><i className="legend-border impassable"/>Impassable</span><span><i className="legend-reachable"/>Range 1–2</span><span><i className="creature-dot blue"/>Stop movement</span><span className="legend-quests"><i className="legend-token horde"/>Horde <i className="legend-token alliance"/>Alliance</span></div>

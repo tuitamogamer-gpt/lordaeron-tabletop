@@ -34,3 +34,12 @@ export function zoomCamera(camera: MapCamera, zoom: number, cursor: { x: number;
 export function panCamera(camera: MapCamera, delta: { x: number; y: number }, width: number, height: number, ratio: number): MapCamera {
  return clampCamera({ ...camera, x: camera.x - delta.x, y: camera.y - delta.y }, width, height, ratio);
 }
+export interface Pinch { camera: MapCamera; mid: { x: number; y: number }; distance: number; }
+/**
+ * Two-finger gesture on the fullscreen map: the spread between the fingers scales the start zoom around the point
+ * where the gesture began, and moving both fingers together pans. Points are relative to the canvas centre.
+ */
+export function pinchCamera(start: Pinch, mid: { x: number; y: number }, distance: number, width: number, height: number, ratio: number): MapCamera {
+ const zoomed = zoomCamera(start.camera, start.camera.zoom * distance / Math.max(1, start.distance), start.mid, width, height, ratio);
+ return clampCamera({ ...zoomed, x: zoomed.x + mid.x - start.mid.x, y: zoomed.y + mid.y - start.mid.y }, width, height, ratio);
+}

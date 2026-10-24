@@ -28,6 +28,10 @@
  /* The faction journals list one quest per row inside each faction column. */
  .campaign-app .workspace-quests .faction-quests{grid-template-columns:minmax(0,1fr)}
 
+ /* Narrow-screen rules in earlier layers shrink these captions to 7–8px; keep them readable. */
+ .campaign-app .action-dock>button>span>small,.campaign-app .combat-sheet-heroes>button>span>small,.campaign-app .setup-footer>a,.campaign-app .setup-boss-selected{font-size:10px!important}
+ .campaign-app .sheet-portrait>.sheet-faction>span,.campaign-app .sheet-portrait>.sheet-level>small,.campaign-app .draft-factions button>span>small{font-size:9.5px!important}
+
  /* Pages read top to bottom instead of keeping desktop side columns. */
  .campaign-app .campaign-main{padding-inline:12px}
 }
@@ -56,3 +60,7 @@
  .combat-toolbar>span{display:none}
  .combat-toolbar>.quiet-button{flex:none;margin-left:auto;white-space:nowrap;padding:6px 10px}
 }
+
+/* Map gesture help matches the input: mouse and trackpad, or touch. */
+.map-gesture-hint>.touch-hint{display:none}
+@media(pointer:coarse){.map-gesture-hint>.pointer-hint{display:none}.map-gesture-hint>.touch-hint{display:inline}}
