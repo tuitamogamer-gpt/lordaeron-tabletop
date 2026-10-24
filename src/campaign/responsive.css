@@ -1,0 +1,58 @@
+/* ---------- Narrow screens · tablets in portrait and phones ----------
+   The table is laid out for landscape desktops. Below 1000px the map takes the full width at its own
+   proportions, the rail follows below it, and the action dock stays docked at the bottom of the screen. */
+@media(max-width:999px){
+ .campaign-app,.campaign-app.desktop-tabletop{min-width:0!important}
+ .campaign-app .topbar{gap:12px;padding:0 12px}
+ .campaign-app .topbar .wordmark{flex:none;min-width:0}
+ .campaign-app .topbar .wordmark>span:last-child>strong{white-space:nowrap;font-size:17px}
+ .campaign-app .topbar .wordmark em{display:none}
+ .campaign-app .topnav{flex:1 1 auto;min-width:0;overflow-x:auto;scrollbar-width:none}
+ .campaign-app .topnav::-webkit-scrollbar{display:none}
+ .campaign-app .topbar .topnav button{display:block;flex:none;white-space:nowrap}
+ .campaign-app .campaign-title{flex-wrap:wrap;row-gap:6px;height:auto}
+ .campaign-app .campaign-title .campaign-turn{margin-left:auto}
+
+ .campaign-app.desktop-tabletop .campaign-main{height:auto;min-height:calc(100dvh - 60px);overflow:visible;padding:10px 12px 0}
+ .campaign-app.desktop-tabletop .command-table{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto 1fr;overflow:visible;gap:10px}
+ .campaign-app.desktop-tabletop .command-table>.territorial-map.overview{grid-column:1;grid-row:1;height:auto}
+ .campaign-app.desktop-tabletop .command-table>.territorial-map.overview .campaign-map-scroll{flex:none;aspect-ratio:1380/920}
+ .campaign-app.desktop-tabletop .command-table>.table-control-rail{grid-column:1;grid-row:2;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;overflow:visible}
+ .campaign-app.desktop-tabletop .command-table>.table-control-rail>*{min-width:0}
+ .campaign-app.desktop-tabletop .command-table>.table-control-rail>.turn-guidance,.campaign-app.desktop-tabletop .command-table>.table-control-rail>.rail-quests{grid-column:1/-1}
+ .campaign-app.desktop-tabletop .command-table>.table-action-footer{grid-column:1;grid-row:3;align-self:end;position:sticky;bottom:0;z-index:6;margin:0 -12px;padding:8px 12px calc(8px + env(safe-area-inset-bottom));background:linear-gradient(#0d1411e6,#0a100df5);border-top:1px solid #8b744866;backdrop-filter:blur(6px)}
+ .campaign-app.desktop-tabletop .table-action-footer .action-dock{display:grid;grid-auto-flow:column;grid-template-columns:none;grid-auto-columns:minmax(118px,1fr);overflow-x:auto;scrollbar-width:none}
+ .campaign-app.desktop-tabletop .table-action-footer .action-dock::-webkit-scrollbar{display:none}
+ .campaign-app .summary-docked{bottom:92px}
+
+ /* The faction journals list one quest per row inside each faction column. */
+ .campaign-app .workspace-quests .faction-quests{grid-template-columns:minmax(0,1fr)}
+
+ /* Pages read top to bottom instead of keeping desktop side columns. */
+ .campaign-app .campaign-main{padding-inline:12px}
+}
+
+@media(max-width:600px){
+ .campaign-app .topbar .wordmark>span:last-child{display:none}
+ .campaign-app .topbar .header-right{gap:4px}
+ .campaign-app .campaign-title h1{font-size:20px}
+ .campaign-app.desktop-tabletop .command-table>.table-control-rail{grid-template-columns:minmax(0,1fr)}
+ .campaign-app .topbar .topnav button{padding:0 8px;font-size:11px;letter-spacing:.3px}
+ .campaign-app.desktop-tabletop .command-table>.territorial-map.overview .map-toolbar>span,.campaign-app.desktop-tabletop .command-table>.territorial-map.overview .map-legend{display:none}
+ .campaign-app.desktop-tabletop .table-action-footer .bot-status{flex:none}
+ .campaign-app .workspace-quests .quest-ledger{grid-template-columns:minmax(0,1fr)}
+ /* Workspace tabs sit two per row instead of one tall column above the content. */
+ .campaign-app .workspace-modal>.workspace-toggles.inside{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+ .campaign-app .workspace-modal>.workspace-toggles.inside>button{min-width:0;min-height:38px;padding:5px 8px}
+ .campaign-app .workspace-modal>.workspace-toggles.inside>button>.game-icon{display:none}
+ /* Decision rows put their controls on a second line so names keep the full width. */
+ .auction-choices .auction-bidder{grid-template-columns:44px minmax(0,1fr);row-gap:8px}
+ .auction-choices .auction-bidder>.auction-stepper{grid-column:1/-1;grid-row:2;justify-self:start}
+ .auction-choices .auction-bidder>.gold-button{grid-column:2;grid-row:2;justify-self:end}
+ .auction-choices .auction-bidder.sealed{grid-template-columns:44px minmax(0,1fr) auto}
+ .quest-swap-row{grid-template-columns:auto minmax(0,1fr)}
+ .quest-swap-row>.quest-swap-tiers{grid-column:1/-1}
+ .quest-swap-tier{flex:1}
+ .combat-toolbar>span{display:none}
+ .combat-toolbar>.quiet-button{flex:none;margin-left:auto;white-space:nowrap;padding:6px 10px}
+}

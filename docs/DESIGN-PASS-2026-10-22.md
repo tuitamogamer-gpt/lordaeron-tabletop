@@ -64,6 +64,30 @@ Preostala tri su natpis „LEVEL” u bedžu nivoa širine 35 px. Na sve tri vel
 | `npm test` | 1.074 testa u 51 datoteci prolaze; 3 nova u `undo.test.ts` |
 | Chromium | Rest → Ctrl+Z vraća akciju i autosave na prethodno stanje; 3 veličine × 39 ekrana bez odsječenog teksta, elemenata izvan ekrana i grešaka u konzoli |
 
+## Peti krug · 24. 10. 2026.
+
+Igra je imala fiksnu minimalnu širinu od 1.024 px. Na tabletu u uspravnom položaju (820×1180) mapa je bila sitna, sa mnogo praznog prostora iznad i ispod nje, a stranice Card library, Chronicle i Rules skrolale su se vodoravno. Na telefonu (390×844) mapa je bila stisnuta u traku širine oko 50 px.
+
+- **Sto ispod 1.000 px.** Mapa zauzima cijelu širinu u svojim proporcijama, ispod nje su prečice, aktivni lik i Overlord (dvije kolone na tabletu, jedna na telefonu), a traka s akcijama ostaje prikačena na dnu ekrana i klizi vodoravno. **Interact with map** otvara mapu preko cijelog ekrana, gdje se pomjera prevlačenjem prsta.
+- **Zaglavlje.** Natpis se više ne lomi u dva reda; na telefonu ostaje samo grb, a navigacija klizi vodoravno.
+- **Stranice.** Bez vodoravnog skrolanja na tabletu i telefonu.
+- **Paneli i odluke na telefonu.** Kartice radnog prostora stoje po dvije u redu. Dnevnik questova prikazuje jedan quest po redu (ranije su naslovi bili široki nekoliko slova). U aukciji i New Horizons dugmad prelaze u drugi red, pa imena ostaju čitljiva. Zaglavlje borbe više ne gura **Back to map** izvan ekrana.
+- Sva pravila su u novom `src/campaign/responsive.css` i vrijede samo ispod 1.000 px, pa je desktop raspored nepromijenjen.
+
+| Veličina | Vodoravno skrolanje | Elementi izvan ekrana |
+| --- | --- | --- |
+| 820×1180 prije / poslije | 3 / 0 | 27 / 1 (ispod ruba stranice Heroes) |
+| 390×844 prije / poslije | 37 / 0 | 80 / 0* |
+
+\* Na telefonu se sto skrola uspravno; elementi ispod prvog ekrana se ne broje.
+
+| Provjera | Rezultat |
+| --- | --- |
+| `npm test`, `npm run build` | 1.074 testa prolaze; build prolazi |
+| Chromium, 1366×768, 1280×720, 1920×1080 | nepromijenjeno: bez odsječenog teksta, elemenata izvan ekrana i grešaka u konzoli |
+
 ## Granice
+
+Na telefonu dio sitnih natpisa (oznake kockica, statistike u borbi) ostaje ispod 9 px, a mapa se zumira dugmadima +/− jer pinch-zoom nije podržan.
 
 Uvećanje cijelog interfejsa na velikim ekranima nije izvedivo bez prepravke rasporeda: CSS `zoom` skalira i `100dvh`, pa raspored vezan za visinu ekrana prelazi ekran. Na visokim ekranima taj prostor sada koristi dnevnik questova.
