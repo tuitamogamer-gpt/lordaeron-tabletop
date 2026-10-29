@@ -13,3 +13,15 @@
 .save-copy-label .save-text{width:100%;max-height:140px}
 .setup-recovery-notice{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;margin:0;padding:10px 20px;background:#392919;color:#f4cc86;font-size:12px}
 .setup-recovery-notice button{flex-shrink:0}
+
+/* ---------- Crash screen · reload or take the autosave instead of a blank page ---------- */
+.app-crash{min-height:100dvh;display:grid;place-items:center;padding:24px 16px;background:radial-gradient(ellipse at top,#26302a,#0b100d 70%);color:#e9dcbf;font-family:var(--sans,Inter,sans-serif)}
+.app-crash-panel{width:min(560px,100%);display:flex;flex-direction:column;gap:12px;padding:26px 28px;border:20px solid transparent;border-image:url('/assets/warcraft/frame.webp') 210 stretch;background:linear-gradient(#31322cf2,#101a20f5)}
+.app-crash-panel .sheet-eyebrow{font:600 11px/1.3 var(--sans,Inter,sans-serif);letter-spacing:1.8px;text-transform:uppercase;color:#cfb174}
+.app-crash-panel h1{margin:0;font:600 28px/1.2 var(--serif,Cinzel,serif);color:#f3d493}
+.app-crash-panel p{margin:0;font-size:14px;line-height:1.55;color:#d8c9a6}
+.app-crash-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.app-crash-actions>button{min-height:40px}
+.app-crash-note{font-size:12px!important;color:#e0a48f!important}
+.app-crash-panel details{font-size:12px;color:#ab9f86}
+.app-crash-panel pre{margin:6px 0 0;padding:8px;max-height:140px;overflow:auto;white-space:pre-wrap;background:#0b110e;border:1px solid #8b734744;color:#cdbf9f}

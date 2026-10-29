@@ -29,8 +29,13 @@ describe('asynchronous AI',()=>{
  });
  it('surfaces worker failures and permits a fresh worker on the next request',async()=>{
   const {fake,client}=worker();const result=client.plan(view(createGame(p,DEFAULT_SETUP)),[],'balanced');
-  const rejection=expect(result).rejects.toThrow('AI planning failed');fake.onerror!.call(fake as unknown as Worker,{} as ErrorEvent);await rejection;
+  const rejection=expect(result).rejects.toThrow('AI planning failed');fake.onerror!.call(fake as unknown as Worker,{message:'Uncaught TypeError'} as ErrorEvent);await rejection;
   expect(fake.terminate).toHaveBeenCalledOnce();client.dispose();
+ });
+ it('asks for a reload when the worker script itself cannot be loaded',async()=>{
+  const {fake,client}=worker();const result=client.plan(view(createGame(p,DEFAULT_SETUP)),[],'balanced');
+  const rejection=expect(result).rejects.toThrow('Reload the page');fake.onerror!.call(fake as unknown as Worker,{} as ErrorEvent);await rejection;
+  client.dispose();
  });
  it('terminates a silent worker, rejects all queued plans and can retry',async()=>{
   vi.useFakeTimers();const {fake,client}=worker(),state=view(createGame(p,DEFAULT_SETUP));

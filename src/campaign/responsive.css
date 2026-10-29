@@ -23,7 +23,7 @@
  .campaign-app.desktop-tabletop .command-table>.table-action-footer{grid-column:1;grid-row:3;align-self:end;position:sticky;bottom:0;z-index:6;margin:0 -12px;padding:8px 12px calc(8px + env(safe-area-inset-bottom));background:linear-gradient(#0d1411e6,#0a100df5);border-top:1px solid #8b744866;backdrop-filter:blur(6px)}
  .campaign-app.desktop-tabletop .table-action-footer .action-dock{display:grid;grid-auto-flow:column;grid-template-columns:none;grid-auto-columns:minmax(118px,1fr);overflow-x:auto;scrollbar-width:none}
  .campaign-app.desktop-tabletop .table-action-footer .action-dock::-webkit-scrollbar{display:none}
- .campaign-app .summary-docked{bottom:92px}
+ .campaign-app .combat-docked{bottom:92px}
 
  /* The faction journals list one quest per row inside each faction column. */
  .campaign-app .workspace-quests .faction-quests{grid-template-columns:minmax(0,1fr)}
@@ -40,6 +40,9 @@
  .campaign-app .topbar .wordmark>span:last-child{display:none}
  .campaign-app .topbar .header-right{gap:4px}
  .campaign-app .campaign-title h1{font-size:20px}
+ /* Turn controls wrap under the faction and turn count instead of pushing past the screen edge. */
+ .campaign-app .campaign-title .campaign-turn{flex-wrap:wrap;width:100%;margin-left:0;row-gap:8px}
+ .campaign-app .campaign-title .campaign-turn>.quiet-button{flex:1 1 auto;justify-content:center;white-space:nowrap}
  .campaign-app.desktop-tabletop .command-table>.table-control-rail{grid-template-columns:minmax(0,1fr)}
  .campaign-app .topbar .topnav button{padding:0 8px;font-size:11px;letter-spacing:.3px}
  .campaign-app.desktop-tabletop .command-table>.territorial-map.overview .map-toolbar>span,.campaign-app.desktop-tabletop .command-table>.territorial-map.overview .map-legend{display:none}

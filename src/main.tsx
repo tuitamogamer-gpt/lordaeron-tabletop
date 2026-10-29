@@ -7,6 +7,7 @@ import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
 import App from './Campaign';
+import AppErrorBoundary, { reloadForUpdate } from './campaign/AppErrorBoundary';
 import './styles.css';
 import './campaign/styles.css';
 import './campaign/design-system.css';
@@ -43,4 +44,6 @@ import './campaign/saves.css';
 import './campaign/decision-flow.css';
 import './campaign/readability.css';
 import './campaign/responsive.css';
-createRoot(document.getElementById('root')!).render(<React.StrictMode><App /></React.StrictMode>);
+// After a deployment, an open tab can ask for code chunks the server no longer has; reload once and resume from the autosave.
+window.addEventListener('vite:preloadError',event=>{if(reloadForUpdate())event.preventDefault();});
+createRoot(document.getElementById('root')!).render(<React.StrictMode><AppErrorBoundary><App /></AppErrorBoundary></React.StrictMode>);

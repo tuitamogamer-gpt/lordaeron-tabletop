@@ -45,7 +45,8 @@ describe('production raster card faces',()=>{
    expect(m.format,id).toBe('webp');expect(m.width,id).toBe(768);expect(m.height,id).toBe(face.height);
    expect(face.height,id).toBeGreaterThanOrEqual(1152);
   }}));
- },30000);
+ // Reading every baked face from a cold disk takes far longer than decoding them.
+ },180000);
  it('bakes every transcript section and leaves every line inside the safe print area',()=>{
   const meta=metadata();
   for(const c of allRasterCardText()){

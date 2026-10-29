@@ -3,7 +3,8 @@ import { decide, type Decision, type Difficulty } from './planner.js';
 import type { Command } from '../rules/model.js';
 import type { GameView } from '../rules/view.js';
 
-export const AI_PLAN_TIMEOUT_MS=30_000;
+/** The slowest combat plans take several seconds on a desktop and a few times longer on a slower phone; only a stuck worker should reach this. */
+export const AI_PLAN_TIMEOUT_MS=90_000;
 
 /** Persistent worker keeps the board responsive and reuses bounded profile caches. */
 export class PlannerClient {
@@ -25,7 +26,8 @@ export class PlannerClient {
     const request=this.pending.get(data.id);if(!request)return;this.pending.delete(data.id);clearTimeout(request.timer);
     if(data.error)request.reject(new Error(data.error));else request.resolve(data.decision);
    };
-   worker.onerror=()=>this.fail(worker,new Error('AI planning failed. Try Step bot again.'));
+   // A script error carries a message; a worker whose script could not be fetched (an outdated tab after a deployment) does not.
+   worker.onerror=event=>this.fail(worker,new Error(event.message?'AI planning failed. Try Step bot again.':'The AI could not load. Reload the page to get the latest version of the game.'));
    worker.onmessageerror=()=>this.fail(worker,new Error('The AI response could not be read. Try Step bot again.'));
   }
   const id=++this.sequence,worker=this.worker;

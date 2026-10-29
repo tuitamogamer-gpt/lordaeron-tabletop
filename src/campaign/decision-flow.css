@@ -114,7 +114,8 @@
 .campaign-summary>footer{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:10px}
 .campaign-summary>footer>button{min-height:36px}
 @media(max-width:640px){.campaign-summary>header{grid-template-columns:auto minmax(0,1fr)}.campaign-summary>header>svg{display:none}.summary-factions{grid-template-columns:1fr}.campaign-summary h2{font-size:24px}}
-.campaign-app .summary-docked{bottom:84px}
+/* Docked combat and summary buttons sit above the action footer instead of covering Challenge and Run AI. */
+.campaign-app .combat-docked{bottom:84px}
 /* The next-quest step shares the reward dialog: empty option rows and loose margins pushed its buttons below a laptop screen. */
 .compact-decision .decision-options:empty{display:none}
 .compact-decision .reward-resolution>.reward-history{margin-top:6px}

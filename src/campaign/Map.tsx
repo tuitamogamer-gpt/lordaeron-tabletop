@@ -37,7 +37,8 @@ export default function CampaignMap({ state, selected, heroId, legal, onSelect, 
  const release=(e:PointerEvent<HTMLDivElement>)=>{
   pointers.current.delete(e.pointerId);if(e.currentTarget.hasPointerCapture(e.pointerId))e.currentTarget.releasePointerCapture(e.pointerId);
   const rest=[...pointers.current.values()][0];
-  if(pinch.current&&pointers.current.size<2){pinch.current=null;drag.current=rest?{x:rest.x,y:rest.y,panX:cameraNow.current.x,panY:cameraNow.current.y}:null;}
+  if(pinch.current&&pointers.current.size>=2)pinch.current={camera:cameraNow.current,...gesture()};
+  else if(pinch.current){pinch.current=null;drag.current=rest?{x:rest.x,y:rest.y,panX:cameraNow.current.x,panY:cameraNow.current.y}:null;}
   else if(!rest)drag.current=null;
   if(!rest)setDragging(false);
  };

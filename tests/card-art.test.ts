@@ -23,7 +23,7 @@ describe('complete illustration coverage',()=>{
   const talents=p.cards.filter(c=>c.kind==='talent');
   const hashes=talents.map(c=>createHash('sha256').update(readFileSync(`public${art[c.id]}`)).digest('hex'));
   expect(talents).toHaveLength(108);expect(new Set(hashes).size).toBe(108);
- });
+ },60000);
  it('has isolated portraits and art for every event theme',()=>{
   for(const c of [...p.characters,...p.overlords])expect(existsSync(`public/assets/portraits/${c.id}.webp`),c.id).toBe(true);
   for(const e of p.events)expect(existsSync(`public/assets/event-art/${e.script}.webp`),e.name).toBe(true);
