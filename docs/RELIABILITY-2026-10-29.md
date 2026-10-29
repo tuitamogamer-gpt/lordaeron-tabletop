@@ -22,6 +22,15 @@ Provjereno u Chromiumu: iz builda je uklonjen dio koda za borbu, kao da ga je ob
 
 Na prvom pokretanju poslije restarta okruženja pale su dvije provjere slika karata. Svaka čita stotine datoteka, a Vitest proglašava i sinhroni test neuspjelim kada potraje duže od roka. Na hladnom disku to je prešlo 5 s, odnosno 30 s. Pri kasnijim pokretanjima obje prolaze. Isto se desilo jednom render testu cijelog stola dok su paralelno radile tri simulacije. Zadani rok testa je sada 20 s, a za dvije provjere vezane za disk 60 s i 180 s. Prave greške u provjerama i dalje padaju odmah.
 
+## Provjera
+
+| Provjera | Rezultat |
+| --- | --- |
+| `npm test` | 1.080 testova u 53 datoteke prolaze; novi `app-error-boundary.test.tsx` i test za worker koji se ne učita |
+| `npm run build`, `npm run check:render` | prolaze; 621 komponenta bez `undefined` / `NaN` |
+| Chromium, 5 veličina, 183 ekrana | bez odsječenog teksta, elemenata izvan ekrana, vodoravnog skrolanja, premalih dugmadi i grešaka u konzoli |
+| Automatsko igranje na 390×844, 25 minuta | AI kampanja do 19. poteza, bez grešaka, zastoja i vodoravnog skrolanja |
+
 ## Simulacije
 
 | Seed | Overlord | Likovi | Naredbe | Questovi | Ishod | Najsporija odluka |
