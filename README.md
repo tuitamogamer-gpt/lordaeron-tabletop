@@ -4,7 +4,9 @@ Desktop adaptacija osnovne igre iz 2005. i službenog FAQ-a 1.4. React interfejs
 
 [Otvori igru](https://lordaeron-tabletop.vercel.app)
 
-Najnoviji prolaz popravlja oporavak i sitne greške. Greška pri prikazu više ne ostavlja prazan ekran: prikazuju se ponovno učitavanje i preuzimanje autosavea. Tab otvoren tokom novog deploya sam se jednom ponovo učita i nastavi partiju. AI ima 90 umjesto 30 sekundi za najtežu odluku, pa sporiji telefoni ne zaustavljaju automatsko igranje. **Return to combat** više ne prekriva **Challenge** i **Run AI**, a **Undo** na telefonu više ne gura kontrole izvan ekrana. Dvanaest novih AI kampanja završilo je bez zastoja i s identičnim replayem. Detalji: [RELIABILITY-2026-10-29.md](docs/RELIABILITY-2026-10-29.md).
+Najnoviji prolaz uči AI da se utrkuje s Nefarianom: napad na njega vrijedi više kako se približava Bulwarku, a heroji se odmaraju prije prisilne završne borbe. Na istih 24 seeda broj pobjeda protiv Nefariana porastao je s 1 na 4, a Kel’Thuzad i Kazzak igraju se kao ranije. Na telefonu naslov u sceni borbe više se ne lomi riječ po riječ, a sažetak kampanje prolazi provjeru pristupačnosti bez prekršaja. Detalji: [AI-NEFARIAN-2026-10-30.md](docs/AI-NEFARIAN-2026-10-30.md).
+
+Prethodni prolaz popravlja oporavak i sitne greške. Greška pri prikazu više ne ostavlja prazan ekran: prikazuju se ponovno učitavanje i preuzimanje autosavea. Tab otvoren tokom novog deploya sam se jednom ponovo učita i nastavi partiju. AI ima 90 umjesto 30 sekundi za najtežu odluku, pa sporiji telefoni ne zaustavljaju automatsko igranje. **Return to combat** više ne prekriva **Challenge** i **Run AI**, a **Undo** na telefonu više ne gura kontrole izvan ekrana. Dvanaest novih AI kampanja završilo je bez zastoja i s identičnim replayem. Detalji: [RELIABILITY-2026-10-29.md](docs/RELIABILITY-2026-10-29.md).
 
 Prethodni prolaz dovršava igranje na telefonu: mapa se zumira s dva prsta, upute na mapi prate način unosa (dodir ili miš), a igra se može dodati na početni ekran kao aplikacija sa svojom ikonom i bez trake preglednika. Na telefonu više nema teksta manjeg od 9 px. Detalji: [DESIGN-PASS-2026-10-22.md](docs/DESIGN-PASS-2026-10-22.md#šesti-krug--24-10-2026).
 
@@ -84,7 +86,7 @@ Prečice: **1–5** akcije, **F** interakcija s mapom, **Esc** povratak. Unutar 
 
 ## Provjera i granice
 
-Aktuelni prolaz ima **1.080 testova**, build, render 621 komponente i dizajnerski audit 39 ekrana na tri veličine: [DESIGN-PASS-2026-10-22.md](docs/DESIGN-PASS-2026-10-22.md). AI prolaz dodaje sedam završenih AI kampanja protiv sva tri Overlorda i nezavisni replay audit dvije od njih: [AI-OVERLORD-2026-10-22.md](docs/AI-OVERLORD-2026-10-22.md). Prethodni prolaz dodaje render 621 komponente, izvoz mape i nastavak dvije zaglavljene kampanje: [RELIABILITY-2026-10-20.md](docs/RELIABILITY-2026-10-20.md).
+Aktuelni prolaz ima **1.083 testa**, build, render 621 komponente i dizajnerski audit 39 ekrana na tri veličine: [DESIGN-PASS-2026-10-22.md](docs/DESIGN-PASS-2026-10-22.md). AI prolaz dodaje sedam završenih AI kampanja protiv sva tri Overlorda i nezavisni replay audit dvije od njih: [AI-OVERLORD-2026-10-22.md](docs/AI-OVERLORD-2026-10-22.md). Prethodni prolaz dodaje render 621 komponente, izvoz mape i nastavak dvije zaglavljene kampanje: [RELIABILITY-2026-10-20.md](docs/RELIABILITY-2026-10-20.md).
 
 Raniji audit enginea popravlja Vanish bonuse, duplirane figure pri recikliranju questova i ponovno zatvaranje borbe. Tadašnjih 838 testova, build, render i tri AI partije s 4.312 naredbi i identičnim replayom: [ENGINE-SCRIPT-AUDIT.md](docs/ENGINE-SCRIPT-AUDIT.md). Prethodna provjera svih event karata, klasnih moći, talenata i smjene Horda → Alijansa kroz svih 30 poteza: [CARD-EVENT-TURN-AUDIT.md](docs/CARD-EVENT-TURN-AUDIT.md).
 
