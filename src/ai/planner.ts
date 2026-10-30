@@ -7,7 +7,7 @@ import { equipped } from '../rules/inventory.js';
 import { apply } from '../rules/game.js';
 import { abilityCommands } from '../rules/legal.js';
 import { publicState } from './public-state.js';
-import { createStrategy, type Objective } from './strategy.js';
+import { createStrategy, nefarianSteps, type Objective } from './strategy.js';
 import { abilityScore, healthValue, tacticalScore } from './tactics.js';
 export type Difficulty = 'cautious' | 'balanced' | 'aggressive';
 export interface Decision { command: Command; score: number; reason: string; alternatives: number; considered: { command: Command; score: number; reason: string }[]; }
@@ -47,10 +47,12 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
   }
   return training.get(key)!;
  };
+ // One Fate event from the Bulwark, Nefarian can begin the closing battles at any moment; heroes fight them as they stand.
+ const steps=nefarianSteps(p,s),readiness=steps!==undefined&&steps<=2?2.5:1;
  const recovery=(h:Hero,next:Hero)=>{
   const cap=capacity(p,h),health=(healthValue(next)-healthValue(h))*risk;
   const energy=(next.energy-h.energy)*(h.energy<Math.max(2,cap.energy*.3)?1.5:.65);
-  return health+energy+(h.curse-next.curse)*2.5;
+  return (health+energy+(h.curse-next.curse)*2.5)*readiness;
  };
  const itemGain=(h:Hero,id:string,discard?:string)=>{
   if(discard===id)return 0;

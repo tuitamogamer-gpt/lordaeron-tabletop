@@ -3,7 +3,7 @@ import { beginBattle, poolPenalties, stats } from '../rules/combat.js';
 import { apply } from '../rules/game.js';
 import { abilityCommands } from '../rules/legal.js';
 import { availableCards, immune } from '../rules/effects.js';
-import { activeEvent } from '../rules/world.js';
+import { activeEvent, distances } from '../rules/world.js';
 import type { Boxes, ContentPack, DiceFilter, Die, Effect, Enemy, Faction, Hero, Reward, State } from '../rules/model.js';
 import type { GameView } from '../rules/view.js';
 import { abilityScore, chance, dieHazard, projectedBoxes } from './tactics.js';
@@ -155,6 +155,20 @@ export function candidateObjectives(sorted: Objective[], overlord: string): Obje
  return [...sorted.slice(0, 5), ...sorted.slice(5).filter(o => o.boss === overlord)];
 }
 export const BOSS_COMMITMENT = 1.2;
+/**
+ * Regions Nefarian still has to cover before he reaches the Bulwark and forces the closing battles.
+ * Undefined for the other Overlords and once the closing battles have begun.
+ */
+export function nefarianSteps(p: ContentPack, s: Pick<GameView, 'overlord'>): number | undefined {
+ if (p.overlords.find(o => o.id === s.overlord.id)?.combat !== 'nefarian' || !s.overlord.region || s.overlord.region === 'bulwark') return undefined;
+ return distances(p, 'bulwark')[s.overlord.region];
+}
+/**
+ * Waiting never avoids Nefarian: at the Bulwark each faction must fight him alone, wherever its heroes stand and however
+ * spent they are, and if both fall the campaign is a draw. An attack chosen while he is near can be made at full strength,
+ * and a failed one still leaves both closing battles, so attacking grows more valuable with every region he advances.
+ */
+export const nefarianUrgency = (steps: number | undefined) => steps === undefined ? 0 : Math.max(0, 6 - steps) * 14;
 type UpsetRound ={ hits: number; guard: number; wounds: number; hazard: number; heal: number };
 /** Standard normal CDF (Abramowitz–Stegun 7.1.26). */
 function normal(z: number) {
@@ -240,6 +254,7 @@ export function lateTokens(p: ContentPack, h: Hero, live: Die[], rule: string, e
 function oRule(p: ContentPack, s: State) { return p.creatures.find(c => c.id === s.enemies.find(e => e.id === s.battle?.enemies[0])?.creature)?.rule ?? 'none'; }
 
 export function createStrategy(p: ContentPack, s: GameView, risk: number) {
+ const nefarian = nefarianSteps(p, s);
  const distances = new Map<string, number>(), forecasts = new Map<string, Forecast>(), plans = new Map<string, Plan | undefined>();
  const goals = new Map<Faction, Objective[]>();
  const distance = (from: string, to: string, side: Faction) => {
@@ -302,7 +317,7 @@ export function createStrategy(p: ContentPack, s: GameView, risk: number) {
  const rewardValue = (o: Objective, party: Hero[]) => {
   if (o.clue) return party.some(h => h.level >= 3) ? 7 : 0;
   // Urgency grows toward the end of a 30-turn game; in Defeat the Overlord it grows with each extra lap instead.
-  if (o.boss === s.overlord.id) return 65 + (!s.variants?.overlordOnly ? s.turn * .7 : ((s.lap ?? 1) - 1) * 21 + ((s.lap ?? 1) > 1 ? s.turn * .7 : 0));
+  if (o.boss === s.overlord.id) return 65 + (!s.variants?.overlordOnly ? s.turn * .7 : ((s.lap ?? 1) - 1) * 21 + ((s.lap ?? 1) > 1 ? s.turn * .7 : 0)) + nefarianUrgency(nefarian);
   if (!o.reward) return o.enemies.some(e => e.color === 'blue') ? 3 : 5;
   const q = p.quests.find(q => q.id === o.quest), r = o.reward;
   const left = q ? s.enemies.filter(e => e.quest === q.id).length : o.enemies.length;
