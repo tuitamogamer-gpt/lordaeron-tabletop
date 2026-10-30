@@ -1,0 +1,47 @@
+/* ---------- The board as the physical game lays it out ----------
+   The rulebook's play area puts the folded board in the middle of the table, with the experience track printed down
+   its edge and the turn track along its foot; creatures stand on it as single-colour green, red and blue figures. */
+
+/* Folds of the six-panel board and its printed frame, faint under the regions and tokens. */
+.board-folds line{stroke:#0b0805;stroke-opacity:.2;stroke-width:3;mix-blend-mode:multiply}
+.board-frame{fill:none;stroke:#26170c;stroke-width:8;stroke-opacity:.7}
+
+/* Around the map lies the board's printed border; the experience track runs down its left side. */
+.campaign-app .territorial-map.overview .campaign-map-scroll{background:radial-gradient(ellipse at 50% 42%,#302c1f 0%,#1b1911 68%,#100f0a 100%)}
+.board-xp{display:none}
+@media(min-width:1000px){
+ .campaign-app .territorial-map.overview .campaign-map-scroll{container:board / size}
+ @container board (min-aspect-ratio: 172 / 100){
+  .board-xp{display:flex}
+  .campaign-app .territorial-map.overview .world-view-label{left:auto;right:12px}
+ }
+}
+.board-xp{position:absolute;z-index:2;left:0;top:0;bottom:0;width:calc((100cqw - 150cqh) / 2);flex-direction:column;align-items:center;gap:6px;padding:10px 0 9px;pointer-events:none}
+.board-xp-title,.board-xp-start{font:600 9.5px/1 var(--sans);letter-spacing:1.3px;text-transform:uppercase;color:#cfb174}
+.board-xp-scale{--inset:14px;position:relative;flex:1;width:min(88px,calc(100% - 18px));border:1px solid #8b734777;border-radius:4px;background:linear-gradient(90deg,#3a1d16 0 50%,#16273a 50%);box-shadow:inset 0 0 14px #000c,0 2px 8px #0008}
+.board-xp-level{position:absolute;left:5px;right:5px;bottom:calc(var(--inset) + (100% - 2 * var(--inset)) * var(--at));border-top:1px solid #9fd08288}
+.board-xp-level b{position:absolute;left:50%;top:0;transform:translate(-50%,-50%);width:17px;height:17px;border:1px solid #b4dc98;border-radius:3px;background:#3c6a2c;color:#f0f9e6;font:700 10px/15px var(--serif);text-align:center;box-shadow:0 1px 3px #000a}
+.board-xp-lane{position:absolute;top:0;bottom:0;width:50%}
+.board-xp-lane.horde{left:0}.board-xp-lane.alliance{right:0}
+.board-xp-lane::before{content:'';position:absolute;left:50%;top:var(--inset,14px);bottom:var(--inset,14px);width:4px;transform:translateX(-50%);border-radius:2px;background:#0a0d09;box-shadow:inset 0 0 2px #000}
+.board-xp-counter{position:absolute;left:50%;bottom:calc(var(--inset) + (100% - 2 * var(--inset)) * var(--at));width:24px;height:24px;border:2px solid #c46a52;border-radius:50%;overflow:hidden;background:#111;box-shadow:0 2px 5px #000d;transform:translate(calc(-50% + var(--stack) * 6px),calc(50% - var(--stack) * 5px));pointer-events:auto}
+.board-xp-lane.alliance .board-xp-counter{border-color:#6fa6cf}
+.board-xp-counter img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 30%}
+
+/* The turn track: thirty stamped spaces with Event and merchant symbols, and the hourglass on the current turn. */
+.board-turns{display:flex;align-items:center;gap:10px;flex-shrink:0;padding:7px 12px 6px;border-top:1px solid #8b744855;background:linear-gradient(#1d1b13,#121109)}
+.board-turns-title{flex:none;font:600 9.5px/1.15 var(--sans);letter-spacing:1.3px;text-transform:uppercase;color:#cfb174;text-align:right}
+.board-turns ol{display:flex;align-items:center;justify-content:space-between;gap:3px;flex:1;min-width:0;margin:0;padding:0;list-style:none}
+.board-turns li{position:relative;flex:1 1 0;max-width:23px;min-width:13px;aspect-ratio:1;display:grid;place-items:center;border:1px solid #8b7347;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ded4bb,#9f957d 72%);color:#2a2116;font:700 10px/1 var(--sans);box-shadow:inset 0 -2px 3px #0005}
+.board-turns li.past{opacity:.42}
+.board-turns li.current{border-color:#fff0c4;background:radial-gradient(circle at 35% 30%,#fff4d2,#e3c27a 75%);box-shadow:0 0 0 2px #e7c67b,0 0 12px #e7c67bb0}
+.board-turns-icon{position:absolute;right:-3px;bottom:-3px;width:9px;height:9px}
+.board-turns-icon.event{width:8px;height:11px;border:1px solid #eadcff;border-radius:1px;background:#6b4a90;transform:rotate(12deg)}
+.board-turns-icon.triangle{width:10px;height:9px;background:#f5f1e6;clip-path:polygon(50% 0,100% 100%,0 100%);filter:drop-shadow(0 0 1px #000)}
+.board-turns-icon.square{width:8px;height:8px;border:1px solid #d8edff;background:#4f95d6}
+.board-turns-icon.circle{border:1px solid #efe0ff;border-radius:50%;background:#9466d1}
+.board-turns-marker{position:absolute;left:50%;top:-11px;width:12px;height:15px;transform:translateX(-50%);background:linear-gradient(#fbe7b0,#c99a45);clip-path:polygon(0 0,100% 0,62% 50%,100% 100%,0 100%,38% 50%);filter:drop-shadow(0 1px 1px #000)}
+.board-turns-marker.horde{background:linear-gradient(#ffd3c4,#c65a3d)}
+.board-turns-marker.alliance{background:linear-gradient(#d9efff,#4d8fc4)}
+.board-turns .board-turns-end{flex:none;max-width:none;aspect-ratio:auto;height:22px;padding:0 9px;border-radius:11px;background:#2b2a1f;border-color:#8b7347;color:#e9d29e;font:600 10px/20px var(--sans);letter-spacing:1px;text-transform:uppercase;box-shadow:none}
+@media(max-width:600px){.board-turns{display:none}}

@@ -43,6 +43,7 @@ import './campaign/screen-fit.css';
 import './campaign/saves.css';
 import './campaign/decision-flow.css';
 import './campaign/readability.css';
+import './campaign/board-table.css';
 import './campaign/responsive.css';
 // After a deployment, an open tab can ask for code chunks the server no longer has; reload once and resume from the autosave.
 window.addEventListener('vite:preloadError',event=>{if(reloadForUpdate())event.preventDefault();});
