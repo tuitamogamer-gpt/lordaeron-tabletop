@@ -26,19 +26,19 @@ export default function CampaignSummary({ state, onNew, onChronicle, onHide }: {
  const lap = state.lap ?? 1, sides = ['horde', 'alliance'] as const;
  const quests = (f: string) => state.completed.filter(id => p.quests.find(q => q.id === id)?.faction === f).length;
  return <section className={`campaign-summary ${state.winner ?? 'draw'}`} role="dialog" aria-modal="false" aria-labelledby="campaign-summary-title">
-  <header>
+  <div className="summary-head">
    <BossPortrait id={state.overlord.id}/>
    <div><span className="sheet-eyebrow">Campaign complete</span><h2 id="campaign-summary-title">{state.winner === 'draw' ? 'The campaign ends in a draw' : `${factionLabel(state.winner ?? '')} wins!`}</h2><p>{endingText(state)}</p></div>
    <Icon name="trophy" size={34}/>
-  </header>
+  </div>
   <dl className="summary-stats">
-   <div><dt>Turns played</dt><dd>{turnsPlayed(state)}</dd><small>{lap > 1 ? `Lap ${lap} · turn ${state.turn} of ${TRACK}` : `Turn ${state.turn} of ${TRACK}`}</small></div>
-   {sides.map(f => <div key={f} className={f}><dt>{factionLabel(f)} quests</dt><dd>{quests(f)}</dd><small>completed</small></div>)}
+   <div><dt>Turns played</dt><dd>{turnsPlayed(state)}</dd><dd className="summary-note">{lap > 1 ? `Lap ${lap} · turn ${state.turn} of ${TRACK}` : `Turn ${state.turn} of ${TRACK}`}</dd></div>
+   {sides.map(f => <div key={f} className={f}><dt>{factionLabel(f)} quests</dt><dd>{quests(f)}</dd><dd className="summary-note">completed</dd></div>)}
   </dl>
   <div className="summary-factions">{sides.map(f => <section key={f} className={`${f} ${state.winner === f ? 'winner' : ''}`} aria-label={`${factionLabel(f)} party`}>
    <h3><FactionCrest faction={f}/>{factionLabel(f)}{state.winner === f && <small>Victor</small>}</h3>
    <ul>{state.heroes.filter(h => faction(p, h.id) === f).map(h => <li key={h.id}><HeroPortrait id={h.id} small/><span><strong>{character(p, h.id).name}</strong><small>Level {h.level} · {h.gold} gold</small></span></li>)}</ul>
   </section>)}</div>
-  <footer><button className="quiet-button" onClick={onChronicle}>Read the chronicle</button><button className="quiet-button" onClick={onHide}>View the table</button><button className="gold-button" onClick={onNew}>New campaign</button></footer>
+  <div className="summary-actions"><button className="quiet-button" onClick={onChronicle}>Read the chronicle</button><button className="quiet-button" onClick={onHide}>View the table</button><button className="gold-button" onClick={onNew}>New campaign</button></div>
  </section>;
 }
