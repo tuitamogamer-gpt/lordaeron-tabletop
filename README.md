@@ -4,7 +4,9 @@ Desktop adaptacija osnovne igre iz 2005. i službenog FAQ-a 1.4. React interfejs
 
 [Otvori igru](https://lordaeron-tabletop.vercel.app)
 
-Najnoviji prolaz približava tablu izgledu igre na stolu, prema pravilniku i fotografijama komponenti. Ispod mape je odštampani trag poteza s 30 polja, simbolima za Event karte i trgovca i pješčanim satom na trenutnom potezu. Uz lijevi rub portretni žetoni likova penju se po tragu iskustva prema nivou 5. Stvorenja stoje kao jednobojne zelene, crvene i plave plastične figure, a tabla ima prelome i okvir kao presavijena tabla. Detalji: [LIVE-TABLE-2026-10-30.md](docs/LIVE-TABLE-2026-10-30.md).
+Najnoviji prolaz koristi korisnikove prave skanove: 478 odštampanih lica karata, pravi brojači likova na mapi i tragu iskustva, pravi pješčani sat, prave poleđine špilova, dugme **Printed sheet** s originalnim listom lika i referentni listovi na stranici Rules. Skenovi su djelo izdavača, pa se ne objavljuju: `npm run scans:fetch` i `npm run scans:prepare` pripremaju ih lokalno, a bez njih igra koristi ilustrovana lica. Detalji i pitanje javnog objavljivanja: [SCANS-2026-11-05.md](docs/SCANS-2026-11-05.md).
+
+Prethodni prolaz približava tablu izgledu igre na stolu, prema pravilniku i fotografijama komponenti. Ispod mape je odštampani trag poteza s 30 polja, simbolima za Event karte i trgovca i pješčanim satom na trenutnom potezu. Uz lijevi rub portretni žetoni likova penju se po tragu iskustva prema nivou 5. Stvorenja stoje kao jednobojne zelene, crvene i plave plastične figure, a tabla ima prelome i okvir kao presavijena tabla. Detalji: [LIVE-TABLE-2026-10-30.md](docs/LIVE-TABLE-2026-10-30.md).
 
 Prethodni prolaz uči AI da se utrkuje s Nefarianom: napad na njega vrijedi više kako se približava Bulwarku, a heroji se odmaraju prije prisilne završne borbe. Na istih 24 seeda broj pobjeda protiv Nefariana porastao je s 1 na 4, a Kel’Thuzad i Kazzak igraju se kao ranije. Na telefonu naslov u sceni borbe više se ne lomi riječ po riječ, a sažetak kampanje prolazi provjeru pristupačnosti bez prekršaja. Detalji: [AI-NEFARIAN-2026-10-30.md](docs/AI-NEFARIAN-2026-10-30.md).
 
@@ -88,7 +90,7 @@ Prečice: **1–5** akcije, **F** interakcija s mapom, **Esc** povratak. Unutar 
 
 ## Provjera i granice
 
-Aktuelni prolaz ima **1.086 testova**, build, render 621 komponente i dizajnerski audit 39 ekrana na tri veličine: [DESIGN-PASS-2026-10-22.md](docs/DESIGN-PASS-2026-10-22.md). AI prolaz dodaje sedam završenih AI kampanja protiv sva tri Overlorda i nezavisni replay audit dvije od njih: [AI-OVERLORD-2026-10-22.md](docs/AI-OVERLORD-2026-10-22.md). Prethodni prolaz dodaje render 621 komponente, izvoz mape i nastavak dvije zaglavljene kampanje: [RELIABILITY-2026-10-20.md](docs/RELIABILITY-2026-10-20.md).
+Aktuelni prolaz ima **1.095 testova**, build, render 621 komponente i dizajnerski audit 39 ekrana na tri veličine: [DESIGN-PASS-2026-10-22.md](docs/DESIGN-PASS-2026-10-22.md). AI prolaz dodaje sedam završenih AI kampanja protiv sva tri Overlorda i nezavisni replay audit dvije od njih: [AI-OVERLORD-2026-10-22.md](docs/AI-OVERLORD-2026-10-22.md). Prethodni prolaz dodaje render 621 komponente, izvoz mape i nastavak dvije zaglavljene kampanje: [RELIABILITY-2026-10-20.md](docs/RELIABILITY-2026-10-20.md).
 
 Raniji audit enginea popravlja Vanish bonuse, duplirane figure pri recikliranju questova i ponovno zatvaranje borbe. Tadašnjih 838 testova, build, render i tri AI partije s 4.312 naredbi i identičnim replayom: [ENGINE-SCRIPT-AUDIT.md](docs/ENGINE-SCRIPT-AUDIT.md). Prethodna provjera svih event karata, klasnih moći, talenata i smjene Horda → Alijansa kroz svih 30 poteza: [CARD-EVENT-TURN-AUDIT.md](docs/CARD-EVENT-TURN-AUDIT.md).
 

@@ -16,4 +16,5 @@ Vizuelna referenca za desktop raspored: [fotografija igre na stolu](https://www.
 - Novi desktop sto, katalog svih komponenti, 16 individualnih portreta i tri Overlord ilustracije: uključeni u aktivnu aplikaciju.
 - Regresije, provjera prikaza i tri pune simulacije s replayem: rezultati u [VALIDATION.md](VALIDATION.md). To nije iscrpna potvrda svih kombinacija karata.
 - Topologija originalne mape: još treba izvor glavne ploče.
+- Pravi skenovi u interfejsu (karte, žetoni, poleđine špilova, listovi likova, referentni listovi): lokalno, uz `npm run scans:fetch` i `npm run scans:prepare`; nisu u repozitoriju. Vidi [SCANS-2026-11-05.md](SCANS-2026-11-05.md).
 - Online sobe ostaju na holdu; desktop i lokalni AI ostaju cilj.

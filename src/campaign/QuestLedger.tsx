@@ -15,12 +15,14 @@ import { rasterFace } from './RasterCard';
 const tiers: Exclude<Tier, 'grey'>[] = ['green', 'yellow', 'red'];
 const tierNames = { green: "Green", yellow: "Yellow", red: "Red" };
 const tierLevels = { green: '2–3', yellow: '3–4', red: '4–5' };
+import { SCANS } from './scan-assets';
 export function QuestDecks({ state, side, legal = [], send }: { state: GameView; side: Faction; legal?: Command[]; send?: (c: Command) => void }) {
  const replacing = (state.reward?.replacementFaction ?? state.reward?.faction) === side;
  return <div className="quest-decks" aria-label={`Quest decks · ${factionLabel(side)}`}>{tiers.map(tier => {
   const count = state.deckCounts.quests[side][tier];
   const enabled = replacing && legal.some(c => c.type === 'quest' && c.tier === tier);
-  return <button key={tier} className={`quest-deck ${tier} ${side}`} style={{backgroundPosition:`${tiers.indexOf(tier)*50}% ${side==='horde'?0:100}%`}} disabled={!enabled || !send} onClick={() => send?.({ type: 'quest', tier })} title={`${tierNames[tier]} deck: ${count} cards · level ${tierLevels[tier]}. Draw a replacement after completing a quest.`} aria-label={`${tierNames[tier]} quest deck · ${count} cards`}><b>{count}</b><span>{tierNames[tier]}<small>LEVEL {tierLevels[tier]}</small></span></button>;
+  const back=SCANS.backs[`quest-${side}-${tier}`];
+  return <button key={tier} className={`quest-deck ${tier} ${side} ${back?'scanned-back':''}`} style={back?{backgroundImage:`url(${back.src})`,backgroundSize:'cover',backgroundPosition:'center'}:{backgroundPosition:`${tiers.indexOf(tier)*50}% ${side==='horde'?0:100}%`}} disabled={!enabled || !send} onClick={() => send?.({ type: 'quest', tier })} title={`${tierNames[tier]} deck: ${count} cards · level ${tierLevels[tier]}. Draw a replacement after completing a quest.`} aria-label={`${tierNames[tier]} quest deck · ${count} cards`}><b>{count}</b><span>{tierNames[tier]}<small>LEVEL {tierLevels[tier]}</small></span></button>;
  })}</div>;
 }
 

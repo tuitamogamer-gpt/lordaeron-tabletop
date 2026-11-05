@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import { BASE_PACK as p } from '../data/base';
 import { character, faction } from '../rules/common';
 import type { GameView } from '../rules/view';
+import { SCANS } from './scan-assets';
 
 const TRACK = 30;
 const deckName: Record<string, string> = { triangle: 'triangle', square: 'square', circle: 'circle' };
@@ -16,7 +17,7 @@ export function TurnTrack({ state }: { state: Pick<GameView, 'turn' | 'lap' | 'f
    {Array.from({ length: TRACK }, (_, i) => {
     const n = i + 1, icon = p.track[n];
     return <li key={n} className={`${n === state.turn ? 'current' : n < state.turn ? 'past' : ''} ${icon ?? ''}`} title={`Turn ${n}: ${spaceText(n)}`}>
-     <b>{n}</b>{icon && <i className={`board-turns-icon ${icon}`}/>}{n === state.turn && <span className={`board-turns-marker ${state.faction}`}/>}
+     <b>{n}</b>{icon && <i className={`board-turns-icon ${icon}`}/>}{n === state.turn && (SCANS.tokens.hourglass ? <img className={`board-turns-hourglass ${state.faction}`} src={SCANS.tokens.hourglass} alt="" draggable={false}/> : <span className={`board-turns-marker ${state.faction}`}/>)}
     </li>;
    })}
    <li className="board-turns-end">{state.variants?.overlordOnly ? `Lap ${lap}` : 'End'}</li>
@@ -27,6 +28,8 @@ export function TurnTrack({ state }: { state: Pick<GameView, 'turn' | 'lap' | 'f
 /** The experience track printed down the board's edge: each character counter climbs toward level 5, one lane per faction. */
 export function ExperienceTrack({ state }: { state: Pick<GameView, 'heroes'> }) {
  const max = p.xp[4], at = (xp: number) => Math.min(xp, max) / max;
+ // Counters sharing a space fan out so that every one stays visible: centre, right, left, then wider.
+ const fan = (stack: number) => [0, 9, -9, 17, -17][stack] ?? 0;
  const lanes = (['horde', 'alliance'] as const).map(f => state.heroes.filter(h => faction(p, h.id) === f));
  return <div className="board-xp" role="img" aria-label={`Experience track: ${state.heroes.map(h => `${character(p, h.id).name.split(' ')[0]} ${h.xp} XP, level ${h.level}`).join('; ')}.`}>
   <span className="board-xp-title">Experience</span>
@@ -35,7 +38,7 @@ export function ExperienceTrack({ state }: { state: Pick<GameView, 'heroes'> }) 
    {lanes.map((heroes, lane) => <div key={lane} className={`board-xp-lane ${lane ? 'alliance' : 'horde'}`}>
     {heroes.map(h => {
      const stack = heroes.filter(v => Math.min(v.xp, max) === Math.min(h.xp, max)).indexOf(h);
-     return <span key={h.id} className="board-xp-counter" style={{ '--at': at(h.xp), '--stack': stack } as CSSProperties} title={`${character(p, h.id).name} · ${h.xp} XP · level ${h.level}`}><img src={`/assets/portraits/${h.id}.webp`} alt="" draggable={false}/></span>;
+     return <span key={h.id} className={`board-xp-counter ${SCANS.counters[h.id] ? 'scanned' : ''}`} style={{ '--at': at(h.xp), '--dx': `${fan(stack)}px`, '--dy': `${stack * 13}px` } as CSSProperties} title={`${character(p, h.id).name} · ${h.xp} XP · level ${h.level}`}><img src={SCANS.counters[h.id] ?? `/assets/portraits/${h.id}.webp`} alt="" draggable={false}/></span>;
     })}
    </div>)}
   </div>

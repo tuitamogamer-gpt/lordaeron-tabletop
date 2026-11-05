@@ -6,6 +6,8 @@ docs/wowrules-reference.pdf
 dev-server.log
 dev-server.err
 .local-data/
+# Prepared from the user's own scans of the printed game (see docs/SCANS-2026-11-05.md); never committed by default.
+public/assets/scans/
 .env
 .env.*
 !.env.example

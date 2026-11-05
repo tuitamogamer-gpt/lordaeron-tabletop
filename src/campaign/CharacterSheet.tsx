@@ -4,7 +4,8 @@ import { BASE_PACK as p } from '../data/base';
 import { capacity, card, character } from '../rules/common';
 import { bagSize, equipped, heroSlots, petCapacity } from '../rules/inventory';
 import type { Card, Command, Hero, Slot } from '../rules/model';
-import { Icon, ResourceBar } from '../components';
+import { Icon, Modal, ResourceBar } from '../components';
+import { SCANS } from './scan-assets';
 import { AbilityArt, FactionCrest } from './Art';
 import { HeroPortrait, CardThumbnail } from './parts';
 import { triggerLabels } from './design-system';
@@ -26,7 +27,7 @@ export function CardRules({value:c}:{value:Card}){
 export const slotLabel=(s:Slot)=>s.stanceOnly?'Stance':s.types.map(t=>({instant:'Instant',active:'Active / constant',ranged:'Ranged',melee:'Melee',general:'General',armor:'Armor',bag:'Bag'}[t])).join(' / ');
 export function startingHero(id:string):Hero {const d=character(p,id);return {id,location:d.faction==='horde'?'brill':'southshore',...d.capacities[0],gold:5,level:1,xp:0,actions:2,curse:0,stun:0,learned:[],talents:[],bag:[],slots:d.slots.map(()=>({addons:[]})),pets:{},auctionItems:[],talentChoices:[]};}
 export default function CharacterSheet({hero:h,legal=[],inspect,open,preview=false}:{hero:Hero;legal?:Command[];inspect:(id:string)=>void;open?:(panel:'manage'|'train'|'trade')=>void;preview?:boolean}) {
- const [tab,setTab]=useState<'sheet'|'spellbook'|'bag'|'talents'|'class'>('sheet');
+ const [tab,setTab]=useState<'sheet'|'spellbook'|'bag'|'talents'|'class'>('sheet'),[printed,setPrinted]=useState(false),scan=SCANS.sheets[h.id];
  const [talentLibrary,setTalentLibrary]=useState(false),[bagPage,setBagPage]=useState(0),[cardPage,setCardPage]=useState(0);
  const d=character(p,h.id),cap=capacity(p,h),slots=heroSlots(p,h),equippedIds=equipped(p,h);
  const can=(type:Command['type'])=>legal.some(c=>c.type===type&&(!('hero'in c)||c.hero===h.id));
@@ -56,7 +57,7 @@ export default function CharacterSheet({hero:h,legal=[],inspect,open,preview=fal
    <div className="sheet-conditions"><span className={h.curse?'afflicted':''}>Curse <b>{h.curse}</b></span><span className={h.stun?'afflicted':''}>Stun <b>{h.stun}</b></span></div>
   </aside>
   <div className="sheet-content">
-   <header className="sheet-dossier-heading"><div><span className="sheet-eyebrow">CHRONICLES OF LORDAERON</span><h3>Character dossier</h3></div>{!preview&&<div className="sheet-controls"><button className="gold-button" aria-label="Manage equipment" disabled={!can('manage')} onClick={()=>open?.('manage')} title={can('manage')?'Your management phase is ready.':'Use both actions for every ally to enter equipment management.'}><GameIcon name="armor" size={20}/>Manage</button><button className="quiet-button" aria-label="Train powers · 1 action" disabled={!can('train')} onClick={()=>open?.('train')}><GameIcon name="train" size={20}/>Train · 1 action</button></div>}<span className="sheet-dossier-class"><GameIcon name={d.classId} size={24}/>{d.classId}</span></header>
+   <header className="sheet-dossier-heading"><div><span className="sheet-eyebrow">CHRONICLES OF LORDAERON</span><h3>Character dossier</h3></div>{(!preview||scan)&&<div className="sheet-controls">{!preview&&<><button className="gold-button" aria-label="Manage equipment" disabled={!can('manage')} onClick={()=>open?.('manage')} title={can('manage')?'Your management phase is ready.':'Use both actions for every ally to enter equipment management.'}><GameIcon name="armor" size={20}/>Manage</button><button className="quiet-button" aria-label="Train powers · 1 action" disabled={!can('train')} onClick={()=>open?.('train')}><GameIcon name="train" size={20}/>Train · 1 action</button></>}{scan&&<button className="quiet-button" onClick={()=>setPrinted(true)}><Icon name="scroll" size={16}/>Printed sheet</button>}</div>}<span className="sheet-dossier-class"><GameIcon name={d.classId} size={24}/>{d.classId}</span></header>
    <div className="sheet-levels" aria-label="Level capacities">{d.capacities.map((v,i)=><div className={h.level===i+1?'current':''} key={i} role="group" aria-label={`Level ${i+1}: ${v.health} health, ${v.energy} energy, ${p.xp[i]} XP`}><b>{['I','II','III','IV','V'][i]}</b><span><i className="health"><GameIcon name="health" size={16}/>{v.health}</i><i className="energy"><GameIcon name="energy" size={16}/>{v.energy}</i></span><small>{p.xp[i]} XP</small></div>)}</div>
    <nav className="sheet-tabs" aria-label="Character sections">{([['sheet','Equipment',slots.length,'armor'],['class','Class deck',24-h.learned.length-h.talents.length,'train'],['spellbook','Spellbook',h.learned.length,'arcane'],['bag','Bag',`${bagSize(p,h.bag)} / 3`,'bag'],['talents','Talents',`${h.talents.length} / 4`,'experience']] as const).map(([id,label,n,icon])=><button key={id} aria-pressed={tab===id} onClick={()=>{setTab(id);setCardPage(0);}}><GameIcon name={icon} size={19}/>{label}<b>{n}</b></button>)}</nav>
    <div className={`sheet-pane sheet-pane-${tab}`}>
@@ -68,5 +69,6 @@ export default function CharacterSheet({hero:h,legal=[],inspect,open,preview=fal
    </div>
    {((tab==='talents'&&talentLibrary)||tab==='spellbook')&&cardPages>1&&<nav className="sheet-gallery-pages" aria-label="Character card pages"><button className="quiet-button" disabled={!visibleCardPage} onClick={()=>setCardPage(visibleCardPage-1)}>Previous</button><span>{visibleCardPage+1} / {cardPages}</span><button className="quiet-button" disabled={visibleCardPage+1===cardPages} onClick={()=>setCardPage(visibleCardPage+1)}>Next</button></nav>}
   </div>
+  {printed&&scan&&<Modal title={`${character(p,h.id).name} · printed sheet`} wide className="printed-sheet-modal" onClose={()=>setPrinted(false)}><figure className="printed-sheet"><img src={scan.src} width={scan.width} height={scan.height} alt={`The printed character sheet of ${character(p,h.id).name}: capacities per level, racial ability and the slots for powers and equipment`} decoding="async"/><figcaption><a href={scan.src} target="_blank" rel="noreferrer">Open full size <Icon name="arrow" size={14}/></a></figcaption></figure></Modal>}
  </article>;
 }
