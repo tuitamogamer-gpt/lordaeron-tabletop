@@ -43,12 +43,12 @@
   "auction-boots-of-endurance": {
    "src": "/assets/scans/cards/auction-boots-of-endurance.webp",
    "width": 677,
-   "height": 1055
+   "height": 1053
   },
   "auction-hood-of-shadow": {
    "src": "/assets/scans/cards/auction-hood-of-shadow.webp",
    "width": 678,
-   "height": 1055
+   "height": 1053
   },
   "auction-ring-of-agility": {
    "src": "/assets/scans/cards/auction-ring-of-agility.webp",
@@ -57,8 +57,8 @@
   },
   "auction-trusty-mount": {
    "src": "/assets/scans/cards/auction-trusty-mount.webp",
-   "width": 680,
-   "height": 1054
+   "width": 678,
+   "height": 1053
   },
   "brandon-lightstone-armor": {
    "src": "/assets/scans/cards/brandon-lightstone-armor.webp",
@@ -122,83 +122,83 @@
   },
   "circle-1-hameyas-slayer": {
    "src": "/assets/scans/cards/circle-1-hameyas-slayer.webp",
-   "width": 484,
-   "height": 744
+   "width": 447,
+   "height": 697
   },
   "circle-10-opulent-tunic-of-the-whale": {
    "src": "/assets/scans/cards/circle-10-opulent-tunic-of-the-whale.webp",
-   "width": 484,
-   "height": 744
+   "width": 448,
+   "height": 697
   },
   "circle-11-royal-highmark-vestments": {
    "src": "/assets/scans/cards/circle-11-royal-highmark-vestments.webp",
-   "width": 484,
-   "height": 744
+   "width": 448,
+   "height": 699
   },
   "circle-12-flamestrider-robes": {
    "src": "/assets/scans/cards/circle-12-flamestrider-robes.webp",
-   "width": 484,
-   "height": 744
+   "width": 446,
+   "height": 697
   },
   "circle-13-cadaverous-armor": {
    "src": "/assets/scans/cards/circle-13-cadaverous-armor.webp",
-   "width": 484,
-   "height": 744
+   "width": 449,
+   "height": 695
   },
   "circle-14-deathblow": {
    "src": "/assets/scans/cards/circle-14-deathblow.webp",
-   "width": 484,
-   "height": 744
+   "width": 448,
+   "height": 697
   },
   "circle-15-gorewood-bow": {
    "src": "/assets/scans/cards/circle-15-gorewood-bow.webp",
-   "width": 484,
-   "height": 744
+   "width": 447,
+   "height": 699
   },
   "circle-16-war-maul": {
    "src": "/assets/scans/cards/circle-16-war-maul.webp",
-   "width": 484,
-   "height": 744
+   "width": 448,
+   "height": 697
   },
   "circle-2-deathchill-armor": {
    "src": "/assets/scans/cards/circle-2-deathchill-armor.webp",
-   "width": 484,
-   "height": 744
+   "width": 446,
+   "height": 697
   },
   "circle-3-bone-of-the-infernal": {
    "src": "/assets/scans/cards/circle-3-bone-of-the-infernal.webp",
-   "width": 484,
-   "height": 744
+   "width": 448,
+   "height": 699
   },
   "circle-4-taran-smasher": {
    "src": "/assets/scans/cards/circle-4-taran-smasher.webp",
-   "width": 484,
-   "height": 744
+   "width": 448,
+   "height": 698
   },
   "circle-5-crackling-staff": {
    "src": "/assets/scans/cards/circle-5-crackling-staff.webp",
-   "width": 484,
-   "height": 744
+   "width": 447,
+   "height": 698
   },
   "circle-6-screeching-bow": {
    "src": "/assets/scans/cards/circle-6-screeching-bow.webp",
-   "width": 484,
-   "height": 744
+   "width": 448,
+   "height": 697
   },
   "circle-7-spire-of-hakkar": {
    "src": "/assets/scans/cards/circle-7-spire-of-hakkar.webp",
-   "width": 484,
-   "height": 744
+   "width": 446,
+   "height": 699
   },
   "circle-8-dragonscale-armor": {
    "src": "/assets/scans/cards/circle-8-dragonscale-armor.webp",
-   "width": 484,
-   "height": 744
+   "width": 448,
+   "height": 698
   },
   "circle-9-earthen-rod": {
    "src": "/assets/scans/cards/circle-9-earthen-rod.webp",
-   "width": 484,
-   "height": 744
+   "width": 447,
+   "height": 697
   },
   "dongon-swiftblade-armor": {
    "src": "/assets/scans/cards/dongon-swiftblade-armor.webp",
@@ -222,128 +222,128 @@
   },
   "druid-barkskin": {
    "src": "/assets/scans/cards/druid-barkskin.webp",
-   "width": 484,
-   "height": 744
+   "width": 463,
+   "height": 696
   },
   "druid-bear-form": {
    "src": "/assets/scans/cards/druid-bear-form.webp",
-   "width": 482,
-   "height": 744
+   "width": 467,
+   "height": 698
   },
   "druid-cat-form": {
    "src": "/assets/scans/cards/druid-cat-form.webp",
-   "width": 483,
-   "height": 744
+   "width": 468,
+   "height": 721
   },
   "druid-entangling-roots": {
    "src": "/assets/scans/cards/druid-entangling-roots.webp",
-   "width": 483,
-   "height": 744
+   "width": 468,
+   "height": 697
   },
   "druid-ferocious-bite": {
    "src": "/assets/scans/cards/druid-ferocious-bite.webp",
    "width": 484,
-   "height": 744
+   "height": 718
   },
   "druid-ferocity": {
    "src": "/assets/scans/cards/druid-ferocity.webp",
-   "width": 484,
-   "height": 744
+   "width": 470,
+   "height": 725
   },
   "druid-healing-touch": {
    "src": "/assets/scans/cards/druid-healing-touch.webp",
-   "width": 481,
-   "height": 744
+   "width": 465,
+   "height": 721
   },
   "druid-hurricane": {
    "src": "/assets/scans/cards/druid-hurricane.webp",
-   "width": 484,
-   "height": 744
+   "width": 474,
+   "height": 724
   },
   "druid-improved-rejuvenation": {
    "src": "/assets/scans/cards/druid-improved-rejuvenation.webp",
-   "width": 484,
-   "height": 744
+   "width": 474,
+   "height": 721
   },
   "druid-innervate": {
    "src": "/assets/scans/cards/druid-innervate.webp",
-   "width": 484,
-   "height": 744
+   "width": 478,
+   "height": 724
   },
   "druid-mark-of-the-wild": {
    "src": "/assets/scans/cards/druid-mark-of-the-wild.webp",
-   "width": 484,
-   "height": 744
+   "width": 470,
+   "height": 720
   },
   "druid-moonfire": {
    "src": "/assets/scans/cards/druid-moonfire.webp",
-   "width": 484,
-   "height": 744
+   "width": 469,
+   "height": 719
   },
   "druid-moonfury": {
    "src": "/assets/scans/cards/druid-moonfury.webp",
-   "width": 484,
-   "height": 744
+   "width": 471,
+   "height": 725
   },
   "druid-natures-grace": {
    "src": "/assets/scans/cards/druid-natures-grace.webp",
-   "width": 484,
-   "height": 744
+   "width": 476,
+   "height": 724
   },
   "druid-natures-grasp": {
    "src": "/assets/scans/cards/druid-natures-grasp.webp",
-   "width": 484,
-   "height": 744
+   "width": 470,
+   "height": 722
   },
   "druid-omen-of-clarity": {
    "src": "/assets/scans/cards/druid-omen-of-clarity.webp",
-   "width": 484,
-   "height": 744
+   "width": 473,
+   "height": 707
   },
   "druid-rejuvenation": {
    "src": "/assets/scans/cards/druid-rejuvenation.webp",
-   "width": 480,
-   "height": 744
+   "width": 463,
+   "height": 718
   },
   "druid-starfire": {
    "src": "/assets/scans/cards/druid-starfire.webp",
-   "width": 484,
-   "height": 744
+   "width": 465,
+   "height": 700
   },
   "druid-strength-of-the-wild": {
    "src": "/assets/scans/cards/druid-strength-of-the-wild.webp",
    "width": 484,
-   "height": 744
+   "height": 723
   },
   "druid-thick-hide": {
    "src": "/assets/scans/cards/druid-thick-hide.webp",
-   "width": 484,
-   "height": 744
+   "width": 471,
+   "height": 725
   },
   "druid-thorns": {
    "src": "/assets/scans/cards/druid-thorns.webp",
-   "width": 480,
-   "height": 744
+   "width": 464,
+   "height": 721
   },
   "druid-tranquility": {
    "src": "/assets/scans/cards/druid-tranquility.webp",
-   "width": 482,
-   "height": 744
+   "width": 469,
+   "height": 729
   },
   "druid-vengeance": {
    "src": "/assets/scans/cards/druid-vengeance.webp",
-   "width": 484,
-   "height": 744
+   "width": 480,
+   "height": 723
   },
   "druid-weapon-balance": {
    "src": "/assets/scans/cards/druid-weapon-balance.webp",
-   "width": 484,
-   "height": 744
+   "width": 473,
+   "height": 721
   },
   "event-1": {
    "src": "/assets/scans/cards/event-1.webp",
    "width": 678,
-   "height": 1054
+   "height": 1053
   },
   "event-10": {
    "src": "/assets/scans/cards/event-10.webp",
@@ -352,23 +352,23 @@
   },
   "event-11": {
    "src": "/assets/scans/cards/event-11.webp",
-   "width": 680,
-   "height": 1054
+   "width": 678,
+   "height": 1053
   },
   "event-12": {
    "src": "/assets/scans/cards/event-12.webp",
-   "width": 680,
-   "height": 1054
+   "width": 678,
+   "height": 1053
   },
   "event-13": {
    "src": "/assets/scans/cards/event-13.webp",
-   "width": 678,
+   "width": 677,
    "height": 1055
   },
   "event-14": {
    "src": "/assets/scans/cards/event-14.webp",
    "width": 678,
-   "height": 1054
+   "height": 1053
   },
   "event-15": {
    "src": "/assets/scans/cards/event-15.webp",
@@ -377,23 +377,23 @@
   },
   "event-16": {
    "src": "/assets/scans/cards/event-16.webp",
-   "width": 679,
-   "height": 1076
+   "width": 678,
+   "height": 1052
   },
   "event-17": {
    "src": "/assets/scans/cards/event-17.webp",
-   "width": 679,
-   "height": 1054
+   "width": 678,
+   "height": 1052
   },
   "event-18": {
    "src": "/assets/scans/cards/event-18.webp",
-   "width": 679,
-   "height": 1053
+   "width": 677,
+   "height": 1052
   },
   "event-19": {
    "src": "/assets/scans/cards/event-19.webp",
    "width": 677,
-   "height": 1055
+   "height": 1053
   },
   "event-2": {
    "src": "/assets/scans/cards/event-2.webp",
@@ -402,8 +402,8 @@
   },
   "event-20": {
    "src": "/assets/scans/cards/event-20.webp",
-   "width": 679,
-   "height": 1056
+   "width": 678,
+   "height": 1054
   },
   "event-21": {
    "src": "/assets/scans/cards/event-21.webp",
@@ -412,43 +412,43 @@
   },
   "event-22": {
    "src": "/assets/scans/cards/event-22.webp",
-   "width": 679,
-   "height": 1053
+   "width": 678,
+   "height": 1052
   },
   "event-23": {
    "src": "/assets/scans/cards/event-23.webp",
-   "width": 681,
+   "width": 678,
    "height": 1053
   },
   "event-24": {
    "src": "/assets/scans/cards/event-24.webp",
-   "width": 679,
-   "height": 1054
+   "width": 678,
+   "height": 1053
   },
   "event-25": {
    "src": "/assets/scans/cards/event-25.webp",
    "width": 678,
-   "height": 1055
+   "height": 1054
   },
   "event-26": {
    "src": "/assets/scans/cards/event-26.webp",
    "width": 679,
-   "height": 1054
+   "height": 1052
   },
   "event-27": {
    "src": "/assets/scans/cards/event-27.webp",
-   "width": 677,
-   "height": 1055
+   "width": 676,
+   "height": 1053
   },
   "event-28": {
    "src": "/assets/scans/cards/event-28.webp",
-   "width": 679,
-   "height": 1055
+   "width": 678,
+   "height": 1051
   },
   "event-29": {
    "src": "/assets/scans/cards/event-29.webp",
-   "width": 679,
-   "height": 1055
+   "width": 678,
+   "height": 1052
   },
   "event-3": {
    "src": "/assets/scans/cards/event-3.webp",
@@ -457,143 +457,143 @@
   },
   "event-30": {
    "src": "/assets/scans/cards/event-30.webp",
-   "width": 678,
-   "height": 1053
+   "width": 677,
+   "height": 1051
   },
   "event-31": {
    "src": "/assets/scans/cards/event-31.webp",
-   "width": 679,
-   "height": 1055
+   "width": 678,
+   "height": 1054
   },
   "event-32": {
    "src": "/assets/scans/cards/event-32.webp",
-   "width": 680,
-   "height": 1054
+   "width": 678,
+   "height": 1053
   },
   "event-33": {
    "src": "/assets/scans/cards/event-33.webp",
    "width": 678,
-   "height": 1055
+   "height": 1053
   },
   "event-34": {
    "src": "/assets/scans/cards/event-34.webp",
-   "width": 680,
-   "height": 1052
+   "width": 679,
+   "height": 1051
   },
   "event-35": {
    "src": "/assets/scans/cards/event-35.webp",
-   "width": 681,
-   "height": 1053
+   "width": 678,
+   "height": 1050
   },
   "event-36": {
    "src": "/assets/scans/cards/event-36.webp",
    "width": 678,
-   "height": 1054
+   "height": 1053
   },
   "event-37": {
    "src": "/assets/scans/cards/event-37.webp",
-   "width": 678,
-   "height": 1056
+   "width": 677,
+   "height": 1054
   },
   "event-38": {
    "src": "/assets/scans/cards/event-38.webp",
-   "width": 678,
+   "width": 677,
    "height": 1054
   },
   "event-39": {
    "src": "/assets/scans/cards/event-39.webp",
-   "width": 679,
-   "height": 1057
+   "width": 677,
+   "height": 1055
   },
   "event-4": {
    "src": "/assets/scans/cards/event-4.webp",
-   "width": 680,
+   "width": 677,
    "height": 1052
   },
   "event-40": {
    "src": "/assets/scans/cards/event-40.webp",
-   "width": 679,
-   "height": 1056
+   "width": 677,
+   "height": 1055
   },
   "event-41": {
    "src": "/assets/scans/cards/event-41.webp",
-   "width": 682,
-   "height": 1056
+   "width": 679,
+   "height": 1055
   },
   "event-42": {
    "src": "/assets/scans/cards/event-42.webp",
    "width": 678,
-   "height": 1056
+   "height": 1055
   },
   "event-43": {
    "src": "/assets/scans/cards/event-43.webp",
-   "width": 679,
-   "height": 1055
+   "width": 678,
+   "height": 1054
   },
   "event-44": {
    "src": "/assets/scans/cards/event-44.webp",
-   "width": 679,
-   "height": 1057
+   "width": 678,
+   "height": 1056
   },
   "event-45": {
    "src": "/assets/scans/cards/event-45.webp",
-   "width": 678,
-   "height": 1058
+   "width": 677,
+   "height": 1055
   },
   "event-46": {
    "src": "/assets/scans/cards/event-46.webp",
-   "width": 678,
-   "height": 1053
+   "width": 677,
+   "height": 1052
   },
   "event-47": {
    "src": "/assets/scans/cards/event-47.webp",
-   "width": 681,
-   "height": 1056
+   "width": 679,
+   "height": 1055
   },
   "event-48": {
    "src": "/assets/scans/cards/event-48.webp",
-   "width": 679,
-   "height": 1054
+   "width": 678,
+   "height": 1053
   },
   "event-49": {
    "src": "/assets/scans/cards/event-49.webp",
-   "width": 682,
-   "height": 1055
+   "width": 678,
+   "height": 1053
   },
   "event-5": {
    "src": "/assets/scans/cards/event-5.webp",
-   "width": 678,
-   "height": 1056
+   "width": 677,
+   "height": 1054
   },
   "event-50": {
    "src": "/assets/scans/cards/event-50.webp",
    "width": 677,
-   "height": 1054
+   "height": 1051
   },
   "event-51": {
    "src": "/assets/scans/cards/event-51.webp",
-   "width": 679,
+   "width": 678,
    "height": 1053
   },
   "event-52": {
    "src": "/assets/scans/cards/event-52.webp",
-   "width": 679,
+   "width": 678,
    "height": 1053
   },
   "event-6": {
    "src": "/assets/scans/cards/event-6.webp",
    "width": 677,
-   "height": 1054
+   "height": 1052
   },
   "event-7": {
    "src": "/assets/scans/cards/event-7.webp",
-   "width": 678,
-   "height": 1053
+   "width": 677,
+   "height": 1052
   },
   "event-8": {
    "src": "/assets/scans/cards/event-8.webp",
-   "width": 680,
-   "height": 1053
+   "width": 678,
+   "height": 1052
   },
   "event-9": {
    "src": "/assets/scans/cards/event-9.webp",
@@ -767,123 +767,123 @@
   },
   "mage-arcane-explosion": {
    "src": "/assets/scans/cards/mage-arcane-explosion.webp",
-   "width": 484,
-   "height": 744
+   "width": 446,
+   "height": 722
   },
   "mage-arcane-focus": {
    "src": "/assets/scans/cards/mage-arcane-focus.webp",
-   "width": 484,
-   "height": 744
+   "width": 470,
+   "height": 727
   },
   "mage-arcane-intellect": {
    "src": "/assets/scans/cards/mage-arcane-intellect.webp",
-   "width": 484,
-   "height": 744
+   "width": 467,
+   "height": 695
   },
   "mage-arcane-meditation": {
    "src": "/assets/scans/cards/mage-arcane-meditation.webp",
-   "width": 484,
-   "height": 744
+   "width": 474,
+   "height": 726
   },
   "mage-arcane-mind": {
    "src": "/assets/scans/cards/mage-arcane-mind.webp",
-   "width": 484,
-   "height": 744
+   "width": 475,
+   "height": 727
   },
   "mage-arcane-missiles": {
    "src": "/assets/scans/cards/mage-arcane-missiles.webp",
-   "width": 484,
-   "height": 744
+   "width": 467,
+   "height": 695
   },
   "mage-arcane-power": {
    "src": "/assets/scans/cards/mage-arcane-power.webp",
-   "width": 484,
-   "height": 744
+   "width": 469,
+   "height": 727
   },
   "mage-combustion": {
    "src": "/assets/scans/cards/mage-combustion.webp",
-   "width": 484,
-   "height": 744
+   "width": 472,
+   "height": 724
   },
   "mage-cone-of-cold": {
    "src": "/assets/scans/cards/mage-cone-of-cold.webp",
-   "width": 484,
-   "height": 744
+   "width": 464,
+   "height": 722
   },
   "mage-dispel": {
    "src": "/assets/scans/cards/mage-dispel.webp",
-   "width": 484,
-   "height": 744
+   "width": 468,
+   "height": 697
   },
   "mage-fire-blast": {
    "src": "/assets/scans/cards/mage-fire-blast.webp",
-   "width": 484,
-   "height": 744
+   "width": 465,
+   "height": 694
   },
   "mage-fireball": {
    "src": "/assets/scans/cards/mage-fireball.webp",
-   "width": 482,
-   "height": 744
+   "width": 465,
+   "height": 696
   },
   "mage-frostbolt": {
    "src": "/assets/scans/cards/mage-frostbolt.webp",
-   "width": 484,
-   "height": 744
+   "width": 466,
+   "height": 696
   },
   "mage-ice-barrier": {
    "src": "/assets/scans/cards/mage-ice-barrier.webp",
-   "width": 484,
-   "height": 744
+   "width": 471,
+   "height": 728
   },
   "mage-ice-block": {
    "src": "/assets/scans/cards/mage-ice-block.webp",
-   "width": 484,
-   "height": 744
+   "width": 474,
+   "height": 727
   },
   "mage-impact": {
    "src": "/assets/scans/cards/mage-impact.webp",
-   "width": 484,
-   "height": 744
+   "width": 471,
+   "height": 728
   },
   "mage-incinerate": {
    "src": "/assets/scans/cards/mage-incinerate.webp",
-   "width": 484,
-   "height": 744
+   "width": 471,
+   "height": 724
   },
   "mage-mana-shield": {
    "src": "/assets/scans/cards/mage-mana-shield.webp",
-   "width": 484,
-   "height": 744
+   "width": 467,
+   "height": 698
   },
   "mage-piercing-ice": {
    "src": "/assets/scans/cards/mage-piercing-ice.webp",
    "width": 484,
-   "height": 744
+   "height": 729
   },
   "mage-polymorph": {
    "src": "/assets/scans/cards/mage-polymorph.webp",
-   "width": 484,
-   "height": 744
+   "width": 467,
+   "height": 696
   },
   "mage-portal": {
    "src": "/assets/scans/cards/mage-portal.webp",
-   "width": 484,
-   "height": 744
+   "width": 467,
+   "height": 719
   },
   "mage-shatter": {
    "src": "/assets/scans/cards/mage-shatter.webp",
-   "width": 484,
-   "height": 744
+   "width": 461,
+   "height": 726
   },
   "mage-teleport": {
    "src": "/assets/scans/cards/mage-teleport.webp",
-   "width": 484,
-   "height": 744
+   "width": 467,
+   "height": 721
   },
   "mage-winters-chill": {
    "src": "/assets/scans/cards/mage-winters-chill.webp",
-   "width": 484,
-   "height": 744
+   "width": 469,
+   "height": 726
   },
   "meadowfrey-armor": {
    "src": "/assets/scans/cards/meadowfrey-armor.webp",
@@ -937,243 +937,243 @@
   },
   "paladin-benediction": {
    "src": "/assets/scans/cards/paladin-benediction.webp",
-   "width": 482,
-   "height": 744
+   "width": 468,
+   "height": 706
   },
   "paladin-blessing-of-freedom": {
    "src": "/assets/scans/cards/paladin-blessing-of-freedom.webp",
-   "width": 484,
-   "height": 744
+   "width": 469,
+   "height": 696
   },
   "paladin-blessing-of-kings": {
    "src": "/assets/scans/cards/paladin-blessing-of-kings.webp",
-   "width": 484,
-   "height": 744
+   "width": 473,
+   "height": 708
   },
   "paladin-blessing-of-might": {
    "src": "/assets/scans/cards/paladin-blessing-of-might.webp",
    "width": 484,
-   "height": 744
+   "height": 699
   },
   "paladin-blessing-of-protection": {
    "src": "/assets/scans/cards/paladin-blessing-of-protection.webp",
-   "width": 484,
-   "height": 744
+   "width": 470,
+   "height": 697
   },
   "paladin-concentration-aura": {
    "src": "/assets/scans/cards/paladin-concentration-aura.webp",
    "width": 484,
-   "height": 744
+   "height": 698
   },
   "paladin-consecration": {
    "src": "/assets/scans/cards/paladin-consecration.webp",
-   "width": 484,
-   "height": 744
+   "width": 462,
+   "height": 697
   },
   "paladin-conviction": {
    "src": "/assets/scans/cards/paladin-conviction.webp",
-   "width": 483,
-   "height": 744
+   "width": 471,
+   "height": 723
   },
   "paladin-devotion-aura": {
    "src": "/assets/scans/cards/paladin-devotion-aura.webp",
    "width": 484,
-   "height": 744
+   "height": 696
   },
   "paladin-hammer-of-justice": {
    "src": "/assets/scans/cards/paladin-hammer-of-justice.webp",
    "width": 484,
-   "height": 744
+   "height": 697
   },
   "paladin-holy-light": {
    "src": "/assets/scans/cards/paladin-holy-light.webp",
-   "width": 484,
-   "height": 744
+   "width": 462,
+   "height": 696
   },
   "paladin-holy-shield": {
    "src": "/assets/scans/cards/paladin-holy-shield.webp",
-   "width": 484,
-   "height": 744
+   "width": 472,
+   "height": 707
   },
   "paladin-holy-shock": {
    "src": "/assets/scans/cards/paladin-holy-shock.webp",
-   "width": 484,
-   "height": 744
+   "width": 472,
+   "height": 707
   },
   "paladin-improved-devotion": {
    "src": "/assets/scans/cards/paladin-improved-devotion.webp",
-   "width": 484,
-   "height": 744
+   "width": 471,
+   "height": 707
   },
   "paladin-improved-holy-light": {
    "src": "/assets/scans/cards/paladin-improved-holy-light.webp",
-   "width": 481,
-   "height": 744
+   "width": 468,
+   "height": 706
   },
   "paladin-improved-might": {
    "src": "/assets/scans/cards/paladin-improved-might.webp",
-   "width": 484,
-   "height": 744
+   "width": 472,
+   "height": 708
   },
   "paladin-improved-righteousness": {
    "src": "/assets/scans/cards/paladin-improved-righteousness.webp",
    "width": 484,
-   "height": 744
+   "height": 706
   },
   "paladin-lay-on-hands": {
    "src": "/assets/scans/cards/paladin-lay-on-hands.webp",
-   "width": 484,
-   "height": 744
+   "width": 462,
+   "height": 697
   },
   "paladin-mace-specialization": {
    "src": "/assets/scans/cards/paladin-mace-specialization.webp",
-   "width": 484,
-   "height": 744
+   "width": 470,
+   "height": 707
   },
   "paladin-reckoning": {
    "src": "/assets/scans/cards/paladin-reckoning.webp",
-   "width": 484,
-   "height": 744
+   "width": 472,
+   "height": 707
   },
   "paladin-seal-of-command": {
    "src": "/assets/scans/cards/paladin-seal-of-command.webp",
    "width": 484,
-   "height": 744
+   "height": 697
   },
   "paladin-seal-of-justice": {
    "src": "/assets/scans/cards/paladin-seal-of-justice.webp",
-   "width": 484,
-   "height": 744
+   "width": 468,
+   "height": 698
   },
   "paladin-seal-of-righteousness": {
    "src": "/assets/scans/cards/paladin-seal-of-righteousness.webp",
    "width": 484,
-   "height": 744
+   "height": 728
   },
   "paladin-vengeance": {
    "src": "/assets/scans/cards/paladin-vengeance.webp",
    "width": 484,
-   "height": 744
+   "height": 706
   },
   "priest-darkness": {
    "src": "/assets/scans/cards/priest-darkness.webp",
-   "width": 484,
-   "height": 744
+   "width": 478,
+   "height": 706
   },
   "priest-divine-spirit": {
    "src": "/assets/scans/cards/priest-divine-spirit.webp",
    "width": 484,
-   "height": 744
+   "height": 706
   },
   "priest-greater-heal": {
    "src": "/assets/scans/cards/priest-greater-heal.webp",
-   "width": 484,
-   "height": 744
+   "width": 469,
+   "height": 696
   },
   "priest-holy-fire": {
    "src": "/assets/scans/cards/priest-holy-fire.webp",
-   "width": 484,
-   "height": 744
+   "width": 472,
+   "height": 697
   },
   "priest-holy-nova": {
    "src": "/assets/scans/cards/priest-holy-nova.webp",
    "width": 484,
-   "height": 744
+   "height": 707
   },
   "priest-holy-specialization": {
    "src": "/assets/scans/cards/priest-holy-specialization.webp",
    "width": 484,
-   "height": 744
+   "height": 706
   },
   "priest-improved-healing": {
    "src": "/assets/scans/cards/priest-improved-healing.webp",
    "width": 484,
-   "height": 744
+   "height": 707
   },
   "priest-improved-pain": {
    "src": "/assets/scans/cards/priest-improved-pain.webp",
    "width": 484,
-   "height": 744
+   "height": 707
   },
   "priest-improved-smite": {
    "src": "/assets/scans/cards/priest-improved-smite.webp",
-   "width": 484,
-   "height": 744
+   "width": 481,
+   "height": 707
   },
   "priest-inner-focus": {
    "src": "/assets/scans/cards/priest-inner-focus.webp",
-   "width": 484,
-   "height": 744
+   "width": 463,
+   "height": 707
   },
   "priest-lesser-heal": {
    "src": "/assets/scans/cards/priest-lesser-heal.webp",
-   "width": 484,
-   "height": 744
+   "width": 473,
+   "height": 727
   },
   "priest-meditation": {
    "src": "/assets/scans/cards/priest-meditation.webp",
-   "width": 484,
-   "height": 744
+   "width": 478,
+   "height": 707
   },
   "priest-mental-agility": {
    "src": "/assets/scans/cards/priest-mental-agility.webp",
    "width": 484,
-   "height": 744
+   "height": 707
   },
   "priest-mental-strength": {
    "src": "/assets/scans/cards/priest-mental-strength.webp",
-   "width": 484,
-   "height": 744
+   "width": 476,
+   "height": 706
   },
   "priest-mind-control": {
    "src": "/assets/scans/cards/priest-mind-control.webp",
    "width": 484,
-   "height": 744
+   "height": 696
   },
   "priest-power-word-fortitude": {
    "src": "/assets/scans/cards/priest-power-word-fortitude.webp",
-   "width": 484,
-   "height": 744
+   "width": 474,
+   "height": 726
   },
   "priest-power-word-shield": {
    "src": "/assets/scans/cards/priest-power-word-shield.webp",
    "width": 484,
-   "height": 744
+   "height": 728
   },
   "priest-prayer-of-healing": {
    "src": "/assets/scans/cards/priest-prayer-of-healing.webp",
    "width": 484,
-   "height": 744
+   "height": 697
   },
   "priest-resurrection": {
    "src": "/assets/scans/cards/priest-resurrection.webp",
    "width": 484,
-   "height": 744
+   "height": 697
   },
   "priest-shadow-word-pain": {
    "src": "/assets/scans/cards/priest-shadow-word-pain.webp",
-   "width": 484,
-   "height": 744
+   "width": 475,
+   "height": 728
   },
   "priest-shadowform": {
    "src": "/assets/scans/cards/priest-shadowform.webp",
    "width": 484,
-   "height": 744
+   "height": 706
   },
   "priest-shadowguard": {
    "src": "/assets/scans/cards/priest-shadowguard.webp",
-   "width": 484,
-   "height": 744
+   "width": 469,
+   "height": 697
   },
   "priest-smite": {
    "src": "/assets/scans/cards/priest-smite.webp",
    "width": 484,
-   "height": 744
+   "height": 727
   },
   "priest-starshards": {
    "src": "/assets/scans/cards/priest-starshards.webp",
    "width": 484,
-   "height": 744
+   "height": 695
   },
   "quest-alliance-a-danger-from-the-depths": {
    "src": "/assets/scans/cards/quest-alliance-a-danger-from-the-depths.webp",
@@ -1577,123 +1577,123 @@
   },
   "rogue-adrenaline-rush": {
    "src": "/assets/scans/cards/rogue-adrenaline-rush.webp",
-   "width": 481,
-   "height": 744
+   "width": 469,
+   "height": 706
   },
   "rogue-ambush": {
    "src": "/assets/scans/cards/rogue-ambush.webp",
-   "width": 481,
-   "height": 744
+   "width": 460,
+   "height": 696
   },
   "rogue-backstab": {
    "src": "/assets/scans/cards/rogue-backstab.webp",
-   "width": 484,
-   "height": 744
+   "width": 462,
+   "height": 697
   },
   "rogue-cheap-shot": {
    "src": "/assets/scans/cards/rogue-cheap-shot.webp",
-   "width": 484,
-   "height": 744
+   "width": 464,
+   "height": 697
   },
   "rogue-cold-blood": {
    "src": "/assets/scans/cards/rogue-cold-blood.webp",
-   "width": 482,
-   "height": 744
+   "width": 469,
+   "height": 707
   },
   "rogue-deadly-poison": {
    "src": "/assets/scans/cards/rogue-deadly-poison.webp",
-   "width": 484,
-   "height": 744
+   "width": 461,
+   "height": 695
   },
   "rogue-dual-wield": {
    "src": "/assets/scans/cards/rogue-dual-wield.webp",
-   "width": 480,
-   "height": 744
+   "width": 458,
+   "height": 698
   },
   "rogue-evasion": {
    "src": "/assets/scans/cards/rogue-evasion.webp",
-   "width": 484,
-   "height": 744
+   "width": 461,
+   "height": 697
   },
   "rogue-eviscerate": {
    "src": "/assets/scans/cards/rogue-eviscerate.webp",
-   "width": 484,
-   "height": 744
+   "width": 463,
+   "height": 695
   },
   "rogue-improved-ambush": {
    "src": "/assets/scans/cards/rogue-improved-ambush.webp",
-   "width": 480,
-   "height": 744
+   "width": 468,
+   "height": 706
   },
   "rogue-improved-backstab": {
    "src": "/assets/scans/cards/rogue-improved-backstab.webp",
-   "width": 483,
-   "height": 744
+   "width": 471,
+   "height": 707
   },
   "rogue-improved-dual-wield": {
    "src": "/assets/scans/cards/rogue-improved-dual-wield.webp",
-   "width": 479,
-   "height": 744
+   "width": 467,
+   "height": 707
   },
   "rogue-improved-sinister-strike": {
    "src": "/assets/scans/cards/rogue-improved-sinister-strike.webp",
-   "width": 480,
-   "height": 744
+   "width": 466,
+   "height": 707
   },
   "rogue-opportunity": {
    "src": "/assets/scans/cards/rogue-opportunity.webp",
-   "width": 483,
-   "height": 744
+   "width": 470,
+   "height": 707
   },
   "rogue-premeditation": {
    "src": "/assets/scans/cards/rogue-premeditation.webp",
-   "width": 479,
-   "height": 744
+   "width": 465,
+   "height": 707
   },
   "rogue-preparation": {
    "src": "/assets/scans/cards/rogue-preparation.webp",
-   "width": 484,
-   "height": 744
+   "width": 471,
+   "height": 708
   },
   "rogue-relentless-strikes": {
    "src": "/assets/scans/cards/rogue-relentless-strikes.webp",
-   "width": 482,
-   "height": 744
+   "width": 469,
+   "height": 706
   },
   "rogue-rupture": {
    "src": "/assets/scans/cards/rogue-rupture.webp",
-   "width": 484,
-   "height": 744
+   "width": 461,
+   "height": 694
   },
   "rogue-ruthlessness": {
    "src": "/assets/scans/cards/rogue-ruthlessness.webp",
-   "width": 479,
-   "height": 744
+   "width": 466,
+   "height": 707
   },
   "rogue-seal-fate": {
    "src": "/assets/scans/cards/rogue-seal-fate.webp",
-   "width": 484,
-   "height": 744
+   "width": 471,
+   "height": 706
   },
   "rogue-sinister-strike": {
    "src": "/assets/scans/cards/rogue-sinister-strike.webp",
-   "width": 484,
-   "height": 744
+   "width": 462,
+   "height": 695
   },
   "rogue-slice-and-dice": {
    "src": "/assets/scans/cards/rogue-slice-and-dice.webp",
-   "width": 484,
-   "height": 744
+   "width": 461,
+   "height": 696
   },
   "rogue-stealth": {
    "src": "/assets/scans/cards/rogue-stealth.webp",
-   "width": 484,
-   "height": 744
+   "width": 464,
+   "height": 727
   },
   "rogue-vanish": {
    "src": "/assets/scans/cards/rogue-vanish.webp",
-   "width": 484,
-   "height": 744
+   "width": 460,
+   "height": 694
   },
   "sandrai-darkshine-armor": {
    "src": "/assets/scans/cards/sandrai-darkshine-armor.webp",
@@ -1743,122 +1743,122 @@
   "shaman-call-of-thunder": {
    "src": "/assets/scans/cards/shaman-call-of-thunder.webp",
    "width": 484,
-   "height": 744
+   "height": 726
   },
   "shaman-chain-lightning": {
    "src": "/assets/scans/cards/shaman-chain-lightning.webp",
-   "width": 484,
-   "height": 744
+   "width": 457,
+   "height": 724
   },
   "shaman-earth-shock": {
    "src": "/assets/scans/cards/shaman-earth-shock.webp",
-   "width": 484,
-   "height": 744
+   "width": 473,
+   "height": 727
   },
   "shaman-elemental-focus": {
    "src": "/assets/scans/cards/shaman-elemental-focus.webp",
    "width": 484,
-   "height": 744
+   "height": 707
   },
   "shaman-elemental-fury": {
    "src": "/assets/scans/cards/shaman-elemental-fury.webp",
    "width": 484,
-   "height": 744
+   "height": 707
   },
   "shaman-elemental-mastery": {
    "src": "/assets/scans/cards/shaman-elemental-mastery.webp",
    "width": 484,
-   "height": 744
+   "height": 707
   },
   "shaman-frost-shock": {
    "src": "/assets/scans/cards/shaman-frost-shock.webp",
    "width": 484,
-   "height": 744
+   "height": 725
   },
   "shaman-ghost-wolf": {
    "src": "/assets/scans/cards/shaman-ghost-wolf.webp",
    "width": 484,
-   "height": 744
+   "height": 724
   },
   "shaman-healing-wave": {
    "src": "/assets/scans/cards/shaman-healing-wave.webp",
-   "width": 484,
-   "height": 744
+   "width": 458,
+   "height": 725
   },
   "shaman-improved-healing-wave": {
    "src": "/assets/scans/cards/shaman-improved-healing-wave.webp",
-   "width": 484,
-   "height": 744
+   "width": 466,
+   "height": 726
   },
   "shaman-improved-rockbiter": {
    "src": "/assets/scans/cards/shaman-improved-rockbiter.webp",
-   "width": 484,
-   "height": 744
+   "width": 480,
+   "height": 726
   },
   "shaman-improved-windfury": {
    "src": "/assets/scans/cards/shaman-improved-windfury.webp",
    "width": 484,
-   "height": 744
+   "height": 707
   },
   "shaman-lightning-shield": {
    "src": "/assets/scans/cards/shaman-lightning-shield.webp",
    "width": 484,
-   "height": 744
+   "height": 724
   },
   "shaman-mana-tide-totem": {
    "src": "/assets/scans/cards/shaman-mana-tide-totem.webp",
-   "width": 484,
-   "height": 744
+   "width": 464,
+   "height": 706
   },
   "shaman-natures-swiftness": {
    "src": "/assets/scans/cards/shaman-natures-swiftness.webp",
-   "width": 484,
-   "height": 744
+   "width": 480,
+   "height": 706
   },
   "shaman-parry": {
    "src": "/assets/scans/cards/shaman-parry.webp",
-   "width": 484,
-   "height": 744
+   "width": 465,
+   "height": 726
   },
   "shaman-purge": {
    "src": "/assets/scans/cards/shaman-purge.webp",
-   "width": 484,
-   "height": 744
+   "width": 473,
+   "height": 725
   },
   "shaman-reincarnation": {
    "src": "/assets/scans/cards/shaman-reincarnation.webp",
-   "width": 484,
-   "height": 744
+   "width": 472,
+   "height": 724
   },
   "shaman-rockbiter-weapon": {
    "src": "/assets/scans/cards/shaman-rockbiter-weapon.webp",
    "width": 484,
-   "height": 744
+   "height": 725
   },
   "shaman-stoneskin-totem": {
    "src": "/assets/scans/cards/shaman-stoneskin-totem.webp",
-   "width": 484,
-   "height": 744
+   "width": 455,
+   "height": 725
   },
   "shaman-stormstrike": {
    "src": "/assets/scans/cards/shaman-stormstrike.webp",
    "width": 484,
-   "height": 744
+   "height": 726
   },
   "shaman-strength-of-earth-totem": {
    "src": "/assets/scans/cards/shaman-strength-of-earth-totem.webp",
-   "width": 484,
-   "height": 744
+   "width": 455,
+   "height": 725
   },
   "shaman-thundering-strikes": {
    "src": "/assets/scans/cards/shaman-thundering-strikes.webp",
-   "width": 484,
-   "height": 744
+   "width": 465,
+   "height": 726
   },
   "shaman-windfury-weapon": {
    "src": "/assets/scans/cards/shaman-windfury-weapon.webp",
-   "width": 484,
-   "height": 744
+   "width": 472,
+   "height": 724
   },
   "sofeea-icecall-armor": {
    "src": "/assets/scans/cards/sofeea-icecall-armor.webp",
@@ -2192,473 +2192,473 @@
   },
   "triangle-1-trogg-club": {
    "src": "/assets/scans/cards/triangle-1-trogg-club.webp",
-   "width": 493,
+   "width": 491,
    "height": 758
   },
   "triangle-10-trogg-club": {
    "src": "/assets/scans/cards/triangle-10-trogg-club.webp",
-   "width": 494,
-   "height": 760
+   "width": 493,
+   "height": 759
   },
   "triangle-11-cobalt-buckler": {
    "src": "/assets/scans/cards/triangle-11-cobalt-buckler.webp",
-   "width": 495,
-   "height": 761
+   "width": 492,
+   "height": 760
   },
   "triangle-12-iridescent-hammer": {
    "src": "/assets/scans/cards/triangle-12-iridescent-hammer.webp",
-   "width": 494,
-   "height": 761
+   "width": 492,
+   "height": 759
   },
   "triangle-13-scroll-of-lesser-spirit": {
    "src": "/assets/scans/cards/triangle-13-scroll-of-lesser-spirit.webp",
-   "width": 492,
-   "height": 764
+   "width": 490,
+   "height": 762
   },
   "triangle-14-skycaller": {
    "src": "/assets/scans/cards/triangle-14-skycaller.webp",
    "width": 492,
-   "height": 761
+   "height": 759
   },
   "triangle-15-bent-staff": {
    "src": "/assets/scans/cards/triangle-15-bent-staff.webp",
-   "width": 493,
-   "height": 760
+   "width": 492,
+   "height": 758
   },
   "triangle-16-archers-buckler": {
    "src": "/assets/scans/cards/triangle-16-archers-buckler.webp",
-   "width": 494,
-   "height": 761
+   "width": 492,
+   "height": 760
   },
   "triangle-17-ley-staff": {
    "src": "/assets/scans/cards/triangle-17-ley-staff.webp",
-   "width": 495,
-   "height": 760
+   "width": 492,
+   "height": 759
   },
   "triangle-18-scimitar": {
    "src": "/assets/scans/cards/triangle-18-scimitar.webp",
-   "width": 497,
-   "height": 759
+   "width": 492,
+   "height": 758
   },
   "triangle-19-dull-blade": {
    "src": "/assets/scans/cards/triangle-19-dull-blade.webp",
-   "width": 495,
-   "height": 759
+   "width": 492,
+   "height": 758
   },
   "triangle-2-minor-agility-potion": {
    "src": "/assets/scans/cards/triangle-2-minor-agility-potion.webp",
    "width": 491,
-   "height": 763
+   "height": 761
   },
   "triangle-20-bastard-sword": {
    "src": "/assets/scans/cards/triangle-20-bastard-sword.webp",
-   "width": 492,
+   "width": 491,
    "height": 758
   },
   "triangle-21-robe-of-apprenticeship": {
    "src": "/assets/scans/cards/triangle-21-robe-of-apprenticeship.webp",
-   "width": 496,
-   "height": 763
-  },
-  "triangle-22-laminated-recurve-bow": {
-   "src": "/assets/scans/cards/triangle-22-laminated-recurve-bow.webp",
    "width": 495,
    "height": 761
   },
+  "triangle-22-laminated-recurve-bow": {
+   "src": "/assets/scans/cards/triangle-22-laminated-recurve-bow.webp",
+   "width": 493,
+   "height": 760
+  },
   "triangle-23-soldiers-armor": {
    "src": "/assets/scans/cards/triangle-23-soldiers-armor.webp",
-   "width": 494,
-   "height": 761
+   "width": 492,
+   "height": 760
   },
   "triangle-24-neophytes-robe": {
    "src": "/assets/scans/cards/triangle-24-neophytes-robe.webp",
-   "width": 494,
-   "height": 761
+   "width": 492,
+   "height": 760
   },
   "triangle-25-rakzur-club": {
    "src": "/assets/scans/cards/triangle-25-rakzur-club.webp",
-   "width": 498,
+   "width": 493,
    "height": 760
   },
   "triangle-26-shadow-wand": {
    "src": "/assets/scans/cards/triangle-26-shadow-wand.webp",
-   "width": 495,
+   "width": 494,
    "height": 760
   },
   "triangle-27-fine-longbow": {
    "src": "/assets/scans/cards/triangle-27-fine-longbow.webp",
-   "width": 495,
-   "height": 762
+   "width": 493,
+   "height": 760
   },
   "triangle-28-minor-mana-potion": {
    "src": "/assets/scans/cards/triangle-28-minor-mana-potion.webp",
-   "width": 496,
-   "height": 760
+   "width": 490,
+   "height": 759
   },
   "triangle-29-cadet-vest": {
    "src": "/assets/scans/cards/triangle-29-cadet-vest.webp",
-   "width": 494,
-   "height": 761
+   "width": 492,
+   "height": 759
   },
   "triangle-3-bent-staff": {
    "src": "/assets/scans/cards/triangle-3-bent-staff.webp",
-   "width": 493,
-   "height": 759
+   "width": 492,
+   "height": 757
   },
   "triangle-30-crocolisk-steak": {
    "src": "/assets/scans/cards/triangle-30-crocolisk-steak.webp",
-   "width": 493,
+   "width": 491,
    "height": 757
   },
   "triangle-31-scimitar": {
    "src": "/assets/scans/cards/triangle-31-scimitar.webp",
-   "width": 492,
-   "height": 759
+   "width": 491,
+   "height": 758
   },
   "triangle-32-robe-of-apprenticeship": {
    "src": "/assets/scans/cards/triangle-32-robe-of-apprenticeship.webp",
-   "width": 494,
-   "height": 761
+   "width": 492,
+   "height": 759
   },
   "triangle-33-cured-leather-armor": {
    "src": "/assets/scans/cards/triangle-33-cured-leather-armor.webp",
-   "width": 495,
-   "height": 761
+   "width": 492,
+   "height": 760
   },
   "triangle-34-minor-healing-potion": {
    "src": "/assets/scans/cards/triangle-34-minor-healing-potion.webp",
-   "width": 495,
+   "width": 493,
    "height": 758
   },
   "triangle-35-dull-blade": {
    "src": "/assets/scans/cards/triangle-35-dull-blade.webp",
-   "width": 494,
-   "height": 762
+   "width": 491,
+   "height": 761
   },
   "triangle-36-footman-tunic": {
    "src": "/assets/scans/cards/triangle-36-footman-tunic.webp",
-   "width": 494,
-   "height": 762
+   "width": 493,
+   "height": 760
   },
   "triangle-37-fine-longbow": {
    "src": "/assets/scans/cards/triangle-37-fine-longbow.webp",
-   "width": 494,
-   "height": 761
+   "width": 489,
+   "height": 760
   },
   "triangle-38-cured-leather-armor": {
    "src": "/assets/scans/cards/triangle-38-cured-leather-armor.webp",
-   "width": 495,
-   "height": 761
+   "width": 492,
+   "height": 760
   },
   "triangle-39-scroll-of-lesser-strength": {
    "src": "/assets/scans/cards/triangle-39-scroll-of-lesser-strength.webp",
-   "width": 493,
-   "height": 766
+   "width": 492,
+   "height": 764
   },
   "triangle-4-gnarled-staff": {
    "src": "/assets/scans/cards/triangle-4-gnarled-staff.webp",
-   "width": 493,
+   "width": 491,
    "height": 757
   },
   "triangle-40-skycaller": {
    "src": "/assets/scans/cards/triangle-40-skycaller.webp",
-   "width": 495,
-   "height": 759
-  },
-  "triangle-41-iridescent-hammer": {
-   "src": "/assets/scans/cards/triangle-41-iridescent-hammer.webp",
-   "width": 495,
-   "height": 760
-  },
-  "triangle-42-shadow-wand": {
-   "src": "/assets/scans/cards/triangle-42-shadow-wand.webp",
-   "width": 494,
-   "height": 760
-  },
-  "triangle-43-minor-healing-potion": {
-   "src": "/assets/scans/cards/triangle-43-minor-healing-potion.webp",
-   "width": 501,
-   "height": 763
-  },
-  "triangle-44-crocolisk-steak": {
-   "src": "/assets/scans/cards/triangle-44-crocolisk-steak.webp",
    "width": 493,
    "height": 758
   },
+  "triangle-41-iridescent-hammer": {
+   "src": "/assets/scans/cards/triangle-41-iridescent-hammer.webp",
+   "width": 492,
+   "height": 759
+  },
+  "triangle-42-shadow-wand": {
+   "src": "/assets/scans/cards/triangle-42-shadow-wand.webp",
+   "width": 491,
+   "height": 758
+  },
+  "triangle-43-minor-healing-potion": {
+   "src": "/assets/scans/cards/triangle-43-minor-healing-potion.webp",
+   "width": 466,
+   "height": 759
+  },
+  "triangle-44-crocolisk-steak": {
+   "src": "/assets/scans/cards/triangle-44-crocolisk-steak.webp",
+   "width": 491,
+   "height": 755
+  },
   "triangle-45-footman-tunic": {
    "src": "/assets/scans/cards/triangle-45-footman-tunic.webp",
-   "width": 493,
-   "height": 762
+   "width": 491,
+   "height": 759
   },
   "triangle-46-minor-mana-potion": {
    "src": "/assets/scans/cards/triangle-46-minor-mana-potion.webp",
-   "width": 498,
-   "height": 760
+   "width": 491,
+   "height": 758
   },
   "triangle-5-minor-agility-potion": {
    "src": "/assets/scans/cards/triangle-5-minor-agility-potion.webp",
-   "width": 491,
+   "width": 490,
    "height": 763
   },
   "triangle-6-laminated-recurve-bow": {
    "src": "/assets/scans/cards/triangle-6-laminated-recurve-bow.webp",
-   "width": 493,
-   "height": 761
+   "width": 492,
+   "height": 760
   },
   "triangle-7-neophytes-robe": {
    "src": "/assets/scans/cards/triangle-7-neophytes-robe.webp",
-   "width": 495,
-   "height": 763
+   "width": 492,
+   "height": 760
   },
   "triangle-8-ley-staff": {
    "src": "/assets/scans/cards/triangle-8-ley-staff.webp",
-   "width": 493,
-   "height": 760
+   "width": 492,
+   "height": 759
   },
   "triangle-9-soldiers-armor": {
    "src": "/assets/scans/cards/triangle-9-soldiers-armor.webp",
-   "width": 493,
-   "height": 761
+   "width": 490,
+   "height": 759
   },
   "warlock-conflagrate": {
    "src": "/assets/scans/cards/warlock-conflagrate.webp",
-   "width": 484,
-   "height": 744
+   "width": 474,
+   "height": 730
   },
   "warlock-corruption": {
    "src": "/assets/scans/cards/warlock-corruption.webp",
-   "width": 483,
-   "height": 744
+   "width": 471,
+   "height": 697
   },
   "warlock-curse-of-agony": {
    "src": "/assets/scans/cards/warlock-curse-of-agony.webp",
-   "width": 484,
-   "height": 744
+   "width": 474,
+   "height": 696
   },
   "warlock-curse-of-exhaustion": {
    "src": "/assets/scans/cards/warlock-curse-of-exhaustion.webp",
-   "width": 484,
-   "height": 744
+   "width": 473,
+   "height": 697
   },
   "warlock-curse-of-recklessness": {
    "src": "/assets/scans/cards/warlock-curse-of-recklessness.webp",
-   "width": 480,
-   "height": 744
+   "width": 469,
+   "height": 698
   },
   "warlock-deathcoil": {
    "src": "/assets/scans/cards/warlock-deathcoil.webp",
-   "width": 484,
-   "height": 744
+   "width": 466,
+   "height": 722
   },
   "warlock-demon-armor": {
    "src": "/assets/scans/cards/warlock-demon-armor.webp",
-   "width": 483,
-   "height": 744
+   "width": 473,
+   "height": 696
   },
   "warlock-demonic-embrace": {
    "src": "/assets/scans/cards/warlock-demonic-embrace.webp",
-   "width": 484,
-   "height": 744
+   "width": 477,
+   "height": 729
   },
   "warlock-fel-stamina": {
    "src": "/assets/scans/cards/warlock-fel-stamina.webp",
-   "width": 484,
-   "height": 744
+   "width": 476,
+   "height": 729
   },
   "warlock-holocaust": {
    "src": "/assets/scans/cards/warlock-holocaust.webp",
-   "width": 484,
-   "height": 744
+   "width": 477,
+   "height": 729
   },
   "warlock-immolate": {
    "src": "/assets/scans/cards/warlock-immolate.webp",
-   "width": 479,
-   "height": 744
+   "width": 469,
+   "height": 697
   },
   "warlock-imp": {
    "src": "/assets/scans/cards/warlock-imp.webp",
-   "width": 479,
-   "height": 744
+   "width": 469,
+   "height": 696
   },
   "warlock-improved-immolate": {
    "src": "/assets/scans/cards/warlock-improved-immolate.webp",
-   "width": 479,
-   "height": 744
+   "width": 470,
+   "height": 729
   },
   "warlock-improved-shadow-bolt": {
    "src": "/assets/scans/cards/warlock-improved-shadow-bolt.webp",
-   "width": 481,
-   "height": 744
+   "width": 474,
+   "height": 730
   },
   "warlock-nightfall": {
    "src": "/assets/scans/cards/warlock-nightfall.webp",
-   "width": 484,
-   "height": 744
+   "width": 477,
+   "height": 729
   },
   "warlock-ritual-of-summoning": {
    "src": "/assets/scans/cards/warlock-ritual-of-summoning.webp",
-   "width": 484,
-   "height": 744
+   "width": 462,
+   "height": 721
   },
   "warlock-sacrifice": {
    "src": "/assets/scans/cards/warlock-sacrifice.webp",
-   "width": 480,
-   "height": 744
+   "width": 471,
+   "height": 728
   },
   "warlock-shadow-bolt": {
    "src": "/assets/scans/cards/warlock-shadow-bolt.webp",
-   "width": 481,
-   "height": 744
+   "width": 470,
+   "height": 696
   },
   "warlock-shadowburn": {
    "src": "/assets/scans/cards/warlock-shadowburn.webp",
-   "width": 483,
-   "height": 744
+   "width": 474,
+   "height": 729
   },
   "warlock-siphon-life": {
    "src": "/assets/scans/cards/warlock-siphon-life.webp",
-   "width": 484,
-   "height": 744
+   "width": 475,
+   "height": 729
   },
   "warlock-soothing-kiss": {
    "src": "/assets/scans/cards/warlock-soothing-kiss.webp",
-   "width": 484,
-   "height": 744
+   "width": 476,
+   "height": 729
   },
   "warlock-succubus": {
    "src": "/assets/scans/cards/warlock-succubus.webp",
    "width": 484,
-   "height": 744
+   "height": 722
   },
   "warlock-unholy-power": {
    "src": "/assets/scans/cards/warlock-unholy-power.webp",
-   "width": 481,
-   "height": 744
+   "width": 473,
+   "height": 728
   },
   "warlock-voidwalker": {
    "src": "/assets/scans/cards/warlock-voidwalker.webp",
-   "width": 484,
-   "height": 744
+   "width": 468,
+   "height": 721
   },
   "warrior-anger-management": {
    "src": "/assets/scans/cards/warrior-anger-management.webp",
-   "width": 531,
-   "height": 791
+   "width": 460,
+   "height": 706
   },
   "warrior-battle-shout": {
    "src": "/assets/scans/cards/warrior-battle-shout.webp",
-   "width": 531,
-   "height": 791
+   "width": 442,
+   "height": 692
   },
   "warrior-berserker-stance": {
    "src": "/assets/scans/cards/warrior-berserker-stance.webp",
-   "width": 531,
-   "height": 791
+   "width": 446,
+   "height": 693
   },
   "warrior-blood-thirst": {
    "src": "/assets/scans/cards/warrior-blood-thirst.webp",
-   "width": 531,
-   "height": 791
+   "width": 460,
+   "height": 707
   },
   "warrior-bloodrage": {
    "src": "/assets/scans/cards/warrior-bloodrage.webp",
-   "width": 531,
-   "height": 791
+   "width": 445,
+   "height": 693
   },
   "warrior-cleave": {
    "src": "/assets/scans/cards/warrior-cleave.webp",
-   "width": 531,
-   "height": 791
+   "width": 446,
+   "height": 693
   },
   "warrior-cruelty": {
    "src": "/assets/scans/cards/warrior-cruelty.webp",
-   "width": 531,
-   "height": 791
+   "width": 459,
+   "height": 705
   },
   "warrior-defensive-stance": {
    "src": "/assets/scans/cards/warrior-defensive-stance.webp",
-   "width": 531,
-   "height": 791
+   "width": 445,
+   "height": 693
   },
   "warrior-dual-wield-specialization": {
    "src": "/assets/scans/cards/warrior-dual-wield-specialization.webp",
-   "width": 531,
-   "height": 791
+   "width": 460,
+   "height": 707
   },
   "warrior-enrage": {
    "src": "/assets/scans/cards/warrior-enrage.webp",
-   "width": 531,
-   "height": 791
+   "width": 460,
+   "height": 707
   },
   "warrior-execute": {
    "src": "/assets/scans/cards/warrior-execute.webp",
-   "width": 531,
-   "height": 791
+   "width": 446,
+   "height": 693
   },
   "warrior-heroic-strike": {
    "src": "/assets/scans/cards/warrior-heroic-strike.webp",
-   "width": 531,
-   "height": 791
+   "width": 446,
+   "height": 693
   },
   "warrior-impale": {
    "src": "/assets/scans/cards/warrior-impale.webp",
-   "width": 531,
-   "height": 791
+   "width": 460,
+   "height": 707
   },
   "warrior-improved-battleshout": {
    "src": "/assets/scans/cards/warrior-improved-battleshout.webp",
-   "width": 531,
-   "height": 791
+   "width": 459,
+   "height": 705
   },
   "warrior-improved-heroic-strike": {
    "src": "/assets/scans/cards/warrior-improved-heroic-strike.webp",
-   "width": 531,
-   "height": 791
+   "width": 460,
+   "height": 706
   },
   "warrior-intercept": {
    "src": "/assets/scans/cards/warrior-intercept.webp",
-   "width": 531,
-   "height": 791
+   "width": 446,
+   "height": 693
   },
   "warrior-mortal-strike": {
    "src": "/assets/scans/cards/warrior-mortal-strike.webp",
-   "width": 531,
-   "height": 791
+   "width": 460,
+   "height": 707
   },
   "warrior-piercing-howl": {
    "src": "/assets/scans/cards/warrior-piercing-howl.webp",
-   "width": 531,
-   "height": 791
+   "width": 460,
+   "height": 707
   },
   "warrior-rend": {
    "src": "/assets/scans/cards/warrior-rend.webp",
-   "width": 531,
-   "height": 791
+   "width": 446,
+   "height": 693
   },
   "warrior-revenge": {
    "src": "/assets/scans/cards/warrior-revenge.webp",
-   "width": 531,
-   "height": 791
+   "width": 446,
+   "height": 693
   },
   "warrior-shield-discipline": {
    "src": "/assets/scans/cards/warrior-shield-discipline.webp",
-   "width": 531,
-   "height": 791
+   "width": 460,
+   "height": 707
   },
   "warrior-shield-wall": {
    "src": "/assets/scans/cards/warrior-shield-wall.webp",
-   "width": 531,
-   "height": 791
+   "width": 446,
+   "height": 693
   },
   "warrior-thunder-clap": {
    "src": "/assets/scans/cards/warrior-thunder-clap.webp",
-   "width": 531,
-   "height": 791
+   "width": 445,
+   "height": 693
   },
   "warrior-unbridled-wrath": {
    "src": "/assets/scans/cards/warrior-unbridled-wrath.webp",
-   "width": 531,
-   "height": 791
+   "width": 460,
+   "height": 707
   },
   "weefla-sorrowfall-armor": {
    "src": "/assets/scans/cards/weefla-sorrowfall-armor.webp",
@@ -2749,7 +2749,7 @@
   "class-druid": {
    "src": "/assets/scans/backs/class-druid.webp",
    "width": 360,
-   "height": 553
+   "height": 556
   },
   "class-hunter": {
    "src": "/assets/scans/backs/class-hunter.webp",
@@ -2759,47 +2759,47 @@
   "class-mage": {
    "src": "/assets/scans/backs/class-mage.webp",
    "width": 360,
-   "height": 553
+   "height": 522
   },
   "class-paladin": {
    "src": "/assets/scans/backs/class-paladin.webp",
    "width": 360,
-   "height": 553
+   "height": 552
   },
   "class-priest": {
    "src": "/assets/scans/backs/class-priest.webp",
    "width": 360,
-   "height": 553
+   "height": 544
   },
   "class-rogue": {
    "src": "/assets/scans/backs/class-rogue.webp",
    "width": 360,
-   "height": 553
+   "height": 539
   },
   "class-shaman": {
    "src": "/assets/scans/backs/class-shaman.webp",
    "width": 360,
-   "height": 553
+   "height": 539
   },
   "class-warlock": {
    "src": "/assets/scans/backs/class-warlock.webp",
    "width": 360,
-   "height": 556
+   "height": 561
   },
   "class-warrior": {
    "src": "/assets/scans/backs/class-warrior.webp",
    "width": 360,
-   "height": 555
+   "height": 557
   },
   "event": {
    "src": "/assets/scans/backs/event.webp",
    "width": 360,
-   "height": 560
+   "height": 559
   },
   "item-circle": {
    "src": "/assets/scans/backs/item-circle.webp",
    "width": 360,
-   "height": 553
+   "height": 572
   },
   "item-special": {
    "src": "/assets/scans/backs/item-special.webp",
@@ -2814,7 +2814,7 @@
   "item-triangle": {
    "src": "/assets/scans/backs/item-triangle.webp",
    "width": 360,
-   "height": 554
+   "height": 556
   },
   "quest-alliance-green": {
    "src": "/assets/scans/backs/quest-alliance-green.webp",

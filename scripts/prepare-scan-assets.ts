@@ -47,8 +47,8 @@ const manifest = { cards: {} as Record<string, Size>, counters: {} as Record<str
 const stats = new Map<string, { n: number; bytes: number }>(), missing: string[] = [];
 const note = (group: string, file: string) => { const s = stats.get(group) ?? { n: 0, bytes: 0 }; s.n++; s.bytes += statSync(file).size; stats.set(group, s); };
 
-/** Scans of quests and some items sit inside a wide black margin; the card itself is cropped out. */
-function cardBox(data: Buffer, w: number, h: number) {
+/** Scans of quests and many items sit inside a clean black margin: the box of the lit pixels is the card. Undefined when that box reaches the scan's edge, which crop marks in the margin cause. */
+function litBox(data: Buffer, w: number, h: number) {
  let x0 = w, y0 = h, x1 = -1, y1 = -1;
  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
   const i = (y * w + x) * 4;
@@ -58,6 +58,27 @@ function cardBox(data: Buffer, w: number, h: number) {
  const pad = 3, left = Math.max(0, x0 - pad), top = Math.max(0, y0 - pad);
  return { left, top, width: Math.min(w, x1 + pad + 1) - left, height: Math.min(h, y1 + pad + 1) - top };
 }
+
+/**
+ * Where crop marks in the corners of the margin spoil that, the card is where the rows and columns are mostly not black: the marks
+ * cover only a few pixels of an otherwise black row. Undefined when nothing sensible is found (the scan is then used as it is).
+ */
+function profileBox(data: Buffer, w: number, h: number) {
+ const lit = (x: number, y: number) => { const i = (y * w + x) * 4; return data[i + 3] > 16 && data[i] + data[i + 1] + data[i + 2] > 90; };
+ // Measured over the middle of the scan, where neither crop marks nor rounded corners reach.
+ const xa = Math.floor(w * 0.15), xb = Math.ceil(w * 0.85), ya = Math.floor(h * 0.15), yb = Math.ceil(h * 0.85);
+ const columns = Array.from({ length: w }, (_, x) => { let n = 0; for (let y = ya; y < yb; y++) if (lit(x, y)) n++; return n / (yb - ya); });
+ const rows = Array.from({ length: h }, (_, y) => { let n = 0; for (let x = xa; x < xb; x++) if (lit(x, y)) n++; return n / (xb - xa); });
+ const first = (v: number[]) => v.findIndex(f => f >= 0.4), last = (v: number[]) => v.length - 1 - [...v].reverse().findIndex(f => f >= 0.4);
+ const x0 = first(columns), x1 = last(columns), y0 = first(rows), y1 = last(rows);
+ if (x0 < 0 || y0 < 0 || x1 - x0 < w * 0.5 || y1 - y0 < h * 0.5) return undefined;
+ if (x0 <= 1 && y0 <= 1 && x1 >= w - 2 && y1 >= h - 2) return undefined; // nothing to trim
+ const left = Math.max(0, x0 - 1), top = Math.max(0, y0 - 1);
+ return { left, top, width: Math.min(w, x1 + 2) - left, height: Math.min(h, y1 + 2) - top };
+}
+
+/** Used for every card face and deck back: the simple box where it works, the measured one where crop marks are in the way. */
+const cardBox = (data: Buffer, w: number, h: number) => litBox(data, w, h) ?? profileBox(data, w, h);
 
 /** A character sheet is cut into many pieces in a row, so the decoded scan of the last file stays at hand. */
 let decoded: { file: string; data: Buffer; info: OutputInfo } | undefined;
