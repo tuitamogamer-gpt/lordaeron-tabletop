@@ -9,7 +9,7 @@ import type { GameView } from '../rules/view';
 import CombatAbilities, { type AbilityCommand } from './CombatAbilities';
 import CombatLoadout from './CombatLoadout';
 import { triggerLabels } from './design-system';
-import { CardThumbnail, HeroPortrait } from './parts';
+import { CardThumbnail, ConditionToken, HeroPortrait } from './parts';
 
 type Props = {
  state: GameView; skills: AbilityCommand[]; dice: number[]; send: (command: Command) => void; busy: boolean;
@@ -53,7 +53,7 @@ export default function CombatCharacterSheet({ state, skills, dice, send, busy, 
    const available = skills.some(command => command.hero === id);
    return <button key={id} type="button" aria-label={`Show ${character(p, id).name} character sheet`} aria-pressed={h.id === id} onClick={() => { setViewedId(id); onChooseHero(); }}><HeroPortrait id={id} small /><span>{character(p, id).name.split(' ')[0]}<small>{activeId === id ? 'Current attacker' : b.participants.includes(id) ? 'In this battle' : 'Supporting ally'}</small></span>{available && <i aria-label="Abilities available" />}</button>;
   })}</nav>
-  <header className="combat-sheet-profile"><HeroPortrait id={h.id} /><div><span className="sheet-eyebrow">LEVEL {h.level} · {d.race} · {d.classId}</span><h3>{d.name}</h3><p>{bots.includes(h.id) ? 'Bot character' : 'Player character'}{b.defeated.includes(h.id) ? ' · defeated' : activeId === h.id ? ' · current attacker' : ''}</p></div><div className="combat-sheet-conditions"><span><Icon name="heart" size={12} />Stun <b>{h.stun}</b></span><span><Icon name="skull" size={12} />Curse <b>{h.curse}</b></span></div></header>
+  <header className="combat-sheet-profile"><HeroPortrait id={h.id} /><div><span className="sheet-eyebrow">LEVEL {h.level} · {d.race} · {d.classId}</span><h3>{d.name}</h3><p>{bots.includes(h.id) ? 'Bot character' : 'Player character'}{b.defeated.includes(h.id) ? ' · defeated' : activeId === h.id ? ' · current attacker' : ''}</p></div><div className="combat-sheet-conditions"><span><ConditionToken kind="stun" fallback={<Icon name="heart" size={12} />} />Stun <b>{h.stun}</b></span><span><ConditionToken kind="curse" fallback={<Icon name="skull" size={12} />} />Curse <b>{h.curse}</b></span></div></header>
   <div className="combat-sheet-vitals"><ResourceBar type="health" value={h.health} max={cap.health} /><ResourceBar type="energy" value={h.energy} max={cap.energy} /></div>
   <div className="combat-choice-content" ref={contentRef}>
    <div className="combat-sheet-card-heading"><h4>Powers & equipment</h4><span>{skills.filter(command => command.hero === h.id).length ? 'Choose a card to use its ability' : 'Hover or focus a card for full rules'}</span></div>

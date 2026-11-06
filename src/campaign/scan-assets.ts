@@ -5,7 +5,7 @@ export interface ScanAssets {
  cards: Record<string, ScanSize>;
  /** Character counters by character id, upright. */
  counters: Record<string, string>;
- /** The hourglass turn marker and the Overlord counters. */
+ /** Other printed tokens: the hourglass turn marker, the Overlord counters, and stun, curse, hit, armor, gold, health, energy, spellbook and bag. */
  tokens: Record<string, string>;
  /** Deck backs: quest-<faction>-<tier>, item-<deck>, class-<class> and event. */
  backs: Record<string, ScanSize>;

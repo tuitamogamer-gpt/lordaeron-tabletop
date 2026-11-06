@@ -17,8 +17,11 @@ const COUNTER: Record<string, number> = {
  'zowka-shattertusk': 7, 'shailara-whitherblade': 8, 'grumbaz-crowsblood': 9, 'brandon-lightstone': 10, 'brebo-bigshot': 11, 'artumnis-moondream': 12,
  'thundershot': 13, 'burbon-fang': 14, 'leeam-sagewind': 15, 'sandrai-darkshine': 16,
 };
-/** Other counters by layer: the hourglass turn marker and the Overlord counters. */
-const TOKEN_LAYER = { hourglass: 17, nefarian: 26, kelthuzad: 27, kazzak: 36 } as const;
+/**
+ * Other tokens by layer: the hourglass turn marker, the Overlord counters, and the tokens the interface draws as symbols: the Stun and
+ * Curse tokens, the hit and armor tokens of the combat boxes, a gold coin, the health and energy tokens, the spellbook and the bag.
+ */
+const TOKEN_LAYER = { hourglass: 17, nefarian: 26, kelthuzad: 27, kazzak: 36, stun: 18, curse: 19, hit: 22, armor: 23, gold: 24, spellbook: 32, bag: 33, health: 40, energy: 42 } as const;
 
 /**
  * Where things sit on a character sheet, as fractions of the scan (all eighteen are 3336×2556): the portrait on the left, then the racial
@@ -133,7 +136,7 @@ for (const e of p.events) { const path = pathOf(e.source?.reference); if (path) 
 for (const o of p.overlords) for (const n of [4, 6]) cards.push({ id: `overlord-${o.id}-${n}`, path: `Overlords/${OVERLORD_FILE[o.id]} ${n}.png`, crop: false, limit: 1700 });
 for (const { id, path, crop, limit } of cards) { const face = await emit('cards', 'cards', id, path, limit, { crop }); if (face) manifest.cards[id] = face; }
 
-// Character counters (upright) and the hourglass and Overlord counters.
+// Character counters (upright) and the other tokens.
 for (const [id, layer] of Object.entries(COUNTER)) { const f = await emit('counters', 'counters', id, `${TOKENS}/Layer ${layer}.png`, 128, { rotate: 180 }); if (f) manifest.counters[id] = f.src; }
 for (const [name, layer] of Object.entries(TOKEN_LAYER)) { const f = await emit('counters', 'counters', name, `${TOKENS}/Layer ${layer}.png`, 160); if (f) manifest.tokens[name] = f.src; }
 

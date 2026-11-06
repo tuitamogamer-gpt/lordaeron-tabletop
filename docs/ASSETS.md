@@ -14,7 +14,7 @@ Za preuzete repozitorije nije utvrđena licenca koja pokriva originalne slike. I
 
 ## Skenovi iz vlasnikovog posjeda
 
-`public/assets/scans/` sadrži 636 smanjenih kopija skenova osnovne igre (karte, uključujući početne karte i rasne panele izrezane s listova likova, žetoni, poleđine špilova, listovi likova, portreti likova, Overlorda i stvorenja, referentni listovi); manifest je `src/data/scan-assets.json`. Originali od 1 GB ostaju u `.local-data/scans` i preuzimaju se skriptom `scripts/fetch-scans.py` uz provjeru SHA-256. Autorska prava pripadaju Fantasy Flight Games i Blizzard Entertainmentu; objavljivanje i uklanjanje opisani su u [SCANS-2026-11-05.md](SCANS-2026-11-05.md).
+`public/assets/scans/` sadrži 645 smanjenih kopija skenova osnovne igre (karte, uključujući početne karte i rasne panele izrezane s listova likova, žetoni, poleđine špilova, listovi likova, portreti likova, Overlorda i stvorenja, referentni listovi); manifest je `src/data/scan-assets.json`. Originali od 1 GB ostaju u `.local-data/scans` i preuzimaju se skriptom `scripts/fetch-scans.py` uz provjeru SHA-256. Autorska prava pripadaju Fantasy Flight Games i Blizzard Entertainmentu; objavljivanje i uklanjanje opisani su u [SCANS-2026-11-05.md](SCANS-2026-11-05.md).
 
 ## Generirane ilustracije
 

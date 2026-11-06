@@ -3,10 +3,14 @@ import type { Battle, Faction } from '../rules/model';
 import { FactionCrest } from './Art';
 import { AnimatedValue } from './feedback';
 import { factionLabel } from './parts';
+import { SCANS } from './scan-assets';
 
 function TokenCount({ count, label, kind, caption }: { count: number; label: string; kind: 'hit' | 'armor'; caption: string }) {
+ const printed = SCANS.tokens[kind];
  return <div className={`combat-token-count ${kind}`}>
-  <span className="combat-counter-token" aria-hidden="true"><Icon name={kind === 'armor' ? 'shield' : 'swords'} size={18} /></span>
+  {printed
+   ? <span className="combat-counter-token printed" aria-hidden="true"><img src={printed} alt="" width={50} height={50} draggable={false} /></span>
+   : <span className="combat-counter-token" aria-hidden="true"><Icon name={kind === 'armor' ? 'shield' : 'swords'} size={18} /></span>}
   <output aria-label={label}><AnimatedValue value={count} /></output><small>{caption}</small>
  </div>;
 }

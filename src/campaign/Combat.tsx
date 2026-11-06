@@ -19,7 +19,7 @@ import { AnimatedValue, ThreatLevel } from './feedback';
 import { combatStep, combatSteps, type CombatPresentation } from './combat-flow';
 import { BossPortrait, CreatureGlyph, creatureRules } from './design-system';
 import { bossRules, regionName } from './event-text';
-import { factionLabel, HeroPortrait, phaseLabel, pretty } from './parts';
+import { ConditionToken, factionLabel, HeroPortrait, phaseLabel, pretty } from './parts';
 
 const channels: { color: Color; title: string; icon: string; note: string; pvpNote: string }[] = [
  { color: 'blue', title: 'Ranged', icon: 'target', note: 'Strikes before the enemy attacks.', pvpNote: 'Deals wounds after armor is resolved.' },
@@ -154,7 +154,7 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
     })}
     <div className="combat-party"><h4>In this battle</h4>{b.participants.map(id => {
      const h = state.heroes.find(h => h.id === id)!, max = capacity(p, h);
-     return <div key={id} className={`${a?.heroId === id ? 'active' : ''} ${b.defeated.includes(id) ? 'defeated' : ''}`}><HeroPortrait id={id} small /><span><strong>{character(p, id).name.split(' ')[0]}</strong><small>{factionLabel(faction(p, id))} · {bots.includes(id) ? 'BOT' : 'PLAYER'}{b.defeated.includes(id) ? ' · defeated' : b.acted.includes(id) ? ' · rolled' : ''}</small><span className="combat-hero-vitals"><i><Icon name="heart" size={11} /><AnimatedValue value={h.health} />/{max.health}</i><i><Icon name="bolt" size={11} /><AnimatedValue value={h.energy} /></i>{h.curse > 0 && <i>Curse {h.curse}</i>}{h.stun > 0 && <i>Stun {h.stun}</i>}</span></span>{a?.heroId === id && <i className="combat-turn-dot" />}</div>;
+     return <div key={id} className={`${a?.heroId === id ? 'active' : ''} ${b.defeated.includes(id) ? 'defeated' : ''}`}><HeroPortrait id={id} small /><span><strong>{character(p, id).name.split(' ')[0]}</strong><small>{factionLabel(faction(p, id))} · {bots.includes(id) ? 'BOT' : 'PLAYER'}{b.defeated.includes(id) ? ' · defeated' : b.acted.includes(id) ? ' · rolled' : ''}</small><span className="combat-hero-vitals"><i><Icon name="heart" size={11} /><AnimatedValue value={h.health} />/{max.health}</i><i><Icon name="bolt" size={11} /><AnimatedValue value={h.energy} /></i>{h.curse > 0 && <i><ConditionToken kind="curse" />Curse {h.curse}</i>}{h.stun > 0 && <i><ConditionToken kind="stun" />Stun {h.stun}</i>}</span></span>{a?.heroId === id && <i className="combat-turn-dot" />}</div>;
     })}</div>
     <CombatLoadout state={state} skills={skills} details/>
     {rule && <details className="combat-enemy-rule"><summary>Encounter rule <Icon name="help" size={14} /></summary><p><RulesText>{rule}</RulesText></p></details>}

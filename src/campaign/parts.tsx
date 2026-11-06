@@ -5,7 +5,7 @@ import { BASE_PACK as p } from '../data/base';
 import { character } from '../rules/common';
 import type { Card } from '../rules/model';
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
-import type { CSSProperties } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import CardPortrait from './CardPortrait';
 import { SCANS } from './scan-assets';
@@ -20,6 +20,11 @@ export function HeroPortrait({id,small=false}:{id:string;small?:boolean}){
  const c=character(p,id),counter=small?SCANS.counters[id]:undefined,art=small?undefined:SCANS.portraits[id]?.src;
  const style:CSSProperties=counter?{backgroundImage:`url(${counter})`,backgroundSize:'contain',backgroundPosition:'center'}:art?{backgroundImage:`url(${art})`,backgroundSize:'cover',backgroundPosition:'center 18%'}:{backgroundImage:`url(/assets/portraits/${id}.webp)`,backgroundSize:'cover',backgroundPosition:'center 35%'};
  return <span className={`portrait campaign-portrait ${small?'small':''} ${counter?'scanned-counter':art?'scanned-art':''}`} role="img" aria-label={c.name} style={style}/>;
+}
+/** The printed Stun or Curse token beside the name of a condition, or the given fallback without scans. */
+export function ConditionToken({kind,fallback=null}:{kind:'stun'|'curse';fallback?:ReactNode}){
+ const src=SCANS.tokens[kind];
+ return src?<img className="condition-token" src={src} alt="" width={20} height={20} draggable={false}/>:<>{fallback}</>;
 }
 export function CharacterCard({id}:{id:string}) {return <RasterCard id={`character-${id}`} title={character(p,id).name}/>;}
 export {effectText} from './rules-text';

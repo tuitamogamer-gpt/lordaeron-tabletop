@@ -9,7 +9,10 @@ import RulesGuide from '../src/campaign/RulesGuide';
 import CharacterSheet, { startingHero } from '../src/campaign/CharacterSheet';
 import { QuestDecks } from '../src/campaign/QuestLedger';
 import BuildStamp from '../src/campaign/BuildStamp';
-import { HeroPortrait } from '../src/campaign/parts';
+import { ConditionToken, HeroPortrait } from '../src/campaign/parts';
+import { GameIcon } from '../src/campaign/GameIcon';
+import CombatArea from '../src/campaign/CombatArea';
+import { beginBattle } from '../src/rules/combat';
 import { BossPortrait, CreatureGlyph } from '../src/campaign/design-system';
 import { ExperienceTrack, TurnTrack } from '../src/campaign/BoardTracks';
 import { faqNote, pickFace } from '../src/campaign/scan-assets';
@@ -24,7 +27,7 @@ vi.mock('../src/campaign/scan-assets', async importOriginal => {
  return { ...real, hasScans: true, SCANS: {
   cards: { 'mage-arcane-missiles': { src: '/scan/arcane-missiles.webp', width: 600, height: 930 }, [`${id}-racial`]: { src: '/scan/racial.webp', width: 471, height: 892 }, [starting]: { src: '/scan/starting.webp', width: 471, height: 737 } },
   counters: { [id]: '/scan/counter.webp' },
-  tokens: { hourglass: '/scan/hourglass.webp' },
+  tokens: { hourglass: '/scan/hourglass.webp', stun: '/scan/stun.webp', hit: '/scan/hit.webp', armor: '/scan/armor.webp', health: '/scan/health.webp' },
   backs: { 'quest-horde-green': { src: '/scan/quest-horde-green.webp', width: 360, height: 556 }, 'class-mage': { src: '/scan/class-mage.webp', width: 360, height: 553 }, event: { src: '/scan/event.webp', width: 360, height: 560 } },
   sheets: { [id]: { src: '/scan/sheet.webp', width: 1900, height: 1456 } },
   portraits: { [id]: { src: '/scan/portrait.webp', width: 520, height: 624 }, [overlord]: { src: '/scan/overlord.webp', width: 640, height: 450 } },
@@ -102,6 +105,35 @@ describe('the Overlords’ own faces', () => {
   const [scanned, illustrated] = screen.getAllByRole('img') as HTMLElement[];
   expect(scanned.style.backgroundImage).toContain('/scan/overlord.webp');
   expect(illustrated.style.backgroundImage).toContain(`/assets/portraits/${second.id}.webp`);
+ });
+});
+
+describe('the printed game tokens', () => {
+ it('draws the health token where the interface has a health symbol and keeps painted icons for the rest', () => {
+  const { container } = render(<><GameIcon name="health"/><GameIcon name="experience"/></>);
+  const [health, experience] = [...container.querySelectorAll('.game-icon')];
+  expect(health.className).toContain('game-icon-token');
+  expect(health.querySelector('img')!.getAttribute('src')).toBe('/scan/health.webp');
+  expect(experience.className).not.toContain('game-icon-token');
+  expect(experience.querySelector('img')!.getAttribute('src')).toBe('/assets/ui-icons/experience.webp');
+ });
+
+ it('puts the printed Stun token beside a condition and the given fallback where there is none', () => {
+  const { container } = render(<><span><ConditionToken kind="stun"/>Stun</span><span><ConditionToken kind="curse" fallback={<b data-testid="fallback"/>}/>Curse</span></>);
+  expect(container.querySelector('img.condition-token')!.getAttribute('src')).toBe('/scan/stun.webp');
+  expect(container.querySelectorAll('img.condition-token')).toHaveLength(1);
+  expect(screen.getByTestId('fallback')).toBeTruthy();
+ });
+
+ it('counts hit and armor tokens in the combat boxes with the printed tokens', () => {
+  const s = createGame(p, DEFAULT_SETUP);
+  s.enemies = [{ id: 'ogre', creature: 'ogre', color: 'green', region: 'brill' }];
+  beginBattle(s, 'pve', [s.heroes[0].id], ['ogre'], 'horde', 'brill');
+  s.battle!.boxes.horde = { damage: 1, defense: 2, armor: 7, attrition: 1 };
+  const { container } = render(<CombatArea battle={s.battle!} side="horde"/>);
+  const sources = [...container.querySelectorAll('.combat-token-count')].map(c => `${c.className.replace('combat-token-count ', '')}:${c.querySelector('img')!.getAttribute('src')}`);
+  expect(sources).toEqual(['hit:/scan/hit.webp', 'hit:/scan/hit.webp', 'armor:/scan/armor.webp', 'hit:/scan/hit.webp']);
+  expect(container.querySelector('output[aria-label="Horde armor"]')!.textContent).toBe('7');
  });
 });
 
