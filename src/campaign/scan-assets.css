@@ -32,6 +32,9 @@
 img.creature-glyph.scanned-creature{object-fit:contain;border:0;border-radius:50%;background:none;box-shadow:none;filter:drop-shadow(0 2px 3px #000a)}
 .quest-reveal-figure>img.scanned-creature{object-fit:cover;border-radius:50%;background:none;filter:drop-shadow(0 2px 3px #000a)}
 
+/* The faction hexagons stand in for the painted Horde and Alliance crests. */
+.faction-crest.printed{background-repeat:no-repeat;filter:drop-shadow(0 2px 3px #000b)}
+
 /* The printed tokens wherever the interface draws a symbol for them: health, energy, gold, bag, spellbook, stun, curse, hit and armor. */
 .game-icon.game-icon-token{border:0;border-radius:0;overflow:visible;background:none;box-shadow:none}
 .game-icon.game-icon-token::after{display:none}

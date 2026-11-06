@@ -2,6 +2,7 @@ import type { Card } from '../rules/model';
 import illustrations from '../data/card-art.json';
 import generatedIllustrations from '../data/generated-card-art.json';
 import fullCards from '../data/full-cards.json';
+import { SCANS } from './scan-assets';
 const cardArt:Record<string,string>={...illustrations,...generatedIllustrations};
 
 const abilityIcons = {
@@ -44,8 +45,10 @@ export function CardArt({card,className='',fit: _fit='contain'}:{card:Card;class
 
 export function EventArt({script='horizons'}:{script?:string}) {return <img className="painted-art event-illustration" src={`/assets/event-art/${script}.webp`} alt="" loading="lazy" width="256" height="256"/>;}
 
+/** The Horde or Alliance emblem: the printed faction hexagon when the scans are installed, otherwise the painted crest. */
 export function FactionCrest({faction, className=''}: {faction: string; className?: string}) {
-  return <span aria-hidden="true" className={`faction-crest ${faction} ${className}`}/>;
+  const printed = faction === 'horde' || faction === 'alliance' ? SCANS.tokens[faction] : undefined;
+  return <span aria-hidden="true" className={`faction-crest ${faction} ${className} ${printed ? 'printed' : ''}`} style={printed ? {backgroundImage: `url(${printed})`, backgroundSize: 'contain', backgroundPosition: 'center'} : undefined}/>;
 }
 
 /** The artwork is decorative; references and counts are drawn as live text. */

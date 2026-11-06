@@ -11,6 +11,7 @@ import { QuestDecks } from '../src/campaign/QuestLedger';
 import BuildStamp from '../src/campaign/BuildStamp';
 import { ConditionToken, HeroPortrait } from '../src/campaign/parts';
 import { GameIcon } from '../src/campaign/GameIcon';
+import { FactionCrest } from '../src/campaign/Art';
 import CombatArea from '../src/campaign/CombatArea';
 import { beginBattle } from '../src/rules/combat';
 import { BossPortrait, CreatureGlyph } from '../src/campaign/design-system';
@@ -27,7 +28,7 @@ vi.mock('../src/campaign/scan-assets', async importOriginal => {
  return { ...real, hasScans: true, SCANS: {
   cards: { 'mage-arcane-missiles': { src: '/scan/arcane-missiles.webp', width: 600, height: 930 }, [`${id}-racial`]: { src: '/scan/racial.webp', width: 471, height: 892 }, [starting]: { src: '/scan/starting.webp', width: 471, height: 737 } },
   counters: { [id]: '/scan/counter.webp' },
-  tokens: { hourglass: '/scan/hourglass.webp', stun: '/scan/stun.webp', hit: '/scan/hit.webp', armor: '/scan/armor.webp', health: '/scan/health.webp' },
+  tokens: { hourglass: '/scan/hourglass.webp', stun: '/scan/stun.webp', horde: '/scan/horde.webp', hit: '/scan/hit.webp', armor: '/scan/armor.webp', health: '/scan/health.webp' },
   backs: { 'quest-horde-green': { src: '/scan/quest-horde-green.webp', width: 360, height: 556 }, 'class-mage': { src: '/scan/class-mage.webp', width: 360, height: 553 }, event: { src: '/scan/event.webp', width: 360, height: 560 } },
   sheets: { [id]: { src: '/scan/sheet.webp', width: 1900, height: 1456 } },
   portraits: { [id]: { src: '/scan/portrait.webp', width: 520, height: 624 }, [overlord]: { src: '/scan/overlord.webp', width: 640, height: 450 } },
@@ -123,6 +124,15 @@ describe('the printed game tokens', () => {
   expect(container.querySelector('img.condition-token')!.getAttribute('src')).toBe('/scan/stun.webp');
   expect(container.querySelectorAll('img.condition-token')).toHaveLength(1);
   expect(screen.getByTestId('fallback')).toBeTruthy();
+ });
+
+ it('stands the printed faction hexagon in for the painted crest, for the factions that have one', () => {
+  const { container } = render(<><FactionCrest faction="horde"/><FactionCrest faction="alliance"/></>);
+  const [horde, alliance] = [...container.querySelectorAll('.faction-crest')] as HTMLElement[];
+  expect(horde.className).toContain('printed');
+  expect(horde.style.backgroundImage).toContain('/scan/horde.webp');
+  expect(alliance.className).not.toContain('printed');
+  expect(alliance.style.backgroundImage).toBe('');
  });
 
  it('counts hit and armor tokens in the combat boxes with the printed tokens', () => {

@@ -2740,6 +2740,7 @@
   "zowka-shattertusk": "/assets/scans/counters/zowka-shattertusk.webp"
  },
  "tokens": {
+  "alliance": "/assets/scans/counters/alliance.webp",
   "armor": "/assets/scans/counters/armor.webp",
   "bag": "/assets/scans/counters/bag.webp",
   "curse": "/assets/scans/counters/curse.webp",
@@ -2747,6 +2748,7 @@
   "gold": "/assets/scans/counters/gold.webp",
   "health": "/assets/scans/counters/health.webp",
   "hit": "/assets/scans/counters/hit.webp",
+  "horde": "/assets/scans/counters/horde.webp",
   "hourglass": "/assets/scans/counters/hourglass.webp",
   "kazzak": "/assets/scans/counters/kazzak.webp",
   "kelthuzad": "/assets/scans/counters/kelthuzad.webp",

@@ -19,9 +19,10 @@ const COUNTER: Record<string, number> = {
 };
 /**
  * Other tokens by layer: the hourglass turn marker, the Overlord counters, and the tokens the interface draws as symbols: the Stun and
- * Curse tokens, the hit and armor tokens of the combat boxes, a gold coin, the health and energy tokens, the spellbook and the bag.
+ * Curse tokens, the hit and armor tokens of the combat boxes, a gold coin, the health and energy tokens, the spellbook and the bag, and
+ * the Horde and Alliance hexagons that stand for the factions.
  */
-const TOKEN_LAYER = { hourglass: 17, nefarian: 26, kelthuzad: 27, kazzak: 36, stun: 18, curse: 19, hit: 22, armor: 23, gold: 24, spellbook: 32, bag: 33, health: 40, energy: 42 } as const;
+const TOKEN_LAYER = { hourglass: 17, nefarian: 26, kelthuzad: 27, kazzak: 36, stun: 18, curse: 19, hit: 22, armor: 23, gold: 24, spellbook: 32, bag: 33, health: 40, energy: 42, horde: 20, alliance: 21 } as const;
 
 /**
  * Where things sit on a character sheet, as fractions of the scan (all eighteen are 3336×2556): the portrait on the left, then the racial
