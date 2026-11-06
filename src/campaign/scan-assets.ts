@@ -10,9 +10,13 @@ export interface ScanAssets {
  /** Deck backs: quest-<faction>-<tier>, item-<deck>, class-<class> and event. */
  backs: Record<string, ScanSize>;
  sheets: Record<string, ScanSize>;
+ /** The painted portrait of each character, cut out of its printed sheet. */
+ portraits: Record<string, ScanSize>;
+ /** The round portrait of each creature type, cut out of the monster reference sheet. */
+ creatures: Record<string, string>;
  reference: Record<string, ScanSize>;
 }
-const none: ScanAssets = { cards: {}, counters: {}, tokens: {}, backs: {}, sheets: {}, reference: {} };
+const none: ScanAssets = { cards: {}, counters: {}, tokens: {}, backs: {}, sheets: {}, portraits: {}, creatures: {}, reference: {} };
 
 // The manifest is written by `npm run scans:prepare` from the user's own scans. Deleting it (and public/assets/scans) returns
 // the game to its illustrated faces. Tests always use the illustrated faces.

@@ -24,6 +24,14 @@
 .board-turns li.current>.board-turns-hourglass.horde{box-shadow:0 0 0 2px #e58a6e,0 0 12px #e0603ec0,0 2px 5px #000}
 .board-turns li.current>.board-turns-hourglass.alliance{box-shadow:0 0 0 2px #86c0ec,0 0 12px #4d8fc4c0,0 2px 5px #000}
 
+/* Faces of the characters: the printed counter wherever a small round portrait was, and the painted portrait of the printed sheet where a large one is. */
+.portrait.scanned-counter{border:0;background-color:transparent;background-repeat:no-repeat;box-shadow:none;border-radius:50%;filter:drop-shadow(0 2px 3px #000b)}
+.portrait.scanned-art{background-repeat:no-repeat;background-color:#3a2f1c}
+
+/* Creatures: the round portrait from the monster reference sheet wherever the painted square icon was. */
+img.creature-glyph.scanned-creature{object-fit:contain;border:0;border-radius:50%;background:none;box-shadow:none;filter:drop-shadow(0 2px 3px #000a)}
+.quest-reveal-figure>img.scanned-creature{object-fit:cover;border-radius:50%;background:none;filter:drop-shadow(0 2px 3px #000a)}
+
 /* The printed character sheet opens as a picture of the real sheet; the printed reference sheets sit side by side. */
 .printed-sheet-modal{width:min(1180px,calc(100vw - 32px))!important}
 .printed-sheet{display:flex;flex-direction:column;gap:10px;margin:0;padding:6px 4px 10px}
@@ -36,3 +44,7 @@
 .printed-sheets figcaption span{flex:1 1 220px;font:13px/1.45 var(--sans);color:#b8ad92}
 .printed-sheets img{display:block;width:100%;height:auto;border-radius:4px;box-shadow:0 6px 24px #000a}
 @media(max-width:800px){.printed-sheets{grid-template-columns:1fr}}
+
+/* Settings: which build this is and whether the real scans are part of it. */
+.build-stamp{display:flex;flex-direction:column;gap:2px;margin:12px 0 0;padding-top:10px;border-top:1px solid #ffffff17;font:11px/1.5 var(--sans);color:#8f9a89}
+.build-stamp b{font:600 11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:#d6c58e;letter-spacing:.4px}

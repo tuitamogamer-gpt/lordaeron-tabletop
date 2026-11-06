@@ -1,10 +1,10 @@
 // Prepares the user's own scans of the printed game for use in the interface.
-//   .local-data/scans/…  →  public/assets/scans/{cards,counters,backs,sheets,reference}/  +  src/data/scan-assets.json
+//   .local-data/scans/…  →  public/assets/scans/{cards,counters,backs,sheets,portraits,creatures,reference}/  +  src/data/scan-assets.json
 // The originals stay out of Git (.local-data/); these resized copies and the manifest are committed, because the game shows them.
 // Without the manifest the game falls back to its illustrated faces. Fetch the originals into .local-data/scans first
 // (`npm run scans:fetch`, see docs/SCANS-2026-11-05.md), then run `npm run scans:prepare`.
 import { existsSync, mkdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
-import sharp from 'sharp';
+import sharp, { type OutputInfo } from 'sharp';
 import { BASE_PACK as p } from '../src/data/base';
 
 const ROOT = '.local-data/scans', OUT = 'public/assets/scans', MANIFEST = 'src/data/scan-assets.json';
@@ -20,8 +20,30 @@ const COUNTER: Record<string, number> = {
 /** Other counters by layer: the hourglass turn marker and the Overlord counters. */
 const TOKEN_LAYER = { hourglass: 17, nefarian: 26, kelthuzad: 27, kazzak: 36 } as const;
 
+/**
+ * Where things sit on a character sheet, as fractions of the scan (all eighteen are 3336×2556): the portrait on the left, then the racial
+ * panel and three power slots across the top, and four equipment slots along the bottom. A character's slot k is the (k+1)th cell of the
+ * top row for k < 3 and the (k−3)th of the bottom row from k = 3; the racial panel is taller than a card and starts higher.
+ */
+const SHEET_COLS = [[0.3255, 0.4685], [0.4976, 0.6405], [0.6697, 0.8122], [0.8378, 0.9804]] as const;
+const SHEET_ROWS = [[0.2402, 0.5310], [0.6215, 0.9126]] as const;
+const SHEET_RACIAL = [0.1794, 0.5310] as const;
+const SHEET_PORTRAIT = { x: [0.007, 0.272], y: [0.088, 0.503] } as const;
+/** On an Overlord sheet (2565×1660) the painting fills the left half. */
+const SHEET_OVERLORD = { x: [0.035, 0.555], y: [0.04, 0.585] } as const;
+type Region = { x: readonly [number, number]; y: readonly [number, number]; inset?: number };
+/**
+ * The monster reference sheet (2552×3510) shows every creature in a round portrait: the centre of each sky-blue disc, in pixels, fitted by
+ * where the blue is. A disc is 336 px across and its name plate overlaps the top, so the cut-out is smaller and sits lower in the disc.
+ */
+const CREATURE_DISC: Record<string, readonly [number, number]> = {
+ murloc: [332, 626], ghoul: [330, 1036], naga: [330, 1448], wraith: [328, 1862], wildkin: [328, 2272], drake: [322, 2690], infernal: [326, 3104],
+ gnoll: [1492, 624], crusader: [1492, 1038], spider: [1490, 1458], worgen: [1490, 1866], ogre: [1490, 2274], doomguard: [1490, 2698],
+};
+const CREATURE_RADIUS = 136, CREATURE_DROP = 14;
+
 type Size = { src: string; width: number; height: number };
-const manifest = { cards: {} as Record<string, Size>, counters: {} as Record<string, string>, tokens: {} as Record<string, string>, backs: {} as Record<string, Size>, sheets: {} as Record<string, Size>, reference: {} as Record<string, Size> };
+const manifest = { cards: {} as Record<string, Size>, counters: {} as Record<string, string>, tokens: {} as Record<string, string>, backs: {} as Record<string, Size>, sheets: {} as Record<string, Size>, portraits: {} as Record<string, Size>, creatures: {} as Record<string, string>, reference: {} as Record<string, Size> };
 const stats = new Map<string, { n: number; bytes: number }>(), missing: string[] = [];
 const note = (group: string, file: string) => { const s = stats.get(group) ?? { n: 0, bytes: 0 }; s.n++; s.bytes += statSync(file).size; stats.set(group, s); };
 
@@ -37,13 +59,25 @@ function cardBox(data: Buffer, w: number, h: number) {
  return { left, top, width: Math.min(w, x1 + pad + 1) - left, height: Math.min(h, y1 + pad + 1) - top };
 }
 
-/** Writes one WebP; `crop` trims a black scan margin, `rotate` turns upside-down table art upright. */
-async function emit(group: keyof typeof manifest | string, dir: string, id: string, path: string, limit: number, options: { crop?: boolean; rotate?: number; quality?: number } = {}) {
+/** A character sheet is cut into many pieces in a row, so the decoded scan of the last file stays at hand. */
+let decoded: { file: string; data: Buffer; info: OutputInfo } | undefined;
+async function decode(file: string) {
+ if (decoded?.file !== file) { const { data, info } = await sharp(file).ensureAlpha().raw().toBuffer({ resolveWithObject: true }); decoded = { file, data, info }; }
+ return decoded;
+}
+/** The pixel box of a fractional region, pulled in by `inset` so that no neighbouring cell or frame shows at the edge. */
+function regionBox(region: Region, w: number, h: number) {
+ const inset = region.inset ?? 3, left = Math.round(region.x[0] * w) + inset, top = Math.round(region.y[0] * h) + inset;
+ return { left, top, width: Math.round(region.x[1] * w) - left - inset, height: Math.round(region.y[1] * h) - top - inset };
+}
+
+/** Writes one WebP; `crop` trims a black scan margin, `region` cuts a piece out of a sheet, `rotate` turns upside-down table art upright. */
+async function emit(group: keyof typeof manifest | string, dir: string, id: string, path: string, limit: number, options: { crop?: boolean; region?: Region; rotate?: number; quality?: number } = {}) {
  const file = path.startsWith(ROOT) ? path : `${ROOT}/${path}`;
  if (!existsSync(file)) { missing.push(`${id} ← ${path}`); return undefined; }
  mkdirSync(`${OUT}/${dir}`, { recursive: true });
- const { data, info } = await sharp(file).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
- const box = options.crop ? cardBox(data, info.width, info.height) : undefined;
+ const { data, info } = await decode(file);
+ const box = options.region ? regionBox(options.region, info.width, info.height) : options.crop ? cardBox(data, info.width, info.height) : undefined;
  let image = sharp(data, { raw: info });
  if (box) image = image.extract(box);
  if (options.rotate) image = image.rotate(options.rotate);
@@ -51,6 +85,20 @@ async function emit(group: keyof typeof manifest | string, dir: string, id: stri
  const target = `${OUT}/${dir}/${id}.webp`, out = await image.webp({ quality: options.quality ?? 88, alphaQuality: 100, smartSubsample: true, effort: 5 }).toFile(target);
  note(group, target);
  return { src: `/assets/scans/${dir}/${id}.webp`, width: out.width, height: out.height };
+}
+
+/** A round cut-out of `r` pixels around a centre, with everything outside the circle transparent. */
+async function emitDisc(group: string, dir: string, id: string, path: string, [cx, cy]: readonly [number, number], r: number, size: number) {
+ const file = `${ROOT}/${path}`;
+ if (!existsSync(file)) { missing.push(`${id} ← ${path}`); return undefined; }
+ mkdirSync(`${OUT}/${dir}`, { recursive: true });
+ const { data, info } = await decode(file);
+ const piece = await sharp(data, { raw: info }).extract({ left: Math.round(cx - r), top: Math.round(cy - r), width: 2 * r, height: 2 * r }).raw().toBuffer({ resolveWithObject: true });
+ const round = await sharp(piece.data, { raw: piece.info }).composite([{ input: Buffer.from(`<svg width="${2 * r}" height="${2 * r}"><circle cx="${r}" cy="${r}" r="${r}" fill="#fff"/></svg>`), blend: 'dest-in' }]).png().toBuffer();
+ const target = `${OUT}/${dir}/${id}.webp`;
+ await sharp(round).resize(size, size).webp({ quality: 88, alphaQuality: 100, smartSubsample: true, effort: 5 }).toFile(target);
+ note(group, target);
+ return `/assets/scans/${dir}/${id}.webp`;
 }
 
 rmSync(OUT, { recursive: true, force: true });
@@ -77,11 +125,35 @@ const BACKS: Record<string, string> = {
 for (const c of ['Druid', 'Hunter', 'Mage', 'Paladin', 'Priest', 'Rogue', 'Shaman', 'Warlock', 'Warrior']) BACKS[`class-${c.toLowerCase()}`] = `Classes/${c}/back.png`;
 for (const [id, path] of Object.entries(BACKS)) { const f = await emit('backs', 'backs', id, path, 360, { crop: true }); if (f) manifest.backs[id] = f; }
 
-// Printed character sheets (one per character; the Paladin and Shaman have single-sided sheets, their other side is blank) and the two reference sheets.
+// Printed character sheets (one per character; the Paladin and Shaman have single-sided sheets, their other side is blank), and the pieces
+// printed on them: the portrait, the racial panel and the starting cards that no card deck holds (those face the scans of the sheet itself).
 const SHEET: Record<string, string> = { alliance: 'A', horde: 'H' };
 for (const c of p.characters) {
- const side = SHEET[c.faction], name = c.classId[0].toUpperCase() + c.classId.slice(1);
- const f = await emit('sheets', 'sheets', c.id, `Character Sheets/${name} ${side}.png`, 1900, { quality: 82 }); if (f) manifest.sheets[c.id] = f;
+ const side = SHEET[c.faction], name = c.classId[0].toUpperCase() + c.classId.slice(1), path = `Character Sheets/${name} ${side}.png`;
+ const f = await emit('sheets', 'sheets', c.id, path, 1900, { quality: 82 }); if (f) manifest.sheets[c.id] = f; else continue;
+ // The cut-outs below assume the layout of the scans this was measured on; a different scan would give crooked cards.
+ const { info } = await decode(`${ROOT}/${path}`);
+ if (Math.abs(info.width / info.height - 3336 / 2556) > 0.01) { missing.push(`${c.id} ← ${path} has another layout (${info.width}×${info.height}), no cut-outs made`); continue; }
+ const portrait = await emit('portraits', 'portraits', c.id, path, 520, { region: { ...SHEET_PORTRAIT, inset: 6 }, quality: 80 }); if (portrait) manifest.portraits[c.id] = portrait;
+ const racial = await emit('cards', 'cards', `${c.id}-racial`, path, 720, { region: { x: SHEET_COLS[0], y: SHEET_RACIAL } }); if (racial) manifest.cards[`${c.id}-racial`] = racial;
+ for (const [k, slot] of c.slots.entries()) {
+  if (!slot.printed) continue;
+  const cell = { x: SHEET_COLS[k < 3 ? k + 1 : k - 3], y: SHEET_ROWS[k < 3 ? 0 : 1] };
+  const face = await emit('cards', 'cards', slot.printed, path, 720, { region: cell }); if (face) manifest.cards[slot.printed] = face;
+ }
+}
+// The painted portraits of the Overlords: the upper left of their sheets, clear of the badge and the false-position tokens.
+for (const o of p.overlords) {
+ const f = await emit('portraits', 'portraits', o.id, `Overlords/${OVERLORD_FILE[o.id]} 6.png`, 640, { region: { ...SHEET_OVERLORD, inset: 0 }, quality: 82 }); if (f) manifest.portraits[o.id] = f;
+}
+// The creatures' round portraits, cut out of the monster reference sheet.
+{
+ const monsters = 'Reference Sheets/monster ref.png';
+ if (existsSync(`${ROOT}/${monsters}`)) {
+  const { info } = await decode(`${ROOT}/${monsters}`);
+  if (info.width !== 2552 || info.height !== 3510) missing.push(`creatures ← ${monsters} has another layout (${info.width}×${info.height}), no cut-outs made`);
+  else for (const [id, [cx, cy]] of Object.entries(CREATURE_DISC)) { const src = await emitDisc('creatures', 'creatures', id, monsters, [cx, cy + CREATURE_DROP], CREATURE_RADIUS, 192); if (src) manifest.creatures[id] = src; }
+ } else missing.push(`creatures ← ${monsters}`);
 }
 for (const [id, path] of Object.entries({ rules: 'Reference Sheets/rules ref.png', monsters: 'Reference Sheets/monster ref.png' })) { const f = await emit('reference', 'reference', id, path, 1800, { quality: 84 }); if (f) manifest.reference[id] = f; }
 

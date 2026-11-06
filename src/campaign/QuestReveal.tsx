@@ -7,6 +7,7 @@ import { regionName } from './event-text';
 import { questLabel } from './map-state';
 import { factionLabel } from './parts';
 import { questObjectives } from './quest-design';
+import { SCANS } from './scan-assets';
 import { placementTotals, questDrawReceipt, questReceipt, type QuestReceipt, type QuestState } from './quest-activity';
 
 function QuestPlacementSummary({ receipt }: { receipt: QuestReceipt }) {
@@ -61,7 +62,7 @@ export function QuestReveal({ receipt, state, onClose, onLocate }: { receipt: Qu
      const creature = p.creatures.find(c => c.id === row.creature)!;
      const objective = objectives.find(o => o.creature === row.creature && o.color === row.color && o.region === row.region);
      return <article className={`quest-reveal-spawn ${row.color}`} key={`${row.creature}:${row.region}:${row.color}`} style={{ '--quest-delay': `${index * 80}ms` } as CSSProperties}>
-      <span className="quest-reveal-figure"><img src={`/assets/tokens/${row.creature}.webp`} alt=""/><i className={`creature-dot ${row.color}`}/><b aria-label={`${row.placed} ${row.color} ${creature.name} ${receipt.kind === 'overview' ? 'remaining' : 'placed'}`}>{row.placed}</b></span>
+      <span className="quest-reveal-figure"><img className={SCANS.creatures[row.creature]?'scanned-creature':undefined} src={SCANS.creatures[row.creature]??`/assets/tokens/${row.creature}.webp`} alt=""/><i className={`creature-dot ${row.color}`}/><b aria-label={`${row.placed} ${row.color} ${creature.name} ${receipt.kind === 'overview' ? 'remaining' : 'placed'}`}>{row.placed}</b></span>
       <div><strong>{creature.name}</strong><small>{row.color === 'blue' ? 'BLUE · INDEPENDENT OBSTACLE' : `${row.color.toUpperCase()} · QUEST OBJECTIVE`}</small><button type="button" className="quest-placement-region" disabled={!onLocate} onClick={() => locate(row.region)}><Icon name="pin" size={14}/>{regionName(row.region)}{onLocate && <Icon name="arrow" size={13}/>}</button>{row.placed < row.requested && receipt.kind !== 'overview' && <p>{row.requested - row.placed} blue figure{row.requested - row.placed === 1 ? '' : 's'} could not be placed: supply exhausted.</p>}{objective && <p className="quest-placement-progress">{state.quests.includes(quest.id) ? `${objective.remaining} of ${objective.total} objectives remain here` : 'This quest has left the active journal'}</p>}</div>
       {row.color !== 'blue' && row.placed > 0 && <span className="quest-placement-marker" title={`${questLabel(p, quest.id)} faction marker at ${regionName(row.region)}`}><Icon name="flag" size={17}/><b>{questLabel(p, quest.id)}</b></span>}
      </article>;

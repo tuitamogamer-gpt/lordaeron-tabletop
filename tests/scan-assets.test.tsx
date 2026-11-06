@@ -8,6 +8,9 @@ import RasterCard from '../src/campaign/RasterCard';
 import RulesGuide from '../src/campaign/RulesGuide';
 import CharacterSheet, { startingHero } from '../src/campaign/CharacterSheet';
 import { QuestDecks } from '../src/campaign/QuestLedger';
+import BuildStamp from '../src/campaign/BuildStamp';
+import { HeroPortrait } from '../src/campaign/parts';
+import { BossPortrait, CreatureGlyph } from '../src/campaign/design-system';
 import { ExperienceTrack, TurnTrack } from '../src/campaign/BoardTracks';
 import { faqNote, pickFace } from '../src/campaign/scan-assets';
 
@@ -17,13 +20,15 @@ const hero = p.characters[0].id;
 vi.mock('../src/campaign/scan-assets', async importOriginal => {
  const real = await importOriginal<typeof import('../src/campaign/scan-assets')>();
  const { BASE_PACK } = await import('../src/data/base');
- const id = BASE_PACK.characters[0].id;
+ const id = BASE_PACK.characters[0].id, starting = BASE_PACK.characters[0].slots.find(s => s.printed)!.printed!, overlord = BASE_PACK.overlords[0].id;
  return { ...real, hasScans: true, SCANS: {
-  cards: { 'mage-arcane-missiles': { src: '/scan/arcane-missiles.webp', width: 600, height: 930 } },
+  cards: { 'mage-arcane-missiles': { src: '/scan/arcane-missiles.webp', width: 600, height: 930 }, [`${id}-racial`]: { src: '/scan/racial.webp', width: 471, height: 892 }, [starting]: { src: '/scan/starting.webp', width: 471, height: 737 } },
   counters: { [id]: '/scan/counter.webp' },
   tokens: { hourglass: '/scan/hourglass.webp' },
   backs: { 'quest-horde-green': { src: '/scan/quest-horde-green.webp', width: 360, height: 556 }, 'class-mage': { src: '/scan/class-mage.webp', width: 360, height: 553 }, event: { src: '/scan/event.webp', width: 360, height: 560 } },
   sheets: { [id]: { src: '/scan/sheet.webp', width: 1900, height: 1456 } },
+  portraits: { [id]: { src: '/scan/portrait.webp', width: 520, height: 624 }, [overlord]: { src: '/scan/overlord.webp', width: 640, height: 450 } },
+  creatures: { murloc: '/scan/murloc.webp' },
   reference: { rules: { src: '/scan/rules.webp', width: 1800, height: 2476 } },
  } };
 });
@@ -55,6 +60,59 @@ describe('faces from the user’s scans', () => {
   expect(illustrated.className).not.toContain('scanned');
   expect(illustrated.querySelector('img')!.getAttribute('src')).toBe('/assets/card-faces/v9/mage-fireball.webp');
   expect(illustrated.querySelector('.faq-note')).toBeNull();
+ });
+});
+
+describe('the character’s own faces', () => {
+ it('uses the printed counter in small portraits and the painted portrait in the large one', () => {
+  const other = p.characters[1].id;
+  render(<><HeroPortrait id={hero} small/><HeroPortrait id={hero}/><HeroPortrait id={other} small/></>);
+  const [counter, art, illustrated] = screen.getAllByRole('img');
+  expect(counter.className).toContain('scanned-counter');
+  expect(counter.style.backgroundImage).toContain('/scan/counter.webp');
+  expect(art.className).toContain('scanned-art');
+  expect(art.style.backgroundImage).toContain('/scan/portrait.webp');
+  expect(illustrated.className).not.toContain('scanned');
+  expect(illustrated.style.backgroundImage).toContain(`/assets/portraits/${other}.webp`);
+ });
+
+ it('shows the starting cards and the racial panel of a new character as they are printed on the sheet', () => {
+  const starting = p.characters[0].slots.find(s => s.printed)!.printed!;
+  const { container } = render(<CharacterSheet hero={startingHero(hero)} inspect={() => {}} open={() => {}}/>);
+  const faces = [...container.querySelectorAll('img.card-portrait-face')].map(img => img.getAttribute('src'));
+  expect(faces).toContain('/scan/starting.webp');
+  expect(faces).toContain('/scan/racial.webp');
+  expect(container.querySelector('.sheet-slot-card img')!.getAttribute('src')).toBe('/scan/starting.webp');
+  expect(container.querySelector('.sheet-portrait .scanned-art')).not.toBeNull();
+  expect(starting).toBeTruthy();
+ });
+
+ it('says in Settings which build is running and whether the scans are in it', () => {
+  render(<BuildStamp/>);
+  const note = screen.getByRole('note').textContent!;
+  expect(note).toMatch(/^Build \S+/);
+  expect(note).toContain('Real scans in use: 3 card faces, 1 character counter, 2 painted portraits');
+ });
+});
+
+describe('the Overlords’ own faces', () => {
+ it('paints an Overlord with the painting from its printed sheet, and the others with the illustration', () => {
+  const [first, second] = p.overlords;
+  render(<><BossPortrait id={first.id}/><BossPortrait id={second.id}/></>);
+  const [scanned, illustrated] = screen.getAllByRole('img') as HTMLElement[];
+  expect(scanned.style.backgroundImage).toContain('/scan/overlord.webp');
+  expect(illustrated.style.backgroundImage).toContain(`/assets/portraits/${second.id}.webp`);
+ });
+});
+
+describe('the creatures’ own faces', () => {
+ it('shows the round portrait from the monster reference sheet for a creature that has one', () => {
+  render(<><CreatureGlyph type="murloc" name="Murloc"/><CreatureGlyph type="gnoll" name="Gnoll"/></>);
+  const murloc = screen.getByRole('img', { name: 'Murloc' }), gnoll = screen.getByRole('img', { name: 'Gnoll' });
+  expect(murloc.tagName).toBe('IMG');
+  expect(murloc.getAttribute('src')).toBe('/scan/murloc.webp');
+  expect(murloc.className).toContain('scanned-creature');
+  expect(gnoll.tagName.toLowerCase()).toBe('svg');
  });
 });
 

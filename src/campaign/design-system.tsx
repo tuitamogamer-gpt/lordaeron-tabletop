@@ -3,6 +3,7 @@ import type { Card, Creature, EventCard, Overlord, Quest } from '../rules/model'
 import { BASE_PACK as p } from '../data/base';
 import { PaintedArt, creatureIcons } from './Art';
 import RasterCard from './RasterCard';
+import { SCANS } from './scan-assets';
 export { triggerLabels, creatureRules } from './card-labels';
 /** Presentation never reads an imported scan. A scan can supply verified content, not layout. */
 export const DESIGN = {
@@ -25,6 +26,8 @@ const glyphPaths:Record<string,string[]>={
  infernal:['M35 34L30 14L46 25L60 9L69 28L78 41L70 59L76 82L50 90L25 81L31 58L19 40Z','M34 43L45 49L36 54 M64 42L55 49L65 54 M39 70L61 69','M41 58L51 53L59 58L51 65Z'],
 };
 export function CreatureGlyph({type,name,className=''}:{type:string;name?:string;className?:string}) {
+ const scan=SCANS.creatures[type];
+ if (scan) return <img className={`creature-glyph scanned-creature ${className}`} src={scan} width={192} height={192} alt={name??type} draggable={false}/>;
  if (type in creatureIcons) return <PaintedArt index={creatureIcons[type]} atlas="bestiary" name={name??type} className={`creature-glyph ${className}`}/>;
  return <svg viewBox="0 0 100 100" className={`creature-glyph ${className}`} role="img" aria-label={name??type}><circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="40"/>{(glyphPaths[type]??glyphPaths.doomguard).map((d,i)=><path key={i} d={d} className={i===0?'glyph-body':''}/>)}</svg>;
 }
@@ -40,11 +43,13 @@ export function EventCardView({event:e}:{event:EventCard}) {
 export function OverlordCard({overlord:o,count=6}:{overlord:Overlord;count?:4|6}) {
  return <RasterCard id={`overlord-${o.id}-${count}`} title={o.name}/>;
 }
-/** Overlords have their own portraits; event bosses share the painted boss encounter scene. */
+/** Where each Overlord's face sits in the painting on its printed sheet, so that a square crop keeps it. */
+const FACE: Record<string,string>={kazzak:'50% 40%',nefarian:'100% 35%',kelthuzad:'40% 30%'};
+/** Overlords have their own portraits (the painting on their printed sheet when it was prepared); event bosses share the painted boss encounter scene. */
 export function BossPortrait({id}:{id:string}){
- const overlord=p.overlords.find(o=>o.id===id),event=overlord?undefined:p.events.find(e=>e.id===id&&e.boss);
- const src=event?'/assets/event-art/boss.webp':`/assets/portraits/${id}.webp`;
- return <span className={`boss-portrait ${event?'event-boss-portrait':''}`} role="img" aria-label={overlord?.name??event?.name??id} style={{backgroundImage:`url(${src})`,backgroundSize:'cover',backgroundPosition:event?'center 35%':'center 30%'}}/>;
+ const overlord=p.overlords.find(o=>o.id===id),event=overlord?undefined:p.events.find(e=>e.id===id&&e.boss),art=overlord?SCANS.portraits[overlord.id]?.src:undefined;
+ const src=event?'/assets/event-art/boss.webp':art??`/assets/portraits/${id}.webp`;
+ return <span className={`boss-portrait ${event?'event-boss-portrait':''}`} role="img" aria-label={overlord?.name??event?.name??id} style={{backgroundImage:`url(${src})`,backgroundSize:'cover',backgroundPosition:event?'center 35%':art?FACE[id]??'center 30%':'center 30%'}}/>;
 }
 export function AbilityCard({card:c,onClick,disabled,selected}:{card:Card;children?:ReactNode;footer?:string;onClick?:()=>void;disabled?:boolean;selected?:boolean}) {
  return <RasterCard id={c.id} title={c.name} onClick={onClick} disabled={disabled} selected={selected} ability/>;

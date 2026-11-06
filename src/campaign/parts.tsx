@@ -5,12 +5,22 @@ import { BASE_PACK as p } from '../data/base';
 import { character } from '../rules/common';
 import type { Card } from '../rules/model';
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import type { CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import CardPortrait from './CardPortrait';
+import { SCANS } from './scan-assets';
 export const pretty=(s:string)=>s.replace(/ · probn[oi]( quest)?/g,'');
 export const factionLabel=(f:string)=>f==='horde'?"Horde":f==='alliance'?"Alliance":"Draw";
 export const phaseLabel:Record<string,string>={actions:"Party actions",management:"Equipment management",'final-management':"Final PvP preparation",combat:"Combat",reward:"Rewards and new quest",event:"Event",finished:"Campaign end",attacker:"Attack order",pool:"Prepare dice",penalty:'Stun / Curse','after-pool':"After rolling",reroll:"Rerolls",'after-reroll':"Creature effect",'after-tokens':"After hits",tokens:"Place hits",defense:"Defense",wounds:"Assign wounds",resolution:"Resolution",'round-end':"Round end",over:"Combat outcome"};
-export function HeroPortrait({id,small=false}:{id:string;small?:boolean}){const c=character(p,id);return <span className={`portrait campaign-portrait ${small?'small':''}`} role="img" aria-label={c.name} style={{backgroundImage:`url(/assets/portraits/${id}.webp)`,backgroundSize:'cover',backgroundPosition:'center 35%'}}/>;}
+/**
+ * A character's face. Small ones (rosters, seats, combat lines) are the printed character counter, as on the table; the large
+ * one in the dossier is the painted portrait from the printed sheet. Without prepared scans both fall back to the illustration.
+ */
+export function HeroPortrait({id,small=false}:{id:string;small?:boolean}){
+ const c=character(p,id),counter=small?SCANS.counters[id]:undefined,art=small?undefined:SCANS.portraits[id]?.src;
+ const style:CSSProperties=counter?{backgroundImage:`url(${counter})`,backgroundSize:'contain',backgroundPosition:'center'}:art?{backgroundImage:`url(${art})`,backgroundSize:'cover',backgroundPosition:'center 18%'}:{backgroundImage:`url(/assets/portraits/${id}.webp)`,backgroundSize:'cover',backgroundPosition:'center 35%'};
+ return <span className={`portrait campaign-portrait ${small?'small':''} ${counter?'scanned-counter':art?'scanned-art':''}`} role="img" aria-label={c.name} style={style}/>;
+}
 export function CharacterCard({id}:{id:string}) {return <RasterCard id={`character-${id}`} title={character(p,id).name}/>;}
 export {effectText} from './rules-text';
 export const cardText=(c:Card)=>[...c.abilities.map(a=>a.effects.map(effectText).join(' · ')),...staticCardText(c)].join(' / ');

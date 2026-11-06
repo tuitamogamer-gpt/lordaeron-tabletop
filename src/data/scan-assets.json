@@ -1,5 +1,45 @@
 {
  "cards": {
+  "alissi-quicksting-armor": {
+   "src": "/assets/scans/cards/alissi-quicksting-armor.webp",
+   "width": 470,
+   "height": 738
+  },
+  "alissi-quicksting-melee": {
+   "src": "/assets/scans/cards/alissi-quicksting-melee.webp",
+   "width": 471,
+   "height": 738
+  },
+  "alissi-quicksting-racial": {
+   "src": "/assets/scans/cards/alissi-quicksting-racial.webp",
+   "width": 471,
+   "height": 892
+  },
+  "alissi-quicksting-ranged": {
+   "src": "/assets/scans/cards/alissi-quicksting-ranged.webp",
+   "width": 471,
+   "height": 738
+  },
+  "artumnis-moondream-armor": {
+   "src": "/assets/scans/cards/artumnis-moondream-armor.webp",
+   "width": 470,
+   "height": 738
+  },
+  "artumnis-moondream-melee": {
+   "src": "/assets/scans/cards/artumnis-moondream-melee.webp",
+   "width": 471,
+   "height": 738
+  },
+  "artumnis-moondream-racial": {
+   "src": "/assets/scans/cards/artumnis-moondream-racial.webp",
+   "width": 471,
+   "height": 892
+  },
+  "artumnis-moondream-ranged": {
+   "src": "/assets/scans/cards/artumnis-moondream-ranged.webp",
+   "width": 471,
+   "height": 738
+  },
   "auction-boots-of-endurance": {
    "src": "/assets/scans/cards/auction-boots-of-endurance.webp",
    "width": 677,
@@ -19,6 +59,66 @@
    "src": "/assets/scans/cards/auction-trusty-mount.webp",
    "width": 680,
    "height": 1054
+  },
+  "brandon-lightstone-armor": {
+   "src": "/assets/scans/cards/brandon-lightstone-armor.webp",
+   "width": 470,
+   "height": 738
+  },
+  "brandon-lightstone-melee": {
+   "src": "/assets/scans/cards/brandon-lightstone-melee.webp",
+   "width": 471,
+   "height": 738
+  },
+  "brandon-lightstone-racial": {
+   "src": "/assets/scans/cards/brandon-lightstone-racial.webp",
+   "width": 471,
+   "height": 892
+  },
+  "brandon-lightstone-ranged": {
+   "src": "/assets/scans/cards/brandon-lightstone-ranged.webp",
+   "width": 471,
+   "height": 738
+  },
+  "brebo-bigshot-armor": {
+   "src": "/assets/scans/cards/brebo-bigshot-armor.webp",
+   "width": 470,
+   "height": 738
+  },
+  "brebo-bigshot-melee": {
+   "src": "/assets/scans/cards/brebo-bigshot-melee.webp",
+   "width": 471,
+   "height": 738
+  },
+  "brebo-bigshot-racial": {
+   "src": "/assets/scans/cards/brebo-bigshot-racial.webp",
+   "width": 471,
+   "height": 892
+  },
+  "brebo-bigshot-ranged": {
+   "src": "/assets/scans/cards/brebo-bigshot-ranged.webp",
+   "width": 471,
+   "height": 738
+  },
+  "burbon-fang-armor": {
+   "src": "/assets/scans/cards/burbon-fang-armor.webp",
+   "width": 470,
+   "height": 738
+  },
+  "burbon-fang-melee": {
+   "src": "/assets/scans/cards/burbon-fang-melee.webp",
+   "width": 471,
+   "height": 738
+  },
+  "burbon-fang-racial": {
+   "src": "/assets/scans/cards/burbon-fang-racial.webp",
+   "width": 471,
+   "height": 892
+  },
+  "burbon-fang-ranged": {
+   "src": "/assets/scans/cards/burbon-fang-ranged.webp",
+   "width": 471,
+   "height": 738
   },
   "circle-1-hameyas-slayer": {
    "src": "/assets/scans/cards/circle-1-hameyas-slayer.webp",
@@ -99,6 +199,26 @@
    "src": "/assets/scans/cards/circle-9-earthen-rod.webp",
    "width": 484,
    "height": 744
+  },
+  "dongon-swiftblade-armor": {
+   "src": "/assets/scans/cards/dongon-swiftblade-armor.webp",
+   "width": 470,
+   "height": 738
+  },
+  "dongon-swiftblade-melee": {
+   "src": "/assets/scans/cards/dongon-swiftblade-melee.webp",
+   "width": 471,
+   "height": 738
+  },
+  "dongon-swiftblade-racial": {
+   "src": "/assets/scans/cards/dongon-swiftblade-racial.webp",
+   "width": 471,
+   "height": 892
+  },
+  "dongon-swiftblade-ranged": {
+   "src": "/assets/scans/cards/dongon-swiftblade-ranged.webp",
+   "width": 471,
+   "height": 738
   },
   "druid-barkskin": {
    "src": "/assets/scans/cards/druid-barkskin.webp",
@@ -480,6 +600,31 @@
    "width": 677,
    "height": 1053
   },
+  "grumbaz-crowsblood-armor": {
+   "src": "/assets/scans/cards/grumbaz-crowsblood-armor.webp",
+   "width": 470,
+   "height": 738
+  },
+  "grumbaz-crowsblood-melee": {
+   "src": "/assets/scans/cards/grumbaz-crowsblood-melee.webp",
+   "width": 471,
+   "height": 738
+  },
+  "grumbaz-crowsblood-racial": {
+   "src": "/assets/scans/cards/grumbaz-crowsblood-racial.webp",
+   "width": 471,
+   "height": 892
+  },
+  "grumbaz-crowsblood-ranged": {
+   "src": "/assets/scans/cards/grumbaz-crowsblood-ranged.webp",
+   "width": 471,
+   "height": 738
+  },
+  "grumbaz-crowsblood-stance": {
+   "src": "/assets/scans/cards/grumbaz-crowsblood-stance.webp",
+   "width": 471,
+   "height": 737
+  },
   "hunter-aimed-shot": {
    "src": "/assets/scans/cards/hunter-aimed-shot.webp",
    "width": 463,
@@ -600,6 +745,26 @@
    "width": 459,
    "height": 718
   },
+  "leeam-sagewind-armor": {
+   "src": "/assets/scans/cards/leeam-sagewind-armor.webp",
+   "width": 470,
+   "height": 738
+  },
+  "leeam-sagewind-melee": {
+   "src": "/assets/scans/cards/leeam-sagewind-melee.webp",
+   "width": 471,
+   "height": 738
+  },
+  "leeam-sagewind-racial": {
+   "src": "/assets/scans/cards/leeam-sagewind-racial.webp",
+   "width": 471,
+   "height": 892
+  },
+  "leeam-sagewind-ranged": {
+   "src": "/assets/scans/cards/leeam-sagewind-ranged.webp",
+   "width": 471,
+   "height": 738
+  },
   "mage-arcane-explosion": {
    "src": "/assets/scans/cards/mage-arcane-explosion.webp",
    "width": 484,
@@ -719,6 +884,26 @@
    "src": "/assets/scans/cards/mage-winters-chill.webp",
    "width": 484,
    "height": 744
+  },
+  "meadowfrey-armor": {
+   "src": "/assets/scans/cards/meadowfrey-armor.webp",
+   "width": 470,
+   "height": 738
+  },
+  "meadowfrey-melee": {
+   "src": "/assets/scans/cards/meadowfrey-melee.webp",
+   "width": 471,
+   "height": 738
+  },
+  "meadowfrey-racial": {
+   "src": "/assets/scans/cards/meadowfrey-racial.webp",
+   "width": 471,
+   "height": 892
+  },
+  "meadowfrey-ranged": {
+   "src": "/assets/scans/cards/meadowfrey-ranged.webp",
+   "width": 471,
+   "height": 738
   },
   "overlord-kazzak-4": {
    "src": "/assets/scans/cards/overlord-kazzak-4.webp",
@@ -1510,6 +1695,51 @@
    "width": 484,
    "height": 744
   },
+  "sandrai-darkshine-armor": {
+   "src": "/assets/scans/cards/sandrai-darkshine-armor.webp",
+   "width": 470,
+   "height": 738
+  },
+  "sandrai-darkshine-melee": {
+   "src": "/assets/scans/cards/sandrai-darkshine-melee.webp",
+   "width": 471,
+   "height": 738
+  },
+  "sandrai-darkshine-racial": {
+   "src": "/assets/scans/cards/sandrai-darkshine-racial.webp",
+   "width": 471,
+   "height": 892
+  },
+  "sandrai-darkshine-ranged": {
+   "src": "/assets/scans/cards/sandrai-darkshine-ranged.webp",
+   "width": 471,
+   "height": 738
+  },
+  "shailara-whitherblade-armor": {
+   "src": "/assets/scans/cards/shailara-whitherblade-armor.webp",
+   "width": 470,
+   "height": 738
+  },
+  "shailara-whitherblade-melee": {
+   "src": "/assets/scans/cards/shailara-whitherblade-melee.webp",
+   "width": 471,
+   "height": 738
+  },
+  "shailara-whitherblade-racial": {
+   "src": "/assets/scans/cards/shailara-whitherblade-racial.webp",
+   "width": 471,
+   "height": 892
+  },
+  "shailara-whitherblade-ranged": {
+   "src": "/assets/scans/cards/shailara-whitherblade-ranged.webp",
+   "width": 471,
+   "height": 738
+  },
+  "shailara-whitherblade-stance": {
+   "src": "/assets/scans/cards/shailara-whitherblade-stance.webp",
+   "width": 471,
+   "height": 737
+  },
   "shaman-call-of-thunder": {
    "src": "/assets/scans/cards/shaman-call-of-thunder.webp",
    "width": 484,
@@ -1629,6 +1859,26 @@
    "src": "/assets/scans/cards/shaman-windfury-weapon.webp",
    "width": 484,
    "height": 744
+  },
+  "sofeea-icecall-armor": {
+   "src": "/assets/scans/cards/sofeea-icecall-armor.webp",
+   "width": 470,
+   "height": 738
+  },
+  "sofeea-icecall-melee": {
+   "src": "/assets/scans/cards/sofeea-icecall-melee.webp",
+   "width": 471,
+   "height": 738
+  },
+  "sofeea-icecall-racial": {
+   "src": "/assets/scans/cards/sofeea-icecall-racial.webp",
+   "width": 471,
+   "height": 892
+  },
+  "sofeea-icecall-ranged": {
+   "src": "/assets/scans/cards/sofeea-icecall-ranged.webp",
+   "width": 471,
+   "height": 738
   },
   "special-amulet-of-protection": {
    "src": "/assets/scans/cards/special-amulet-of-protection.webp",
@@ -1919,6 +2169,26 @@
    "src": "/assets/scans/cards/square-9-firestarter.webp",
    "width": 458,
    "height": 714
+  },
+  "thundershot-armor": {
+   "src": "/assets/scans/cards/thundershot-armor.webp",
+   "width": 470,
+   "height": 738
+  },
+  "thundershot-melee": {
+   "src": "/assets/scans/cards/thundershot-melee.webp",
+   "width": 471,
+   "height": 738
+  },
+  "thundershot-racial": {
+   "src": "/assets/scans/cards/thundershot-racial.webp",
+   "width": 471,
+   "height": 892
+  },
+  "thundershot-ranged": {
+   "src": "/assets/scans/cards/thundershot-ranged.webp",
+   "width": 471,
+   "height": 738
   },
   "triangle-1-trogg-club": {
    "src": "/assets/scans/cards/triangle-1-trogg-club.webp",
@@ -2389,6 +2659,66 @@
    "src": "/assets/scans/cards/warrior-unbridled-wrath.webp",
    "width": 531,
    "height": 791
+  },
+  "weefla-sorrowfall-armor": {
+   "src": "/assets/scans/cards/weefla-sorrowfall-armor.webp",
+   "width": 470,
+   "height": 738
+  },
+  "weefla-sorrowfall-melee": {
+   "src": "/assets/scans/cards/weefla-sorrowfall-melee.webp",
+   "width": 471,
+   "height": 738
+  },
+  "weefla-sorrowfall-racial": {
+   "src": "/assets/scans/cards/weefla-sorrowfall-racial.webp",
+   "width": 471,
+   "height": 892
+  },
+  "weefla-sorrowfall-ranged": {
+   "src": "/assets/scans/cards/weefla-sorrowfall-ranged.webp",
+   "width": 471,
+   "height": 738
+  },
+  "wennu-bloodsinger-armor": {
+   "src": "/assets/scans/cards/wennu-bloodsinger-armor.webp",
+   "width": 470,
+   "height": 738
+  },
+  "wennu-bloodsinger-melee": {
+   "src": "/assets/scans/cards/wennu-bloodsinger-melee.webp",
+   "width": 471,
+   "height": 738
+  },
+  "wennu-bloodsinger-racial": {
+   "src": "/assets/scans/cards/wennu-bloodsinger-racial.webp",
+   "width": 471,
+   "height": 892
+  },
+  "wennu-bloodsinger-ranged": {
+   "src": "/assets/scans/cards/wennu-bloodsinger-ranged.webp",
+   "width": 471,
+   "height": 738
+  },
+  "zowka-shattertusk-armor": {
+   "src": "/assets/scans/cards/zowka-shattertusk-armor.webp",
+   "width": 470,
+   "height": 738
+  },
+  "zowka-shattertusk-melee": {
+   "src": "/assets/scans/cards/zowka-shattertusk-melee.webp",
+   "width": 471,
+   "height": 738
+  },
+  "zowka-shattertusk-racial": {
+   "src": "/assets/scans/cards/zowka-shattertusk-racial.webp",
+   "width": 471,
+   "height": 892
+  },
+  "zowka-shattertusk-ranged": {
+   "src": "/assets/scans/cards/zowka-shattertusk-ranged.webp",
+   "width": 471,
+   "height": 738
   }
  },
  "counters": {
@@ -2608,6 +2938,118 @@
    "width": 1900,
    "height": 1456
   }
+ },
+ "portraits": {
+  "alissi-quicksting": {
+   "src": "/assets/scans/portraits/alissi-quicksting.webp",
+   "width": 520,
+   "height": 626
+  },
+  "artumnis-moondream": {
+   "src": "/assets/scans/portraits/artumnis-moondream.webp",
+   "width": 520,
+   "height": 626
+  },
+  "brandon-lightstone": {
+   "src": "/assets/scans/portraits/brandon-lightstone.webp",
+   "width": 520,
+   "height": 626
+  },
+  "brebo-bigshot": {
+   "src": "/assets/scans/portraits/brebo-bigshot.webp",
+   "width": 520,
+   "height": 626
+  },
+  "burbon-fang": {
+   "src": "/assets/scans/portraits/burbon-fang.webp",
+   "width": 520,
+   "height": 626
+  },
+  "dongon-swiftblade": {
+   "src": "/assets/scans/portraits/dongon-swiftblade.webp",
+   "width": 520,
+   "height": 626
+  },
+  "grumbaz-crowsblood": {
+   "src": "/assets/scans/portraits/grumbaz-crowsblood.webp",
+   "width": 520,
+   "height": 626
+  },
+  "kazzak": {
+   "src": "/assets/scans/portraits/kazzak.webp",
+   "width": 640,
+   "height": 435
+  },
+  "kelthuzad": {
+   "src": "/assets/scans/portraits/kelthuzad.webp",
+   "width": 640,
+   "height": 434
+  },
+  "leeam-sagewind": {
+   "src": "/assets/scans/portraits/leeam-sagewind.webp",
+   "width": 520,
+   "height": 626
+  },
+  "meadowfrey": {
+   "src": "/assets/scans/portraits/meadowfrey.webp",
+   "width": 520,
+   "height": 626
+  },
+  "nefarian": {
+   "src": "/assets/scans/portraits/nefarian.webp",
+   "width": 640,
+   "height": 433
+  },
+  "sandrai-darkshine": {
+   "src": "/assets/scans/portraits/sandrai-darkshine.webp",
+   "width": 520,
+   "height": 626
+  },
+  "shailara-whitherblade": {
+   "src": "/assets/scans/portraits/shailara-whitherblade.webp",
+   "width": 520,
+   "height": 626
+  },
+  "sofeea-icecall": {
+   "src": "/assets/scans/portraits/sofeea-icecall.webp",
+   "width": 520,
+   "height": 626
+  },
+  "thundershot": {
+   "src": "/assets/scans/portraits/thundershot.webp",
+   "width": 520,
+   "height": 626
+  },
+  "weefla-sorrowfall": {
+   "src": "/assets/scans/portraits/weefla-sorrowfall.webp",
+   "width": 520,
+   "height": 626
+  },
+  "wennu-bloodsinger": {
+   "src": "/assets/scans/portraits/wennu-bloodsinger.webp",
+   "width": 520,
+   "height": 626
+  },
+  "zowka-shattertusk": {
+   "src": "/assets/scans/portraits/zowka-shattertusk.webp",
+   "width": 520,
+   "height": 626
+  }
+ },
+ "creatures": {
+  "crusader": "/assets/scans/creatures/crusader.webp",
+  "doomguard": "/assets/scans/creatures/doomguard.webp",
+  "drake": "/assets/scans/creatures/drake.webp",
+  "ghoul": "/assets/scans/creatures/ghoul.webp",
+  "gnoll": "/assets/scans/creatures/gnoll.webp",
+  "infernal": "/assets/scans/creatures/infernal.webp",
+  "murloc": "/assets/scans/creatures/murloc.webp",
+  "naga": "/assets/scans/creatures/naga.webp",
+  "ogre": "/assets/scans/creatures/ogre.webp",
+  "spider": "/assets/scans/creatures/spider.webp",
+  "wildkin": "/assets/scans/creatures/wildkin.webp",
+  "worgen": "/assets/scans/creatures/worgen.webp",
+  "wraith": "/assets/scans/creatures/wraith.webp"
  },
  "reference": {
   "monsters": {
