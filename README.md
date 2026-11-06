@@ -4,7 +4,7 @@ Desktop adaptacija osnovne igre iz 2005. i službenog FAQ-a 1.4. React interfejs
 
 [Otvori igru](https://lordaeron-tabletop.vercel.app)
 
-Najnoviji prolaz koristi korisnikove prave skanove: 478 odštampanih lica karata, pravi brojači likova na mapi i tragu iskustva, pravi pješčani sat, prave poleđine špilova, dugme **Printed sheet** s originalnim listom lika i referentni listovi na stranici Rules. Skenovi su djelo izdavača, pa se ne objavljuju: `npm run scans:fetch` i `npm run scans:prepare` pripremaju ih lokalno, a bez njih igra koristi ilustrovana lica. Detalji i pitanje javnog objavljivanja: [SCANS-2026-11-05.md](docs/SCANS-2026-11-05.md).
+Najnoviji prolaz koristi korisnikove prave skanove: 478 odštampanih lica karata, pravi brojači likova na mapi i tragu iskustva, pravi pješčani sat, prave poleđine špilova, dugme **Printed sheet** s originalnim listom lika i referentni listovi na stranici Rules. Objavljene su smanjene kopije u `public/assets/scans/` (originali od 1 GB ostaju lokalno), a bez njih igra koristi ilustrovana lica. Autorska prava i uklanjanje: [SCANS-2026-11-05.md](docs/SCANS-2026-11-05.md).
 
 Prethodni prolaz približava tablu izgledu igre na stolu, prema pravilniku i fotografijama komponenti. Ispod mape je odštampani trag poteza s 30 polja, simbolima za Event karte i trgovca i pješčanim satom na trenutnom potezu. Uz lijevi rub portretni žetoni likova penju se po tragu iskustva prema nivou 5. Stvorenja stoje kao jednobojne zelene, crvene i plave plastične figure, a tabla ima prelome i okvir kao presavijena tabla. Detalji: [LIVE-TABLE-2026-10-30.md](docs/LIVE-TABLE-2026-10-30.md).
 
@@ -108,5 +108,10 @@ Granice mape ručno su precrtane iz dvije fotografije originala, uz dijagrame iz
 - [Imagegen promptovi](docs/IMAGEGEN-BASE.md)
 - [Porijeklo materijala](docs/ASSETS.md)
 - [Multiplayer, trenutno na čekanju](docs/MULTIPLAYER.md)
+- [Pravi skenovi karata, žetona i listova](docs/SCANS-2026-11-05.md)
+
+## Autorska prava
+
+Neslužbeni projekat obožavatelja bez komercijalne svrhe. World of Warcraft: The Board Game i njegove karte, ilustracije, žetoni i likovi pripadaju Fantasy Flight Games i Blizzard Entertainmentu. Slike u `public/assets/scans/` smanjene su kopije skenova igre iz vlasnikovog posjeda. Nositelji prava mogu tražiti njihovo uklanjanje; kako se uklanjaju opisano je u [SCANS-2026-11-05.md](docs/SCANS-2026-11-05.md).
 
 `main` je povezan s Vercel projektom `lordaeron-tabletop`. Redis nije povezan; online kontrole nisu izložene u trenutnom interfejsu. Stariji fixture paket i server testovi ostaju radi regresija. Paket pravila v7 ima novi content fingerprint i autosave ključ zbog promjena replaya. Prethodne v6/v4/v3 partije ostaju netaknute; najnovija prethodna partija može se preuzeti u postavkama i nije automatski ponovljena po novim pravilima.

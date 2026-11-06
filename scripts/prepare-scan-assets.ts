@@ -1,12 +1,13 @@
 // Prepares the user's own scans of the printed game for use in the interface.
-//   .local-data/scans/…  →  public/assets/scans/{cards,counters,backs,sheets,reference}/  +  src/data/scan-assets.local.json
-// Both outputs are untracked on purpose: the scans are the publishers' artwork. Without them the game shows its illustrated faces.
-// Fetch the originals into .local-data/scans (see docs/SCANS-2026-11-05.md), then run `npm run scans:prepare`.
+//   .local-data/scans/…  →  public/assets/scans/{cards,counters,backs,sheets,reference}/  +  src/data/scan-assets.json
+// The originals stay out of Git (.local-data/); these resized copies and the manifest are committed, because the game shows them.
+// Without the manifest the game falls back to its illustrated faces. Fetch the originals into .local-data/scans first
+// (`npm run scans:fetch`, see docs/SCANS-2026-11-05.md), then run `npm run scans:prepare`.
 import { existsSync, mkdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import sharp from 'sharp';
 import { BASE_PACK as p } from '../src/data/base';
 
-const ROOT = '.local-data/scans', OUT = 'public/assets/scans', MANIFEST = 'src/data/scan-assets.local.json';
+const ROOT = '.local-data/scans', OUT = 'public/assets/scans', MANIFEST = 'src/data/scan-assets.json';
 const TOKENS = `${ROOT}/Tokens (will be edited and cleaned up at some point)`;
 const pathOf = (reference?: string) => reference?.split(' · FAQ 1.4: ')[0];
 const OVERLORD_FILE: Record<string, string> = { kazzak: 'kaz', kelthuzad: 'kel', nefarian: 'nef' };

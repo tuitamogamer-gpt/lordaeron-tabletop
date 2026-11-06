@@ -14,11 +14,11 @@ export interface ScanAssets {
 }
 const none: ScanAssets = { cards: {}, counters: {}, tokens: {}, backs: {}, sheets: {}, reference: {} };
 
-// The manifest is written by `npm run scans:prepare` from the user's own scans and is untracked (`*.local.*`), so a checkout
-// without scans builds and runs with the illustrated faces. Tests always use the illustrated faces.
+// The manifest is written by `npm run scans:prepare` from the user's own scans. Deleting it (and public/assets/scans) returns
+// the game to its illustrated faces. Tests always use the illustrated faces.
 let prepared: Record<string, Partial<ScanAssets>> = {};
 // Scripts such as check:render import the interface under plain Node, where there is no bundler and no import.meta.glob.
-try { prepared = import.meta.glob('../data/scan-assets.local.json', { eager: true, import: 'default' }) as typeof prepared; } catch { /* not running under Vite */ }
+try { prepared = import.meta.glob('../data/scan-assets.json', { eager: true, import: 'default' }) as typeof prepared; } catch { /* not running under Vite */ }
 export const SCANS: ScanAssets = import.meta.env?.MODE === 'test' ? none : { ...none, ...Object.values(prepared)[0] };
 export const hasScans = Object.keys(SCANS.cards).length > 0;
 

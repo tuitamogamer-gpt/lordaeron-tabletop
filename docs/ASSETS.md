@@ -12,6 +12,10 @@ Aktuelna v0.7 koristi 521 imagegen lice karte, 16 izdvojenih tokena i novu Lorda
 
 Za preuzete repozitorije nije utvrđena licenca koja pokriva originalne slike. Izvori i nosioci prava ostaju odvojeni od vlastitog koda. Dostupnost materijala na webu nije licenca za njihovo javno objavljivanje. Produkcijska verzija i status hostinga navedeni su u README-u.
 
+## Skenovi iz vlasnikovog posjeda
+
+`public/assets/scans/` sadrži 538 smanjenih kopija skenova osnovne igre (karte, žetoni, poleđine špilova, listovi likova, referentni listovi); manifest je `src/data/scan-assets.json`. Originali od 1 GB ostaju u `.local-data/scans` i preuzimaju se skriptom `scripts/fetch-scans.py` uz provjeru SHA-256. Autorska prava pripadaju Fantasy Flight Games i Blizzard Entertainmentu; objavljivanje i uklanjanje opisani su u [SCANS-2026-11-05.md](SCANS-2026-11-05.md).
+
 ## Generirane ilustracije
 
 Sljedeće dvije slike nastale su alatom za generiranje slika, kao nova grafika prototipa. Nisu skenovi fizičke igre. Alat je sam odabrao rezoluciju; izvorne PNG datoteke su kopirane bez precrtavanja. CSS prikazuje portrete iz atlasa 3 × 3. Datum: 26. 9. 2026.
