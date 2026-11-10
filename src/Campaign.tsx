@@ -4,7 +4,7 @@ import { BASE_PACK as p, DEFAULT_SETUP } from './data/base';
 import { card, character, faction } from './rules/common';
 import { apply, createGame } from './rules/game';
 import { legalActions } from './rules/legal';
-import { importSession, MAX_SESSION_SIZE, newSession, OWN_SAVE } from './rules/session';
+import { extendsSession, importSession, MAX_SESSION_SIZE, newSession, OWN_SAVE, resumeSession } from './rules/session';
 import { view } from './rules/view';
 import type { Command, Setup } from './rules/model';
 import { type Difficulty } from './ai/planner';
@@ -32,7 +32,7 @@ import { UNDO_DEPTH, undoable, undoLabel } from './campaign/undo';
 import CharacterSheet, { CardRules, startingHero } from './campaign/CharacterSheet';
 import { AUTO_CONTINUE_MS, bookkeepingStep, combatCandidates, COMBAT_STEP_MS, DICE_SETTLE_MS, rollSignature, useCombatPresentation } from './campaign/combat-flow';
 import { challengeProfile, distinctChallenges, ThreatLevel } from './campaign/feedback';
-import { BOTS_KEY as BOTS, loadBots, loadCampaign, PREVIOUS_SAVE_KEY, readSave, RECOVERY_SAVE_KEY, recoverySave, SAVE_KEY as SAVE } from './campaign/saves';
+import { BOTS_KEY as BOTS, dropSnapshot, loadBots, loadCampaign, PREVIOUS_SAVE_KEY, readSave, RECOVERY_SAVE_KEY, recoverySave, SAVE_KEY as SAVE, writeSnapshot } from './campaign/saves';
 const CampaignCombat=lazy(()=>import('./campaign/Combat'));
 const DesignGallery=lazy(()=>import('./campaign/DesignGallery'));
 const LEGACY_SAVE='lordaeron-base-save-v6',AUTO_CONTINUE='lordaeron-base-auto-continue';
@@ -50,6 +50,9 @@ export default function Campaign(){
  useEffect(()=>{try{localStorage.setItem(AUTO_CONTINUE,String(autoContinue));}catch{/* The preference only lasts this session. */}},[autoContinue]);
  const[questSession,setQuestSession]=useState(0),[revealSetup,setRevealSetup]=useState(false),[questOpen,setQuestOpen]=useState(false),[workspaceOpen,setWorkspaceOpen]=useState(false);
  const file=useRef<HTMLInputElement>(null),importRequest=useRef(0),current=useRef(game);current.current=game;
+ // What this tab last read from or wrote to the shared autosave, and for which game and seats it last wrote.
+ const lastSaved=useRef<string|null|undefined>(undefined),written=useRef<{game?:typeof game;bots?:string[]}>({}),followSaved=useRef<(text:string)=>boolean>(()=>false);
+ if(lastSaved.current===undefined)lastSaved.current=readSave(SAVE);
  const currentBots=useRef(bots);currentBots.current=bots;
  const planner=useRef<PlannerClient|null>(null),botRequest=useRef<symbol|null>(null);
  useEffect(()=>()=>{planner.current?.dispose();planner.current=null;botRequest.current=null;},[bots,difficulty,panel,detailOpen,workspaceOpen,questOpen,mapFocus,page,importBusy,auto,combatResolve]);
@@ -71,8 +74,15 @@ export default function Campaign(){
    // Preserve backups before replacing the autosave, including when storage is full.
    if(recoveredSave)localStorage.setItem(RECOVERY_SAVE_KEY,recoveredSave);
    if(previousSave)localStorage.setItem(PREVIOUS_SAVE_KEY,previousSave);
-   if(game.needsSetup)return;
-   localStorage.setItem(SAVE,JSON.stringify(game.session));localStorage.setItem(BOTS,JSON.stringify(bots));setSaveUnavailable(false);
+   // A backup that changed on its own (another tab wrote it) is no reason to write this tab's game again.
+   if(game.needsSetup||(written.current.game===game&&written.current.bots===bots))return;
+   const json=JSON.stringify(game.session),stored=localStorage.getItem(SAVE);
+   // Another tab saved since this tab last looked. Its game is the saved one: take it over rather than overwrite it.
+   if(stored!==null&&stored!==json&&stored!==lastSaved.current&&followSaved.current(stored))return;
+   // The state snapshot only shortens loading; when storage is full it makes room for the save itself.
+   try{localStorage.setItem(SAVE,json);}catch{dropSnapshot();localStorage.setItem(SAVE,json);}
+   lastSaved.current=json;written.current={game,bots};
+   localStorage.setItem(BOTS,JSON.stringify(bots));setSaveUnavailable(false);writeSnapshot(game,json);
   }catch{setSaveUnavailable(true);}
  },[game,bots,recoveredSave,previousSave]);
  useEffect(()=>{setExportJSON('');},[game]);
@@ -117,13 +127,47 @@ export default function Campaign(){
  const open=(next:Panel)=>{if(next==='train')setTraining([]);setDetailOpen(false);setPanel(next);};
  const inspect=(id:string)=>{setDetailCard(id);setDetailOpen(true);};
  const closeAfter=(c:Command)=>{if(send(c)){setPanel(null);if(c.type==='manage')setToast(`${character(p,c.hero).name.split(' ')[0]}’s equipment is ready. Loadout saved.`);if(c.type==='train')setToast('Powers learned. Equip them during equipment management.');}};
- const replaceCampaign=(next:ReturnType<typeof importSession>,human:string,nextBots:string[])=>{
-  if(!current.current.needsSetup)setPreviousSave(JSON.stringify(current.current.session));
+ const replaceCampaign=(next:ReturnType<typeof importSession>,human:string,nextBots:string[],fromOtherTab=false)=>{
+  // The tab that replaced the campaign already kept the previous one as a backup; this tab only reads it.
+  if(fromOtherTab)setPreviousSave(readSave(PREVIOUS_SAVE_KEY));else if(!current.current.needsSetup)setPreviousSave(JSON.stringify(current.current.session));
   planner.current?.dispose();planner.current=null;botRequest.current=null;
   current.current=next;setGame(next);setBots(nextBots);setHeroId(human);setSelected(next.state.heroes.find(hero=>hero.id===human)!.location);
   setAuto(false);setMapFocus(false);setBotReason('');setTraining([]);setExportJSON('');setDetailOpen(false);setWorkspaceOpen(false);setSummaryHidden(false);setUndoStack([]);
   setCombatOpen(next.state.phase==='combat');setSettledRoll('');setQuestSession(n=>n+1);setRevealSetup(false);setQuestOpen(false);setPanel(null);setPage('board');
  };
+ // Every tab of this browser shares one autosave. A tab follows what another tab saves; otherwise the tab that was
+ // opened earlier would overwrite the newer progress with its own older game on its next move.
+ const sameSeats=(a:string[],b:string[])=>a.length===b.length&&a.every(id=>b.includes(id));
+ /** Takes over the game another tab saved. False when that text cannot be read, so this tab's game stays. */
+ followSaved.current=(text:string)=>{
+  const mine=current.current,own=mine.needsSetup?'':JSON.stringify(mine.session);
+  if(text===own){lastSaved.current=text;return true;}
+  try{
+   if(own&&extendsSession(own,text)){
+    // The same campaign, further along: apply only the new moves and keep this tab where it is.
+    const next=resumeSession(p,text,{state:mine.state,count:mine.session.commands.length}),seats=loadBots(next.session.setup.roster);
+    planner.current?.dispose();planner.current=null;botRequest.current=null;
+    lastSaved.current=text;current.current=next;setGame(next);setUndoStack([]);setAuto(false);setBots(v=>sameSeats(v,seats)?v:seats);
+    setPanel(v=>v==='settings'||v==='new'?v:null);setToast('This campaign moved on in another tab. This tab now follows it.');
+    return true;
+   }
+   // Anything else (a new or imported campaign, an undo, two tabs that moved at once): what is saved wins.
+   const next=loadCampaign();
+   if(next.needsSetup)return false;
+   lastSaved.current=readSave(SAVE);
+   if(JSON.stringify(next.session)===own)return true;
+   const human=next.state.heroes.find(hero=>hero.id===heroId)??next.state.heroes.find(hero=>faction(p,hero.id)===next.state.faction)??next.state.heroes[0];
+   importRequest.current++;setImportBusy(false);replaceCampaign(next,human.id,loadBots(next.session.setup.roster),true);
+   setToast('Another tab changed the saved campaign. This tab now shows the saved game.');
+   return true;
+  }catch{return false;/* The other tab saved something this page cannot read. This game stays as it is. */}
+ };
+ useEffect(()=>{const handler=(e:StorageEvent)=>{
+  if(e.key===PREVIOUS_SAVE_KEY){setPreviousSave(e.newValue);return;}
+  const mine=current.current;
+  if(e.key===BOTS&&!mine.needsSetup){const seats=loadBots(mine.session.setup.roster);setBots(v=>sameSeats(v,seats)?v:seats);return;}
+  if(e.key===SAVE&&e.newValue)followSaved.current(e.newValue);
+ };window.addEventListener('storage',handler);return()=>window.removeEventListener('storage',handler);},[]);
  const reset=(setup:Setup,human:string,newBots:boolean)=>{try{const next={state:createGame(p,setup),session:newSession(p,setup)},humanId=setup.roster.includes(human)?human:setup.roster[0];importRequest.current++;setImportBusy(false);replaceCampaign(next,humanId,newBots?setup.roster.filter(id=>id!==humanId):[]);}catch(e){setToast((e as Error).message);}};
  useEffect(()=>{const handler=(e:KeyboardEvent)=>{if(e.ctrlKey||e.metaKey||e.altKey||(e.target as HTMLElement).closest('input,select,textarea,dialog,[contenteditable=true]')||panel||game.needsSetup||document.querySelector('dialog[open]'))return;const action=(['travel','rest','train','town','challenge'] as const)[Number(e.key)-1];if(action&&page==='board'&&can(action)){e.preventDefault();if(action==='travel')setMapFocus(true);else open(action);}if(e.key.toLowerCase()==='f'&&page==='board'&&!decision&&state.phase!=='combat')setMapFocus(v=>!v);if(e.key==='Escape'&&mapFocus)setMapFocus(false);};window.addEventListener('keydown',handler);return()=>window.removeEventListener('keydown',handler);});
  const exportSave=()=>{const raw=JSON.stringify(game.session,null,2);setExportJSON(raw);try{downloadSession(raw,`lordaeron-${game.state.turn}.json`);}catch{setPanel('settings');setToast('Copy the game backup below and save it as a JSON file.');}};
