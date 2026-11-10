@@ -1,6 +1,6 @@
 import { BASE_PACK as pack, DEFAULT_SETUP } from '../data/base';
 import { createGame } from '../rules/game';
-import { importSession, newSession } from '../rules/session';
+import { importSession, newSession, OWN_SAVE } from '../rules/session';
 
 export const SAVE_KEY = 'lordaeron-base-save-v7';
 export const PREVIOUS_SAVE_KEY = `${SAVE_KEY}-before-new`;
@@ -33,7 +33,7 @@ export function loadCampaign(): LoadedCampaign {
  try {
   const raw = localStorage.getItem(SAVE_KEY);
   if (raw) {
-   try { return importSession(pack, raw); }
+   try { return importSession(pack, raw, OWN_SAVE); }
    catch { unreadableSave = raw; }
   }
  } catch { storageUnavailable = true; }

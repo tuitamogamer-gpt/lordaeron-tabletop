@@ -4,6 +4,8 @@
 .campaign-app .modal[open]{animation:panel-arrive 220ms cubic-bezier(.2,.8,.2,1)}
 .campaign-app .modal::backdrop{background:#040b10bb;backdrop-filter:blur(3px)}
 .campaign-app .toast{animation:notice-arrive 260ms ease-out;max-width:min(650px,90vw)}
+/* Shown over a dialog the notice is a popover; it keeps its place at the bottom instead of the popover default (centred). */
+.campaign-app .toast[popover]{inset:auto auto 39px 50%;margin:0;overflow:visible}
 .animated-value{position:relative;display:inline-block;font-variant-numeric:tabular-nums;white-space:nowrap}
 .animated-value.value-changed>span:first-child{display:inline-block;animation:value-pop 350ms ease-out}
 .value-delta::after{content:attr(data-delta);position:absolute;left:50%;bottom:90%;font:600 11px var(--sans);color:#b6e6ba;pointer-events:none;text-shadow:0 1px 5px #000;animation:value-drift 950ms ease-out both;z-index:2}

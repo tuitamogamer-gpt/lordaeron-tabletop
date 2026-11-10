@@ -121,3 +121,5 @@
 .compact-decision .reward-resolution>.reward-history{margin-top:6px}
 .compact-decision .replacement-decks>p{margin-bottom:6px}
 .compact-decision .replacement-decks>.quest-decks{margin-top:8px;margin-bottom:4px;max-width:clamp(330px,calc(200dvh - 1100px),470px)}
+/* The decision takes focus when it appears; it is a container, not a control. */
+.world-decision:focus{outline:none}

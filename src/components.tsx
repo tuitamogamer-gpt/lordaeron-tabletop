@@ -1,4 +1,5 @@
-import { useEffect, useRef, type CSSProperties, type ReactNode, type RefObject } from 'react';
+import { useEffect, useRef, useSyncExternalStore, type CSSProperties, type ReactNode, type RefObject } from 'react';
+import { createPortal } from 'react-dom';
 import { ArrowRight, Axe, BookOpen, Bug, Check, ChevronDown, ChevronRight, CircleHelp, Coins, Compass, Crown, Download, Eye, Fish, Flag, Flame, FlaskConical, Footprints, Heart, Home, Layers, Leaf, Map, MapPin, Maximize2, Minus, Moon, Mountain, Music2, Plus, RotateCcw, ScrollText, Search, Settings2, Shield, Skull, Snowflake, Sparkles, Sun, Sword, Swords, Target, Tent, Trophy, Upload, Users, Volume2, VolumeX, Wind, X, Zap, Lock, type LucideIcon } from 'lucide-react';
 import { heroDefinition } from './data/content';
 import { GameIcon } from './campaign/GameIcon';
@@ -7,14 +8,21 @@ export function Icon({name,size=18,...props}:{name:string;size?:number;className
 export function Portrait({id,className='',style={}}:{id:string;className?:string;style?:CSSProperties}){const d=heroDefinition(id);return <span role="img" aria-label={d.name} className={`portrait ${className}`} style={{backgroundPosition:`${d.portrait%3*50}% ${Math.floor(d.portrait/3)*50}%`,...style}}/>;}
 type OpenModal = {dialog:HTMLDialogElement;previousFocus:Element|null};
 const openModals:OpenModal[]=[];
+const modalListeners=new Set<()=>void>();
+const modalsChanged=()=>modalListeners.forEach(listener=>listener());
+/** The dialog on top of the stack, or null while the page itself is in front. */
+export function useTopModal(){return useSyncExternalStore(listener=>{modalListeners.add(listener);return()=>{modalListeners.delete(listener);};},()=>openModals.at(-1)?.dialog??null,()=>null);}
 let overflowBeforeModals = '';
+let focusReturning=false;
+/** True while a closing dialog hands focus back to the control that opened it. A card that gets focus this way keeps its preview closed. */
+export const restoringFocus=()=>focusReturning;
 export function useModalDialog(ref:RefObject<HTMLDialogElement|null>,active=true){
   useEffect(()=>{
     if(!active||!ref.current)return;
     const dialog=ref.current,entry:OpenModal={dialog,previousFocus:document.activeElement};
     dialog.showModal();
     if(openModals.length===0)overflowBeforeModals=document.body.style.overflow;
-    openModals.push(entry);
+    openModals.push(entry);modalsChanged();
     document.body.style.overflow='hidden';
     return()=>{
       const index=openModals.indexOf(entry),wasTop=index===openModals.length-1;
@@ -22,11 +30,11 @@ export function useModalDialog(ref:RefObject<HTMLDialogElement|null>,active=true
       for(const other of openModals){
         if(other!==entry&&other.previousFocus&&dialog.contains(other.previousFocus))other.previousFocus=entry.previousFocus;
       }
-      openModals.splice(index,1);
+      openModals.splice(index,1);modalsChanged();
       if(dialog.open)dialog.close?.();
       if(openModals.length===0)document.body.style.overflow=overflowBeforeModals;
       const remaining=openModals.at(-1)?.dialog,previous=entry.previousFocus;
-      if(wasTop&&previous instanceof HTMLElement&&previous.isConnected&&(!remaining||remaining.contains(previous)))previous.focus({preventScroll:true});
+      if(wasTop&&previous instanceof HTMLElement&&previous.isConnected&&(!remaining||remaining.contains(previous))){focusReturning=true;try{previous.focus({preventScroll:true});}finally{focusReturning=false;}}
     };
   },[ref,active]);
 }
@@ -39,5 +47,13 @@ export function Modal({title,children,onClose,wide=false,className=''}:{title:st
     return event.clientX<bounds.left||event.clientX>bounds.right||event.clientY<bounds.top||event.clientY>bounds.bottom;
   };
   return <dialog ref={ref} className={`modal ${wide?'wide':''} ${className}`} aria-label={title} onCancel={e=>{e.preventDefault();onClose();}} onPointerDown={e=>{backdropPress.current=e.button===0&&outside(e);}} onPointerCancel={()=>{backdropPress.current=false;}} onClick={e=>{const dismiss=backdropPress.current&&outside(e);backdropPress.current=false;if(dismiss)onClose();}}><div className="modal-head"><div><span className="eyebrow">LORDAERON · CHRONICLES</span><h2>{title}</h2></div><button type="button" className="icon-button" aria-label="Close" onClick={onClose}><Icon name="x"/></button></div>{children}</dialog>;
+}
+/** A notice that stays in front. While a modal is open the page is inert and lies under the backdrop, so the notice
+ *  moves into the top dialog and onto the top layer. */
+export function Toast({message,onDismiss}:{message:string;onDismiss:()=>void}){
+  const host=useTopModal(),ref=useRef<HTMLDivElement>(null),layered=!!host&&typeof HTMLElement!=='undefined'&&typeof HTMLElement.prototype.showPopover==='function';
+  useEffect(()=>{const node=ref.current;if(!node||!layered)return;try{node.showPopover();}catch{/* Already shown. */}return()=>{try{node.hidePopover();}catch{/* Already hidden or detached. */}};},[layered,host,message]);
+  const notice=<div ref={ref} className="toast" role="status" popover={layered?'manual':undefined}><Icon name="help"/>{message}<button type="button" className="icon-button" aria-label="Dismiss notification" onClick={onDismiss}><Icon name="x" size={14}/></button></div>;
+  return host?createPortal(notice,host,'toast'):notice;
 }
 export function ResourceBar({type,value,max}:{type:'health'|'energy';value:number;max:number}){return <div className={`resource ${type}`}><div className="resource-heading"><span><GameIcon name={type} size={24}/>{type==='health'?"Health":"Energy"}</span><b>{value}<small> / {max}</small></b></div><div className="resource-track"><div style={{width:`${Math.max(0,Math.min(100,value/max*100))}%`}}/></div></div>;}
