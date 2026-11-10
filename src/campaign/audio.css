@@ -1,0 +1,9 @@
+/* Sound: the speaker in the header and the Sound section of Settings (audio.tsx). */
+.sound-toggle[aria-pressed=false]{color:#a5937a}
+.sound-settings{display:grid;gap:8px;margin:14px 0;padding:12px 14px;border:1px solid #7c683e75;border-radius:4px;background:#1c241e}
+.sound-settings>h3{display:flex;align-items:center;gap:8px;margin:0;font:600 14px var(--serif);color:#ecd3a1}
+.sound-settings .setting-row{display:flex;align-items:center;justify-content:flex-start;gap:10px;margin:0;font-size:12px;text-align:left}
+.sound-settings .sound-volume>span{min-width:62px}
+.sound-settings .sound-volume>input{flex:1;accent-color:#c9a45f}
+.sound-settings .sound-volume>b{min-width:40px;text-align:right;font:600 11px var(--sans);color:#d8c69f}
+.sound-settings .sound-credit{margin:0;font:10px/1.5 var(--sans);color:#a99d84}
