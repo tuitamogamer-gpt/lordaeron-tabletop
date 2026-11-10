@@ -55,3 +55,7 @@ Igriva kampanja koristi novu ilustraciju mape i portrete, ne referentnu fotograf
 ## Poligonska mapa · v0.4
 
 Granice svih 67 polja ručno su precrtane u `src/data/board-geometry.ts`. Dvije fotografije originala i pravilnik služe provjeri; izvori i tumačenje su u [MAP.md](MAP.md). Ranija generirana ilustracija ostaje samo blaga tekstura unutar poligona. `screenshots/02-map-regions.png` je render stvarne SVG komponente, napravljen komandom `npm run render:map`; nije snimak cijelog preglednika.
+
+## Zvuk i muzika (10. 11. 2026.)
+
+`public/assets/audio/` sadrži 24 MP3 datoteke (0,85 MB) napravljene vlasnikovim Fish Audio računom: dvije muzičke petlje i šest efekata su zvučni zapis Fish video modela heygen-video-1, a 16 glasovnih linija je Fish TTS (drama-3) sa zvaničnim Fish glasovima Adrian i Ethan. Linije su nove, ne citati iz igara. Promptovi, troškovi i obrada: [EQUIPMENT-AND-SOUND-2026-11-10.md](EQUIPMENT-AND-SOUND-2026-11-10.md); sirovi snimci ostaju u `.local-data/audio/raw`, a `python3 scripts/prepare-audio.py` pravi objavljene datoteke.

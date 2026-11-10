@@ -4,7 +4,9 @@ Desktop adaptacija osnovne igre iz 2005. i službenog FAQ-a 1.4. React interfejs
 
 [Otvori igru](https://lordaeron-tabletop.vercel.app)
 
-Najnoviji prolaz koristi korisnikove prave skanove: 544 odštampana lica karata (i početne karte i rasni paneli s listova likova), pravi brojači likova u popisima, na mapi i tragu iskustva, slikani portreti likova i Overlorda, okrugli portreti stvorenja, pravi žetoni (zdravlje, energija, zlato, hit, armor, Stun, Curse, znakovi frakcija), pravi pješčani sat, prave poleđine špilova, dugme **Printed sheet** s originalnim listom lika i referentni listovi na stranici Rules. Settings pokazuje koja je verzija pokrenuta i koliko je skenova u upotrebi. Objavljene su smanjene kopije u `public/assets/scans/` (originali od 1 GB ostaju lokalno), a bez njih igra koristi ilustrovana lica. Autorska prava i uklanjanje: [SCANS-2026-11-05.md](docs/SCANS-2026-11-05.md).
+Najnoviji prolaz popravlja opremanje i dodaje zvuk. U prozoru **Character management** vidjela su se samo mjesta 1–4, pa su oružje (05 Melee), mjesto 06 i oklop (07 Armor) izgledali kao da ne postoje; sada je svih 7 mjesta u mreži 4 × 2 na svakoj veličini ekrana, a karta pod mišem prikazuje se dovoljno velika da se tekst čita. Oprema se mijenja kada svi likovi frakcije potroše obje akcije: **Manage equipment → Equip <lik> → mjesto → karta → Confirm equipment**. Klasne karte, predmeti i početne karte (386 lica) imaju isti odštampani crni rub umjesto tri različita izreza skenova. Muzika (mapa i borba), šest zvučnih efekata i 16 glasovnih linija napravljeni su s Fish Audio; zvučnik u zaglavlju ih isključuje, a **Settings › Sound** podešava glasnoću i glasove. Mjerenje AI-ja protiv Nefariana nije pokazalo brži razvoj heroja, pa AI nije mijenjan. Detalji: [EQUIPMENT-AND-SOUND-2026-11-10.md](docs/EQUIPMENT-AND-SOUND-2026-11-10.md).
+
+Prethodni prolaz koristi korisnikove prave skenove: 544 odštampana lica karata (i početne karte i rasni paneli s listova likova), pravi brojači likova u popisima, na mapi i tragu iskustva, slikani portreti likova i Overlorda, okrugli portreti stvorenja, pravi žetoni (zdravlje, energija, zlato, hit, armor, Stun, Curse, znakovi frakcija), pravi pješčani sat, prave poleđine špilova, dugme **Printed sheet** s originalnim listom lika i referentni listovi na stranici Rules. Settings pokazuje koja je verzija pokrenuta i koliko je skenova u upotrebi. Objavljene su smanjene kopije u `public/assets/scans/` (originali od 1 GB ostaju lokalno), a bez njih igra koristi ilustrovana lica. Autorska prava i uklanjanje: [SCANS-2026-11-05.md](docs/SCANS-2026-11-05.md).
 
 Prethodni prolaz približava tablu izgledu igre na stolu, prema pravilniku i fotografijama komponenti. Ispod mape je odštampani trag poteza s 30 polja, simbolima za Event karte i trgovca i pješčanim satom na trenutnom potezu. Uz lijevi rub portretni žetoni likova penju se po tragu iskustva prema nivou 5. Stvorenja stoje kao jednobojne zelene, crvene i plave plastične figure, a tabla ima prelome i okvir kao presavijena tabla. Detalji: [LIVE-TABLE-2026-10-30.md](docs/LIVE-TABLE-2026-10-30.md).
 
@@ -90,7 +92,7 @@ Prečice: **1–5** akcije, **F** interakcija s mapom, **Esc** povratak. Unutar 
 
 ## Provjera i granice
 
-Aktuelni prolaz ima **1.108 testova**, build, render 621 komponente i dizajnerski audit 39 ekrana na tri veličine: [DESIGN-PASS-2026-10-22.md](docs/DESIGN-PASS-2026-10-22.md). AI prolaz dodaje sedam završenih AI kampanja protiv sva tri Overlorda i nezavisni replay audit dvije od njih: [AI-OVERLORD-2026-10-22.md](docs/AI-OVERLORD-2026-10-22.md). Prethodni prolaz dodaje render 621 komponente, izvoz mape i nastavak dvije zaglavljene kampanje: [RELIABILITY-2026-10-20.md](docs/RELIABILITY-2026-10-20.md).
+Aktuelni prolaz ima **1.119 testova** ([EQUIPMENT-AND-SOUND-2026-11-10.md](docs/EQUIPMENT-AND-SOUND-2026-11-10.md)); dizajnerski prolaz imao je 1.108 testova, build, render 621 komponente i dizajnerski audit 39 ekrana na tri veličine: [DESIGN-PASS-2026-10-22.md](docs/DESIGN-PASS-2026-10-22.md). AI prolaz dodaje sedam završenih AI kampanja protiv sva tri Overlorda i nezavisni replay audit dvije od njih: [AI-OVERLORD-2026-10-22.md](docs/AI-OVERLORD-2026-10-22.md). Prethodni prolaz dodaje render 621 komponente, izvoz mape i nastavak dvije zaglavljene kampanje: [RELIABILITY-2026-10-20.md](docs/RELIABILITY-2026-10-20.md).
 
 Raniji audit enginea popravlja Vanish bonuse, duplirane figure pri recikliranju questova i ponovno zatvaranje borbe. Tadašnjih 838 testova, build, render i tri AI partije s 4.312 naredbi i identičnim replayom: [ENGINE-SCRIPT-AUDIT.md](docs/ENGINE-SCRIPT-AUDIT.md). Prethodna provjera svih event karata, klasnih moći, talenata i smjene Horda → Alijansa kroz svih 30 poteza: [CARD-EVENT-TURN-AUDIT.md](docs/CARD-EVENT-TURN-AUDIT.md).
 
@@ -109,6 +111,7 @@ Granice mape ručno su precrtane iz dvije fotografije originala, uz dijagrame iz
 - [Porijeklo materijala](docs/ASSETS.md)
 - [Multiplayer, trenutno na čekanju](docs/MULTIPLAYER.md)
 - [Pravi skenovi karata, žetona i listova](docs/SCANS-2026-11-05.md)
+- [Oprema, rub karata, zvuk i muzika](docs/EQUIPMENT-AND-SOUND-2026-11-10.md)
 
 ## Autorska prava
 
