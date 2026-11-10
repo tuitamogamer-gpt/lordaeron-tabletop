@@ -149,6 +149,18 @@ describe('interface audit, November 2026', () => {
   expect(document.querySelector('dialog.map-fullscreen-dialog[open]')).toBeNull();
  });
 
+ it('names the faction whose turn it is while an event at the start of that turn resolves', () => {
+  // The engine keeps the previous faction until the event ends; the marker already stands on the Horde's turn 7.
+  const state = createGame(p, DEFAULT_SETUP); state.turn = 7; state.faction = 'alliance'; state.phase = 'event';
+  state.eventFlow = { event: p.events[0].id, steps: [], seen: [] } as unknown as NonNullable<typeof state.eventFlow>;
+  state.auction = { event: p.events[0].id, item: p.cards.find(c => c.kind === 'item')!.id, bids: {} };
+  vi.spyOn(saves, 'loadCampaign').mockReturnValue({ state, session: newSession(p, DEFAULT_SETUP) });
+  const view = render(<Campaign/>), turn = view.container.querySelector('.campaign-turn')!;
+  expect(turn.textContent).toContain('Horde');
+  expect(turn.textContent).not.toContain('Alliance');
+  expect(turn.textContent).toContain('7');
+ });
+
  it('loads its own autosave without the limits that apply to imported files', () => {
   const setup = DEFAULT_SETUP; let state = createGame(p, setup); const commands: Command[] = [];
   for (const hero of state.heroes.slice(0, 2)) { const c: Command = { type: 'rest', hero: hero.id, health: 0 }; state = apply(p, state, c); commands.push(c); }

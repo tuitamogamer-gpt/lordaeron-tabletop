@@ -3,13 +3,14 @@ import { BASE_PACK as p } from '../data/base';
 import { character, faction } from '../rules/common';
 import type { GameView } from '../rules/view';
 import { SCANS } from './scan-assets';
+import { turnFaction } from './parts';
 
 const TRACK = 30;
 const deckName: Record<string, string> = { triangle: 'triangle', square: 'square', circle: 'circle' };
 const spaceText = (n: number) => p.track[n] === 'event' ? 'Event cards are drawn' : p.track[n] ? `a ${deckName[p.track[n]]} item joins the merchant` : 'no event';
 
 /** The turn track printed along the board: thirty faction turns, the Event and merchant spaces, and the hourglass marker. */
-export function TurnTrack({ state }: { state: Pick<GameView, 'turn' | 'lap' | 'faction' | 'variants'> }) {
+export function TurnTrack({ state }: { state: Pick<GameView, 'turn' | 'lap' | 'faction' | 'variants' | 'eventFlow'> }) {
  const lap = state.lap ?? 1, next = Array.from({ length: TRACK - state.turn }, (_, i) => state.turn + 1 + i).find(n => p.track[n] === 'event');
  return <div className="board-turns" role="img" aria-label={`Turn track: turn ${state.turn} of ${TRACK}${lap > 1 ? `, lap ${lap}` : ''}. ${next ? `Next Event cards on turn ${next}.` : 'No further Event cards this lap.'}`}>
   <span className="board-turns-title">Turn<br/>track</span>
@@ -17,7 +18,7 @@ export function TurnTrack({ state }: { state: Pick<GameView, 'turn' | 'lap' | 'f
    {Array.from({ length: TRACK }, (_, i) => {
     const n = i + 1, icon = p.track[n];
     return <li key={n} className={`${n === state.turn ? 'current' : n < state.turn ? 'past' : ''} ${icon ?? ''}`} title={`Turn ${n}: ${spaceText(n)}`}>
-     <b>{n}</b>{icon && <i className={`board-turns-icon ${icon}`}/>}{n === state.turn && (SCANS.tokens.hourglass ? <img className={`board-turns-hourglass ${state.faction}`} src={SCANS.tokens.hourglass} alt="" draggable={false}/> : <span className={`board-turns-marker ${state.faction}`}/>)}
+     <b>{n}</b>{icon && <i className={`board-turns-icon ${icon}`}/>}{n === state.turn && (SCANS.tokens.hourglass ? <img className={`board-turns-hourglass ${turnFaction(state)}`} src={SCANS.tokens.hourglass} alt="" draggable={false}/> : <span className={`board-turns-marker ${turnFaction(state)}`}/>)}
     </li>;
    })}
    <li className="board-turns-end">{state.variants?.overlordOnly ? `Lap ${lap}` : 'End'}</li>

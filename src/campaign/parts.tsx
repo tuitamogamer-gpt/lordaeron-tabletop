@@ -2,8 +2,8 @@ import { AbilityCard } from './design-system';
 import RasterCard, { rasterFace } from './RasterCard';
 import { effectText, staticCardText } from './rules-text';
 import { BASE_PACK as p } from '../data/base';
-import { character } from '../rules/common';
-import type { Card } from '../rules/model';
+import { character, other } from '../rules/common';
+import type { Card, Faction } from '../rules/model';
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
@@ -12,6 +12,8 @@ import { SCANS } from './scan-assets';
 import { restoringFocus } from '../components';
 export const pretty=(s:string)=>s.replace(/ · probn[oi]( quest)?/g,'');
 export const factionLabel=(f:string)=>f==='horde'?"Horde":f==='alliance'?"Alliance":"Draw";
+/** Whose turn the marker is on. An Event at the start of a turn resolves before the engine hands the turn over, so until it ends the turn already belongs to the other faction. */
+export const turnFaction=(s:{faction:Faction;eventFlow?:unknown}):Faction=>s.eventFlow?other(s.faction):s.faction;
 export const phaseLabel:Record<string,string>={actions:"Party actions",management:"Equipment management",'final-management':"Final PvP preparation",combat:"Combat",reward:"Rewards and new quest",event:"Event",finished:"Campaign end",attacker:"Attack order",pool:"Prepare dice",penalty:'Stun / Curse','after-pool':"After rolling",reroll:"Rerolls",'after-reroll':"Creature effect",'after-tokens':"After hits",tokens:"Place hits",defense:"Defense",wounds:"Assign wounds",resolution:"Resolution",'round-end':"Round end",over:"Combat outcome"};
 /**
  * A character's face. Small ones (rosters, seats, combat lines) are the printed character counter, as on the table; the large
