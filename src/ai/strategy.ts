@@ -326,7 +326,17 @@ export function createStrategy(p: ContentPack, s: GameView, risk: number) {
   const levelUp = party.some(h => h.level < 5 && h.xp + r.xp / party.length >= p.xp[h.level]) ? 3 : 0;
   return (5 + xp * 2.8 + r.gold * .45 + r.items.length * 3 + (r.special?.length ?? 0) * 3 + levelUp) * fraction;
  };
- const value = (o: Objective, party: Hero[], f = forecast(o, party)) => f.win * rewardValue(o, party) - (1 - f.win) * (18 + party.length * 5) * risk - f.wounds * .32 * risk - party.length * .8;
+ // Once a faction has no quest in play and none left to draw, waiting improves nothing. A defeat by the Overlord then
+ // costs only the turns it takes to recover, so it no longer outweighs a modest chance of ending the campaign.
+ const spent = new Map<Faction, boolean>();
+ const exhausted = (side: Faction) => {
+  if (!spent.has(side)) spent.set(side, !!s.variants?.overlordOnly && !s.quests.some(id => p.quests.find(q => q.id === id)?.faction === side) && (['green', 'yellow', 'red'] as const).every(tier => !s.deckCounts.quests[side]?.[tier]));
+  return spent.get(side)!;
+ };
+ const value = (o: Objective, party: Hero[], f = forecast(o, party)) => {
+  const defeat = o.boss === s.overlord.id && exhausted(faction(p, party[0].id)) ? 4 : 18 + party.length * 5;
+  return f.win * rewardValue(o, party) - (1 - f.win) * defeat * risk - f.wounds * .32 * risk - party.length * .8;
+ };
  const plan = (h: Hero): Plan | undefined => {
   const key = JSON.stringify([h.id, h.location, h.health, h.energy, h.actions]);
   if (plans.has(key)) return plans.get(key);

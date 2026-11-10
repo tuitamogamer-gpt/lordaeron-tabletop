@@ -9,6 +9,7 @@ import { startRewards } from '../src/rules/reward-engine';
 import { spawnQuest } from '../src/rules/rewards';
 import { loadouts, scoreLoadout } from '../src/ai/loadout';
 import { decide } from '../src/ai/planner';
+import { createStrategy } from '../src/ai/strategy';
 import { faction } from '../src/rules/common';
 import { view } from '../src/rules/view';
 import type { Command, State } from '../src/rules/model';
@@ -176,6 +177,29 @@ describe('AI audit, November 2026', () => {
   const scores = loadouts(p, h).map(c => scoreLoadout(p, h, c));
   expect(scores.length).toBeGreaterThan(1);
   expect(scores).toEqual([...scores].sort((a, b) => b - a));
+ });
+
+ it('stops fearing a defeat by the Overlord once a faction has no quest left to gain from', () => {
+  const overlord = (variants: { overlordOnly?: boolean }, exhaust: boolean) => {
+   const s = createGame(p, { ...DEFAULT_SETUP, variants });
+   for (const h of s.heroes) { h.level = 5; h.xp = 28; Object.assign(h, capacity(p, h)); h.location = s.overlord.region; }
+   if (exhaust) {
+    // Every Horde quest is done: none in play, none left in the replacement decks.
+    const mine = s.quests.filter(id => p.quests.find(q => q.id === id)!.faction === 'horde');
+    s.quests = s.quests.filter(id => !mine.includes(id)); s.enemies = s.enemies.filter(e => !e.quest || !mine.includes(e.quest));
+    s.questDecks.horde = { grey: s.questDecks.horde.grey, green: [], yellow: [], red: [] };
+   }
+   const v = view(s, s.heroes.map(h => h.id)), strategy = createStrategy(p, v, 1), team = v.heroes.filter(h => faction(p, h.id) === 'horde');
+   const objective = strategy.targets('horde').find(o => o.boss === v.overlord.id && !o.clue)!, forecast = strategy.forecast(objective, team);
+   return { value: strategy.value(objective, team, forecast), win: forecast.win, other: strategy.value(strategy.targets('alliance').find(o => o.boss === v.overlord.id && !o.clue)!, v.heroes.filter(h => faction(p, h.id) === 'alliance')) };
+  };
+  const busy = overlord({ overlordOnly: true }, false), spent = overlord({ overlordOnly: true }, true);
+  expect(spent.win).toBe(busy.win);
+  // A defeat costs 4 instead of 18 + 5 per participant: with three heroes the plan gains (1 - win) × 29.
+  expect(spent.value - busy.value).toBeCloseTo((1 - busy.win) * 29, 6);
+  // The other faction still has quests, and a 30-turn game ends by itself: neither changes.
+  expect(spent.other).toBe(busy.other);
+  expect(overlord({}, true).value).toBe(overlord({}, false).value);
  });
 });
 
