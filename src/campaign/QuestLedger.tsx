@@ -33,7 +33,7 @@ export default function QuestLedger({ state, selected, onQuest, onInspect }: { s
  const targets=state.enemies.filter(e=>e.quest&&state.quests.includes(e.quest)&&e.color!=='blue').length;
  return <aside className="quest-ledger table-frame" ref={root} aria-label="Active quest journal">
   <div className="ledger-heading"><Icon name="scroll"/><span>CALL TO ARMS<small>Quests and decks</small></span></div>
-  <div className="ledger-overview"><b>{state.quests.length}</b> active quests <span>·</span><b>{targets}</b> objectives on the map</div>
+  <div className="ledger-overview"><b>{state.quests.length}</b> {state.quests.length===1?'active quest':'active quests'} <span>·</span><b>{targets}</b> {targets===1?'objective':'objectives'} on the map</div>
   {(['horde', 'alliance'] as const).map(side => {
    const quests = state.quests.map(id => p.quests.find(q => q.id === id)!).filter(q => q.faction === side);
    return <section className={`faction-quests ${side}`} key={side}>
