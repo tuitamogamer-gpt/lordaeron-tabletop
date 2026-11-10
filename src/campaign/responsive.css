@@ -1,8 +1,15 @@
 /* ---------- Narrow screens · tablets in portrait and phones ----------
    The table is laid out for landscape desktops. Below 1000px the map takes the full width at its own
    proportions, the rail follows below it, and the action dock stays docked at the bottom of the screen. */
+/* No page keeps a minimum width. The desktop layout starts at 1000px, so a 1024px minimum only added a
+   horizontal scrollbar between 1000 and 1023px. */
+.campaign-app,.campaign-app.desktop-tabletop{min-width:0!important}
+/* Seven workspace tabs fit one row from 1000px up; landscape tablets (1024px) no longer clip the last one. */
+@media(min-width:1000px) and (max-width:1060px){
+ .workspace-modal .workspace-toggles.inside{gap:4px;padding-inline:10px}
+ .workspace-modal .workspace-toggles.inside button{min-width:0;padding-inline:6px;gap:4px}
+}
 @media(max-width:999px){
- .campaign-app,.campaign-app.desktop-tabletop{min-width:0!important}
  .campaign-app .topbar{gap:12px;padding:0 12px}
  .campaign-app .topbar .wordmark{flex:none;min-width:0}
  .campaign-app .topbar .wordmark>span:last-child>strong{white-space:nowrap;font-size:17px}
@@ -34,6 +41,36 @@
 
  /* Pages read top to bottom instead of keeping desktop side columns. */
  .campaign-app .campaign-main{padding-inline:12px}
+
+ /* Section tabs scroll inside their own strip instead of widening the page or the dialog. */
+ .campaign-app .flow-tabs{max-width:100%;overflow-x:auto;scrollbar-width:none}
+ .campaign-app .flow-tabs::-webkit-scrollbar{display:none}
+ .campaign-app .flow-tabs>button{flex:none}
+
+ /* Merchant stock keeps readable cards in as many columns as fit, and the deck counts wrap. */
+ .campaign-app .merchant-stock{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+ .campaign-app .workspace-modal .merchant-stock>.card-thumbnail{height:230px}
+ .item-deck-counts{flex-wrap:wrap;gap:10px 20px}
+
+ /* Encounter deck, chronicle and rules: one column, the page or dialog scrolls. */
+ .encounter-dashboard{display:grid;grid-template-columns:minmax(0,1fr);gap:22px}
+ .encounter-brief h3{font-size:24px;margin:8px 0 10px}
+ .encounter-brief>p{font-size:13px;max-width:none}
+ .encounter-stat-grid{padding:16px 0}
+ .encounter-boss>.folio-card{width:100%;max-width:440px;margin-inline:auto}
+ .encounter-reading-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;justify-items:center}
+ .encounter-event-entry .folio-card{width:100%}
+ .encounter-track{display:flex;flex-direction:column;gap:16px}
+ .encounter-track h3{font-size:22px}
+ .chronicle-flow,.rules-flow{display:flex;flex-direction:column;gap:14px}
+ .chronicle-heading,.rules-heading{flex-wrap:wrap;gap:10px 16px}
+ .chronicle-tools{flex-wrap:wrap}
+ .chronicle-tools>label{flex:1 1 220px;max-width:none}
+ .chronicle-tools input{font-size:14px}
+ .chronicle-entries{display:grid;gap:6px}
+ .rules-flow .rules-grid{margin:0}
+ .rules-reference{display:grid;grid-template-columns:minmax(0,1fr);gap:20px}
+ .campaign-app .coverage-page td:first-child{min-width:0}
 }
 
 @media(max-width:600px){
@@ -66,6 +103,33 @@
  .campaign-app .combat-room .cinematic-scene .battle-fighter{flex:0 0 62px;min-width:58px}
  .campaign-app .combat-room .cinematic-scene .battle-scene-center>strong{font-size:13px;line-height:1.3}
  .combat-toolbar>.quiet-button{flex:none;margin-left:auto;white-space:nowrap;padding:6px 10px}
+ /* Chronicle, rules and the encounter deck on a phone. */
+ .campaign-app .journal-page,.campaign-app .coverage-page{padding:18px 16px}
+ .chronicle-entries>article{grid-template-columns:minmax(0,1fr);gap:3px;padding:10px 12px}
+ /* The first figure carries the deck back, so it gets the wider column. */
+ .encounter-stat-grid{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,1fr);gap:10px}
+ .rules-reference th,.rules-reference td{padding:9px 8px}
+ .rules-reference aside{padding:18px 16px}
+ /* The dossier actions wrap under the heading, and the takeover notice stacks, instead of running past the dialog. */
+ .premium-character-sheet .sheet-dossier-heading{flex-wrap:wrap;row-gap:8px}
+ .premium-character-sheet .sheet-dossier-heading .sheet-controls{flex-wrap:wrap}
+ .character-control-handover{flex-direction:column;align-items:stretch;gap:10px}
+ .character-control-handover>button{justify-content:center}
+ /* Inside a workspace dialog the sheet is about 50px narrower than on the Heroes page: the longest names and the
+    condition row still fit. */
+ .workspace-modal .premium-character-sheet .sheet-nameplate h2{font-size:13.5px}
+ .workspace-modal .premium-character-sheet .sheet-conditions{flex-wrap:wrap;gap:4px 8px}
+ /* Party controls list one character per row; two columns cut the second one off. */
+ .campaign-app .party-control-list{grid-template-columns:minmax(0,1fr)}
+ /* The three dice of the combat guide stack instead of running past the dialog. */
+ .combat-idle{padding:26px 16px}
+ .combat-idle h3{font-size:26px}
+ .combat-guide-dice{grid-template-columns:minmax(0,1fr);gap:10px;margin:18px 0}
+ .combat-guide-dice article{display:grid;grid-template-columns:64px minmax(0,1fr);column-gap:12px;align-items:center;padding:10px 14px;text-align:left}
+ .combat-guide-dice article>.combat-d8{grid-row:1/3;margin:0;justify-self:center}
+ .combat-guide-dice article>h4{justify-content:flex-start;margin:0 0 2px}
+ .combat-idle-order{flex-wrap:wrap;gap:8px 12px}
+ .combat-idle .combat-switches{flex-direction:column;align-items:flex-start;gap:14px}
 }
 
 /* Map gesture help matches the input: mouse and trackpad, or touch. */
