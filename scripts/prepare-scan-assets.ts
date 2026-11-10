@@ -6,6 +6,7 @@
 import { existsSync, mkdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import sharp, { type OutputInfo } from 'sharp';
 import { BASE_PACK as p } from '../src/data/base';
+import { borderedCards, exif, withPrintedBorder } from './card-border';
 
 const ROOT = '.local-data/scans', OUT = 'public/assets/scans', MANIFEST = 'src/data/scan-assets.json';
 const TOKENS = `${ROOT}/Tokens (will be edited and cleaned up at some point)`;
@@ -96,17 +97,25 @@ function regionBox(region: Region, w: number, h: number) {
  return { left, top, width: Math.round(region.x[1] * w) - left - inset, height: Math.round(region.y[1] * h) - top - inset };
 }
 
-/** Writes one WebP; `crop` trims a black scan margin, `region` cuts a piece out of a sheet, `rotate` turns upside-down table art upright. */
-async function emit(group: keyof typeof manifest | string, dir: string, id: string, path: string, limit: number, options: { crop?: boolean; region?: Region; rotate?: number; quality?: number } = {}) {
+/**
+ * Writes one WebP; `crop` trims a black scan margin, `region` cuts a piece out of a sheet, `border` sets a small card in the printed black
+ * border (see card-border.ts), `rotate` turns upside-down table art upright.
+ */
+async function emit(group: keyof typeof manifest | string, dir: string, id: string, path: string, limit: number, options: { crop?: boolean; region?: Region; rotate?: number; quality?: number; border?: boolean } = {}) {
  const file = path.startsWith(ROOT) ? path : `${ROOT}/${path}`;
  if (!existsSync(file)) { missing.push(`${id} ← ${path}`); return undefined; }
  mkdirSync(`${OUT}/${dir}`, { recursive: true });
  const { data, info } = await decode(file);
  const box = options.region ? regionBox(options.region, info.width, info.height) : options.crop ? cardBox(data, info.width, info.height) : undefined;
- let image = sharp(data, { raw: info });
+ let image = sharp(data, { raw: info }), width = box ? box.width : info.width;
  if (box) image = image.extract(box);
+ if (options.border) {
+  const cut = await image.raw().toBuffer({ resolveWithObject: true }), framed = await withPrintedBorder(cut.data, cut.info);
+  image = sharp(framed.data, { raw: framed.info }); width = framed.info.width;
+ }
  if (options.rotate) image = image.rotate(options.rotate);
- if ((box ? box.width : info.width) > limit) image = image.resize({ width: limit });
+ if (width > limit) image = image.resize({ width: limit });
+ if (options.border) image = image.withExif(exif);
  const target = `${OUT}/${dir}/${id}.webp`, out = await image.webp({ quality: options.quality ?? 88, alphaQuality: 100, smartSubsample: true, effort: 5 }).toFile(target);
  note(group, target);
  return { src: `/assets/scans/${dir}/${id}.webp`, width: out.width, height: out.height };
@@ -129,13 +138,14 @@ async function emitDisc(group: string, dir: string, id: string, path: string, [c
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
 
-// Card faces: class cards and items, quests, events and the Overlord sheets (4 and 6 characters).
-const cards: { id: string; path: string; crop: boolean; limit: number }[] = [];
-for (const c of p.cards) { const path = pathOf(c.source?.reference); if (path && !path.startsWith('Character Sheets/')) cards.push({ id: c.id, path, crop: true, limit: 720 }); }
+// Card faces: class cards and items (in the printed border), quests, events and the Overlord sheets (4 and 6 characters).
+const bordered = borderedCards(p);
+const cards: { id: string; path: string; crop: boolean; limit: number; border?: boolean }[] = [];
+for (const c of p.cards) { const path = pathOf(c.source?.reference); if (path && !path.startsWith('Character Sheets/')) cards.push({ id: c.id, path, crop: true, limit: 720, border: bordered.has(c.id) }); }
 for (const q of p.quests) { const path = pathOf(q.source?.reference); if (path) cards.push({ id: q.id, path, crop: true, limit: 720 }); }
 for (const e of p.events) { const path = pathOf(e.source?.reference); if (path) cards.push({ id: e.id, path, crop: true, limit: 720 }); }
 for (const o of p.overlords) for (const n of [4, 6]) cards.push({ id: `overlord-${o.id}-${n}`, path: `Overlords/${OVERLORD_FILE[o.id]} ${n}.png`, crop: false, limit: 1700 });
-for (const { id, path, crop, limit } of cards) { const face = await emit('cards', 'cards', id, path, limit, { crop }); if (face) manifest.cards[id] = face; }
+for (const { id, path, crop, limit, border } of cards) { const face = await emit('cards', 'cards', id, path, limit, { crop, border }); if (face) manifest.cards[id] = face; }
 
 // Character counters (upright) and the other tokens.
 for (const [id, layer] of Object.entries(COUNTER)) { const f = await emit('counters', 'counters', id, `${TOKENS}/Layer ${layer}.png`, 128, { rotate: 180 }); if (f) manifest.counters[id] = f.src; }
@@ -164,7 +174,7 @@ for (const c of p.characters) {
  for (const [k, slot] of c.slots.entries()) {
   if (!slot.printed) continue;
   const cell = { x: SHEET_COLS[k < 3 ? k + 1 : k - 3], y: SHEET_ROWS[k < 3 ? 0 : 1] };
-  const face = await emit('cards', 'cards', slot.printed, path, 720, { region: cell }); if (face) manifest.cards[slot.printed] = face;
+  const face = await emit('cards', 'cards', slot.printed, path, 720, { region: cell, border: true }); if (face) manifest.cards[slot.printed] = face;
  }
 }
 // The painted portraits of the Overlords: the upper left of their sheets, clear of the badge and the false-position tokens.

@@ -17,7 +17,8 @@
     "check:cards": "vitest run tests/raster-card-assets.test.ts",
     "render:map": "tsx scripts/render-map.ts",
     "scans:fetch": "python3 scripts/fetch-scans.py",
-    "scans:prepare": "tsx scripts/prepare-scan-assets.ts"
+    "scans:prepare": "tsx scripts/prepare-scan-assets.ts",
+    "scans:border": "tsx scripts/border-card-scans.ts"
   },
   "dependencies": {
     "@fontsource/cinzel": "^5.2.0",
