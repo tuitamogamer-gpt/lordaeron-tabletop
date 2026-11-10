@@ -1,3 +1,4 @@
+import EnemyInfo from './CombatEnemyInfo';
 import { Icon } from '../components';
 import { BASE_PACK as p } from '../data/base';
 import { capacity, character, faction } from '../rules/common';
@@ -34,6 +35,6 @@ export default function CombatScene({ state, busy, presentation }: { state: Game
    <strong role="status">{heading}</strong><small>{detail}</small>
    <div className="battle-beats" aria-label={cue ? `Battle animation: ${phase}` : 'Ready for your decision'}>{['Prepare', 'Strike', 'Impact', 'Settle'].map((label, index) => <span key={label} className={index === phaseIndex ? 'active' : index < phaseIndex ? 'complete' : ''}><i />{label}</span>)}</div>
   </div>
-  <div className={`battle-fighter enemy ${fighterClass('enemy')}`}><div className="battle-portrait-ring">{opponent ? <HeroPortrait id={opponent} small /> : boss ? <BossPortrait id={boss.id} /> : creature ? <CreatureGlyph type={creature.rule} name={creature.name} /> : <Icon name="skull" size={44} />}</div><span>{opponent ? character(p, opponent).name.split(' ')[0] : boss?.name ?? creature?.name ?? 'Encounter'}</span></div>
+  <div className={`battle-fighter enemy ${fighterClass('enemy')}`}><EnemyInfo state={state}><div className="battle-portrait-ring">{opponent ? <HeroPortrait id={opponent} small /> : boss ? <BossPortrait id={boss.id} /> : creature ? <CreatureGlyph type={creature.rule} name={creature.name} /> : <Icon name="skull" size={44} />}</div></EnemyInfo><span>{opponent ? character(p, opponent).name.split(' ')[0] : boss?.name ?? creature?.name ?? 'Encounter'}</span></div>
  </section>;
 }

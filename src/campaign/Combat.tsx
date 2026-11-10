@@ -8,6 +8,7 @@ import { commandLabel } from '../rules/legal';
 import type { Attack, BattleStage, Color, Command, Die, Pool } from '../rules/model';
 import type { GameView } from '../rules/view';
 import CombatArea from './CombatArea';
+import EnemyInfo from './CombatEnemyInfo';
 import { type AbilityCommand } from './CombatAbilities';
 import CombatCharacterSheet from './CombatCharacterSheet';
 import CombatLoadout from './CombatLoadout';
@@ -135,7 +136,7 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
   <div className="combat-workbench">
    <div className="combat-arena">
     <div className="combat-arena-scroll">
-    <header className="combat-encounter">{boss || event?.boss ? <BossPortrait id={b.boss!} /> : creature ? <CreatureGlyph type={creature.rule} name={creature.name} /> : <Icon name="swords" size={38} />}<div><span className="sheet-eyebrow">{b.kind === 'pve' ? b.boss ? 'BOSS ENCOUNTER' : `${b.enemies.length} ENEMIES REMAIN` : 'FACTION BATTLE'}</span><h3>{title}</h3><p>{b.stage === 'over' ? b.winner === 'draw' ? 'The battle ends in a draw.' : `${factionLabel(b.winner ?? '')} wins the battle.` : 'Prepare your hand. Let the dice decide.'}</p></div>{b.kind === 'pve' && <dl><div><dt>ATTACK</dt><dd><AnimatedValue value={attack} /></dd></div><div><dt>HEALTH</dt><dd><AnimatedValue value={health} /></dd></div></dl>}</header>
+    <header className="combat-encounter"><EnemyInfo state={state}>{boss || event?.boss ? <BossPortrait id={b.boss!} /> : creature ? <CreatureGlyph type={creature.rule} name={creature.name} /> : <Icon name="swords" size={38} />}<div><span className="sheet-eyebrow">{b.kind === 'pve' ? b.boss ? 'BOSS ENCOUNTER' : `${b.enemies.length} ENEMIES REMAIN` : 'FACTION BATTLE'}</span><h3>{title}</h3><p>{b.stage === 'over' ? b.winner === 'draw' ? 'The battle ends in a draw.' : `${factionLabel(b.winner ?? '')} wins the battle.` : 'Prepare your hand. Let the dice decide.'}</p></div></EnemyInfo>{b.kind === 'pve' && <dl><div><dt>ATTACK</dt><dd><AnimatedValue value={attack} /></dd></div><div><dt>HEALTH</dt><dd><AnimatedValue value={health} /></dd></div></dl>}</header>
     <ol className="combat-timeline" aria-label="Combat sequence">{combatSteps.map((label, i) => <li key={label} className={`${i === step ? 'current' : ''} ${i < step ? 'complete' : ''}`} aria-current={i === step ? 'step' : undefined}><span>{i < step ? <Icon name="check" size={13} /> : `0${i + 1}`}</span><b>{b.kind !== 'pve' && i === 2 ? 'Armor & ranged' : label}</b></li>)}</ol>
     <div className="combat-phase-note"><div key={`${b.round}:${b.stage}`} className="phase-copy"><span className="sheet-eyebrow">{b.stage === 'over' ? 'BATTLE COMPLETE' : actingBot ? 'BOT TURN' : 'CURRENT STEP'}</span><h4>{b.stage==='over'?(b.winner==='draw'?'Draw':b.kind==='pve'?(b.winner===b.first?'Victory':'Defeat'):`${factionLabel(b.winner??'')} victory`):phaseLabel[b.stage]}</h4><p>{phaseGuidance}</p></div><span className={`combat-live-status ${automationPending || locked ? 'running' : ''}`} role="status"><i />{stateText}</span></div>
     <CombatScene state={state} busy={busy} presentation={presentation} />
@@ -149,9 +150,9 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
     </section>
     {state.respawns.length > 0 && <p className="combat-warning">A character has no health. Use any available healing or choose a starting region or graveyard.</p>}
    <aside className="combat-ledger" aria-label="Battle totals">
-    {(['horde', 'alliance'] as const).filter(f => b.kind !== 'pve' || f === b.first).map(f => {
+    <div className="combat-board-row">{(['horde', 'alliance'] as const).filter(f => b.kind !== 'pve' || f === b.first).map(f => {
      return <CombatArea key={f} battle={b} side={f} deadlyPvp={state.variants?.deadlyPvp} />;
-    })}
+    })}</div>
     <div className="combat-party"><h4>In this battle</h4>{b.participants.map(id => {
      const h = state.heroes.find(h => h.id === id)!, max = capacity(p, h);
      return <div key={id} className={`${a?.heroId === id ? 'active' : ''} ${b.defeated.includes(id) ? 'defeated' : ''}`}><HeroPortrait id={id} small /><span><strong>{character(p, id).name.split(' ')[0]}</strong><small>{factionLabel(faction(p, id))} · {bots.includes(id) ? 'BOT' : 'PLAYER'}{b.defeated.includes(id) ? ' · defeated' : b.acted.includes(id) ? ' · rolled' : ''}</small><span className="combat-hero-vitals"><i><Icon name="heart" size={11} /><AnimatedValue value={h.health} />/{max.health}</i><i><Icon name="bolt" size={11} /><AnimatedValue value={h.energy} /></i>{h.curse > 0 && <i><ConditionToken kind="curse" />Curse {h.curse}</i>}{h.stun > 0 && <i><ConditionToken kind="stun" />Stun {h.stun}</i>}</span></span>{a?.heroId === id && <i className="combat-turn-dot" />}</div>;

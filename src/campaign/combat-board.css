@@ -1,0 +1,122 @@
+/* ---------- Combat as on the table (10. 11. 2026.) ----------
+   The Combat Area printed on the board (three overlapping circles with the tokens in them), the opponent's details on hover, and powers
+   as compact rows instead of large cards. Loaded last, so it overrides the earlier combat layers. */
+
+/* The Combat Area: Damage (blue dice), Defense (red dice and green armor) and Attrition (ability hits). */
+.combat-board-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:10px;margin:0 0 12px}
+.player-driven-combat .combat-ledger .combat-board-row{grid-column:1/-1}
+.combat-token-area{margin:0;padding:9px 12px 10px;border:1px solid #7a6340;border-radius:6px;background:radial-gradient(ellipse at 28% 18%,#4b3b25,#2a2117 58%,#18130d);box-shadow:inset 0 0 0 1px #0009,inset 0 0 28px #000b}
+.combat-token-area>h4{margin:0 0 6px;font-size:12px}
+.combat-token-area>h4>span{font-size:8.5px;letter-spacing:1.4px;color:#c2ad83}
+.combat-board{display:grid;grid-template-columns:minmax(210px,265px) minmax(0,1fr);gap:12px;align-items:center}
+.combat-token-boxes{position:relative;display:block;width:100%;aspect-ratio:1.5;grid-template-columns:none;gap:0}
+.combat-token-box{position:absolute;aspect-ratio:1;padding:0;border:0;border-radius:50%;min-width:0;
+ background:radial-gradient(circle at 46% 38%,#e3c88f,#b8904f 42%,#7c5730 72%,#4a321b);
+ box-shadow:0 0 0 2px #2e2213,0 0 0 4px #c49b5c,0 0 0 6px #3a2a17,0 6px 14px #000c,inset 0 0 22px #3b240fbb,inset 0 0 0 9px #6b4b2a66}
+.combat-token-box.damage{width:60%;right:1%;top:2%;z-index:1}
+.combat-token-box.defense{width:44%;left:2%;top:31%;z-index:2}
+.combat-token-box.attrition{width:34%;left:45%;bottom:1%;z-index:3}
+.combat-token-box>h5{position:absolute;left:50%;top:9%;transform:translateX(-50%);z-index:2;margin:0;padding:1px 7px 2px;border:1px solid #876637;border-radius:2px;background:linear-gradient(#f3e9d2,#d9c9a6);box-shadow:0 1px 3px #000a;color:#3b2a16;font:700 9.5px/1.25 var(--serif);letter-spacing:.6px;text-transform:uppercase;white-space:nowrap}
+.combat-token-box.attrition>h5{top:5%;font-size:8.5px;padding:1px 5px}
+.combat-token-box>h5>svg{display:none}
+.combat-token-pile{position:absolute;inset:25% 13% 24%;display:flex;flex-wrap:wrap;align-content:center;justify-content:center;gap:1px;pointer-events:none}
+.combat-token-pile>img,.combat-token-pile>.combat-token-dot{width:var(--token,21px);height:var(--token,21px);object-fit:contain;filter:drop-shadow(0 2px 2px #000c);animation:token-drop .32s cubic-bezier(.2,.8,.3,1.3) both;animation-delay:calc(var(--i) * 25ms)}
+.combat-token-dot{display:block;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ff9d8b,#c7322a 55%,#6d130f)}
+.combat-token-pile.armor>.combat-token-dot{border-radius:30% 30% 45% 45%;background:radial-gradient(circle at 35% 30%,#b9f0b0,#3f9a45 55%,#1f4f22)}
+.combat-token-box.defense .combat-token-pile{--token:17px}
+.combat-token-box.defense .combat-token-pile.hit{inset:24% 12% 47%}
+.combat-token-box.defense .combat-token-pile.armor{inset:51% 12% 21%}
+.combat-token-box.attrition .combat-token-pile{--token:15px;inset:27% 14% 27%}
+.combat-token-more{align-self:center;margin-left:2px;padding:0 4px;border-radius:7px;background:#1c140bcc;color:#f6e3b8;font:700 10px/16px var(--sans)}
+@keyframes token-drop{from{opacity:0;transform:translateY(-8px) scale(.6)}to{opacity:1;transform:none}}
+.combat-token-box>output.combat-token-count{position:absolute;bottom:5%;left:50%;transform:translateX(-50%);z-index:2;display:block;min-width:24px;height:22px;padding:0 6px;border:2px solid #d6b06b;border-radius:11px;background:#1d140b;box-shadow:0 2px 4px #000b;color:#f8e9c4;font:700 13px/18px var(--serif);text-align:center;font-variant-numeric:tabular-nums}
+.combat-token-box.defense>output.combat-token-count.hit{left:33%}
+.combat-token-box.defense>output.combat-token-count.armor{left:67%;border-color:#7fc27d;color:#d7f2cf}
+.combat-token-box.attrition>output.combat-token-count{bottom:3%;min-width:20px;height:19px;font-size:11px;line-height:15px}
+.combat-die-chip{display:inline-block;width:11px;height:11px;flex:none;transform:rotate(45deg);border:1px solid #000a;border-radius:2px;box-shadow:inset 1px 1px 0 #fff6,0 1px 2px #000a;vertical-align:-1px}
+.combat-die-chip.blue{background:#3f86cf}.combat-die-chip.red{background:#c4473a}.combat-die-chip.green{background:#3c9b4e}
+.combat-die-chip.hit{transform:none;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ff9d8b,#c7322a 55%,#6d130f)}
+.combat-token-box>.combat-die-chip{position:absolute;z-index:3;width:13px;height:13px}
+.combat-token-box.damage>.combat-die-chip.blue{left:6%;top:20%}
+.combat-token-box.defense>.combat-die-chip.red{left:4%;bottom:22%}
+.combat-token-box.defense>.combat-die-chip.green{left:14%;bottom:8%}
+.combat-board-key{display:grid;gap:7px;margin:0;font:10.5px/1.35 var(--sans)}
+.combat-board-key>div{display:grid;gap:1px}
+.combat-board-key dt{display:flex;align-items:center;gap:7px;color:#efdcb3;font:600 11.5px var(--serif)}
+.combat-board-key dd{margin:0 0 0 18px;color:#b9ad93}
+.combat-board-key dd>.combat-die-chip{margin:0 3px 0 2px;width:9px;height:9px}
+.combat-token-area .combat-token-flow{margin:7px 0 0;font-size:10.5px}
+.combat-token-area.resolving .combat-token-box.damage{box-shadow:0 0 0 2px #2e2213,0 0 0 4px #e6c67f,0 0 0 6px #3a2a17,0 0 18px #f0cf8a99,inset 0 0 22px #3b240fbb}
+@media(prefers-reduced-motion:reduce){.combat-token-pile>img,.combat-token-pile>.combat-token-dot{animation:none}}
+@media(max-width:600px){.combat-board{grid-template-columns:1fr}.combat-token-boxes{max-width:300px;margin:0 auto}.combat-board-key{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.combat-board-key dd{margin-left:0}}
+
+/* The opponent: hover or focus the portrait and name for every detail. */
+.enemy-info{position:relative;display:flex;align-items:center;gap:15px;flex:1;min-width:0;border-radius:8px;outline:0;cursor:help}
+.enemy-info:focus-visible{box-shadow:0 0 0 2px #e7c67b}
+.combat-encounter .enemy-info>.creature-glyph,.combat-encounter .enemy-info>img,.combat-encounter .enemy-info>.boss-portrait{width:62px;height:62px;object-fit:contain;flex-shrink:0;border-radius:8px;filter:drop-shadow(0 4px 6px #0008)}
+.combat-encounter .enemy-info>div:not(.boss-portrait):not(.enemy-info-card){flex:1;min-width:0}
+.enemy-info-card{position:absolute;z-index:60;top:calc(100% + 8px);left:0;display:grid;gap:8px;width:min(360px,calc(100vw - 48px));padding:11px 13px;border:1px solid #c9a35f;border-radius:6px;background:linear-gradient(#2c2419f8,#15100af9);box-shadow:0 12px 32px #000d;color:#e9dcc0;font:11px/1.45 var(--sans);text-align:left;opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .14s,transform .14s,visibility 0s .14s;pointer-events:none;cursor:default}
+.enemy-info:hover>.enemy-info-card,.enemy-info:focus-within>.enemy-info-card{opacity:1;visibility:visible;transform:none;transition-delay:.15s,.15s,0s}
+.battle-fighter.enemy .enemy-info{flex:none;justify-content:center}
+.battle-fighter.enemy .enemy-info-card{left:auto;right:0;top:calc(100% + 4px)}
+.enemy-info-title{font:700 9px var(--sans);letter-spacing:1.4px;text-transform:uppercase;color:#c9a35f}
+.enemy-info-card section{display:grid;gap:7px}
+.enemy-info-card h5{margin:0;font:600 12px var(--serif);color:#efd9a8}
+.enemy-info-row{display:grid;grid-template-columns:38px minmax(0,1fr) auto;align-items:center;gap:9px}
+.enemy-info-row>.creature-glyph,.enemy-info-row>.boss-portrait,.enemy-info-row>.portrait{width:38px;height:38px;border-radius:6px;object-fit:contain}
+.enemy-info-row strong{display:block;font:600 13px var(--serif);color:#f3e2bd}
+.enemy-info-row small{display:block;font-size:10px;color:#b4a687}
+.enemy-info-stats{display:flex;gap:10px;margin:0}
+.enemy-info-stats>div{display:grid;justify-items:center}
+.enemy-info-stats dt{font:600 8px var(--sans);letter-spacing:.8px;text-transform:uppercase;color:#a99878}
+.enemy-info-stats dd{margin:0;font:700 15px var(--serif);color:#f6e6c2;font-variant-numeric:tabular-nums}
+.enemy-info-card p{margin:0;color:#d8cbb0}
+.enemy-info-note{color:#b4a687!important;font-style:italic}
+
+/* Powers as compact rows: a small face (hover it for the whole card), the name, when it works and its cost; choosing one opens its options below. */
+.combat-room .combat-sheet-card-grid{display:flex;flex-direction:column;gap:5px}
+.combat-room .combat-sheet-card{display:grid;grid-template-columns:44px minmax(0,1fr);grid-template-areas:"thumb label" "thumb status";column-gap:10px;row-gap:2px;align-items:center;padding:4px 8px 4px 4px;border-radius:5px}
+.combat-room .combat-sheet-card>.combat-sheet-slot-label{grid-area:label;align-self:end;font-size:9.5px;letter-spacing:.3px}
+.combat-room .combat-sheet-card>.card-thumbnail{grid-area:thumb;width:44px;height:66px;padding:0;border-radius:4px}
+.combat-room .combat-sheet-card>.combat-sheet-card-status{grid-area:status;align-self:start;margin:0;text-align:left;font-size:10px}
+.combat-room .combat-sheet-card.ready{grid-template-columns:minmax(0,1fr);grid-template-areas:"label" "power";padding:5px 8px;border-color:#c8a86580;background:#2a2a1c99}
+.combat-room .combat-sheet-card.ready>.combat-power-choice{grid-area:power;min-width:0}
+.combat-room .combat-sheet-card .combat-power-choice .combat-power-summary{display:grid;grid-template-columns:44px minmax(0,1fr);align-items:center;gap:10px;padding:0}
+.combat-room .combat-sheet-card .combat-power-choice .combat-power-thumbnail,.combat-room .combat-sheet-card .combat-power-choice.expanded .combat-power-thumbnail{width:44px;height:66px;padding:0;border-radius:4px}
+.combat-room .combat-sheet-card .combat-power-caption{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:1px 10px;text-align:left}
+.combat-room .combat-sheet-card .combat-power-caption>strong{grid-column:1;font-size:13px;line-height:1.25}
+.combat-room .combat-sheet-card .combat-power-caption>small{grid-column:1;font-size:10px}
+.combat-room .combat-sheet-card .combat-power-caption>.combat-power-ready{grid-column:2;grid-row:1/3;align-self:center;margin:0}
+.combat-room .combat-sheet-card .combat-power-review{margin-top:7px}
+@media(max-width:600px){.combat-room .combat-sheet-card-grid{gap:4px}}
+
+/* On desktop the Combat Area sits beside the dice tray, as on the table: dice are rolled on the left and their hits land in the circles. */
+@media(min-width:1000px){
+ .campaign-app .combat-room .combat-arena-scroll{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,292px);grid-auto-flow:row dense;column-gap:12px;align-content:start}
+ .campaign-app .combat-room .combat-arena-scroll>*{grid-column:1/-1;min-width:0}
+ .campaign-app .combat-room .combat-arena-scroll>.combat-dice-table{grid-column:1;margin-bottom:0}
+ .campaign-app .combat-room .combat-arena-scroll>.combat-ledger{grid-column:2;align-self:stretch;display:flex;flex-direction:column;gap:10px;height:0;min-height:100%;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#b3945c #17211b;padding-right:2px}
+ .combat-room .combat-arena-scroll>.combat-ledger>.combat-board-row{display:flex;flex-direction:column;gap:8px;margin:0}
+ .combat-room .combat-ledger .combat-board{grid-template-columns:1fr}
+ .combat-room .combat-ledger .combat-token-boxes{max-width:262px;margin:0 auto}
+ .combat-room .combat-ledger .combat-board-key{display:none}
+ .combat-room .combat-ledger .combat-board-row>.combat-token-area:nth-child(2):last-child,.combat-room .combat-ledger .combat-board-row>.combat-token-area:first-child:nth-last-child(2){padding:7px 9px}
+ .combat-room .combat-ledger .combat-board-row>.combat-token-area:first-child:nth-last-child(2) .combat-token-boxes,.combat-room .combat-ledger .combat-board-row>.combat-token-area:nth-child(2):last-child .combat-token-boxes{max-width:205px}
+}
+.combat-room .combat-sheet-card-grid{align-items:stretch}
+.combat-room .combat-sheet-card{width:auto;min-width:0}
+.combat-room .combat-sheet-card .combat-power-caption>strong{display:block}
+.combat-room .combat-sheet-card .combat-power-caption>.combat-power-ready{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border:1px solid #c9a35f;border-radius:12px;background:#3a3020;color:#f3dca4;font:600 10px var(--sans);white-space:nowrap}
+/* Fine-tuning: the Damage count sits clear of the Attrition circle, unready powers show their name, and the tray heading wraps cleanly. */
+.combat-token-box.damage>output.combat-token-count{left:auto;right:9%;bottom:30%;transform:none}
+.combat-room .combat-ledger .combat-token-boxes{max-width:238px}
+.combat-room .combat-sheet-card:not(.ready){grid-template-areas:"thumb label" "thumb name" "thumb status"}
+.combat-room .combat-sheet-card>.combat-sheet-card-name{grid-area:name;font:600 12.5px/1.25 var(--serif);color:#eadcb8;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(min-width:1000px){
+ .campaign-app .combat-room .combat-tray-heading{flex-wrap:wrap;row-gap:6px}
+ .campaign-app .combat-room .combat-tray-heading .threat-level{white-space:nowrap}
+}
+.campaign-app .combat-room .enemy-info-card p{display:block;margin:0;font-size:11px;line-height:1.45;color:#d8cbb0}
+.campaign-app .combat-room .enemy-info-card .enemy-info-note{color:#b4a687;font-style:italic}
+/* Damage tokens lie in the part of the circle that Defense and Attrition do not cover. */
+.combat-token-box.damage .combat-token-pile{inset:22% 8% 38% 30%;align-content:flex-start;justify-content:flex-end}

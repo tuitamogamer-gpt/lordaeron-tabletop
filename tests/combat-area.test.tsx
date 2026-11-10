@@ -2,6 +2,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { cleanup, render, screen, within } from '@testing-library/react';
 import CombatArea from '../src/campaign/CombatArea';
+import EnemyInfo from '../src/campaign/CombatEnemyInfo';
 import { combatCue } from '../src/campaign/combat-flow';
 import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
 import { beginBattle } from '../src/rules/combat';
@@ -53,4 +54,45 @@ describe('the three tabletop combat boxes', () => {
   expect(screen.getByLabelText('Horde ranged hits').textContent).toBe('0');
   expect(screen.getByText('Both factions clear their hit tokens before the next round.')).toBeTruthy();
  });
+
+ it('draws the board’s three circles with the dice colour that feeds each and the round', () => {
+  const s = createGame(p, DEFAULT_SETUP);
+  s.enemies = [{ id: 'ogre', creature: 'ogre', color: 'green', region: 'brill' }];
+  beginBattle(s, 'pve', [s.heroes[0].id], ['ogre'], 'horde', 'brill');
+  s.battle!.round = 3;
+  render(<CombatArea battle={s.battle!} side="horde" />);
+  expect(screen.getByText('COMBAT AREA · ROUND 3')).toBeTruthy();
+  for (const [box, chips] of [['damage', ['blue']], ['defense', ['red', 'green']], ['attrition', []]] as const) {
+   const region = screen.getByRole('region', { name: `Horde ${box} box` });
+   expect([...region.querySelectorAll(':scope > .combat-die-chip')].map(c => c.className.replace('combat-die-chip ', ''))).toEqual(chips);
+  }
+ });
 });
+
+describe('the opponent on hover', () => {
+ const fight = (enemies: { id: string; creature: string; color: 'green' | 'red' | 'blue' }[], boss?: string) => {
+  const s = createGame(p, DEFAULT_SETUP);
+  s.enemies = enemies.map(e => ({ ...e, region: 'brill' }));
+  beginBattle(s, 'pve', [s.heroes[0].id], enemies.map(e => e.id), 'horde', 'brill', boss);
+  return view(s);
+ };
+ it('groups the creatures with their threat, attack and health, and gives the encounter rule', () => {
+  render(<EnemyInfo state={fight([{ id: 'a', creature: 'murloc', color: 'green' }, { id: 'b', creature: 'murloc', color: 'green' }, { id: 'c', creature: 'murloc', color: 'blue' }])}><span>Murlocs</span></EnemyInfo>);
+  const card = screen.getByRole('tooltip'), trigger = screen.getByRole('group', { name: 'Opponent details' });
+  expect(trigger.getAttribute('tabindex')).toBe('0');
+  expect(trigger.getAttribute('aria-describedby')).toBe(card.id);
+  expect(within(card).getByText('2 × Murloc')).toBeTruthy();
+  expect(within(card).getByText('Blue figure · independent')).toBeTruthy();
+  const murloc = p.creatures.find(c => c.id === 'murloc')!;
+  expect(within(card).getAllByText(`${murloc.stats.green.threat}+`).length).toBeGreaterThan(0);
+  expect(card.textContent).toContain(String(murloc.stats.green.health));
+ });
+ it('shows an Overlord with its own combat rules', () => {
+  render(<EnemyInfo state={fight([], 'kelthuzad')}><span>Boss</span></EnemyInfo>);
+  const card = screen.getByRole('tooltip');
+  expect(within(card).getByText('Kel’Thuzad')).toBeTruthy();
+  expect(within(card).getByText('Overlord')).toBeTruthy();
+  expect(card.querySelector('p')?.textContent?.length).toBeGreaterThan(20);
+ });
+});
+

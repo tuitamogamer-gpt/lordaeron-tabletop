@@ -135,14 +135,18 @@ describe('the printed game tokens', () => {
   expect(alliance.style.backgroundImage).toBe('');
  });
 
- it('counts hit and armor tokens in the combat boxes with the printed tokens', () => {
+ it('lays the printed hit and armor tokens in the circles of the combat area, one per token', () => {
   const s = createGame(p, DEFAULT_SETUP);
   s.enemies = [{ id: 'ogre', creature: 'ogre', color: 'green', region: 'brill' }];
   beginBattle(s, 'pve', [s.heroes[0].id], ['ogre'], 'horde', 'brill');
   s.battle!.boxes.horde = { damage: 1, defense: 2, armor: 7, attrition: 1 };
   const { container } = render(<CombatArea battle={s.battle!} side="horde"/>);
-  const sources = [...container.querySelectorAll('.combat-token-count')].map(c => `${c.className.replace('combat-token-count ', '')}:${c.querySelector('img')!.getAttribute('src')}`);
-  expect(sources).toEqual(['hit:/scan/hit.webp', 'hit:/scan/hit.webp', 'armor:/scan/armor.webp', 'hit:/scan/hit.webp']);
+  const pile = (box: string, kind: string) => [...container.querySelectorAll(`.combat-token-box.${box} .combat-token-pile.${kind} img`)].map(i => i.getAttribute('src'));
+  expect(pile('damage', 'hit')).toEqual(['/scan/hit.webp']);
+  expect(pile('defense', 'hit')).toEqual(['/scan/hit.webp', '/scan/hit.webp']);
+  expect(pile('defense', 'armor')).toEqual(Array(6).fill('/scan/armor.webp'));
+  expect(container.querySelector('.combat-token-box.defense .combat-token-pile.armor .combat-token-more')!.textContent).toBe('+1');
+  expect(pile('attrition', 'hit')).toEqual(['/scan/hit.webp']);
   expect(container.querySelector('output[aria-label="Horde armor"]')!.textContent).toBe('7');
  });
 });

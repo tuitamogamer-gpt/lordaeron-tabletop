@@ -46,6 +46,7 @@ import './campaign/readability.css';
 import './campaign/board-table.css';
 import './campaign/scan-assets.css';
 import './campaign/audio.css';
+import './campaign/combat-board.css';
 import './campaign/responsive.css';
 // After a deployment, an open tab can ask for code chunks the server no longer has; reload once and resume from the autosave.
 window.addEventListener('vite:preloadError',event=>{if(reloadForUpdate())event.preventDefault();});
