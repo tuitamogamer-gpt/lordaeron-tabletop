@@ -45,3 +45,23 @@ Produkcija je objavljena na [lordaeron-tabletop.vercel.app](https://lordaeron-ta
 Server koristi Node 24 i eksplicitne `.js` putanje za ESM importe. `npm run build` uključuje `npm run check:server` s NodeNext rezolucijom, kako bundler ne bi prikrio putanje koje produkcijski Node ne može učitati.
 
 Ograničenja ove verzije: botovi napreduju dok je povezan klijent koji traži njihove poteze; nema background joba kad svi izađu. Socket polling troši Redis operacije. Rate limit je lokalni po instanci, nije globalna zaštita od zloupotrebe. Zapis je ograničen na 20.000 naredbi. Ovo je MVP za partije s pozivnicom, ne kompletna javna platforma s matchmakingom i takmičarskom zaštitom.
+
+## Pregled 10. 11. 2026.
+
+Server je pregledan dok su online sobe na čekanju. Na živom sajtu, bez Redisa, `/api/game` odgovara 503 za oko 1 ms, a `/api/ws` sada odbija vezu sa 503 umjesto da je drži otvorenu 30–35 s. Autorizacija mjesta, entropija tokena, poređenje u konstantnom vremenu, provjera origina, ograničenje veličine tijela i compare-and-swap izdržali su testove.
+
+Popravljeno u ovom prolazu:
+
+- `/api/ws` bez spremišta odbija upgrade (503), neuspjela autentikacija prekida vezu za oko sekunde i kad druga strana ne odgovori na close, upgrade prolazi kroz isti rate limit kao HTTP, a jedan član može držati najviše četiri žive veze.
+- Greške klijenta dobijaju 4xx i kad spremište nije podešeno: pogrešna metoda 405, neispravan ili preduboko ugniježđen JSON 400, neispravan kod sobe 400.
+- Revizija ima vlastitu granicu (1.000.000). Ranije je dijelila granicu 10.000 s ostalim brojačima, pa bi soba nakon revizije 10.001 odbijala svaki zahtjev iako dozvoljava 20.000 naredbi.
+
+**Otvoreno, riješiti prije uključivanja online soba:**
+
+1. **Sjeme RNG-a se može rekonstruisati.** Sjeme ima 32 bita, generator je xorshift32, a javno stanje (questovi i trgovac na početku) dovoljno je da se sjeme nađe grubom silom za oko dvije minute na četiri jezgre. Ko ga nađe, zna poredak svih špilova i buduća bacanja. Rješenje: tajna od 32 bajta po sobi izvan `State` i izvođenje svakog izvlačenja iz HMAC-SHA256(tajna, brojač).
+2. **Kreiranje soba nema globalno ograničenje.** Rate limit je u memoriji jedne instance (300 zahtjeva u minuti po adresi), soba ima oko 7,6 KB i TTL od 30 dana. Treba limit u Redisu sa strogom kvotom za kreiranje i kratak TTL za sobe koje nikad nisu pokrenute.
+3. **Polling po vezi.** Svaka veza čita cijelu sobu svakih 1,5 s. Treba jedno čitanje po sobi, ne po vezi.
+4. **Razmjena s botom ne traži pristanak.** Vlasnik lika može jednom naredbom uzeti zlato savezničkog bota. Bot treba procijeniti ili odbiti takvu razmjenu.
+5. **Prazne razmjene troše revizije.** Razmjena bez predmeta i zlata se prihvata i dodaje reviziju; treba je odbiti.
+6. **Redis CAS i Vercel WebSocket** i dalje nisu isprobani na stvarnim servisima.
+

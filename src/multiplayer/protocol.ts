@@ -3,6 +3,9 @@ import type { Command, Setup } from '../rules/model.js';
 export const id = z.string().min(1).max(100).regex(/^[a-zA-Z0-9:-]+$/);
 const ids = z.array(id).max(40);
 const n = z.number().int().min(0).max(10000);
+// A room allows 20,000 commands and every accepted request adds a revision, so revisions need their own bound.
+const revision = z.number().int().min(0).max(1_000_000);
+const room = z.string().regex(/^[A-Z0-9]{12}$/);
 const dieIds = z.array(z.number().int().min(0).max(1000)).max(21);
 const slots = z.array(z.object({ card: id.optional(), addons: ids }).strict()).max(8);
 const pool = z.object({ red: n, blue: n, green: n }).strict();
@@ -42,11 +45,11 @@ export const commandSchema: z.ZodType<Command> = schema;
 export const setupSchema: z.ZodType<Setup> = z.object({seed:z.number().int().min(1).max(0xffffffff),roster:z.array(id).min(4).max(6),overlord:id,variants:z.object({deadlyPvp:z.boolean().optional(),overlordOnly:z.boolean().optional()}).strict().optional()}).strict();
 export const requestSchema = z.discriminatedUnion('kind',[
  z.object({kind:z.literal('create'),name:z.string().trim().min(1).max(32),setup:setupSchema,heroes:z.array(id).min(1).max(3)}).strict(),
- z.object({kind:z.literal('join'),room:id,name:z.string().trim().min(1).max(32),heroes:z.array(id).min(1).max(3)}).strict(),
- z.object({kind:z.literal('command'),room:id,revision:n,requestId:z.string().min(8).max(80),command:commandSchema}).strict(),
- z.object({kind:z.literal('configure'),room:id,revision:n,bots:z.array(id).max(6)}).strict(),
- z.object({kind:z.literal('start'),room:id,revision:n}).strict(),
- z.object({kind:z.literal('consent'),room:id,revision:n,accept:z.boolean()}).strict(),
- z.object({kind:z.literal('tick'),room:id,revision:n}).strict(),
+ z.object({kind:z.literal('join'),room,name:z.string().trim().min(1).max(32),heroes:z.array(id).min(1).max(3)}).strict(),
+ z.object({kind:z.literal('command'),room,revision,requestId:z.string().min(8).max(80),command:commandSchema}).strict(),
+ z.object({kind:z.literal('configure'),room,revision,bots:z.array(id).max(6)}).strict(),
+ z.object({kind:z.literal('start'),room,revision}).strict(),
+ z.object({kind:z.literal('consent'),room,revision,accept:z.boolean()}).strict(),
+ z.object({kind:z.literal('tick'),room,revision}).strict(),
 ]);
 export type RoomRequest = z.infer<typeof requestSchema>;

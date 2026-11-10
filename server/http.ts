@@ -10,7 +10,7 @@ export const allowedOrigin=(req:IncomingMessage)=>{
  }catch{return false;}
 };
 const limits=new Map<string,{time:number;count:number}>();
-function rateLimit(req:IncomingMessage){
+export function rateLimit(req:IncomingMessage){
  const key=String(req.headers['x-real-ip']??req.socket.remoteAddress??'unknown'),now=Date.now();
  if(limits.size>2000)for(const[k,v]of limits)if(now-v.time>60000)limits.delete(k);
  const current=limits.get(key);if(!current||now-current.time>60000){limits.set(key,{time:now,count:1});return;}
@@ -20,11 +20,12 @@ export function createHandler(storeProvider:()=>RoomStore=getStore){ return asyn
  res.setHeader('Cache-Control','no-store');res.setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('X-Content-Type-Options','nosniff');
  try{
   if(!allowedOrigin(req))throw new RoomError("This request origin is not allowed.",403);rateLimit(req);
-  const store=storeProvider(),token=String(req.headers.authorization??'').replace(/^Bearer /,'');
+  const token=String(req.headers.authorization??'').replace(/^Bearer /,'');
   let result:unknown;
   if(req.method==='GET'){
    const url=new URL(req.url??'/','http://localhost'),room=url.searchParams.get('room')??'';
    if(!/^[A-Z0-9]{12}$/.test(room))throw new RoomError("Invalid room code.");
+   const store=storeProvider();
    if(token)result=await readRoom(store,room,token);
    else{const r=await store.get(room);if(!r)throw new RoomError("Room not found.",404);result={id:r.id,started:r.started,roster:r.setup.roster,members:r.members.map(m=>({name:m.name,heroes:m.heroes})),bots:r.bots};}
   }else if(req.method==='POST'){
@@ -33,13 +34,14 @@ export function createHandler(storeProvider:()=>RoomStore=getStore){ return asyn
    if(typeof body==='string')body=JSON.parse(body);
    if(JSON.stringify(body).length>64000)throw new RoomError("The request is too large.",413);
    const parsed=requestSchema.safeParse(body);if(!parsed.success)throw new RoomError("Invalid request format.");
-   result=await handleRoom(store,parsed.data,token);
+   result=await handleRoom(storeProvider(),parsed.data,token);
   }else throw new RoomError("Method not supported.",405);
   res.statusCode=200;res.end(JSON.stringify(result));
  }catch(e){
-  const expected=e instanceof RoomError||e instanceof RuleError||e instanceof SyntaxError;
+  // A body that cannot be parsed (broken or absurdly nested JSON) is the client's error, not an outage.
+  const malformed=e instanceof SyntaxError||e instanceof RangeError,expected=e instanceof RoomError||e instanceof RuleError||malformed;
   res.statusCode=e instanceof RoomError?e.status:expected?400:503;
-  res.end(JSON.stringify({error:expected?(e as Error).message:"The network service is unavailable. Check the connection and storage configuration."}));
+  res.end(JSON.stringify({error:malformed?"Invalid request format.":expected?(e as Error).message:"The network service is unavailable. Check the connection and storage configuration."}));
  }
 }
 

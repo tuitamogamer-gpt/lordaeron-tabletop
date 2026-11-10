@@ -1,32 +1,41 @@
 import { createServer, type Server } from 'node:http';
 import { WebSocketServer, type WebSocket } from 'ws';
-import { allowedOrigin } from './http.js';
+import { allowedOrigin, rateLimit } from './http.js';
 import { authenticate, readRoom, snapshot as roomSnapshot } from './rooms.js';
 import { getStore, type RoomStore } from './store.js';
 interface Subscription { room:string;token:string;revision:number;busy:boolean; }
+const MAX_SOCKETS_PER_MEMBER=4;
 /** The socket is an ephemeral delivery channel; authoritative room state lives in Redis. */
 export function attachWebSockets(server:Server,storeProvider:()=>RoomStore=getStore){
  const wss=new WebSocketServer({noServer:true,maxPayload:2048,perMessageDeflate:false});
  const clients=new Map<WebSocket,Subscription>();
+ // close() waits up to 30 s for the peer's close frame; a peer that never answers is dropped after one.
+ const drop=(ws:WebSocket,code:number,reason:string)=>{ws.close(code,reason);setTimeout(()=>{if(ws.readyState!==3)ws.terminate();},1000).unref();};
+ const refuse=(socket:{write(data:string):unknown;destroy():unknown},status:string)=>{socket.write(`HTTP/1.1 ${status}\r\nConnection: close\r\n\r\n`);socket.destroy();};
  server.on('upgrade',(req,socket,head)=>{
-  if(!allowedOrigin(req)||!req.url?.startsWith('/api/ws')){socket.write('HTTP/1.1 403 Forbidden\r\n\r\n');socket.destroy();return;}
+  if(!allowedOrigin(req)||!req.url?.startsWith('/api/ws')){refuse(socket,'403 Forbidden');return;}
+  // Without a room store there is nothing to subscribe to: refuse instead of holding the connection open.
+  try{storeProvider();}catch{refuse(socket,'503 Service Unavailable');return;}
+  try{rateLimit(req);}catch{refuse(socket,'429 Too Many Requests');return;}
   wss.handleUpgrade(req,socket,head,ws=>wss.emit('connection',ws,req));
  });
  wss.on('connection',ws=>{
   let authenticating=false;
-  const authDeadline=setTimeout(()=>ws.close(1008,'Authentication required'),5000);
+  const authDeadline=setTimeout(()=>drop(ws,1008,'Authentication required'),5000);
   // Reconnect before the function lifetime ends; clients reload the durable revision.
-  const lifetime=setTimeout(()=>ws.close(1012,'Reconnect'),240000);
+  const lifetime=setTimeout(()=>drop(ws,1012,'Reconnect'),240000);
   ws.on('message',async raw=>{
-   if(authenticating||clients.has(ws)){ws.close(1008,'Already subscribed');return;}
+   if(authenticating||clients.has(ws)){drop(ws,1008,'Already subscribed');return;}
    authenticating=true;
    try{const msg=JSON.parse(raw.toString()) as {room?:unknown;token?:unknown};
     if(typeof msg.room!=='string'||!/^[A-Z0-9]{12}$/.test(msg.room)||typeof msg.token!=='string'||msg.token.length>128)throw new Error();
+    // One member needs one live socket per open tab; more only multiply the polling of the store.
+    if([...clients.values()].filter(c=>c.token===msg.token).length>=MAX_SOCKETS_PER_MEMBER)throw new Error();
     const snapshot=await readRoom(storeProvider(),msg.room,msg.token);
     if(ws.readyState!==1)return;
     clearTimeout(authDeadline);clients.set(ws,{room:msg.room,token:msg.token,revision:snapshot.revision,busy:false});
     ws.send(JSON.stringify(snapshot));
-   }catch{ws.close(1008,'Invalid session');}
+   }catch{drop(ws,1008,'Invalid session');}
   });
   ws.on('close',()=>{clearTimeout(authDeadline);clearTimeout(lifetime);clients.delete(ws);});
   ws.on('error',()=>ws.close());

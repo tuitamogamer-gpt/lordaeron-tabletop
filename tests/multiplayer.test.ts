@@ -2,7 +2,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createServer, type Server } from 'node:http';
 import { WebSocket, type WebSocketServer } from 'ws';
 import { DEFAULT_SETUP } from '../src/data/development-pack';
-import { commandSchema } from '../src/multiplayer/protocol';
+import { commandSchema, requestSchema } from '../src/multiplayer/protocol';
 import { handleRoom, readRoom, type RoomSnapshot } from '../server/rooms';
 import { MemoryStore } from '../server/store';
 import { createHandler } from '../server/http';
@@ -90,4 +90,44 @@ describe('HTTP and live WebSocket transport',()=>{
   const cross=await fetch(url+'/api/game',{method:'POST',headers:{Origin:'https://unrelated.invalid'},body:'{}'});expect(cross.status).toBe(403);
   const malformed=await fetch(url+'/api/game',{method:'POST',body:'{broken'});expect(malformed.status).toBe(400);
  });
+
+ it('answers client mistakes with client errors, also when no store is configured',async()=>{
+  // Absurdly nested JSON overflows the parser's stack; that is a bad request, not an outage.
+  const nested=await fetch(url+'/api/game',{method:'POST',body:'['.repeat(60000)});expect(nested.status).toBe(400);
+  expect((await post({kind:'join',room:'abc',name:'Guest',heroes:[mage]})).status).toBe(400);
+  const unconfigured=createServer(createHandler(()=>{throw new Error('no store');}));await new Promise<void>(resolve=>unconfigured.listen(0,'127.0.0.1',resolve));
+  const a=unconfigured.address(),base=`http://127.0.0.1:${typeof a==='object'&&a?a.port:0}/api/game`;
+  try{
+   expect((await fetch(base,{method:'PUT'})).status).toBe(405);
+   expect((await fetch(base,{method:'POST',body:'{broken'})).status).toBe(400);
+   expect((await fetch(base+'?room=nope')).status).toBe(400);
+   expect((await fetch(base+'?room=ABCDEFGHJKLM')).status).toBe(503);
+  }finally{unconfigured.closeAllConnections();await new Promise<void>(resolve=>unconfigured.close(()=>resolve()));}
+ });
+ it('accepts revisions beyond 10,000, which a room reaches before its move log limit',()=>{
+  expect(requestSchema.safeParse({kind:'tick',room:'ABCDEFGHJKLM',revision:10001}).success).toBe(true);
+  expect(requestSchema.safeParse({kind:'tick',room:'ABCDEFGHJKLM',revision:-1}).success).toBe(false);
+  expect(requestSchema.safeParse({kind:'tick',room:'not-a-room',revision:1}).success).toBe(false);
+ });
+ it('refuses a socket when no store is configured instead of holding it open',async()=>{
+  const bare=createServer(),sockets=attachWebSockets(bare,()=>{throw new Error('no store');});await new Promise<void>(resolve=>bare.listen(0,'127.0.0.1',resolve));
+  const a=bare.address(),started=Date.now();
+  try{
+   const status=await new Promise<number>((resolve,reject)=>{const ws=new WebSocket(`ws://127.0.0.1:${typeof a==='object'&&a?a.port:0}/api/ws`);ws.on('unexpected-response',(_req,res)=>resolve(res.statusCode??0));ws.on('open',()=>reject(new Error('The socket was accepted.')));ws.on('error',()=>{});});
+   expect(status).toBe(503);expect(Date.now()-started).toBeLessThan(2000);
+  }finally{await new Promise<void>(resolve=>sockets.close(()=>resolve()));bare.closeAllConnections();await new Promise<void>(resolve=>bare.close(()=>resolve()));}
+ });
+ it('drops a socket that fails authentication within about a second and caps sockets per member',async()=>{
+  const host=await(await post({kind:'create',name:'Socket host',setup:DEFAULT_SETUP,heroes:[warrior]})).json() as Login;
+  // A wrong token is closed, and the connection is torn down even if the peer never answers the close frame.
+  const bad=new WebSocket(url.replace('http:','ws:')+'/api/ws');sockets.push(bad);const started=Date.now();
+  const closed=new Promise<number>(resolve=>bad.on('close',code=>resolve(code)));bad.once('open',()=>bad.send(JSON.stringify({room:host.id,token:'wrong-token'})));
+  expect(await closed).toBe(1008);expect(Date.now()-started).toBeLessThan(3000);
+  // Four live sockets per member are served; a fifth is refused.
+  const live=[0,1,2,3].map(()=>listen(host.id,host.token));await Promise.all(live.map(v=>v.ready));
+  const extra=new WebSocket(url.replace('http:','ws:')+'/api/ws');sockets.push(extra);
+  const refused=new Promise<number>(resolve=>extra.on('close',code=>resolve(code)));extra.once('open',()=>extra.send(JSON.stringify({room:host.id,token:host.token})));
+  expect(await refused).toBe(1008);
+  live.forEach(v=>v.ws.close());
+ },10000);
 });
