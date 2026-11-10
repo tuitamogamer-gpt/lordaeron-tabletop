@@ -202,3 +202,61 @@
  .campaign-app .equipment-modal .equipment-flow .loadout-attachments label{padding:6px 0;align-items:center}
  .campaign-app .equipment-modal .equipment-flow .loadout-attachments .card-portrait-face{height:128px;width:66px}
 }
+
+/* ---------- Every slot in view, and a card large enough to read (10. 11. 2026.) ----------
+   The slots used to scroll sideways in a strip of 155 px columns: at 1366×768, and even at 1920×1080, only slots 1–4 were in view, so the
+   melee weapon, armor and general slots looked missing. The choices were full cards 210 px tall, whose rules print at about 4 px.
+   Now all slots share a 4 × 2 grid, the choices are rows with a small face, and the card under the pointer or focus is shown as large as
+   the screen height allows (its rules at 8–11 px), with the hover preview for every strength option. */
+@media(min-width:1000px) and (min-height:600px){
+ .campaign-app .equipment-modal .equipment-flow>.loadout-layout{grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);gap:14px}
+ .campaign-app .equipment-modal .equipment-flow .loadout-slot-shelf{overflow:visible}
+ .campaign-app .equipment-modal .equipment-flow .loadout-slots{grid-auto-flow:row;grid-auto-columns:auto;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:none;grid-auto-rows:minmax(0,1fr);overflow:visible;padding:0;gap:8px}
+ .campaign-app .equipment-modal .equipment-flow .loadout-slot{min-height:0;grid-template-rows:auto minmax(0,1fr) auto;padding:6px 7px;overflow:hidden}
+ .campaign-app .equipment-modal .equipment-flow .loadout-slot-card{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;align-self:stretch;min-height:0;height:100%;padding-top:2px}
+ .campaign-app .equipment-modal .equipment-flow .loadout-slot.vacant .loadout-slot-card{justify-content:center}
+ .campaign-app .equipment-modal .equipment-flow .loadout-slot-card>.card-portrait-face{flex:1 1 0;min-height:0;height:auto;width:100%;object-fit:contain;margin:0 0 4px}
+ .campaign-app .equipment-modal .equipment-flow .loadout-slot-card>.loadout-empty-icon{flex:0 1 74px;min-height:34px;width:72%;margin:0 0 6px}
+ .campaign-app .equipment-modal .equipment-flow .loadout-slot-card strong{font-size:11px;line-height:1.3}
+ .campaign-app .equipment-modal .equipment-flow .loadout-slot-card small{font-size:9.5px;line-height:1.3;margin-top:1px}
+ .campaign-app .equipment-modal .equipment-flow .loadout-slot-bottom{margin-top:3px;padding-top:3px;font-size:9px}
+
+ .campaign-app .equipment-modal .equipment-flow .loadout-picker{display:grid;grid-template-columns:minmax(0,1fr) clamp(200px,calc((100dvh - 340px) * .655),360px);grid-template-rows:auto auto minmax(0,1fr) auto auto;align-content:stretch;gap:6px 12px;overflow:hidden}
+ .campaign-app .equipment-modal .equipment-flow .loadout-picker-title{grid-column:1/-1}
+ .campaign-app .equipment-modal .equipment-flow .loadout-comparison{grid-column:1;grid-row:2;margin:0}
+ .campaign-app .equipment-modal .equipment-flow .loadout-choices{grid-column:1;grid-row:3;display:flex;flex-direction:column;gap:6px;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:2px;scrollbar-width:thin;scrollbar-color:#b3945c #17211b}
+ .campaign-app .equipment-modal .equipment-flow .loadout-choice.card-choice{flex:none;flex-direction:row;align-items:center;text-align:left;gap:10px;min-height:0;padding:5px 30px 5px 6px}
+ .campaign-app .equipment-modal .equipment-flow .loadout-choice.card-choice>.card-portrait-face{width:auto;height:76px;min-height:0;flex:none;filter:drop-shadow(0 2px 3px #0008)}
+ .campaign-app .equipment-modal .equipment-flow .loadout-choice.card-choice>span{flex:1;width:auto}
+ .campaign-app .equipment-modal .equipment-flow .loadout-choice.card-choice>.lucide{top:50%;right:8px;transform:translateY(-50%)}
+ .campaign-app .equipment-modal .equipment-flow .loadout-choice strong{font-size:12px}
+ .campaign-app .equipment-modal .equipment-flow .loadout-choice small{font-size:10px}
+ .campaign-app .equipment-modal .equipment-flow .loadout-pagination,.campaign-app .equipment-modal .equipment-flow .loadout-empty-note,.campaign-app .equipment-modal .equipment-flow .loadout-attachments{grid-column:1}
+ .campaign-app .equipment-modal .equipment-flow .loadout-empty-note{margin:0;font-size:10.5px;line-height:1.5}
+ .campaign-app .equipment-modal .equipment-flow .loadout-card-preview{grid-column:2;grid-row:2/-1;align-self:start;width:100%;min-height:0;margin:0;display:flex;flex-direction:column;align-items:center;gap:5px}
+ .campaign-app .equipment-modal .equipment-flow .loadout-card-preview>.card-thumbnail{width:100%;height:auto;aspect-ratio:.655;max-height:calc(100dvh - 330px);padding:0}
+ .campaign-app .equipment-modal .equipment-flow .loadout-card-preview .card-portrait-face{object-fit:contain}
+ .campaign-app .equipment-modal .equipment-flow .loadout-card-preview>p{margin:0;text-align:center;font:10px/1.4 var(--sans);color:#b8c4a6}
+}
+/* Tablets and phones: the slot faces kept a fixed 240 px height at any width, so in narrow slots they were squeezed out of shape, and
+   three slots per row pushed the picker far down. Four compact slots per row keep all of them on one screen; the faces keep their shape;
+   the choices are rows; and the card being looked at is shown up to 300 px wide. */
+@media(max-width:999px){
+ .campaign-app .equipment-modal .equipment-flow .loadout-slots{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+ .campaign-app .equipment-modal .equipment-flow .loadout-slot{padding:5px;gap:3px}
+ .campaign-app .equipment-modal .equipment-flow .loadout-slot-type{font-size:9px;line-height:1.25}
+ .campaign-app .equipment-modal .equipment-flow .loadout-slot-card>.card-portrait-face{width:100%;height:clamp(96px,28vw,190px);object-fit:contain;margin:0 0 4px}
+ .campaign-app .equipment-modal .equipment-flow .loadout-slot-card>.loadout-empty-icon{width:80%;height:clamp(60px,18vw,110px);margin:0 auto 4px}
+ .campaign-app .equipment-modal .equipment-flow .loadout-slot-card strong{font-size:10px;line-height:1.25;overflow-wrap:anywhere}
+ .campaign-app .equipment-modal .equipment-flow .loadout-slot-card small{font-size:9px;line-height:1.25}
+ .campaign-app .equipment-modal .equipment-flow .loadout-slot-bottom{display:none}
+ .campaign-app .equipment-modal .equipment-flow .loadout-choices{display:flex;flex-direction:column;gap:6px;max-height:none}
+ .campaign-app .equipment-modal .equipment-flow .loadout-choice.card-choice{flex-direction:row;align-items:center;text-align:left;gap:10px;min-height:0;padding:5px 30px 5px 6px}
+ .campaign-app .equipment-modal .equipment-flow .loadout-choice.card-choice>.card-portrait-face{width:auto;height:76px;min-height:0;flex:none}
+ .campaign-app .equipment-modal .equipment-flow .loadout-choice.card-choice>span{flex:1;width:auto}
+ .campaign-app .equipment-modal .equipment-flow .loadout-choice.card-choice>.lucide{top:50%;right:8px;transform:translateY(-50%)}
+ .campaign-app .equipment-modal .equipment-flow .loadout-card-preview{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
+ .campaign-app .equipment-modal .equipment-flow .loadout-card-preview>.card-thumbnail{width:min(100%,300px);height:auto;aspect-ratio:.655;padding:0}
+ .campaign-app .equipment-modal .equipment-flow .loadout-card-preview .card-portrait-face{object-fit:contain}
+ .campaign-app .equipment-modal .equipment-flow .loadout-card-preview>p{text-align:center;font-size:10px;margin:0}
+}

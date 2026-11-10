@@ -67,6 +67,24 @@ describe('consistent new card artwork', () => {
   expect(send.mock.calls[0][0].slots[startingSlot].card).toBeUndefined();
  });
 
+ it('shows the card under the pointer or focus large before it is equipped, and the slot card again on another slot', () => {
+  const def = p.characters.find(c => c.classId === 'mage')!, h = startingHero(def.id);
+  h.learned = ['mage-fireball'];
+  render(<EquipmentEditor hero={h} send={vi.fn()} busy={false} />);
+  const preview = () => screen.queryByRole('region', { name: 'Selected card preview' });
+  const shown = () => preview()?.querySelector('img.card-portrait-face')?.getAttribute('src');
+  const printed = def.slots[0].printed, own = printed ? `/assets/card-faces/v9/${printed}.webp` : undefined;
+  expect(shown()).toBe(own);
+  fireEvent.pointerEnter(screen.getByRole('button', { name: 'Equip Fireball' }));
+  expect(shown()).toBe('/assets/card-faces/v9/mage-fireball.webp');
+  expect(within(preview()!).getByText(/Not equipped yet/)).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: /^Slot 2:/ }));
+  fireEvent.click(screen.getByRole('button', { name: /^Slot 1:/ }));
+  expect(shown()).toBe(own);
+  fireEvent.focus(screen.getByRole('button', { name: 'Equip Fireball' }));
+  expect(shown()).toBe('/assets/card-faces/v9/mage-fireball.webp');
+ });
+
  it('keeps starting cards in their slots and reveals complete dice rules on focus', () => {
   const def = p.characters.find(c => c.classId === 'mage')!;
   const r = render(<CharacterSheet hero={startingHero(def.id)} inspect={() => {}} preview />);
