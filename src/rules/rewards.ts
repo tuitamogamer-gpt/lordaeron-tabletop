@@ -3,7 +3,8 @@ import { retainedFigures } from './world.js';
 import type { ContentPack, Faction, Quest, State, Tier } from './model.js';
 export { awardXP, shares, startRewards as rewards, advanceRewards as nextItem } from './reward-engine.js';
 /** Check ALL quest figures before spawning anything. Blue shortages are simply skipped. */
-export function spawnQuest(p: ContentPack, s: State, q: Quest): boolean {
+/** A quest enters play only while the box still holds every green and red figure it needs. */
+export function questFits(p: ContentPack, s: State, q: Quest): boolean {
  const needed = new Map<string, number>();
  for (const spawn of q.spawns.filter(a => a.color !== 'blue')) { const k = `${spawn.creature}:${spawn.color}`; needed.set(k, (needed.get(k) ?? 0) + spawn.count); }
  for (const [key, n] of needed) {
@@ -11,6 +12,10 @@ export function spawnQuest(p: ContentPack, s: State, q: Quest): boolean {
   assert(c, "This quest uses an unknown creature.");
   if (s.enemies.filter(e => e.creature === type && e.color === color).length + n > c.stock[color as 'green' | 'red']) return false;
  }
+ return true;
+}
+export function spawnQuest(p: ContentPack, s: State, q: Quest): boolean {
+ if (!questFits(p, s, q)) return false;
  for (const spawn of q.spawns) {
   const c = p.creatures.find(c => c.id === spawn.creature)!;
   const available = c.stock[spawn.color] - retainedFigures(s,spawn.creature,spawn.color) - s.enemies.filter(e => e.creature === spawn.creature && e.color === spawn.color).length;

@@ -66,7 +66,8 @@ export function loadouts(p:ContentPack,h:Hero):Loadout[]{
   }
   beam=expanded.sort((a,b)=>(b.score-b.cost*.12)-(a.score-a.cost*.12)).slice(0,36);
  }
- const candidates:Loadout[]=[{type:'manage',hero:h.id,slots:structuredClone(h.slots),discard:[]}];
+ const candidates:Loadout[]=[],current:Loadout={type:'manage',hero:h.id,slots:structuredClone(h.slots),discard:[]};
+ try{manage(p,{merchant:[]},structuredClone(h),current.slots,current.discard);candidates.push(current);}catch{/* An overfull bag or a lost talent can make the unchanged sheet illegal. */}
  for(const b of beam){
   const bag=owned.filter(id=>card(p,id).kind==='item'&&!b.ids.includes(id)),discard=bag.filter(id=>!card(p,id).bagExempt).sort((a,b)=>cardValue(p,a,h)-cardValue(p,b,h)).slice(0,Math.max(0,bagSize(p,bag)-3));
   const c:Loadout={type:'manage',hero:h.id,slots:b.slots,discard};

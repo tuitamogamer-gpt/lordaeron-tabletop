@@ -1,12 +1,12 @@
 import { assert, card, faction, hero, integer, note, other, random, shuffle } from './common.js';
 import { beginBattle } from './combat.js';
-import { drawQuest, finalAttacker, rewards, stronger } from './rewards.js';
+import { drawQuest, finalAttacker, questFits, rewards, stronger } from './rewards.js';
 import { activeEvent, nefarianDestinations } from './world.js';
 import { resolveEvent } from './event-choices.js';
 import type { ContentPack, Faction, State, WorldEvent } from './model.js';
 export { eventChoice } from './event-choices.js';
 export { battleEvents, purify } from './event-rewards.js';
-export function finishEvent(s:State){delete s.eventFlow;s.eventSeen=[];s.faction=other(s.faction);s.phase='actions';s.tradeWindow=false;note(s,`${s.faction} begins faction turn ${s.turn}.`);}
+export function finishEvent(s:State){delete s.eventFlow;s.eventSeen=[];s.faction=other(s.faction);s.phase='actions';s.tradeWindow=false;note(s,`The ${s.faction==='horde'?'Horde':'Alliance'} begins faction turn ${s.turn}.`);}
 export const removeWorld=(s:State,id:string)=>{s.world=s.world?.filter(e=>e.id!==id);};
 export function addWorld(s:State,id:string):WorldEvent{
  const e:WorldEvent={id,tokens:[],attempts:[],gold:0,items:[],trophies:{horde:[],alliance:[]}};(s.world??=[]).push(e);return e;
@@ -63,15 +63,16 @@ export function replacement(p:ContentPack,s:State,tier:'green'|'yellow'|'red'){
  assert(drawQuest(p,s,s.reward.replacementFaction??s.reward.faction,tier),"A quest cannot currently be placed from this deck.");s.reward.replacement=false;
  if(s.reward.resolution){s.reward.resolution.status='complete';s.reward.resolution.receipts.push({kind:'quest',card:s.quests.at(-1),text:`A new ${tier} quest enters play.`});}
 }
-/** Long Overlord campaigns can exhaust all replacement decks. No cards are recycled. */
-export function skipReplacement(s:State){
+/** Long Overlord campaigns can exhaust all replacement decks, or leave only quests whose figures are already on the map. No cards are recycled. */
+export function skipReplacement(p:ContentPack,s:State){
  const reward=s.reward;
  assert(s.phase==='reward'&&reward?.replacement,"No quest to replace.");
  assert(!reward.offered.length&&!reward.items.length&&!reward.special.length&&!reward.extraItems?.length&&!reward.relic,"Distribute rewards first.");
  const decks=s.questDecks[reward.replacementFaction??reward.faction];
- assert((['green','yellow','red'] as const).every(tier=>!decks[tier].length),"A replacement quest deck is still available.");
+ const placeable=(['green','yellow','red'] as const).some(tier=>decks[tier].some(id=>questFits(p,s,p.quests.find(q=>q.id===id)!)));
+ assert(!placeable,"A replacement quest deck is still available.");
  reward.replacement=false;
- const text='No replacement quests remain for this faction. The campaign continues without drawing a quest.';
+ const text=(['green','yellow','red'] as const).some(tier=>decks[tier].length)?'No remaining quest of this faction can be placed: its figures are already on the map. The campaign continues without drawing a quest.':'No replacement quests remain for this faction. The campaign continues without drawing a quest.';
  if(reward.resolution){reward.resolution.status='complete';reward.resolution.receipts.push({kind:'skip',text});}
  note(s,text);
 }

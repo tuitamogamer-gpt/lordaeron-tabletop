@@ -1,7 +1,7 @@
 import { assert, capacity, card, character, faction, hero, note, other, random, region, shuffle, unique } from './common.js';
 import { effects } from './effects.js';
 import { addWorld, drawEvents, finishEvent, removeWorld, startNefarian, teamLeader } from './events.js';
-import { receiveItem, rest } from './inventory.js';
+import { fitsSlot, heroSlots, petCapacity, receiveItem, rest, unequip } from './inventory.js';
 import { drawQuest, finalAttacker, stronger } from './rewards.js';
 import { activeEvent, distances, nefarianDestinations, plagued, worldEvent } from './world.js';
 import type { ContentPack, EventCard, EventChoiceArgs, EventStep, State } from './model.js';
@@ -56,7 +56,11 @@ export function eventChoice(p:ContentPack,s:State,id:string,c:EventChoiceArgs){
    const old=[...h.talents],limits=old.map(id=>card(p,id).level).sort(),next=c.talents.map(id=>card(p,id)).sort((a,b)=>a.level-b.level);
    assert(next.every((v,i)=>v.kind==='talent'&&v.classId===character(p,h.id).classId&&v.level<=limits[i]),"The new talent must be the same level or lower.");
    h.talents=old.filter(id=>c.talents!.includes(id));const cap=capacity(p,h);h.health=Math.min(h.health,cap.health);h.energy=Math.min(h.energy,cap.energy);h.talents=[...c.talents];
-   for(const id of h.talents.filter(id=>!old.includes(id)))for(const a of card(p,id).abilities.filter(a=>a.timing==='learn'))effects(p,s,h,id,a.effects,{});break;
+   for(const id of h.talents.filter(id=>!old.includes(id)))for(const a of card(p,id).abilities.filter(a=>a.timing==='learn'))effects(p,s,h,id,a.effects,{});
+   // A replaced talent may have been what let a card sit in its slot or what raised a pet's health.
+   const areas=heroSlots(p,h);h.slots.forEach((slot,i)=>{if(slot.card&&!fitsSlot(p,h,card(p,slot.card),areas[i]))unequip(p,h,slot.card);});
+   for(const id of Object.keys(h.pets))h.pets[id]=Math.min(h.pets[id],petCapacity(p,h,id));
+   break;
   }
   case 'horizons':{
    const q=p.quests.find(q=>q.id===c.quest);assert(q&&s.quests.includes(q.id)&&q.faction===step.faction&&c.tier,"Choose your quest and a new deck.");

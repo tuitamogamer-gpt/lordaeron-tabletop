@@ -32,8 +32,8 @@ export function rollPool(s: State) {
  b.stage = 'after-pool';
 }
 export function monsterEffect(p: ContentPack, s: State, selected: string[] = []) {
- const b = s.battle!, a = b.active!, h = hero(s, a.heroId);
- assert(b.stage === 'after-reroll', "The creature effect does not resolve now.");
+ const b = s.battle!; assert(b.stage === 'after-reroll' && b.active, "The creature effect does not resolve now.");
+ const a = b.active, h = hero(s, a.heroId);
  const rule = immune(p,h,creatureRule(p,s))?'none':creatureRule(p, s), dice = a.dice.filter(d => !d.removed);
  const low = dice.filter(d => d.value <= 2 && d.color !== 'green');
  const ones = dice.filter(d => d.value === 1 && d.color !== 'green');
@@ -59,8 +59,8 @@ export function monsterEffect(p: ContentPack, s: State, selected: string[] = [])
  b.stage = 'tokens';
 }
 export function placeTokens(p: ContentPack, s: State, toAttrition: number[] = []) {
- const b = s.battle!, a = b.active!, h = hero(s, a.heroId), box = b.boxes[faction(p, h.id)], rule = immune(p,h,creatureRule(p,s))?'none':creatureRule(p, s);
- assert(b.stage === 'tokens', "Hits cannot be assigned in this phase.");
+ const b = s.battle!; assert(b.stage === 'tokens' && b.active, "Hits cannot be assigned in this phase.");
+ const a = b.active, h = hero(s, a.heroId), box = b.boxes[faction(p, h.id)], rule = immune(p,h,creatureRule(p,s))?'none':creatureRule(p, s);
  if (!b.defeated.includes(h.id)) {
   const hits = a.dice.filter(d => !d.removed && d.value >= a.threat);
   const nefarian = p.overlords.find(o => o.id === b.boss)?.combat === 'nefarian';
@@ -90,7 +90,7 @@ export function finishAttack(p:ContentPack,s:State){
  if(a.flags?.['ice-barrier']&&!drake){box.armor+=placed.damage;placed.armor+=placed.damage;}
  if(a.flags?.revenge&&!['spider','wraith'].includes(creatureRule(p,s)))box.attrition+=placed.armor;
  if(a.flags?.adrenaline)h.energy=Math.max(h.energy,Math.min(capacity(p,h).energy,h.energy+Math.floor(placed.damage/2)));
- if(b.boss==='kazzak'){const low=a.dice.filter(d=>!d.removed&&d.color!=='green'&&d.value<=2).length;box.attrition=Math.max(0,box.attrition-low);healthLoss(s,h,low);}
+ if(b.boss==='kazzak'&&!b.defeated.includes(h.id)){const low=a.dice.filter(d=>!d.removed&&d.color!=='green'&&d.value>=1&&d.value<=2).length;box.attrition=Math.max(0,box.attrition-low);healthLoss(s,h,low);}
  if(a.flags?.execute)b.report.push(`execute:${faction(p,h.id)}`);
  b.acted.push(h.id); b.nextFaction = b.kind === 'pve' ? b.first : other(faction(p, h.id)); delete b.active;
  b.stage = living(s, b).some(id => !b.acted.includes(id)) ? 'attacker' : 'defense';
@@ -182,8 +182,9 @@ export function enforceDicePenalties(s: State) {
  if (h.stun || h.curse) b.stage = 'penalty'; else rollPool(s);
 }
 export function removePenalty(s: State, ids: number[]) {
- const b = s.battle!, a = b.active!, h = hero(s, a.heroId), dice = a.dice.filter(d => !d.removed);
- assert(b.stage === 'penalty' && ids.length === Math.min(dice.length, h.stun * 2 + h.curse) && new Set(ids).size === ids.length, "Choose dice for Stun and Curse.");
+ const b = s.battle!; assert(b.stage === 'penalty' && b.active, "Choose dice for Stun and Curse.");
+ const a = b.active, h = hero(s, a.heroId), dice = a.dice.filter(d => !d.removed);
+ assert(ids.length === Math.min(dice.length, h.stun * 2 + h.curse) && new Set(ids).size === ids.length, "Choose dice for Stun and Curse.");
  for (const id of ids) { const d = dice.find(d => d.id === id); assert(d, "This die is unavailable."); d.removed = true; a.removed[d.color]++; }
  rollPool(s);
 }

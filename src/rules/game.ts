@@ -216,7 +216,7 @@ export function apply(p: ContentPack, state: State, command: Command): State {
    claimReward(p, s, c.hero, c.card, c.discard); finishRewards(p, s); break;
   }
   case 'quest': assert(s.phase === 'reward' && s.reward && !s.reward.offered.length, "Distribute rewards first."); replacement(p, s, c.tier); finishRewards(p, s); break;
-  case 'skip-quest': skipReplacement(s); finishRewards(p,s); break;
+  case 'skip-quest': skipReplacement(p,s); finishRewards(p,s); break;
   case 'bid': assert(s.phase === 'event', "No auction is active."); bid(p, s, c.hero, c.amount); break;
   default: assert(false, "Unknown command.");
  }
