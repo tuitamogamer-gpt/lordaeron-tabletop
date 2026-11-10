@@ -185,6 +185,47 @@ describe('event effects and exceptional decisions', () => {
   expect(next.world).toEqual([]); expect(() => apply(p, next, { type: 'closeBattle' })).toThrow();
  });
 
+ it('Bounty pays each faction that defeated the marked enemy when both fall in one battle', () => {
+  const s = fresh(4), horde = s.heroes.filter(h => faction(p, h.id) === 'horde').map(h => h.id), alliance = s.heroes.filter(h => faction(p, h.id) === 'alliance').map(h => h.id);
+  addWorld(s, 'event-36').tokens = [horde[0], alliance[0]];
+  beginBattle(s, 'pvp', [horde[0], alliance[0]], [], 'horde', 'andorhal');
+  s.battle!.stage = 'over'; s.battle!.winner = 'draw'; s.battle!.defeated = [horde[0], alliance[0]];
+  const next = apply(p, s, { type: 'closeBattle' });
+  // Printed card: "If a faction can defeat the enemy character on this card, every character of that faction gains 3 XP."
+  for (const id of [...horde, ...alliance]) expect(hero(next, id).xp).toBe(3);
+  expect(next.world).toEqual([]);
+ });
+
+ it('Bounty is not paid when a creature defeats the marked character', () => {
+  const s = fresh(4), horde = s.heroes.filter(h => faction(p, h.id) === 'horde').map(h => h.id), target = s.heroes.find(h => faction(p, h.id) === 'alliance')!.id;
+  addWorld(s, 'event-36').tokens = [horde[0], target];
+  s.enemies = [{ id: 'audit-enemy', creature: 'murloc', color: 'blue', region: 'andorhal' }];
+  beginBattle(s, 'pve', [target], ['audit-enemy'], 'alliance', 'andorhal');
+  s.battle!.stage = 'over'; s.battle!.winner = 'horde'; s.battle!.defeated = [target];
+  const next = apply(p, s, { type: 'closeBattle' });
+  // Printed card: the card is discarded "after one of the two characters on this card have been defeated in PvP combat".
+  for (const id of horde) expect(hero(next, id).xp).toBe(0);
+  expect(next.world?.some(w => w.id === 'event-36')).toBe(true);
+ });
+
+ it('Foul Plaguewinds charges 1 energy before a Travel action that starts in the Plaguelands, and only there', () => {
+  const s = fresh(4), h = s.heroes[0];
+  s.enemies.push({ id: 'audit-blue', creature: 'murloc', color: 'blue', region: 'andorhal' }); addWorld(s, 'event-39');
+  const inside = p.regions.find(r => plagued(p, r.id) && r.neighbors.some(n => !plagued(p, n) && !p.regions.find(v => v.id === n)!.home))!;
+  const outside = inside.neighbors.find(n => !plagued(p, n) && !p.regions.find(v => v.id === n)!.home)!;
+  s.enemies = s.enemies.filter(e => e.color !== 'blue' || e.id === 'audit-blue');
+  // Printed card: "If a character is in any region in the Eastern or Western Plaguelands, he must spend 1 Energy before taking a Travel Action."
+  h.location = inside.id; h.energy = 1;
+  const left = apply(p, s, { type: 'travel', hero: h.id, path: [outside] });
+  expect(hero(left, h.id).energy).toBe(0);
+  h.energy = 0;
+  expect(() => apply(p, s, { type: 'travel', hero: h.id, path: [outside] })).toThrow();
+  // Entering the Plaguelands from outside is free.
+  h.location = outside; h.energy = 1;
+  const entered = apply(p, s, { type: 'travel', hero: h.id, path: [inside.id] });
+  expect(hero(entered, h.id).energy).toBe(1);
+ });
+
  it.each(['event-10', 'event-35'])('%s rounds down normally and up only with Spread the Plague', event => {
   for (const plague of [false, true]) {
    const s = fresh(), h = s.heroes[0]; h.location = s.overlord.region; h.health = 5; h.energy = 5;

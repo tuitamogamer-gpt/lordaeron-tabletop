@@ -28,7 +28,8 @@ export function battleEvents(p:ContentPack,s:State){
   }
  }else if(b.kind==='pvp'){
   for(const event of [...s.world??[]])if(p.events.find(e=>e.id===event.id)?.script==='bounty'){
-   const defeated=b.defeated.find(id=>event.tokens.includes(id));if(defeated){for(const h of s.heroes.filter(h=>faction(p,h.id)!==faction(p,defeated)))awardXP(p,h,3);removeWorld(s,event.id);}
+   // Printed card: a faction that defeats the enemy character on the card gains the XP at the end of that combat. Both marked characters can fall in one battle.
+   const defeated=b.defeated.filter(id=>event.tokens.includes(id));for(const id of defeated)for(const h of s.heroes.filter(h=>faction(p,h.id)!==faction(p,id)))awardXP(p,h,3);if(defeated.length)removeWorld(s,event.id);
   }
   const hatreds=activeEvent(p,s,'hatreds');if(hatreds&&b.winner&&b.winner!=='draw'){
    const strong=stronger(p,s).includes(b.winner);for(const id of b.participants.filter(id=>faction(p,id)===b.winner)){hero(s,id).gold+=strong?8:4;awardXP(p,hero(s,id),strong?1:2);}removeWorld(s,hatreds.id);
