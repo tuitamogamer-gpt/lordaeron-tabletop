@@ -78,7 +78,7 @@ export function loadouts(p:ContentPack,h:Hero):Loadout[]{
   const next={...c,reEquip:[id]};try{manage(p,{merchant:[]},structuredClone(h),next.slots,next.discard,next.reEquip);candidates.push(next);}catch{/* Refresh also pays energy. */}
  }
  const unique=new Map(candidates.map(c=>[JSON.stringify(c),c]));
- return [...unique.values()].sort((a,b)=>scoreLoadout(p,h,b)-scoreLoadout(p,h,a)).slice(0,6);
+ return [...unique.values()].map(c=>({c,score:scoreLoadout(p,h,c)})).sort((a,b)=>b.score-a.score).slice(0,6).map(v=>v.c);
 }
 export function scoreLoadout(p:ContentPack,h:Hero,c:Loadout):number {
  const next=structuredClone(h);manage(p,{merchant:[]},next,c.slots,c.discard,c.reEquip);

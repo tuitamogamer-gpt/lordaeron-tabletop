@@ -133,7 +133,7 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
    }
    case 'reward': score=itemGain(h!,command.card,command.discard);reason="Assigning the reward by its improvement to each hero’s complete equipment.";break;
    case 'talent': score = itemValue(p, command.card,h!); reason = "Choosing a talent that supports learned powers and equipment."; break;
-   case 'quest': { const level = s.heroes.filter(h => faction(p, h.id) === s.reward?.faction).reduce((n,h) => n + h.level,0) / (s.heroes.length/2); score = 5 - Math.abs((command.tier === 'green' ? 2 : command.tier === 'yellow' ? 3 : 4) - level) * 3; reason = "Choosing quest difficulty for the faction’s level."; break; }
+   case 'quest': { const side = s.reward?.replacementFaction ?? s.reward?.faction; const level = s.heroes.filter(h => faction(p, h.id) === side).reduce((n,h) => n + h.level,0) / (s.heroes.length/2); score = 5 - Math.abs((command.tier === 'green' ? 2 : command.tier === 'yellow' ? 3 : 4) - level) * 3; reason = "Choosing quest difficulty for the faction’s level."; break; }
    case 'skip-quest': score=5;reason='No replacement quest can be placed; continuing the campaign.';break;
    case 'bid': {
     const value=s.auction?cardValue(p,s.auction.item,h!):0;
@@ -224,7 +224,10 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
  }
  scored.sort((a,b)=>b.score-a.score||(JSON.stringify(a.command)<JSON.stringify(b.command)?-1:JSON.stringify(a.command)>JSON.stringify(b.command)?1:0));
  if (!scored.length) return undefined;
- const best = scored[0]; return { command: best.command, score: Math.round(best.score * 100) / 100, reason: best.reason, alternatives: legal.length,
+ const best = scored[0];
+ // A bot left with nothing but pointless trades waits for its human ally; taking one would bounce the item back and forth forever.
+ if (best.command.type === 'trade' && best.score <= -1000) return undefined;
+ return { command: best.command, score: Math.round(best.score * 100) / 100, reason: best.reason, alternatives: legal.length,
   considered:scored.slice(0,3).map(({command,score,reason})=>({command,score:Math.round(score*100)/100,reason})) };
 }
 function bagSizeValue(p: ContentPack, h: Hero) { return h.bag.filter(id => !card(p, id).bagExempt).length; }

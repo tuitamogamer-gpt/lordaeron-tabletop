@@ -7,7 +7,10 @@ import { manage } from '../src/rules/inventory';
 import { legalActions } from '../src/rules/legal';
 import { startRewards } from '../src/rules/reward-engine';
 import { spawnQuest } from '../src/rules/rewards';
-import { loadouts } from '../src/ai/loadout';
+import { loadouts, scoreLoadout } from '../src/ai/loadout';
+import { decide } from '../src/ai/planner';
+import { faction } from '../src/rules/common';
+import { view } from '../src/rules/view';
 import type { Command, State } from '../src/rules/model';
 
 const roster = ['grumbaz-crowsblood', 'sofeea-icecall', 'brandon-lightstone', 'artumnis-moondream'];
@@ -140,3 +143,39 @@ describe('engine audit, November 2026', () => {
   expect(s.log.at(-1)?.text).toBe('The Alliance begins faction turn 2.');
  });
 });
+
+describe('AI audit, November 2026', () => {
+ it('declines a pointless trade when it is the only move a bot owns', () => {
+  const s = createGame(p, DEFAULT_SETUP), [giver, ally] = s.heroes.filter(h => faction(p, h.id) === 'horde');
+  // A level-5 item neither level-1 hero can equip: handing it over improves nothing.
+  const item = p.cards.find(c => c.kind === 'item' && c.level === 5 && !c.addon)!.id;
+  giver.bag = [item]; ally.location = giver.location; s.tradeWindow = true;
+  const trade: Command = { type: 'trade', hero: giver.id, to: ally.id, items: [item], receiveItems: [], gold: 0, receiveGold: 0 };
+  expect(() => apply(p, s, trade)).not.toThrow();
+  expect(decide(p, view(s, s.heroes.map(h => h.id)), [trade])).toBeUndefined();
+  // With a real alternative the bot still acts.
+  expect(decide(p, view(s, s.heroes.map(h => h.id)), [trade, { type: 'endActions' }])?.command).toEqual({ type: 'endActions' });
+ });
+
+ it('rates the replacement quest for the faction that draws it', () => {
+  const pick = (horde: number, alliance: number) => {
+   const s = createGame(p, DEFAULT_SETUP);
+   for (const h of s.heroes) { h.level = faction(p, h.id) === 'horde' ? horde : alliance; h.xp = p.xp[h.level - 1]; }
+   s.phase = 'reward';
+   // Subterfuge: the Horde completed an Alliance quest, so the Alliance draws the replacement.
+   s.reward = { faction: 'horde', replacementFaction: 'alliance', eligible: s.heroes.filter(h => faction(p, h.id) === 'horde').map(h => h.id), items: [], special: [], offered: [], replacement: true };
+   return decide(p, view(s, s.heroes.map(h => h.id)), [{ type: 'quest', tier: 'green' }, { type: 'quest', tier: 'yellow' }, { type: 'quest', tier: 'red' }])!.command;
+  };
+  expect(pick(2, 4)).toEqual({ type: 'quest', tier: 'red' });
+  expect(pick(4, 2)).toEqual({ type: 'quest', tier: 'green' });
+ });
+
+ it('returns loadouts best first', () => {
+  const s = createGame(p, { seed: 11, roster, overlord: 'nefarian' }), h = s.heroes[0];
+  h.level = 3; h.bag = s.itemDecks.triangle.splice(0, 3); h.learned = p.cards.filter(c => c.kind === 'power' && c.classId === 'warrior' && !c.printed && c.level <= 3).map(c => c.id).slice(0, 4);
+  const scores = loadouts(p, h).map(c => scoreLoadout(p, h, c));
+  expect(scores.length).toBeGreaterThan(1);
+  expect(scores).toEqual([...scores].sort((a, b) => b - a));
+ });
+});
+
