@@ -4,7 +4,9 @@ Desktop adaptacija osnovne igre iz 2005. i službenog FAQ-a 1.4. React interfejs
 
 [Otvori igru](https://lordaeron-tabletop.vercel.app)
 
-Najnoviji prolaz mijenja izgled borbe da liči na originalnu igru. Polje borbe je sada „COMBAT AREA” s table: tri preklopljena kruga, **Damage**, **Defense** i **Attrition**, s pravim hit i armor žetonima u njima, oznakama boje kocki i tačnim brojem; na računaru stoji pored kocki. Prelazak mišem preko protivnika pokazuje njegove vrijednosti (prag, napad, zdravlje), boju figure i pravila, a za Overlorda i njegova pravila borbe. Sposobnosti su kompaktni redovi umjesto velikih karata; klik otvara opcije i dugme **Use**. Mehanika borbe nije mijenjana. Detalji: [COMBAT-TABLE-2026-11-10.md](docs/COMBAT-TABLE-2026-11-10.md).
+Najnoviji prolaz je igranje kroz cijelu igru i provjera enginea prema zvaničnom pravilniku. Tri pravila su ispravljena: Kel’Thuzadov limit Attritiona broji svaku crvenu ili plavu kockicu sa 6+ i ne troši je, lik koji padne van poteza svoje frakcije ne gubi akcije sljedećeg poteza, a lik kojem događaj uzme zadnje zdravlje može još popiti napitak. Vrijede za nove kampanje; započete zadržavaju pravila s kojima su igrane, da se sačuvana partija i dalje učita. Žetoni na mapi sada stoje unutar granica svoje regije (ranije je oko 11 od 37 bilo izvan nje), putovanje vraća na sto, a Chronicle piše imena likova i regija umjesto internih oznaka. Detalji i šta je provjereno bez izmjene: [PLAYTHROUGH-2026-11-11.md](docs/PLAYTHROUGH-2026-11-11.md).
+
+Prethodni prolaz mijenja izgled borbe da liči na originalnu igru. Polje borbe je sada „COMBAT AREA” s table: tri preklopljena kruga, **Damage**, **Defense** i **Attrition**, s pravim hit i armor žetonima u njima, oznakama boje kocki i tačnim brojem; na računaru stoji pored kocki. Prelazak mišem preko protivnika pokazuje njegove vrijednosti (prag, napad, zdravlje), boju figure i pravila, a za Overlorda i njegova pravila borbe. Sposobnosti su kompaktni redovi umjesto velikih karata; klik otvara opcije i dugme **Use**. Mehanika borbe nije mijenjana. Detalji: [COMBAT-TABLE-2026-11-10.md](docs/COMBAT-TABLE-2026-11-10.md).
 
 Prethodni prolaz popravlja opremanje i dodaje zvuk. U prozoru **Character management** vidjela su se samo mjesta 1–4, pa su oružje (05 Melee), mjesto 06 i oklop (07 Armor) izgledali kao da ne postoje; sada je svih 7 mjesta u mreži 4 × 2 na svakoj veličini ekrana, a karta pod mišem prikazuje se dovoljno velika da se tekst čita. Oprema se mijenja kada svi likovi frakcije potroše obje akcije: **Manage equipment → Equip <lik> → mjesto → karta → Confirm equipment**. Klasne karte, predmeti i početne karte (386 lica) imaju isti odštampani crni rub umjesto tri različita izreza skenova. Muzika (mapa i borba), šest zvučnih efekata i 16 glasovnih linija napravljeni su s Fish Audio; zvučnik u zaglavlju ih isključuje, a **Settings › Sound** podešava glasnoću i glasove. Mjerenje AI-ja protiv Nefariana nije pokazalo brži razvoj heroja, pa AI nije mijenjan. Detalji: [EQUIPMENT-AND-SOUND-2026-11-10.md](docs/EQUIPMENT-AND-SOUND-2026-11-10.md).
 
@@ -94,7 +96,7 @@ Prečice: **1–5** akcije, **F** interakcija s mapom, **Esc** povratak. Unutar 
 
 ## Provjera i granice
 
-Aktuelni prolaz ima **1.122 testa** ([COMBAT-TABLE-2026-11-10.md](docs/COMBAT-TABLE-2026-11-10.md)); dizajnerski prolaz imao je 1.108 testova, build, render 621 komponente i dizajnerski audit 39 ekrana na tri veličine: [DESIGN-PASS-2026-10-22.md](docs/DESIGN-PASS-2026-10-22.md). AI prolaz dodaje sedam završenih AI kampanja protiv sva tri Overlorda i nezavisni replay audit dvije od njih: [AI-OVERLORD-2026-10-22.md](docs/AI-OVERLORD-2026-10-22.md). Prethodni prolaz dodaje render 621 komponente, izvoz mape i nastavak dvije zaglavljene kampanje: [RELIABILITY-2026-10-20.md](docs/RELIABILITY-2026-10-20.md).
+Aktuelni prolaz ima **1.145 testova** ([PLAYTHROUGH-2026-11-11.md](docs/PLAYTHROUGH-2026-11-11.md)); dizajnerski prolaz imao je 1.108 testova, build, render 621 komponente i dizajnerski audit 39 ekrana na tri veličine: [DESIGN-PASS-2026-10-22.md](docs/DESIGN-PASS-2026-10-22.md). AI prolaz dodaje sedam završenih AI kampanja protiv sva tri Overlorda i nezavisni replay audit dvije od njih: [AI-OVERLORD-2026-10-22.md](docs/AI-OVERLORD-2026-10-22.md). Prethodni prolaz dodaje render 621 komponente, izvoz mape i nastavak dvije zaglavljene kampanje: [RELIABILITY-2026-10-20.md](docs/RELIABILITY-2026-10-20.md).
 
 Raniji audit enginea popravlja Vanish bonuse, duplirane figure pri recikliranju questova i ponovno zatvaranje borbe. Tadašnjih 838 testova, build, render i tri AI partije s 4.312 naredbi i identičnim replayom: [ENGINE-SCRIPT-AUDIT.md](docs/ENGINE-SCRIPT-AUDIT.md). Prethodna provjera svih event karata, klasnih moći, talenata i smjene Horda → Alijansa kroz svih 30 poteza: [CARD-EVENT-TURN-AUDIT.md](docs/CARD-EVENT-TURN-AUDIT.md).
 
@@ -115,6 +117,7 @@ Granice mape ručno su precrtane iz dvije fotografije originala, uz dijagrame iz
 - [Pravi skenovi karata, žetona i listova](docs/SCANS-2026-11-05.md)
 - [Oprema, rub karata, zvuk i muzika](docs/EQUIPMENT-AND-SOUND-2026-11-10.md)
 - [Borba kao na stolu: polje borbe, protivnik, sposobnosti](docs/COMBAT-TABLE-2026-11-10.md)
+- [Prolaz kroz igru i provjera pravila prema pravilniku](docs/PLAYTHROUGH-2026-11-11.md)
 
 ## Autorska prava
 
