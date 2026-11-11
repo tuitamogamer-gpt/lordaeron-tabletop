@@ -12,9 +12,12 @@ import { factionView, publicState } from './public-state.js';
 export interface Objective {
  id: string; region: string; label: string; enemies: Enemy[]; boss?: string;
  reward?: Reward; quest?: string; clue?: boolean; pvp?: string[];
+ /** A place to hold in a War: this character stands in `region`, `partner` in `other`. Nothing is fought for it. */
+ war?: { partner: string; other: string };
 }
 export interface Forecast { win: number; wounds: number; rounds: number; damage: number; health: number; }
 export interface Plan { objective: Objective; party: string[]; score: number; travelActions: number; forecast: Forecast; }
+interface WarPost { id: string; label: string; value: number; wait: number; cost: number; holders: { hero: string; region: string; travel: number }[] }
 const sum = (n: number[]) => n.reduce((a, b) => a + b, 0);
 
 /** Public map path cost includes flights, enemy homes and costly blue roadblocks. */
@@ -342,6 +345,34 @@ export function createStrategy(p: ContentPack, s: GameView, risk: number, indepe
   const final = lastStand(o, party), win = final ? Math.max(f.win, PEAK_FLOOR / Math.max(1, risk)) : f.win;
   return win * rewardValue(o, party) - (1 - win) * (18 + party.length * 5) * risk * (final ? .3 : 1) - Math.min(f.wounds, final ? 30 : Infinity) * .32 * risk - party.length * .8;
  };
+ const assignments = new Map<Faction, WarPost[]>();
+ /** The War the side goes for: the two characters who reach its regions soonest, and what holding them is worth. */
+ const posts = (side: Faction): WarPost[] => {
+  if (assignments.has(side)) return assignments.get(side)!;
+  const team = s.heroes.filter(a => faction(p, a.id) === side && a.health > 0), result: WarPost[] = [];
+  const total = (f: Faction) => sum(s.heroes.filter(a => faction(p, a.id) === f).map(a => a.xp)), lead = total(side) - total(side === 'horde' ? 'alliance' : 'horde');
+  for (const war of s.wars ?? []) {
+   const r = lead >= 0 ? war.reward : war.weakReward ?? war.reward, each = war.perHero ? 1 : 1 / Math.max(1, team.length);
+   const xp = sum(team.map(a => a.level === 5 ? 0 : r.xp * each)), levelUp = team.some(a => a.level < 5 && a.xp + r.xp * each >= p.xp[a.level]) ? 3 : 0;
+   const value = (5 + xp * 2.8 + r.gold * each * team.length * .45 + levelUp) * (peak(team) ? PEAK_QUESTS : 1) - 1.6;
+   let chosen: WarPost | undefined;
+   for (const a of team) for (const b of team) {
+    if (a.id === b.id) continue;
+    // A character these bots do not steer holds a region only if he already stands in it.
+    if (independent.includes(a.id) && a.location !== war.regions[0] || independent.includes(b.id) && b.location !== war.regions[1]) continue;
+    const ta = Math.ceil(distance(a.location, war.regions[0], side) / 2), tb = Math.ceil(distance(b.location, war.regions[1], side) / 2);
+    if (ta > 6 || tb > 6) continue;
+    const wait = Math.max(0, ta - a.actions, tb - b.actions), cost = wait * 100 + ta + tb;
+    if (!chosen || cost < chosen.cost) chosen = { id: war.id, label: p.events.find(e => e.id === war.id)?.name ?? 'the War', value, wait, cost, holders: [{ hero: a.id, region: war.regions[0], travel: ta }, { hero: b.id, region: war.regions[1], travel: tb }] };
+   }
+   if (chosen) result.push(chosen);
+  }
+  // Three characters can hold one War at a time: the side goes for the one that pays best for the walk, so that nobody waits in a
+  // region for a partner who has gone to another War.
+  const worth = (v: WarPost) => (v.value - v.wait * .9) / (1 + sum(v.holders.map(h => h.travel)) * .65);
+  const best = result.sort((a, b) => worth(b) - worth(a) || a.id.localeCompare(b.id)).slice(0, 1);
+  assignments.set(side, best); return best;
+ };
  const plan = (h: Hero): Plan | undefined => {
   const key = JSON.stringify([h.id, h.location, h.health, h.energy, h.actions]);
   if (plans.has(key)) return plans.get(key);
@@ -364,6 +395,14 @@ export function createStrategy(p: ContentPack, s: GameView, risk: number, indepe
     const score = (value(o, party, f) - wait * .9) / (1 + sum(travels) * .65) - Math.max(0, d - 8) * .2;
     if (!best || score > best.score) best = { objective: o, party: party.map(h => h.id), score, travelActions: Math.ceil(d / 2), forecast: f };
    }
+  }
+  // A War asks for no fight: two characters standing in its two regions when the enemy's turn ends win its reward for every
+  // character of the faction. Each War has one pair told off for it, so that both walk to the same War and to different regions.
+  for (const post of posts(side)) {
+   const mine = post.holders.find(v => v.hero === h.id);
+   if (!mine) continue;
+   const other = post.holders.find(v => v.hero !== h.id)!, score = (post.value - post.wait * .9) / (1 + (mine.travel + other.travel) * .65);
+   if (!best || score > best.score) best = { objective: { id: post.id, region: mine.region, label: post.label, enemies: [], war: { partner: other.hero, other: other.region } }, party: [h.id, other.hero], score, travelActions: mine.travel, forecast: { win: 1, wounds: 0, rounds: 0, damage: 0, health: 0 } };
   }
   plans.set(key, best); return best;
  };

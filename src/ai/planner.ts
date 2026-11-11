@@ -11,7 +11,7 @@ import { createStrategy, nefarianSteps, type Objective } from './strategy.js';
 import { abilityScore, healthValue, tacticalScore } from './tactics.js';
 export type Difficulty = 'cautious' | 'balanced' | 'aggressive';
 /** An objective in the words of the table: a quest by its name, a creature or a boss as it is called. */
-const named=(o:Objective)=>o.clue?'a clue to Kazzak':o.boss?o.label:o.quest?`the quest “${o.label}”`:`the ${o.label}`;
+const named=(o:Objective)=>o.war?o.label:o.clue?'a clue to Kazzak':o.boss?o.label:o.quest?`the quest “${o.label}”`:`the ${o.label}`;
 export interface Decision { command: Command; score: number; reason: string; alternatives: number; considered: { command: Command; score: number; reason: string }[]; }
 const equipmentCaches=new WeakMap<ContentPack,Map<string,number>>();
 /** Pure policy module: receives public information + legal moves, never the hidden server State. */
@@ -97,12 +97,12 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
     const plan=strategy.plan(h!);
     // Close to the Overlord, a worn member of a faction at its peak rests before anything else.
     if(plan&&plan.objective.boss===s.overlord.id&&worn(h!)&&strategy.lastStand(plan.objective,plan.party.map(id=>s.heroes.find(v=>v.id===id)!))&&strategy.distance(h!.location,plan.objective.region,f)<=2)score+=7;
-    if(plan&&!plan.objective.clue&&plan.objective.region===h!.location&&h!.actions>1){
+    if(plan&&!plan.objective.clue&&!plan.objective.war&&plan.objective.region===h!.location&&h!.actions>1){
      const party=plan.party.map(id=>id===h!.id?next:s.heroes.find(v=>v.id===id)!);
      const ready=strategy.forecast(plan.objective,party);
      score+=Math.max(0,ready.win-plan.forecast.win)*8;
     }
-    {const gained=[[next.health-h!.health,'health'],[next.energy-h!.energy,'energy']].filter(([n])=>Number(n)>0).map(([n,what])=>`${n} ${what}`).join(' and ');reason=`Recovering ${gained||'nothing'}${plan?` before ${named(plan.objective)}`:''}.`;}break;
+    {const gained=[[next.health-h!.health,'health'],[next.energy-h!.energy,'energy']].filter(([n])=>Number(n)>0).map(([n,what])=>`${n} ${what}`).join(' and ');reason=`Recovering ${gained||'nothing'}${plan?plan.objective.war?` while holding a region for ${plan.objective.label}`:` before ${named(plan.objective)}`:''}.`;}break;
    }
    case 'travel': {
     if (!command.path.length) { score = -40; reason='Waiting for the party or the next management phase.'; break; }
@@ -115,6 +115,7 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
       if(after===0&&h!.actions>1&&plan.forecast.win>.75)score+=2;
      }
      {const more=Math.ceil(after/2),allies=plan.party.length-1;const company=allies?`, to fight there with ${allies===1?'an ally':`${allies} allies`}`:'';reason=more?`Heading for ${named(plan.objective)} in ${p.regions.find(r=>r.id===plan.objective.region)?.name??plan.objective.region}${company}; ${more} more Travel ${more===1?'action':'actions'} after this one.`:`This move reaches ${named(plan.objective)}${company}.`;}
+     if(plan.objective.war){const place=(id:string)=>p.regions.find(r=>r.id===id)?.name??id,more=Math.ceil(after/2);reason=`Going to hold ${place(plan.objective.region)} for ${plan.objective.label}${more?` (${more} more Travel ${more===1?'action':'actions'})`:''}: with ${p.characters.find(c=>c.id===plan.objective.war!.partner)?.name.split(' ')[0]} in ${place(plan.objective.war.other)} when the enemy’s turn ends, the whole faction is rewarded.`;}
     }
     if(s.enemies.some(e=>e.region===at&&e.color==='blue'))score-=4*risk;
     if(command.power){const power=card(p,command.power);score-=power.actionPower==='teleport'?command.path.length*.55:power.travelPower?.unequip?1:0;}
