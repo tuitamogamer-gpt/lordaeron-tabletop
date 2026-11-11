@@ -44,6 +44,22 @@ export function pick(list: Cue[]): Cue {
  return { sfx: list.find(c => c.sfx)?.sfx, voice: list.find(c => c.voice)?.voice };
 }
 
+/** One stretch of music: the loop played this many times, then this many seconds of quiet. */
+export interface Phrase { cycles: number; rest: number }
+/**
+ * The themes are loops of under fourteen seconds, and a loop that never stops wears thin within minutes. Each theme therefore plays in
+ * phrases: a few cycles, a fade, a rest, then the next phrase. The map rests longer than a battle, and the pattern varies so that the
+ * music does not return like clockwork.
+ */
+const PACING: Record<Track, Phrase[]> = {
+ map: [{ cycles: 4, rest: 50 }, { cycles: 3, rest: 80 }, { cycles: 4, rest: 65 }, { cycles: 3, rest: 100 }],
+ battle: [{ cycles: 5, rest: 20 }, { cycles: 4, rest: 30 }],
+};
+/** The n-th phrase of a theme, counted from 0. */
+export function phrase(track: Track, n: number): Phrase { const list = PACING[track]; return list[n % list.length]; }
+/** Seconds a phrase takes to fade in and to fade out; a theme pushed aside by the other scene fades in CROSSFADE. */
+export const FADE_IN = 1.5, FADE_OUT = 4, CROSSFADE = 1.2;
+
 export interface SoundSettings { muted: boolean; music: number; effects: number; voices: boolean }
 const KEY = 'lordaeron-audio-v1', DEFAULTS: SoundSettings = { muted: false, music: 0.35, effects: 0.8, voices: true };
 function loadSettings(): SoundSettings {
@@ -52,13 +68,17 @@ function loadSettings(): SoundSettings {
 const src = (kind: 'music' | 'sfx' | 'voice', name: string) => `/assets/audio/${kind}/${name}.mp3`;
 
 /** Plays everything through Web Audio, once the browser allows sound (after the first click or key press). Without Web Audio it stays silent. */
-class AudioDirector {
+export class AudioDirector {
  settings = loadSettings();
  private ctx?: AudioContext;
  private buses?: Record<'music' | 'sfx' | 'voice', GainNode>;
  private buffers = new Map<string, Promise<AudioBuffer | undefined>>();
- private track?: { name: Track; source: AudioBufferSourceNode; gain: GainNode };
+ private track?: { name: Track; source: AudioBufferSourceNode; gain: GainNode; rest: number };
  private wanted?: Track;
+ /** How many phrases each theme has begun, and until when (performance.now) each one rests. */
+ private phrases: Record<Track, number> = { map: 0, battle: 0 };
+ private restUntil: Record<Track, number> = { map: 0, battle: 0 };
+ private timer?: ReturnType<typeof setTimeout>;
  private voiceUntil = 0;
  private recent = new Map<string, number>();
  private listeners = new Set<() => void>();
@@ -70,7 +90,8 @@ class AudioDirector {
   this.settings = { ...this.settings, ...change };
   try { localStorage.setItem(KEY, JSON.stringify(this.settings)); } catch { /* The choice lasts until the tab closes. */ }
   this.applyVolumes();
-  if (this.settings.muted || this.settings.music <= 0) this.stopMusic(); else if (this.wanted) this.music(this.wanted);
+  // Whoever turns the music on or moves its volume hears it at once, not after the current rest.
+  if (this.settings.muted || this.settings.music <= 0) this.stopMusic(); else if (this.wanted) void this.music(this.wanted, 'muted' in change || 'music' in change);
   this.listeners.forEach(l => l());
  }
 
@@ -84,11 +105,13 @@ class AudioDirector {
    this.buses = { music: bus(), sfx: bus(), voice: bus() };
    this.applyVolumes();
   }
-  if (this.ctx.state === 'suspended') void this.ctx.resume().catch(() => {});
-  if (this.wanted && !this.track) this.music(this.wanted);
+  if (this.ctx.state === 'suspended') void this.ctx.resume().then(this.resumeMusic).catch(() => {}); else this.resumeMusic();
  };
 
- suspend(hidden: boolean) { if (!this.ctx) return; void (hidden ? this.ctx.suspend() : this.ctx.resume()).catch(() => {}); }
+ /** A hidden tab is silent, and the music's schedule waits with it. */
+ suspend(hidden: boolean) { if (!this.ctx) return; void (hidden ? this.ctx.suspend() : this.ctx.resume().then(this.resumeMusic)).catch(() => {}); }
+
+ private resumeMusic = () => { if (this.wanted && !this.track) void this.music(this.wanted); };
 
  private applyVolumes() {
   if (!this.buses || !this.ctx) return;
@@ -123,29 +146,55 @@ class AudioDirector {
   source.buffer = buffer; source.connect(this.buses[kind]); source.start();
  }
 
- /** Keeps the given track playing, crossfading from the previous one; the files loop without a seam. */
- async music(name: Track) {
+ /**
+  * Keeps the scene's theme on its schedule: a phrase of a few cycles (the files loop without a seam), a fade, a rest, the next phrase.
+  * The other scene's theme fades out and starts its rest. A battle's theme begins with the battle; the map's waits out its rest.
+  * `now` skips the rest.
+  */
+ async music(name: Track, now = false) {
+  if (now || name === 'battle' && this.wanted !== name) this.restUntil[name] = 0;
   this.wanted = name;
+  clearTimeout(this.timer);
   if (!this.ready() || this.settings.music <= 0 || this.track?.name === name) return;
+  const wait = this.restUntil[name] - performance.now();
+  if (wait > 0) {
+   this.stopMusic(CROSSFADE, true);
+   this.timer = setTimeout(() => { if (this.wanted === name) void this.music(name); }, wait);
+   return;
+  }
   const buffer = await this.load(src('music', name));
   if (!buffer || !this.ctx || !this.buses || this.wanted !== name || this.track?.name === name || !this.ready()) return;
-  this.stopMusic(1.2);
+  this.stopMusic(CROSSFADE, true);
+  const { cycles, rest } = phrase(name, this.phrases[name]++), play = buffer.duration * cycles;
   const gain = this.ctx.createGain(), source = this.ctx.createBufferSource(), t = this.ctx.currentTime;
-  gain.gain.setValueAtTime(0, t); gain.gain.linearRampToValueAtTime(1, t + 1.5); gain.connect(this.buses.music);
-  source.buffer = buffer; source.loop = true; source.connect(gain); source.start();
-  this.track = { name, source, gain };
+  gain.gain.setValueAtTime(0, t); gain.gain.linearRampToValueAtTime(1, t + FADE_IN);
+  gain.gain.setValueAtTime(1, t + play - FADE_OUT); gain.gain.linearRampToValueAtTime(0, t + play);
+  gain.connect(this.buses.music);
+  source.buffer = buffer; source.loop = true; source.connect(gain); source.start(); source.stop(t + play + 0.05);
+  const track = { name, source, gain, rest };
+  // The phrase ran its length (audio time: a hidden tab pauses it): the rest begins, and the next phrase follows it.
+  source.onended = () => {
+   if (this.track !== track) return;
+   this.track = undefined;
+   this.restUntil[name] = performance.now() + rest * 1000;
+   if (this.wanted === name) void this.music(name);
+  };
+  this.track = track;
  }
 
- stopMusic(fade = 0.6) {
-  if (!this.track || !this.ctx) { this.track = undefined; return; }
-  const { source, gain } = this.track, t = this.ctx.currentTime;
+ /** Fades the playing theme out. With `rest`, its rest begins as if the phrase had ended: it does not start over the moment its scene returns. */
+ stopMusic(fade = 0.6, rest = false) {
+  const track = this.track;
+  this.track = undefined;
+  if (!track || !this.ctx) return;
+  if (rest) this.restUntil[track.name] = performance.now() + track.rest * 1000;
+  const { source, gain } = track, t = this.ctx.currentTime;
   gain.gain.cancelScheduledValues(t); gain.gain.setValueAtTime(gain.gain.value, t); gain.gain.linearRampToValueAtTime(0, t + fade);
   try { source.stop(t + fade + 0.05); } catch { /* already stopped */ }
-  this.track = undefined;
  }
 
  /** No music while there is no campaign on the table. */
- silence() { this.wanted = undefined; this.stopMusic(); }
+ silence() { this.wanted = undefined; clearTimeout(this.timer); this.stopMusic(); this.restUntil = { map: 0, battle: 0 }; this.phrases = { map: 0, battle: 0 }; }
 }
 
 export const audio = new AudioDirector();
@@ -185,6 +234,6 @@ export function SoundControls() {
   <label className="setting-row"><input type="checkbox" checked={!s.muted} onChange={e => { audio.unlock(); audio.update({ muted: !e.target.checked }); }} />Play music and sound effects</label>
   {volume('music', 'Music')}{volume('effects', 'Effects')}
   <label className="setting-row"><input type="checkbox" checked={s.voices} onChange={e => { audio.unlock(); audio.update({ voices: e.target.checked }); }} />Voice lines (battle cries, turns, quests, the Overlord)</label>
-  <p className="sound-credit">Music, effects and voices made with Fish Audio.</p>
+  <p className="sound-credit">The music comes and goes: each theme plays for about a minute, then rests. Music, effects and voices made with Fish Audio.</p>
  </section>;
 }
