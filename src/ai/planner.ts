@@ -10,6 +10,8 @@ import { publicState } from './public-state.js';
 import { createStrategy, nefarianSteps, type Objective } from './strategy.js';
 import { abilityScore, healthValue, tacticalScore } from './tactics.js';
 export type Difficulty = 'cautious' | 'balanced' | 'aggressive';
+/** An objective in the words of the table: a quest by its name, a creature or a boss as it is called. */
+const named=(o:Objective)=>o.clue?'a clue to Kazzak':o.boss?o.label:o.quest?`the quest “${o.label}”`:`the ${o.label}`;
 export interface Decision { command: Command; score: number; reason: string; alternatives: number; considered: { command: Command; score: number; reason: string }[]; }
 const equipmentCaches=new WeakMap<ContentPack,Map<string,number>>();
 /** Pure policy module: receives public information + legal moves, never the hidden server State. */
@@ -73,7 +75,7 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
      const ready=strategy.forecast(plan.objective,party);
      score+=Math.max(0,ready.win-plan.forecast.win)*8;
     }
-    reason=`Recovering ${next.health-h!.health} health and ${next.energy-h!.energy} energy${plan?` before ${plan.objective.label}`:''}.`;break;
+    {const gained=[[next.health-h!.health,'health'],[next.energy-h!.energy,'energy']].filter(([n])=>Number(n)>0).map(([n,what])=>`${n} ${what}`).join(' and ');reason=`Recovering ${gained||'nothing'}${plan?` before ${named(plan.objective)}`:''}.`;}break;
    }
    case 'travel': {
     if (!command.path.length) { score = -40; reason='Waiting for the party or the next management phase.'; break; }
@@ -85,7 +87,7 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
       score=2+Math.min(3,plan.score*.7)+Math.min(2,before-after)*1.2+(after===0?1.5:0);
       if(after===0&&h!.actions>1&&plan.forecast.win>.75)score+=2;
      }
-     reason=`Moving toward ${plan.objective.label} with ${plan.party.length===1?'a solo route':`${plan.party.length} planned participants`}; ${Math.ceil(after/2)} further Travel actions.`;
+     {const more=Math.ceil(after/2),allies=plan.party.length-1;const company=allies?`, to fight there with ${allies===1?'an ally':`${allies} allies`}`:'';reason=more?`Heading for ${named(plan.objective)} in ${p.regions.find(r=>r.id===plan.objective.region)?.name??plan.objective.region}${company}; ${more} more Travel ${more===1?'action':'actions'} after this one.`:`This move reaches ${named(plan.objective)}${company}.`;}
     }
     if(s.enemies.some(e=>e.region===at&&e.color==='blue'))score-=4*risk;
     if(command.power){const power=card(p,command.power);score-=power.actionPower==='teleport'?command.path.length*.55:power.travelPower?.unequip?1:0;}
@@ -107,7 +109,7 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
     const forecast=strategy.forecast(objective,party);
     score=strategy.value(objective,party,forecast);
     if(objective.enemies[0]?.color==='blue')score+=5;
-    reason=`Challenging ${objective.label} with ${party.length} participant${party.length>1?'s':''}: estimated ${forecast.rounds} rounds and ${forecast.wounds.toFixed(1)} wounds; ${forecast.win>.8?'low':forecast.win>.5?'moderate':'high'} risk.`;break;
+    reason=`Fighting ${objective.quest?'for ':''}${named(objective)} ${party.length>1?`with ${party.length} characters`:'alone'}: about ${forecast.rounds} ${forecast.rounds===1?'round':'rounds'} and ${forecast.wounds.toFixed(1)} wounds expected; ${forecast.win>.8?'low':forecast.win>.5?'moderate':'high'} risk.`;break;
    }
    case 'ability': {
     const a = card(p, command.card).abilities.find(a => a.id === command.ability)!;
@@ -121,7 +123,7 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
    case 'wound': score = command.pet ? 30 : h!.health * 2 + h!.energy * .1; reason = "Assigning wounds while keeping participants alive."; break;
    case 'penalty': score = command.dice.reduce((n, id) => n + (s.battle!.active!.dice.find(d => d.id === id)?.color === 'green' ? 0 : -1), 0); break;
    case 'manage': score = scoreLoadout(p,h!,command); reason = "Choosing a complete loadout within slot, category and energy limits."; break;
-   case 'train': score = trainValue(h!,command.cards); reason = "Comparing complete future loadouts and learning useful powers together."; break;
+   case 'train': score = trainValue(h!,command.cards); reason = "These powers improve the strongest loadout this character can equip."; break;
    case 'town': {
     const op = command.operations[0];
     if (op?.op === 'buy') { const c = card(p, op.card); score = c.level <= h!.level&&usableItem(p,h!,c) ? itemGain(h!,c.id,op.discard)-c.price*.4-1.2 : -5; if (op.discard === op.card) score = -20; }
@@ -129,7 +131,7 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
     else if(op?.op==='train')score=trainValue(h!,command.operations.filter(o=>o.op==='train').map(o=>o.card))+.1;
     else score = -1;
     const next=apply(p,publicState(s),command).heroes.find(v=>v.id===h!.id)!;
-    score+=recovery(h!,next);reason = "Combining actual recovery with purchases, training and equipment compatibility."; break;
+    score+=recovery(h!,next);reason = "The best mix of recovery, purchases and training this Town action allows."; break;
    }
    case 'reward': score=itemGain(h!,command.card,command.discard);reason="Assigning the reward by its improvement to each hero’s complete equipment.";break;
    case 'talent': score = itemValue(p, command.card,h!); reason = "Choosing a talent that supports learned powers and equipment."; break;

@@ -55,3 +55,20 @@
 @media(max-width:1250px){.campaign-app .table-navigation>.workspace-toggles>button{font-size:10px;padding-inline:6px;gap:5px}.campaign-app .table-navigation>.turn-preview{display:none}.campaign-app .table-action-footer .action-dock strong{font-size:11px}.campaign-app .table-action-footer .action-dock small{font-size:8px}.campaign-app .active-character-summary .compact-vitals{margin-inline:auto;gap:10px}.campaign-app .map-context>.overlord-summary-button{min-width:205px}}
 @media(max-height:720px){.campaign-app.desktop-tabletop .campaign-main{padding-block:7px}.campaign-app.desktop-tabletop .campaign-title{margin-bottom:5px;min-height:29px}.campaign-app.desktop-tabletop .campaign-title h1{font-size:19px}.campaign-app.desktop-tabletop .campaign-title .eyebrow{display:none}.campaign-app.desktop-tabletop .command-table{gap:5px}.campaign-app .table-navigation>.workspace-toggles>button{min-height:35px}.campaign-app .map-context>.active-character-summary{min-height:44px}.campaign-app .overlord-summary-button .boss-portrait{height:43px}.campaign-app .table-action-footer .action-dock button{min-height:45px}.campaign-app .command-table .map-legend{padding-block:3px}}
 @media(max-width:1000px){.campaign-app .table-navigation>.workspace-toggles>button>.game-icon,.campaign-app .session-badge{display:none}.campaign-app .active-character-summary .summary-name{min-width:120px}.campaign-app .active-character-summary .compact-stat>.game-icon{display:none}.campaign-app .map-context>.overlord-summary-button{min-width:185px}.campaign-app .table-action-footer .current-location{display:none}.campaign-app .map-toolbar .map-jump{width:100px}.campaign-app.desktop-tabletop .campaign-main{padding-inline:10px}.campaign-app .table-action-footer .action-dock button{padding-left:5px}.campaign-app .table-action-footer .action-dock .game-icon{width:24px!important;height:24px!important}}
+/* The move advisor in the table rail: a hint on request, then the suggestion with its reason and a button to take it. */
+.campaign-app .turn-guidance.advisor{border-color:#6f7f93;background:linear-gradient(135deg,#243243e6,#172029f0)}
+.campaign-app .turn-guidance.advisor>svg{color:#a9c7e8}
+.campaign-app .turn-guidance.advisor.suggested{border-color:#d7b878;background:linear-gradient(135deg,#3a3120eb,#1d1b14f2)}
+.campaign-app .turn-guidance.advisor.suggested>svg{color:#e7c67b}
+.campaign-app .turn-guidance.advisor kbd{margin-left:7px;padding:1px 5px;border:1px solid #ffffff38;border-radius:3px;font:600 9px/1.4 var(--sans);color:#d6c9a8}
+/* No keyboard, no key to name. */
+@media(hover:none){.campaign-app .turn-guidance.advisor kbd{display:none}}
+.campaign-app .turn-guidance.advisor .advisor-actions{grid-column:1/-1;display:flex;gap:6px;min-width:0}
+.campaign-app .turn-guidance.advisor .advisor-actions>button{flex:1;min-width:0;min-height:30px;margin:0;padding:4px 10px;font-size:11px}
+.campaign-app .turn-guidance.advisor .advisor-actions>.advisor-dismiss{flex:none;min-width:0;padding:4px 9px}
+.campaign-app .turn-guidance.advisor p{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+@media(max-height:800px){.campaign-app .command-table>.turn-guidance.advisor,.campaign-app .table-control-rail>.turn-guidance.advisor{padding-block:5px;gap:5px 10px}}
+@media(max-height:730px){.campaign-app .command-table>.turn-guidance.advisor,.campaign-app .table-control-rail>.turn-guidance.advisor{padding-block:3px}}
+.campaign-app .turn-guidance.advisor[aria-busy=true]>svg{animation:advisor-turn 1.6s linear infinite}
+@keyframes advisor-turn{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.campaign-app .turn-guidance.advisor[aria-busy=true]>svg{animation:none}}

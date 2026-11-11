@@ -16,3 +16,5 @@ export function undoable(before: State, after: State, c: Command) {
 }
 
 export const undoLabel: Record<string, string> = { travel: 'travel', rest: 'rest', train: 'training', town: 'town visit', trade: 'trade', manage: 'equipment' };
+/** What the Undo button takes back; a Travel that goes nowhere is a passed action. */
+export const undoName = (c: Command) => c.type === 'travel' && !c.path.length ? 'pass' : undoLabel[c.type] ?? 'move';
