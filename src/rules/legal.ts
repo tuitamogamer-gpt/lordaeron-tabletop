@@ -48,8 +48,9 @@ function argsFor(p: ContentPack, s: State, h: Hero, effects: Effect[],cardId:str
  return args;
 }
 export function abilityCommands(p: ContentPack, s: State): Command[] {
- if (!s.battle&&!s.energySpent?.length) return [];
- return (s.battle?.participants??s.energySpent??[]).flatMap(id => {
+ if (!s.battle&&!s.energySpent?.length&&!s.respawns.length) return [];
+ // Outside combat: whoever just spent energy (mana potions) and whoever just lost his last Health (the last chance to heal).
+ return (s.battle?.participants??[...new Set([...s.energySpent??[],...s.respawns])]).flatMap(id => {
   const h = hero(s, id);
   return availableCards(p, h).flatMap(id => card(p, id).abilities.filter(a => !a.automatic&&!a.judgement&&(a.timing === timing(s)||((a.reaction==='defeat'&&s.respawns.length)||(a.reaction==='friendly-damage'&&Object.keys(s.battle?.losses??{}).length))||(a.timing==='energy-spent'&&s.energySpent?.includes(h.id))||(a.timing==='wound'&&a.condition?.kind==='has-damage'&&!!s.battle?.losses?.[h.id]))).flatMap(a => argsFor(p, s, h, a.effects.map(e=>{const v=availableCards(p,h).map(c=>card(p,c).spotOverride).find(v=>v?.cards.includes(id));return e.op==='spot'&&v?{...e,filter:{...e.filter,min:v.min}}:e;}),id).map(args => ({ type: 'ability' as const, hero: h.id, card: id, ability: a.id, args }))));
  });

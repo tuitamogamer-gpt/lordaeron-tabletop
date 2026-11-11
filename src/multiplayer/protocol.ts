@@ -39,7 +39,7 @@ const schema = z.discriminatedUnion('type', [
  z.object({type:z.literal('closeBattle')}).strict(),
 ]);
 export const commandSchema: z.ZodType<Command> = schema;
-export const setupSchema: z.ZodType<Setup> = z.object({seed:z.number().int().min(1).max(0xffffffff),roster:z.array(id).min(4).max(6),overlord:id,variants:z.object({deadlyPvp:z.boolean().optional(),overlordOnly:z.boolean().optional()}).strict().optional()}).strict();
+export const setupSchema: z.ZodType<Setup> = z.object({seed:z.number().int().min(1).max(0xffffffff),roster:z.array(id).min(4).max(6),overlord:id,variants:z.object({deadlyPvp:z.boolean().optional(),overlordOnly:z.boolean().optional(),rules:z.number().int().min(1).max(99).optional()}).strict().optional()}).strict();
 export const requestSchema = z.discriminatedUnion('kind',[
  z.object({kind:z.literal('create'),name:z.string().trim().min(1).max(32),setup:setupSchema,heroes:z.array(id).min(1).max(3)}).strict(),
  z.object({kind:z.literal('join'),room:id,name:z.string().trim().min(1).max(32),heroes:z.array(id).min(1).max(3)}).strict(),

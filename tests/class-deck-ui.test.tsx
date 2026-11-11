@@ -64,7 +64,7 @@ describe('class deck and equipment interface',()=>{
  });
  it('fixes the Overlord objective and offers Deadly PvP as an independent combat rule',()=>{
   const start=vi.fn();render(<CampaignSetup onStart={start} onCancel={()=>{}}/>);expect(screen.getByText('Campaign objective · Defeat the Overlord')).toBeTruthy();expect(screen.queryByRole('checkbox',{name:/Defeat the Overlord/})).toBeNull();fireEvent.click(screen.getByRole('checkbox',{name:/Deadly PvP/}));
-  for(let i=0;i<3;i++)fireEvent.click(screen.getByRole('button',{name:/^Continue/}));expect(screen.getByText('Class decks')).toBeTruthy();fireEvent.click(screen.getByRole('button',{name:/Begin campaign/}));expect(start.mock.calls[0][0].variants).toEqual({deadlyPvp:true,overlordOnly:true});
+  for(let i=0;i<3;i++)fireEvent.click(screen.getByRole('button',{name:/^Continue/}));expect(screen.getByText('Class decks')).toBeTruthy();fireEvent.click(screen.getByRole('button',{name:/Begin campaign/}));expect(start.mock.calls[0][0].variants).toEqual({...DEFAULT_SETUP.variants,deadlyPvp:true});
  });
  it('defaults to six heroes and lets either added faction seat be the human-controlled hero',()=>{
   const start=vi.fn();render(<CampaignSetup onStart={start} onCancel={()=>{}}/>);
@@ -78,7 +78,7 @@ describe('class deck and equipment interface',()=>{
   fireEvent.click(screen.getByRole('tab',{name:'Starting quests'}));
   expect(screen.getByRole('region',{name:'Starting quests and creature placement'})).toBeTruthy();
   fireEvent.click(screen.getByRole('button',{name:/Begin campaign/}));
-  expect(start).toHaveBeenCalledWith(expect.objectContaining({roster:DEFAULT_SETUP.roster,variants:{overlordOnly:true}}),DEFAULT_SETUP.roster[5],true);
+  expect(start).toHaveBeenCalledWith(expect.objectContaining({roster:DEFAULT_SETUP.roster,variants:DEFAULT_SETUP.variants}),DEFAULT_SETUP.roster[5],true);
  });
  it.each(['v4','v6'])('preserves the %s save and presents a fresh setup under the new rules',version=>{
   const key=`lordaeron-base-save-${version}`;

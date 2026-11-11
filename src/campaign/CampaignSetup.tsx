@@ -1,12 +1,12 @@
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { BASE_PACK as p, DEFAULT_SETUP } from '../data/base';
-import { character } from '../rules/common';
+import { character, RULES_REVISION } from '../rules/common';
 import { createGame } from '../rules/game';
 import type { Setup, Variants } from '../rules/model';
 import { Icon } from '../components';
 import { HeroPortrait, factionLabel } from './parts';
 import { BossPortrait } from './design-system';
-import { bossRules } from './event-text';
+import { bossRuleText } from './event-text';
 import { FactionCrest } from './Art';
 import { QuestSetupPreview } from './QuestReveal';
 
@@ -26,7 +26,7 @@ const reviewTabs = ['Overview', 'Starting quests', 'Shuffle'] as const;
 
 export default function CampaignSetup({ onStart, onCancel, existing = false }: { onStart: (setup: Setup, human: string, bots: boolean) => void; onCancel: () => void; existing?: boolean }) {
  const [step, setStep] = useState(0), [count, setCount] = useState<4 | 6>(6), [roster, setRoster] = useState(DEFAULT_SETUP.roster), [boss, setBoss] = useState(DEFAULT_SETUP.overlord), [seed, setSeed] = useState(() => String(globalThis.crypto.getRandomValues(new Uint32Array(1))[0] || 1)), [bots, setBots] = useState(true), [human, setHuman] = useState(DEFAULT_SETUP.roster[0]);
- const [variants, setVariants] = useState<Variants>({ overlordOnly: true });
+ const [variants, setVariants] = useState<Variants>({ overlordOnly: true, rules: RULES_REVISION });
  const [reviewTab, setReviewTab] = useState(0);
  const heading = useRef<HTMLHeadingElement>(null), reviewButtons = useRef<(HTMLButtonElement | null)[]>([]);
  const reviewId = useId();
@@ -87,7 +87,7 @@ export default function CampaignSetup({ onStart, onCancel, existing = false }: {
     </>}
     {step === 2 && <>
      <div className="boss-selection">{p.overlords.map(o => <button key={o.id} aria-pressed={boss === o.id} className={boss === o.id ? 'selected' : ''} onClick={() => setBoss(o.id)}><BossPortrait id={o.id}/><strong>{o.name}</strong><small>{o.stats[count].threat}+ threat · {o.stats[count].attack} attack · {o.stats[count].health} health</small>{boss === o.id && <span className="setup-boss-selected"><Icon name="check" size={14}/>Selected</span>}</button>)}</div>
-     <div className="setup-rule-note"><Icon name="crown"/><p>{bossRules[p.overlords.find(o => o.id === boss)!.combat]}</p></div>
+     <div className="setup-rule-note"><Icon name="crown"/><p>{bossRuleText(p.overlords.find(o => o.id === boss)!.combat)}</p></div>
     </>}
     {step === 3 && <>
      <div className="setup-review-tabs" role="tablist" aria-label="Review campaign setup">{reviewTabs.map((label, i) => <button key={label} ref={node => { reviewButtons.current[i] = node; }} id={`${reviewId}-tab-${i}`} role="tab" aria-selected={reviewTab === i} aria-controls={`${reviewId}-panel-${i}`} tabIndex={reviewTab === i ? 0 : -1} onClick={() => setReviewTab(i)} onKeyDown={e => navigateReview(e, i)}>{label}</button>)}</div>

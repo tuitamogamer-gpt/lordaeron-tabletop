@@ -1,4 +1,4 @@
-import { assert, capacity, card, character, colors, emptyBoxes, emptyPool, faction, hero, note, other, random } from './common.js';
+import { assert, capacity, card, character, colors, emptyBoxes, emptyPool, faction, hero, note, other, random, revised } from './common.js';
 import { automatic, availableCards, healthLoss, immune, matches } from './effects.js';
 import { equipped, unequip } from './inventory.js';
 import { eventBoss, worldAttack } from './world.js';
@@ -54,7 +54,13 @@ export function monsterEffect(p: ContentPack, s: State, selected: string[] = [])
    for (const id of selected) unequip(p, h, id); break;
   }
  }
- if(b.boss==='kelthuzad'){healthLoss(s,h,low.length*2);const possible=dice.filter(d=>d.color!=='green'&&d.value>=6&&!d.spotted);a.attrition=Math.min(Math.max(0,a.attrition),possible.length);possible.slice(0,a.attrition).forEach(d=>d.spotted=true);}
+ // Kel’Thuzad’s sheet: Attrition “can be no greater than the number of [red or blue 6+] he can spot”. A Boss’s rule and a character’s
+ // ability may spot the same die (rules p. 19), so every such die counts, also one a card has spotted, and none is used up.
+ // Campaigns begun before rules revision 2 keep the earlier reading: only unspotted dice count, and the ones counted are used up.
+ if(b.boss==='kelthuzad'){healthLoss(s,h,low.length*2);
+  if(revised(s))a.attrition=Math.min(Math.max(0,a.attrition),dice.filter(d=>d.color!=='green'&&d.value>=6).length);
+  else{const possible=dice.filter(d=>d.color!=='green'&&d.value>=6&&!d.spotted);a.attrition=Math.min(Math.max(0,a.attrition),possible.length);possible.slice(0,a.attrition).forEach(d=>d.spotted=true);}
+ }
  if(eventBoss(p,s)?.combat==='cauldrons')b.boxes[b.first].damage=Math.max(0,b.boxes[b.first].damage-allOnes.length);
  b.stage = 'tokens';
 }
@@ -147,7 +153,9 @@ export function continueWounds(p: ContentPack, s: State) {
 }
 export function defeat(p: ContentPack, s: State, id: string, destination: string) {
  const h = hero(s, id), b = s.battle;
- if(b)b.defeated.push(id); h.health = 1; h.energy = 1; h.actions = 0; h.stun = 0; h.curse = 0; h.location = destination;
+ // Remaining actions are lost only “if defeated during his own faction turn” (rules p. 26): an event at the end of the other
+ // faction’s turn must not cost a character the turn that follows.
+ if(b)b.defeated.push(id); h.health = 1; h.energy = 1; if (!revised(s) || faction(p, id) === s.faction) h.actions = 0; h.stun = 0; h.curse = 0; h.location = destination;
  for (const pet of Object.keys(h.pets)) unequip(p, h, pet);
  h.auctionItems = [];h.slots=h.slots.slice(0,character(p,h.id).slots.length); s.respawns = s.respawns.filter(x => x !== id);
  note(s, `${character(p, id).name} is defeated and returns to ${p.regions.find(r => r.id === destination)?.name ?? destination}.`);

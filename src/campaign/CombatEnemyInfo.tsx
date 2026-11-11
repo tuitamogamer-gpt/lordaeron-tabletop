@@ -4,7 +4,7 @@ import { stats } from '../rules/combat';
 import { capacity, character, faction } from '../rules/common';
 import type { GameView } from '../rules/view';
 import { BossPortrait, CreatureGlyph, creatureRules } from './design-system';
-import { bossRules } from './event-text';
+import { bossRuleText } from './event-text';
 import { HeroPortrait, factionLabel } from './parts';
 import RulesText from './RulesText';
 
@@ -25,7 +25,7 @@ export function EnemyDetails({ state }: { state: GameView }) {
   })}</section>)}</>;
  }
  if (b.boss) {
-  const overlord = p.overlords.find(o => o.id === b.boss), event = p.events.find(e => e.id === b.boss), rule = overlord ? bossRules[overlord.combat] : event?.boss ? bossRules[event.boss.combat] : '';
+  const overlord = p.overlords.find(o => o.id === b.boss), event = p.events.find(e => e.id === b.boss), rule = overlord ? bossRuleText(overlord.combat) : event?.boss ? bossRuleText(event.boss.combat) : '';
   return <section><div className="enemy-info-row"><BossPortrait id={b.boss} /><span><strong>{overlord?.name ?? event?.name}</strong><small>{overlord ? 'Overlord' : 'Event boss'}</small></span></div><Stats {...stats(p, state)} />{rule && <p><RulesText>{rule}</RulesText></p>}</section>;
  }
  const groups = new Map<string, { creature: string; color: string; count: number; id: string }>();

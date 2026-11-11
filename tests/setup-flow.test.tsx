@@ -68,6 +68,6 @@ describe('compact campaign setup', () => {
   expect(document.activeElement).toBe(screen.getByRole('heading', { name: 'Gather your characters.' }));
   next(); next();
   fireEvent.click(screen.getByRole('button', { name: /^Begin campaign/ }));
-  expect(start.mock.calls[0][0].variants).toEqual({ overlordOnly: true, deadlyPvp: true });
+  expect(start.mock.calls[0][0].variants).toEqual({ ...DEFAULT_SETUP.variants, deadlyPvp: true });
  });
 });

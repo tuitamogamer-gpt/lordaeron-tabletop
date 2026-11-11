@@ -115,7 +115,12 @@ export interface RewardState { resolution?: RewardResolution; replacementFaction
 export interface War { weakReward?:Reward;perHero?:boolean; id: string; regions: [string, string]; reward: Reward; }
 export interface Auction { event: string; item: string; bids: Record<string, number>; }
 export interface Log { id: number; turn: number; text: string; }
-export interface Variants { deadlyPvp?: boolean; overlordOnly?: boolean; }
+/**
+ * `rules` is the rules revision a campaign was begun with. Revision 2 (11. 11. 2026) corrects three points against the rulebook
+ * (docs/PLAYTHROUGH-2026-11-11.md). Campaigns begun earlier carry none and keep the behaviour they were played with, because a saved
+ * campaign is its list of commands replayed: under changed rules those commands could stop being legal.
+ */
+export interface Variants { deadlyPvp?: boolean; overlordOnly?: boolean; rules?: number; }
 export interface State { variants?: Variants; lap?: number; factions?:Record<string,Faction>; world?:WorldEvent[];eventFlow?:EventFlow;lastAction?:string;lastActions?:string[];travelPowers?:string[];nefarianFinal?:Faction[];kazzak?:KazzakToken[]; pendingPortal?: string; energySpent?: string[]; travels?: Record<string,number>; turnStarted?: number; version: 2; pack: string; revision: number; rng: number; phase: 'actions' | 'management' | 'combat' | 'reward' | 'event' | 'final-management' | 'finished'; turn: number; faction: Faction; heroes: Hero[]; enemies: Enemy[]; quests: string[]; completed: string[]; questDecks: Record<Faction, Record<Tier, string[]>>; itemDecks: Record<ItemDeck, string[]>; merchant: string[]; eventDeck: string[]; eventDiscard: string[]; eventSeen: string[]; wars: War[]; auction?: Auction; overlord: { id: string; region: string; attack: number; health: number; threat: number }; battle?: Battle; reward?: RewardState; tradeWindow: boolean; finalReady: string[]; managed: string[]; respawns: string[]; winner?: Faction | 'draw'; log: Log[]; }
 export interface Setup { variants?: Variants; seed: number; roster: string[]; overlord: string; }
 export interface AbilityArgs { removeDice?:number[]; colors?:Color[]; slot?:number; free?:boolean;secondaryTarget?:string;health?:number; targets?:string[]; discard?: string; dice?: number[]; target?: string; color?: Color; }

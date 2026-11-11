@@ -180,7 +180,7 @@ export function apply(p: ContentPack, state: State, command: Command): State {
   }
   case 'talent': { const h = hero(s, c.hero), t = card(p, c.card); assert(h.talentChoices.length && t.kind === 'talent' && t.classId === character(p, h.id).classId && t.level <= h.talentChoices[0] && !h.talents.includes(t.id), "This talent is unavailable."); h.talents.push(t.id); h.talentChoices.shift();for(const a of t.abilities.filter(a=>a.timing==='learn'))effects(p,s,h,t.id,a.effects,{}); break; }
   case 'attacker': assert(s.phase === 'combat' && s.battle, "No combat in progress."); chooseAttacker(p, s, c.hero); break;
-  case 'ability': activate(p, s, c.hero, c.card, c.ability, c.args); if (s.battle?.stage === 'wounds' && !s.respawns.length) continueWounds(p, s); break;
+  case 'ability': { const pending = s.respawns.length; activate(p, s, c.hero, c.card, c.ability, c.args); if (s.battle?.stage === 'wounds' && !s.respawns.length) continueWounds(p, s); else if (!s.battle && pending && !s.respawns.length && s.eventFlow) drawEvents(p, s); break; }
   case 'roll': assert(s.battle?.stage === 'pool', "Dice cannot be rolled now."); poolPenalties(p,s);omitDice(s, c.omit); enforceDicePenalties(s); break;
   case 'penalty': assert(s.battle, "No combat in progress."); removePenalty(s, c.dice); break;
   case 'reroll': assert(s.battle, "No combat in progress."); reroll(p, s, c.dice); break;

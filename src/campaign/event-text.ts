@@ -15,7 +15,16 @@ export const bossRules:Record<string,string>={
  cauldrons:"After rerolls, remove 1 ranged hit per die showing 1. Each faction gets only one attempt. Victory awards tokens that cancel Kel’Thuzad’s extra +4 attack.",
  boregore:"At the start of each combat round, remove 2 ranged hits. One victor takes Light of Ages: +4 ranged hits at the start of combat against Kel’Thuzad.",
 };
+/** The wording on the illustrated Overlord faces: their text is baked into the image and its fingerprint (scripts/bake-card-faces.ts). */
 export function overlordText(o:Overlord){return bossRules[o.combat]??'';}
+/**
+ * Wording corrected after those faces were baked. The interface reads a Boss's rules from here; the illustrated Kel’Thuzad face keeps
+ * the earlier sentence until the faces are baked again with their original fonts.
+ */
+const correctedBossRules:Record<string,string>={
+ kelthuzad:"After rerolls, lose 2 health per red or blue die showing 1 or 2. Attrition can be no greater than the number of your red or blue dice showing 6+; those dice stay free for your own abilities. If he survives resolution, remove 4/6 ranged hits in a 4/6-character game.",
+};
+export const bossRuleText=(combat:string)=>correctedBossRules[combat]??bossRules[combat]??'';
 export function eventText(e:EventCard):string{
  if(e.boss)return `${regionName(e.boss.region)} · ${bossRules[e.boss.combat]} Stronger faction reward: ${rewardText(e.boss.strong)}. Weaker faction: ${rewardText(e.boss.weak)}.`;
  const descriptions:Record<string,string>={

@@ -19,7 +19,7 @@ import CombatScene from './CombatScene';
 import { AnimatedValue, ThreatLevel } from './feedback';
 import { combatStep, combatSteps, type CombatPresentation } from './combat-flow';
 import { BossPortrait, CreatureGlyph, creatureRules } from './design-system';
-import { bossRules, regionName } from './event-text';
+import { bossRuleText, regionName } from './event-text';
 import { ConditionToken, factionLabel, HeroPortrait, phaseLabel, pretty } from './parts';
 
 const channels: { color: Color; title: string; icon: string; note: string; pvpNote: string }[] = [
@@ -101,7 +101,7 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
  const creature = p.creatures.find(c => c.id === enemy?.creature);
  const boss = p.overlords.find(o => o.id === b.boss), event = p.events.find(e => e.id === b.boss);
  const title = b.kind === 'final' ? 'Final showdown' : b.kind === 'pvp' ? 'Horde versus Alliance' : creature?.name ?? boss?.name ?? event?.name ?? 'Encounter';
- const rule = boss ? bossRules[boss.combat] : event?.boss ? bossRules[event.boss.combat] : creature ? creatureRules[creature.rule] : '';
+ const rule = boss ? bossRuleText(boss.combat) : event?.boss ? bossRuleText(event.boss.combat) : creature ? creatureRules[creature.rule] : '';
  const enemyStats = b.kind !== 'pve' ? [] : b.boss ? [stats(p, state)] : b.enemies.map(id => stats(p, state, id));
  const threat = a?.threat ?? (enemyStats.length ? Math.max(...enemyStats.map(s => s.threat)) : undefined);
  const attack = enemyStats.reduce((n, s) => n + s.attack, 0), health = enemyStats.reduce((n, s) => n + s.health, 0);

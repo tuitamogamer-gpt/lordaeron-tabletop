@@ -20,6 +20,10 @@ export const capacity = (p: ContentPack, h: Hero) => {
  for(const id of new Set(ids)){const modifier=p.cards.find(c=>c.id===id)?.capacity;if(modifier){base.health+=modifier.health??0;base.energy+=modifier.energy??0;}}
  return base;
 };
+/** The rules revision new campaigns begin with; see Variants.rules. */
+export const RULES_REVISION = 2;
+/** True for a campaign begun with at least this rules revision. */
+export const revised = (s: { variants?: { rules?: number } }, revision = 2) => (s.variants?.rules ?? 1) >= revision;
 /** For the chronicle: "The Horde" / "The Alliance", and names joined as "A, B and C". */
 export const factionName = (f: string) => f === 'horde' ? 'The Horde' : f === 'alliance' ? 'The Alliance' : f;
 export const listed = (names: string[]) => names.length < 2 ? names.join('') : `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`;

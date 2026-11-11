@@ -1,4 +1,4 @@
-import { assert, capacity, card, character, colors, emptyBoxes, faction, hero, integer, other, random } from './common.js';
+import { assert, capacity, card, character, colors, emptyBoxes, faction, hero, integer, other, random, revised } from './common.js';
 import { defeat } from './combat.js';
 import { bagSize, equipped, heroSlots, petCapacity, unequip } from './inventory.js';
 import type { AbilityArgs, Command, Condition, ContentPack, DiceFilter, Die, Effect, Hero, State, Timing } from './model.js';
@@ -21,7 +21,7 @@ export function timing(s: State): Timing | undefined {
  if (s.phase === 'actions') return 'action';
  return undefined;
 }
-export function condition(p: ContentPack, s: Pick<State,'battle'|'enemies'>, h: Hero, id: string, test: Condition): boolean {
+export function condition(p: ContentPack, s: Pick<State,'battle'|'enemies'>&{respawns?:string[]}, h: Hero, id: string, test: Condition): boolean {
  const b = s.battle, a = b?.active;
  switch (test.kind) {
   case 'previous-use': return !!b?.previous[h.id]?.cards.includes(test.cardId ?? id) && (!test.unharmed || !b.previous[h.id].harmed);
@@ -37,7 +37,8 @@ export function condition(p: ContentPack, s: Pick<State,'battle'|'enemies'>, h: 
   case 'first-round': return b?.round===1;
   case 'opponent-defeated': return !!b && !b.defeated.includes(h.id) && (b.report.some(v=>v.startsWith('killed:'))||b.defeated.some(id=>faction(p,id)!==faction(p,h.id)));
   case 'trait': return equipped(p,h).some(id=>test.traits.includes(card(p,id).trait??''));
-  case 'has-damage': return !!b?.losses?.[h.id] && b.losses[h.id].amount>b.losses[h.id].prevented;
+  // In combat: Health was lost this round. Outside it: an event has just taken the character's last Health.
+  case 'has-damage': return b ? !!b.losses?.[h.id] && b.losses[h.id].amount>b.losses[h.id].prevented : !!s.respawns?.includes(h.id);
   case 'round': return !!b&&b.round>=test.min;
   case 'strong-enemy': return !!b&&(b.kind!=='pve'||!!b.boss||s.enemies.some(e=>b.enemies.includes(e.id)&&e.color==='red'));
  }
@@ -308,7 +309,9 @@ export function activate(p: ContentPack, s: State, heroId: string, cardId: strin
  assert(!ability.automatic&&!ability.judgement,"This ability resolves through its trigger.");
  assert(!ability.requires||!!b?.current[heroId]?.cards.includes(`${cardId}:${ability.requires}`),"Activate this card’s primary ability first.");
  assert(!ability.condition||condition(p,s,h,cardId,ability.condition),"The ability’s condition is not met.");
- if(!b){assert(reaction&&ability.timing==='energy-spent'&&c.type==='bag',"This ability requires combat.");effects(p,s,h,cardId,ability.effects,args);return;}
+ // Outside combat: a mana potion after spending energy, and the “one last chance” to drink a healing potion after losing the last
+ // Health to an event (rules p. 26), before the character goes to a graveyard.
+ if(!b){assert(c.type==='bag'&&(reaction&&ability.timing==='energy-spent'||revised(s)&&ability.timing==='wound'&&s.respawns.includes(heroId)),"This ability requires combat.");effects(p,s,h,cardId,ability.effects,args);return;}
  assert(b.participants.includes(heroId) && !b.defeated.includes(heroId), "This hero is not an active combat participant.");
  assert(['wound', 'energy-spent', 'defense', 'round-end','round-start'].includes(ability.timing) || a?.heroId === heroId || (!!ability.friendlyTiming&&!!a&&faction(p,a.heroId)===faction(p,heroId)), "Another hero is currently active.");
  b.current[heroId] ??= { cards: [], harmed: false };
