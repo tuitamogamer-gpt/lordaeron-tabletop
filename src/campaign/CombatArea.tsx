@@ -73,6 +73,6 @@ export default function CombatArea({ battle, side, deadlyPvp = false }: { battle
    </dl>
   </div>
   <p className="combat-token-flow"><Icon name={resolving ? 'arrow' : 'help'} size={14} /><span>{note}</span></p>
-  {battle.wounds[side] > 0 && <div className="combat-wound-count"><Icon name="heart" /><strong>{battle.wounds[side]}</strong> wounds to assign</div>}
+  {battle.wounds[side] > 0 && <div className="combat-wound-count"><Icon name="heart" /><strong>{battle.wounds[side]}</strong> {battle.wounds[side] === 1 ? 'wound' : 'wounds'} to assign</div>}
  </section>;
 }

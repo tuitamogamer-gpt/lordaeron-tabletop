@@ -16,9 +16,11 @@ export default function CombatScene({ state, busy, presentation }: { state: Game
  const opponent = b.kind !== 'pve' ? b.participants.find(id => faction(p, id) !== faction(p, heroId)) : undefined;
  const over = b.stage === 'over', won = b.winner === b.first;
  const result = b.winner === 'draw' ? 'Draw' : b.kind === 'pve' ? won ? 'Victory' : 'Defeat' : `${factionLabel(b.winner ?? '')} victory`;
+ // Only a won fight has rewards to collect; a lost one sends the fallen to a graveyard or their starting region.
+ const settled = b.winner === 'draw' ? 'Neither side prevails. Finish combat to continue.' : b.kind !== 'pve' ? 'The battle is settled. Finish combat to continue.' : won ? 'The battle is won. Collect your rewards below.' : 'The party is defeated. Fallen characters return to a graveyard or their starting region.';
  const revealed = phase === 'impact' || phase === 'recovery';
  const heading = busy ? 'The dice are in motion…' : cue ? phase === 'anticipation' ? cue.anticipation : over && revealed ? result : cue.title : over ? result : b.active ? `${character(p, b.active.heroId).name.split(' ')[0]} prepares an attack` : `Round ${b.round} · The battlefield`;
- const detail = cue ? revealed ? cue.detail : 'A moment before the clash' : over ? 'The battle is settled. Collect your rewards below.' : 'Ranged first. Hold the line. Strike back.';
+ const detail = cue ? revealed ? cue.detail : 'A moment before the clash' : over ? settled : 'Ranged first. Hold the line. Strike back.';
  const kind = busy ? 'rolling' : cue?.kind ?? 'ready';
  const phaseIndex = ['anticipation', 'action', 'impact', 'recovery'].indexOf(phase);
  const fighterClass = (side: 'hero' | 'enemy') => {
