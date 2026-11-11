@@ -46,7 +46,6 @@
 .compact-character-sheet .sheet-identity>.resource{margin:5px 0}
 .compact-character-sheet .resource-heading{font-size:10px;margin-bottom:4px}
 .compact-character-sheet .resource-heading b{font-size:11px}
-.compact-character-sheet .resource-track{height:9px}
 .compact-character-sheet .sheet-currency{margin-top:8px;padding:8px 0;gap:5px}
 .compact-character-sheet .sheet-currency>span{font-size:19px;gap:2px 5px}
 .compact-character-sheet .sheet-currency small{font:8px/1.25 var(--sans);letter-spacing:.8px}

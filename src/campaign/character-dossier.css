@@ -31,9 +31,6 @@
 .premium-character-sheet .resource-heading .game-icon{width:18px;height:18px}
 .premium-character-sheet .resource-heading b{font:600 14px/1 var(--sans);color:#f4e9cd}
 .premium-character-sheet .resource-heading b>small{font-size:10px;color:#a99f88}
-.premium-character-sheet .resource-track{height:6px;border:1px solid #aa8c524d;border-radius:0;background:#080d0d;box-shadow:none}
-.premium-character-sheet .health .resource-track>div{background:linear-gradient(90deg,#80362d,#cd6c4b);box-shadow:inset 0 1px #edb68d55}
-.premium-character-sheet .energy .resource-track>div{background:linear-gradient(90deg,#24506d,#77b5d3);box-shadow:inset 0 1px #c9e8f055}
 .premium-character-sheet .sheet-currency{display:grid;grid-template-columns:repeat(3,1fr);flex:none;gap:5px;padding:8px 0;margin:0;border-top:1px solid #b5914940;border-bottom:1px solid #b5914940}
 .premium-character-sheet .sheet-currency>span{display:grid;grid-template-columns:21px auto;align-items:center;justify-content:center;gap:3px 6px;font:600 21px/1 var(--serif);color:#f1d39a}
 .premium-character-sheet .sheet-currency .game-icon{width:20px;height:20px}

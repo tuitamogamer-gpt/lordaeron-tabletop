@@ -134,9 +134,6 @@
 .character-sheet .resource {margin-bottom:10px}
 .character-sheet .resource-heading {font-size:10px;color:#d9cdb5;margin-bottom:5px}
 .character-sheet .resource-heading b {font-size:11px;color:#f7e8c6}
-.character-sheet .resource-track {height:13px;border:2px groove #a18355;border-radius:2px;background:#101417;box-shadow:0 1px 3px #000}
-.character-sheet .health .resource-track>div {background:linear-gradient(#bf5244,#7a2220 55%,#b33227);box-shadow:inset 0 1px #f2b39c55,0 0 9px #9f342d44}
-.character-sheet .energy .resource-track>div {background:linear-gradient(#6db6f2,#245487 55%,#387bcc);box-shadow:inset 0 1px #c2e6ff77,0 0 9px #2873bf33}
 .hero-counters {margin-top:11px;padding:8px 2px;border-color:#8f714740}
 .hero-counters>span {font-size:15px;color:#f0cc7e}.hero-counters small {font-size:7px;color:#b0a181}
 .sheet-inventory {margin-top:9px;color:#ccb890;font-size:10px}
@@ -295,7 +292,7 @@
   .action-dock .painted-art {width:43px;height:43px}.action-dock kbd {font-size:9px;right:8px;bottom:6px}
   .party-tabs .campaign-portrait.small {width:42px;height:42px}
   .character-sheet {padding:21px 17px 13px}.character-title h2 {font-size:21px}.character-title>.portrait {width:74px;height:74px}
-  .character-sheet .resource-track {height:15px}.character-sheet .resource-heading {font-size:11px}
+  .character-sheet .resource-heading {font-size:11px}
   .quest-panel {padding:19px 15px 12px}.quest-row {min-height:57px}.quest-row strong {font-size:12px}.quest-row small {font-size:10px}.quest-portrait .creature-glyph {width:39px;height:39px}
   .equipped-cards .folio-card {grid-template-columns:76px minmax(0,1fr);grid-template-rows:22px 38px 32px 20px;min-height:116px;max-height:116px;flex-basis:210px}
   .equipped-cards .folio-art,.equipped-cards .folio-art>.painted-art {width:76px;height:70px}

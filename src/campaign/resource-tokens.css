@@ -1,0 +1,31 @@
+/* Health and energy as tokens (components.tsx › ResourceBar): a token for every point held, an empty place for every point missing.
+   With the scans the tokens are the printed ones; without them a red drop and a blue shield are drawn. */
+.resource-tokens{display:flex;flex-wrap:wrap;gap:3px;min-height:18px;padding:3px 0 1px}
+.resource-tokens>i{position:relative;display:block;width:18px;height:18px;flex:none;border-radius:50%}
+.resource-tokens>i.spent{border:1px dashed #b89d6a66;background:radial-gradient(circle,#0000 40%,#0003)}
+.resource-tokens>i.held{animation:resource-token-in .28s cubic-bezier(.2,.8,.3,1.3) both}
+.resource-tokens>i.held>img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 1px 1px #000b)}
+.resource.health .resource-tokens>i.held:empty{background:radial-gradient(circle at 35% 30%,#ffb09c,#cf3d30 55%,#74160f);box-shadow:inset 0 0 0 1px #3a0d08,0 1px 2px #000a}
+.resource.energy .resource-tokens>i.held:empty{border-radius:30% 30% 46% 46%;background:radial-gradient(circle at 35% 30%,#bfe6ff,#3f86cf 55%,#1c3f77);box-shadow:inset 0 0 0 1px #0d2440,0 1px 2px #000a}
+.resource-tokens.many>i{width:14px;height:14px}
+@keyframes resource-token-in{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.resource-tokens>i.held{animation:none}}
+/* The dossier's two columns are narrow: smaller tokens keep five to a row. */
+.premium-character-sheet .sheet-vitals .resource-tokens{gap:2px;min-height:15px;padding:1px 0 0}
+.premium-character-sheet .sheet-vitals .resource-tokens>i{width:15px;height:15px}
+.premium-character-sheet .sheet-vitals .resource-tokens.many>i{width:13px;height:13px}
+/* In the combat sheet the two rows sit beside the profile, so the tokens are a little smaller. */
+.combat-sheet-vitals .resource-tokens{gap:2px;min-height:15px;padding:2px 0 0}
+.combat-sheet-vitals .resource-tokens>i{width:15px;height:15px}
+.combat-sheet-vitals .resource-tokens.many>i{width:12px;height:12px}
+/* On short screens the combat sheet gives both a 152 px column: the icon, the tokens and the number share one line, and the word
+   "Health" or "Energy" stays only for screen readers. */
+@media(max-height:800px) and (min-width:801px){
+ .combat-sheet-vitals .resource{display:flex;align-items:center;gap:5px}
+ .combat-sheet-vitals .resource-heading{display:contents}
+ .combat-sheet-vitals .resource-heading>span{flex:none;gap:0;font-size:0}
+ .combat-sheet-vitals .resource-heading .game-icon{width:16px;height:16px}
+ .combat-sheet-vitals .resource-heading>b{order:2;flex:none;min-width:30px;text-align:right}
+ .combat-sheet-vitals .resource-tokens{order:1;flex:1;min-width:0;padding:0}
+ .combat-sheet-vitals .resource-tokens>i,.combat-sheet-vitals .resource-tokens.many>i{width:13px;height:13px}
+}
