@@ -3,7 +3,7 @@ import type { Command, ContentPack, Hero, Pool } from '../rules/model.js';
 import type { GameView } from '../rules/view.js';
 import { availableCards } from '../rules/effects.js';
 import { cardValue, loadouts, scoreLoadout, usableItem } from './loadout.js';
-import { equipped } from '../rules/inventory.js';
+import { bagSize, equipped } from '../rules/inventory.js';
 import { apply } from '../rules/game.js';
 import { abilityCommands } from '../rules/legal.js';
 import { publicState } from './public-state.js';
@@ -28,6 +28,8 @@ function distance(p: ContentPack, from: string, to: string, f: string): number {
  } return 100;
 }
 const itemValue=cardValue;
+/** Gold a purchase should leave for the next one, and the least worth of a purchase for which a character walks to town. */
+const GOLD_RESERVE = 20, SHOP_WORTH = 4;
 /** The score of a move that is never worth making, such as a transfer that improves nobody's equipment. */
 const NEVER = -1000;
 /** What the caller knows beyond the table: `independent` are the characters played by someone else than these bots (see createStrategy). */
@@ -44,12 +46,15 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
   }
   return equipment!.get(key)!;
  };
+ // What gold is worth depends on what is left after spending it. A purchase that leaves a reserve for the next one is not weighed by
+ // its price; one that empties the purse is weighed in full. A flat price penalty kept characters with hundreds of gold from buying.
+ const dear=(h:Hero,cost:number)=>cost*Math.max(0,Math.min(1,1-(h.gold-cost)/GOLD_RESERVE));
  const trainValue=(h:Hero,ids:string[])=>{
   const key=`${h.id}:${[...ids].sort().join(',')}`;
   if(!training.has(key)){
    const next={...h,learned:[...h.learned,...ids]};
    const gain=bestEquipment(next)-bestEquipment(h),cost=ids.reduce((n,id)=>n+card(p,id).price,0);
-   training.set(key,gain*3-cost*.3-1.2+(ids.length>1?.25:0));
+   training.set(key,gain*3-dear(h,cost)*.3-1.2+(ids.length>1?.25:0));
   }
   return training.get(key)!;
  };
@@ -65,6 +70,22 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
   const next=structuredClone(h);next.bag=[...next.bag.filter(v=>v!==discard),id];
   return (bestEquipment(next)-bestEquipment(h))*3+Math.ceil(card(p,id).price/2)*.12-(discard?cardValue(p,discard,h)*.35:0);
  };
+ // The best purchase the Merchant's row holds for a character who can pay for it, as a Town action would score it.
+ const wants=new Map<string,{value:number;name:string}>();
+ const shopping=(h:Hero)=>{
+  if(!wants.has(h.id)){
+   let best={value:-Infinity,name:''};
+   for(const id of s.merchant){
+    const c=card(p,id);if(c.level>h.level||c.price>h.gold||!usableItem(p,h,c))continue;
+    // As in the legal moves: a bag over its three places gives up one item that takes a place (never the new one here).
+    const room=bagSize(p,[...h.bag,id])<=3;
+    for(const discard of room?[undefined]:h.bag.filter(v=>!card(p,v).bagExempt)){const value=itemGain(h,id,discard)-dear(h,c.price)*.4-1.2;if(value>best.value)best={value,name:c.name};}
+   }
+   wants.set(h.id,best);
+  }
+  return wants.get(h.id)!;
+ };
+ const worn=(h:Hero)=>{const cap=capacity(p,h);return h.health<cap.health*.85||h.energy<cap.energy*.85;};
  const scored = legal.map((command, index) => {
   let score = -10, reason = "Advancing to the next phase.";
   const h = 'hero' in command ? s.heroes.find(h => h.id === command.hero) : undefined;
@@ -74,6 +95,8 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
     const next=apply(p,publicState(s),command).heroes.find(v=>v.id===h!.id)!;
     score=recovery(h!,next)-1.3-(command.food?.length?.15:0);
     const plan=strategy.plan(h!);
+    // Close to the Overlord, a worn member of a faction at its peak rests before anything else.
+    if(plan&&plan.objective.boss===s.overlord.id&&worn(h!)&&strategy.lastStand(plan.objective,plan.party.map(id=>s.heroes.find(v=>v.id===id)!))&&strategy.distance(h!.location,plan.objective.region,f)<=2)score+=7;
     if(plan&&!plan.objective.clue&&plan.objective.region===h!.location&&h!.actions>1){
      const party=plan.party.map(id=>id===h!.id?next:s.heroes.find(v=>v.id===id)!);
      const ready=strategy.forecast(plan.objective,party);
@@ -96,12 +119,12 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
     if(s.enemies.some(e=>e.region===at&&e.color==='blue'))score-=4*risk;
     if(command.power){const power=card(p,command.power);score-=power.actionPower==='teleport'?command.path.length*.55:power.travelPower?.unequip?1:0;}
     // Retreat to a friendly town only when its recovery is worth the detour.
-    const cap=capacity(p,h!);
-    if(h!.health<cap.health*.35){
-     const towns=p.regions.filter(r=>r.town===f||r.town==='both');
-     const before=Math.min(...towns.map(r=>strategy.distance(h!.location,r.id,f))),after=Math.min(...towns.map(r=>strategy.distance(at,r.id,f)));
-     if(after<before)score=Math.max(score,4+(after===0?3:0));
-    }
+    const cap=capacity(p,h!),towns=p.regions.filter(r=>r.town===f||r.town==='both');
+    const townBefore=Math.min(...towns.map(r=>strategy.distance(h!.location,r.id,f))),townAfter=Math.min(...towns.map(r=>strategy.distance(at,r.id,f)));
+    if(h!.health<cap.health*.35&&townAfter<townBefore)score=Math.max(score,4+(townAfter===0?3:0));
+    // With the gold in hand and something in the Merchant's row worth having, a friendly town is worth the walk.
+    const want=shopping(h!);
+    if(want.value>SHOP_WORTH&&townAfter<townBefore){const trip=Math.min(8.5,2.5+want.value*.55)+(townAfter===0?1:0);if(trip>score){score=trip;reason=`Going to town for ${want.name}: it improves this character’s equipment, and the gold is there.`;}}
     break;
    }
    case 'challenge': {
@@ -113,6 +136,8 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
     if(objective.clue){score=-30;reason='Investigate the clue before committing a Challenge.';break;}
     const forecast=strategy.forecast(objective,party);
     score=strategy.value(objective,party,forecast);
+    // A faction at its peak fights the Overlord rested: it waits until every member has most of his health and energy.
+    if(strategy.lastStand(objective,party)&&party.some(worn)){score=-6;reason='Resting first: the party is not at full strength for the Overlord.';break;}
     if(objective.enemies[0]?.color==='blue')score+=5;
     reason=`Fighting ${objective.quest?'for ':''}${named(objective)} ${party.length>1?`with ${party.length} characters`:'alone'}: about ${forecast.rounds} ${forecast.rounds===1?'round':'rounds'} and ${forecast.wounds.toFixed(1)} wounds expected; ${forecast.win>.8?'low':forecast.win>.5?'moderate':'high'} risk.`;break;
    }
@@ -131,7 +156,7 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
    case 'train': score = trainValue(h!,command.cards); reason = "These powers improve the strongest loadout this character can equip."; break;
    case 'town': {
     const op = command.operations[0];
-    if (op?.op === 'buy') { const c = card(p, op.card); score = c.level <= h!.level&&usableItem(p,h!,c) ? itemGain(h!,c.id,op.discard)-c.price*.4-1.2 : -5; if (op.discard === op.card) score = -20; }
+    if (op?.op === 'buy') { const c = card(p, op.card); score = c.level <= h!.level&&usableItem(p,h!,c) ? itemGain(h!,c.id,op.discard)-dear(h!,c.price)*.4-1.2 : -5; if(score>SHOP_WORTH)score+=4; if (op.discard === op.card) score = -20; }
     else if (op?.op === 'sell') score = h!.bag.includes(op.card) && bagSizeValue(p, h!) >= 3 ? 2 : -5;
     else if(op?.op==='train')score=trainValue(h!,command.operations.filter(o=>o.op==='train').map(o=>o.card))+.1;
     else score = -1;

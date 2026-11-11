@@ -155,6 +155,8 @@ export function candidateObjectives(sorted: Objective[], overlord: string): Obje
  return [...sorted.slice(0, 5), ...sorted.slice(5).filter(o => o.boss === overlord)];
 }
 export const BOSS_COMMITMENT = 1.2;
+/** For a whole faction at level 5: the extra pull of the Overlord, the share of a quest's worth that is left, and the least chance it counts on. */
+export const PEAK_URGENCY = 60, PEAK_QUESTS = .4, PEAK_FLOOR = .3;
 /**
  * Regions Nefarian still has to cover before he reaches the Bulwark and forces the closing battles.
  * Undefined for the other Overlords and once the closing battles have begun.
@@ -318,19 +320,28 @@ export function createStrategy(p: ContentPack, s: GameView, risk: number, indepe
   const result = { win, wounds, rounds: round, damage: totalDamage / Math.max(1, round), health: initialHealth };
   forecasts.set(key, result); return result;
  };
+ // A faction is at its peak when every one of its characters is level 5. More quests then bring gold and items but no growth, and
+ // waiting cannot improve the odds against the Overlord: the whole faction together makes its attempt.
+ const peak = (party: Hero[]) => party.every(h => h.level === 5);
+ const lastStand = (o: Objective, party: Hero[]) => o.boss === s.overlord.id && peak(party) && party.length === s.heroes.filter(a => faction(p, a.id) === faction(p, party[0].id)).length;
  const rewardValue = (o: Objective, party: Hero[]) => {
   if (o.clue) return party.some(h => h.level >= 3) ? 7 : 0;
   // Urgency grows toward the end of a 30-turn game; in Defeat the Overlord it grows with each extra lap instead.
-  if (o.boss === s.overlord.id) return 65 + (!s.variants?.overlordOnly ? s.turn * .7 : ((s.lap ?? 1) - 1) * 21 + ((s.lap ?? 1) > 1 ? s.turn * .7 : 0)) + nefarianUrgency(nefarian);
+  if (o.boss === s.overlord.id) return 65 + (!s.variants?.overlordOnly ? s.turn * .7 : ((s.lap ?? 1) - 1) * 21 + ((s.lap ?? 1) > 1 ? s.turn * .7 : 0)) + nefarianUrgency(nefarian) + (lastStand(o, party) ? PEAK_URGENCY : 0);
   if (!o.reward) return o.enemies.some(e => e.color === 'blue') ? 3 : 5;
   const q = p.quests.find(q => q.id === o.quest), r = o.reward;
   const left = q ? s.enemies.filter(e => e.quest === q.id).length : o.enemies.length;
   const fraction = o.enemies.length ? Math.min(1, o.enemies.length / Math.max(1, left)) : 1;
   const xp = sum(party.map(h => h.level === 5 ? 0 : Math.max(0, r.xp / party.length - Math.max(0, h.level - (q?.level ?? h.level)))));
   const levelUp = party.some(h => h.level < 5 && h.xp + r.xp / party.length >= p.xp[h.level]) ? 3 : 0;
-  return (5 + xp * 2.8 + r.gold * .45 + r.items.length * 3 + (r.special?.length ?? 0) * 3 + levelUp) * fraction;
+  return (5 + xp * 2.8 + r.gold * .45 + r.items.length * 3 + (r.special?.length ?? 0) * 3 + levelUp) * fraction * (peak(party) ? PEAK_QUESTS : 1);
  };
- const value = (o: Objective, party: Hero[], f = forecast(o, party)) => f.win * rewardValue(o, party) - (1 - f.win) * (18 + party.length * 5) * risk - f.wounds * .32 * risk - party.length * .8;
+ const value = (o: Objective, party: Hero[], f = forecast(o, party)) => {
+  // The forecast of an Overlord fight has been wrong by half in both directions (a party given 9% won at its first attempt). A whole
+  // faction at its peak therefore counts on at least PEAK_FLOOR, and a lost attempt costs it time, not standing.
+  const final = lastStand(o, party), win = final ? Math.max(f.win, PEAK_FLOOR / Math.max(1, risk)) : f.win;
+  return win * rewardValue(o, party) - (1 - win) * (18 + party.length * 5) * risk * (final ? .3 : 1) - Math.min(f.wounds, final ? 30 : Infinity) * .32 * risk - party.length * .8;
+ };
  const plan = (h: Hero): Plan | undefined => {
   const key = JSON.stringify([h.id, h.location, h.health, h.energy, h.actions]);
   if (plans.has(key)) return plans.get(key);
@@ -356,5 +367,5 @@ export function createStrategy(p: ContentPack, s: GameView, risk: number, indepe
   }
   plans.set(key, best); return best;
  };
- return { distance, targets, forecast, rewardValue, value, plan };
+ return { distance, targets, forecast, rewardValue, value, plan, lastStand };
 }
