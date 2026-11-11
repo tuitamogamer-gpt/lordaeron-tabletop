@@ -100,14 +100,15 @@ describe('faction turns cannot overlap or skip a side', () => {
   expect(next.faction).toBe('alliance'); expect(next.turn).toBe(4);
  });
 
- it('war rewards and a level-up interrupt management without giving either faction another turn', () => {
-  const s = fresh(4); s.heroes.forEach(h => h.actions = 0); s.eventDeck = [];
+ // Rules revision 3 judges Wars at the end of the faction turn, after the turn marker has moved; earlier campaigns judged them before.
+ it.each([[2, 1], [3, 2]])('war rewards and a level-up interrupt the end of the turn without giving either faction another turn (rules revision %i)', (rules, markerDuringReward) => {
+  const s = fresh(4); s.variants = { ...s.variants, rules }; s.heroes.forEach(h => h.actions = 0); s.eventDeck = [];
   const allies = s.heroes.filter(h => faction(p, h.id) === 'alliance');
   allies[0].location = 'andorhal'; allies[1].location = 'hearthglen';
   s.wars = [{ id: 'event-24', regions: ['andorhal', 'hearthglen'], reward: { xp: 2, gold: 5, items: [] }, weakReward: { xp: 4, gold: 5, items: [] }, perHero: true }];
   hero(s, DEFAULT_SETUP.roster[0]).xp = 1; // Alliance receives the weaker-faction reward.
   let next = endTurn(s);
-  expect(next.phase).toBe('reward'); expect(next.faction).toBe('horde'); expect(next.turn).toBe(1);
+  expect(next.phase).toBe('reward'); expect(next.faction).toBe('horde'); expect(next.turn).toBe(markerDuringReward);
   next = decisions(next);
   expect(next.faction).toBe('alliance'); expect(next.turn).toBe(2);
   for (const h of allies) expect(hero(next, h.id)).toMatchObject({ gold: 10, xp: 4, level: 2, actions: 2 });

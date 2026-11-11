@@ -26,6 +26,7 @@ import RestEditor from './campaign/RestEditor';
 import SaveManager from './campaign/SaveManager';
 import BuildStamp from './campaign/BuildStamp';
 import { SoundControls, SoundToggle, useGameAudio } from './campaign/audio';
+import { warNews } from './campaign/war-news';
 import { hintCandidates, hintLabel, type Hint } from './campaign/hints';
 import CampaignSetup from './campaign/CampaignSetup';
 import QuestActivity from './campaign/QuestReveal';
@@ -60,6 +61,8 @@ export default function Campaign(){
  const state=useMemo(()=>view(game.state,controlled),[game.state,bots]),allLegal=useMemo(()=>legalActions(p,game.state),[game.state]);
  const presentation=useCombatPresentation(state);
  useGameAudio(p,game.needsSetup?undefined:state);
+ const lastView=useRef<typeof state|undefined>(undefined);
+ useEffect(()=>{const news=game.needsSetup?undefined:warNews(p,lastView.current,state);lastView.current=game.needsSetup?undefined:state;if(news)setToast(news);},[state,game.needsSetup]);
  const legal=allLegal.filter(c=>decisionOwners(p,state,c).some(id=>controlled.includes(id)));
  const h=state.heroes.find(h=>h.id===heroId)??state.heroes[0];
  const automationPaused=importBusy||!!panel||detailOpen||workspaceOpen||questOpen||mapFocus||page!=='board';

@@ -1,4 +1,4 @@
-import { assert, card, character, faction, factionName, hero, integer, note, other, random, shuffle } from './common.js';
+import { assert, card, character, faction, factionName, hero, integer, note, other, random, revised, shuffle } from './common.js';
 import { beginBattle } from './combat.js';
 import { drawQuest, finalAttacker, rewards, stronger } from './rewards.js';
 import { activeEvent, nefarianDestinations } from './world.js';
@@ -7,6 +7,16 @@ import type { ContentPack, Faction, State, WorldEvent } from './model.js';
 export { eventChoice } from './event-choices.js';
 export { battleEvents, purify } from './event-rewards.js';
 export function finishEvent(s:State){delete s.eventFlow;s.eventSeen=[];s.faction=other(s.faction);s.phase='actions';s.tradeWindow=false;note(s,`${factionName(s.faction)} begins faction turn ${s.turn}.`);}
+/**
+ * The faction turn ends when its Event step is over. From rules revision 3 the Wars are judged here: the rulebook rewards the faction that
+ * holds both regions “at the end of their opponents’ faction turn”, and that turn ends only after the turn marker has moved and its Event
+ * card is resolved. A War reward interrupts the hand-over; when it is distributed, the next War is judged, then the other faction begins.
+ * Campaigns begun earlier judged Wars before the turn marker moved (advanceTurn in game.ts) and keep doing so.
+ */
+export function endFactionTurn(p:ContentPack,s:State){
+ if(revised(s,3)){delete s.eventFlow;s.eventSeen=[];if(checkWars(p,s))return;}
+ finishEvent(s);
+}
 export const removeWorld=(s:State,id:string)=>{s.world=s.world?.filter(e=>e.id!==id);};
 export function addWorld(s:State,id:string):WorldEvent{
  const e:WorldEvent={id,tokens:[],attempts:[],gold:0,items:[],trophies:{horde:[],alliance:[]}};(s.world??=[]).push(e);return e;
@@ -31,9 +41,9 @@ export function drawEvents(p:ContentPack,s:State){
    if(s.eventFlow.steps.length||s.auction||s.respawns.length)return;
    if(!s.eventFlow.started)resolveEvent(p,s,e);
    if(s.eventFlow.steps.length||s.auction||s.respawns.length)return;
-   delete s.eventFlow;if(!e.bonus){finishEvent(s);return;}
+   delete s.eventFlow;if(!e.bonus){endFactionTurn(p,s);return;}
   }
-  if(!s.eventDeck.length){finishEvent(s);return;}
+  if(!s.eventDeck.length){endFactionTurn(p,s);return;}
   const id=s.eventDeck.shift()!,e=p.events.find(e=>e.id===id)!;
   const ears=activeEvent(p,s,'ears');if(ears)removeWorld(s,ears.id);
   s.eventDiscard.push(id);note(s,`Event: ${e.name}.`);
@@ -45,7 +55,7 @@ export function drawEvents(p:ContentPack,s:State){
    if(choices.length>1){s.eventFlow.steps.push({kind:'nefarian',hero:teamLeader(p,s,s.faction),faction:s.faction});if(duplicate)s.eventFlow.started=true;return;}
    s.overlord.region=choices[0];if(choices[0]==='bulwark'){startNefarian(p,s,finalAttacker(p,s));return;}
   }else {const o=p.overlords.find(o=>o.id===s.overlord.id)!;if(o.route?.length){const i=Math.max(0,o.route.indexOf(s.overlord.region));s.overlord.region=o.route[(i+e.fate)%o.route.length];}}
-  if(duplicate){finishEvent(s);return;}
+  if(duplicate){endFactionTurn(p,s);return;}
  }
 }
 export function bid(p:ContentPack,s:State,id:string,amount:number){
@@ -55,6 +65,8 @@ export function bid(p:ContentPack,s:State,id:string,amount:number){
 export function checkWars(p:ContentPack,s:State):boolean{
  const f=other(s.faction),hs=s.heroes.filter(h=>faction(p,h.id)===f),war=s.wars.find(w=>w.regions.every(r=>hs.some(h=>h.location===r)));if(!war)return false;
  s.wars=s.wars.filter(w=>w.id!==war.id);const reward=stronger(p,s).includes(f)?war.reward:war.weakReward??war.reward;
+ const [a,b]=war.regions.map(id=>p.regions.find(r=>r.id===id)?.name??id);
+ note(s,`${factionName(f)} wins ${p.events.find(e=>e.id===war.id)?.name??'the War'}, holding ${a} and ${b}: ${reward.gold} gold and ${reward.xp} XP ${war.perHero?'for each of its characters':'to share'}.`);
  rewards(p,s,hs.map(h=>h.id),hs.map(h=>h.id),war.perHero?{...reward,xp:reward.xp*hs.length,gold:reward.gold*hs.length}:reward);s.phase='reward';return true;
 }
 export function replacement(p:ContentPack,s:State,tier:'green'|'yellow'|'red'){

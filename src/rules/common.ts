@@ -21,7 +21,7 @@ export const capacity = (p: ContentPack, h: Hero) => {
  return base;
 };
 /** The rules revision new campaigns begin with; see Variants.rules. */
-export const RULES_REVISION = 2;
+export const RULES_REVISION = 3;
 /** True for a campaign begun with at least this rules revision. */
 export const revised = (s: { variants?: { rules?: number } }, revision = 2) => (s.variants?.rules ?? 1) >= revision;
 /** For the chronicle: "The Horde" / "The Alliance", and names joined as "A, B and C". */

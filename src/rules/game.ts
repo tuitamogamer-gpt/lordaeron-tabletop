@@ -1,7 +1,7 @@
-import { assert, capacity, card, character, faction, factionName, hero, integer, listed, note, other, region, shuffle, unique } from './common.js';
+import { assert, capacity, card, character, faction, factionName, hero, integer, listed, note, other, region, revised, shuffle, unique } from './common.js';
 import { activate, automatic, effects, settleAutomatic, spendEnergy } from './effects.js';
 import { beginBattle, chooseAttacker, continueWounds, creatureRule, defeat, defense, enforceDicePenalties, finishAttack, living, monsterEffect, nextRound, omitDice, placeTokens, poolPenalties, removePenalty, reroll, resolution, wound } from './combat.js';
-import { battleEvents, bid, checkWars, drawEvents, eventChoice, finishEvent, nextNefarianBattle, purify, removeWorld, replacement, skipReplacement } from './events.js';
+import { battleEvents, bid, checkWars, drawEvents, endFactionTurn, eventChoice, nextNefarianBattle, purify, removeWorld, replacement, skipReplacement } from './events.js';
 import { bagSize, equipped, manage, receiveItem, rest, townOperations, train, unequip } from './inventory.js';
 import { canLeaveBlue, independents, respawnRegions, travel } from './movement.js';
 import { drawQuest, finalAttacker, nextItem, rewards } from './rewards.js';
@@ -57,10 +57,11 @@ function finishRewards(p: ContentPack, s: State) {
  if (s.reward && (s.reward.offered.length || s.reward.items.length || s.reward.special.length || s.reward.extraItems?.length || s.reward.relic || s.reward.replacement)) return;
  delete s.reward;
  if (s.battle && nextQuestReward(p, s)) return;
- // War rewards interrupt management; normal quest rewards resume the action phase.
+ // Quest rewards resume the action phase. War rewards interrupt the end of the turn: from rules revision 3 after its Event step
+ // (events.ts › endFactionTurn), in earlier campaigns before the turn marker moves.
  s.phase = s.battle ? 'actions' : 'management'; s.tradeWindow = s.phase === 'actions'; delete s.battle;
  for (const h of s.heroes) h.stun = 0;
- if (s.phase === 'management') advanceTurn(p, s);
+ if (s.phase === 'management') { if (revised(s, 3)) endFactionTurn(p, s); else advanceTurn(p, s); }
 }
 function nextQuestReward(p: ContentPack, s: State): boolean {
  const b = s.battle;
@@ -72,13 +73,13 @@ function nextQuestReward(p: ContentPack, s: State): boolean {
  rewards(p, s, b.participants, living(s, b), reward, q);if(stolen){s.reward!.replacementFaction=q.faction;removeWorld(s,activeEvent(p,s,'subterfuge')!.id);} s.phase = 'reward'; return true;
 }
 function advanceTurn(p: ContentPack, s: State) {
- if (checkWars(p, s)) return;
+ if (!revised(s, 3) && checkWars(p, s)) return;
  if (s.turn === 30&&!s.variants?.overlordOnly) { s.phase = 'final-management'; s.faction = finalAttacker(p, s); for (const h of s.heroes) { Object.assign(h, capacity(p, h)); h.stun = 0; } s.finalReady = []; note(s, "Preparation for the final PvP battle begins."); return; }
  if(s.turn===30){s.turn=1;s.lap=(s.lap??1)+1;note(s,`Defeat the Overlord: campaign lap ${s.lap} begins.`);}else s.turn++;
  s.travels={};s.travelPowers=[]; for (const h of s.heroes) if (faction(p, h.id) === other(s.faction)) h.actions = 2;
  const icon = p.track[s.turn];
  if (icon === 'event') drawEvents(p, s);
- else { if (icon) s.merchant.push(...s.itemDecks[s.variants?.overlordOnly&&(s.lap??1)>1?'circle':icon].splice(0, 1)); finishEvent(s); }
+ else { if (icon) s.merchant.push(...s.itemDecks[s.variants?.overlordOnly&&(s.lap??1)>1?'circle':icon].splice(0, 1)); endFactionTurn(p, s); }
 }
 /** Atomic deterministic reducer. A rejected command never changes the original state. */
 export function apply(p: ContentPack, state: State, command: Command): State {
