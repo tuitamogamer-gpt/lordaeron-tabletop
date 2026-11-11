@@ -1,4 +1,5 @@
-// Music, sound effects and voice lines, all made with Fish Audio (docs/AUDIO-2026-11-10.md, scripts/prepare-audio.py).
+// Music, sound effects and voice lines, all made with Fish Audio (docs/EQUIPMENT-AND-SOUND-2026-11-10.md, docs/MUSIC-THEMES-2026-11-11.md,
+// scripts/prepare-audio.py).
 // Sounds follow the game state rather than the buttons: whatever changes the state (a player, the AI, an undo) is heard the same way.
 import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { Icon } from '../components';
@@ -9,7 +10,8 @@ import type { GameView } from '../rules/view';
 export type Sfx = 'dice' | 'sword' | 'card' | 'coins' | 'levelup' | 'victory';
 export type Voice = 'horde' | 'alliance' | 'turn-horde' | 'turn-alliance' | 'quest' | 'level' | 'victory-horde' | 'victory-alliance' | 'draw' | 'event'
  | 'overlord-kelthuzad' | 'overlord-nefarian' | 'overlord-kazzak' | 'fallen' | 'new-quest' | 'auction';
-export type Track = 'map' | 'battle';
+/** The scene the music belongs to: the map, a battle, or a battle against the Overlord or another boss. */
+export type Track = 'map' | 'battle' | 'boss';
 export interface Cue { sfx?: Sfx; voice?: Voice }
 
 /**
@@ -45,20 +47,40 @@ export function pick(list: Cue[]): Cue {
  return { sfx: list.find(c => c.sfx)?.sfx, voice: list.find(c => c.voice)?.voice };
 }
 
-/** One stretch of music: the loop played this many times, then this many seconds of quiet. */
+/**
+ * The themes of each scene, by file name in /assets/audio/themes. Every phrase plays the next theme of its scene, so a theme returns
+ * only after the others. A boss fight opens with its own theme and then alternates with the first battle theme.
+ */
+export const THEMES: Record<Track, string[]> = {
+ map: ['map', 'map-road', 'map-blight', 'map-council'],
+ battle: ['battle', 'battle-charge'],
+ boss: ['boss', 'battle'],
+};
+/**
+ * Every theme is one period of music that repeats without a seam, with `lead` seconds of the same music before and after it in the
+ * file (scripts/prepare-audio.py). Looping between those two marks keeps the loop points inside continuous sound, whatever the MP3
+ * coder and the browser's decoder do at the edges of the file.
+ */
+export const LOOP = { lead: 0.2, period: 13.6 };
+/** One stretch of music: the theme's period played this many times, then this many seconds of quiet. */
 export interface Phrase { cycles: number; rest: number }
 /**
- * The themes are loops of under fourteen seconds, and a loop that never stops wears thin within minutes. Each theme therefore plays in
- * phrases: a few cycles, a fade, a rest, then the next phrase. The map rests longer than a battle, and the pattern varies so that the
- * music does not return like clockwork.
+ * A period of under fourteen seconds that never stops wears thin within minutes, so the music plays in phrases: a few cycles of one
+ * theme, a fade, a rest, then the next theme. The map rests longer than a battle, and the pattern is not as long as the list of
+ * themes, so a theme does not always come with the same length and rest.
  */
 const PACING: Record<Track, Phrase[]> = {
- map: [{ cycles: 4, rest: 50 }, { cycles: 3, rest: 80 }, { cycles: 4, rest: 65 }, { cycles: 3, rest: 100 }],
- battle: [{ cycles: 5, rest: 20 }, { cycles: 4, rest: 30 }],
+ map: [{ cycles: 4, rest: 40 }, { cycles: 3, rest: 60 }, { cycles: 4, rest: 50 }],
+ battle: [{ cycles: 5, rest: 15 }, { cycles: 4, rest: 25 }, { cycles: 4, rest: 20 }],
+ boss: [{ cycles: 5, rest: 12 }, { cycles: 4, rest: 18 }, { cycles: 4, rest: 15 }],
 };
-/** The n-th phrase of a theme, counted from 0. */
+/** The n-th phrase of a scene, counted from 0. */
 export function phrase(track: Track, n: number): Phrase { const list = PACING[track]; return list[n % list.length]; }
-/** Seconds a phrase takes to fade in and to fade out; a theme pushed aside by the other scene fades in CROSSFADE. */
+/** The theme of a scene's n-th phrase; `first` is the place in the list where this session began. */
+export function theme(track: Track, n: number, first = 0): string { const list = THEMES[track]; return list[(first + n) % list.length]; }
+/** The scene whose music fits the table. */
+export function scene(state: Pick<GameView, 'phase' | 'battle'>): Track { return state.phase !== 'combat' ? 'map' : state.battle?.boss ? 'boss' : 'battle'; }
+/** Seconds a phrase takes to fade in and to fade out; a theme pushed aside by another scene fades in CROSSFADE. */
 export const FADE_IN = 1.5, FADE_OUT = 4, CROSSFADE = 1.2;
 
 export interface SoundSettings { muted: boolean; music: number; effects: number; voices: boolean }
@@ -66,7 +88,7 @@ const KEY = 'lordaeron-audio-v1', DEFAULTS: SoundSettings = { muted: false, musi
 function loadSettings(): SoundSettings {
  try { const saved = JSON.parse(localStorage.getItem(KEY) ?? 'null'); return saved && typeof saved === 'object' ? { ...DEFAULTS, ...saved } : DEFAULTS; } catch { return DEFAULTS; }
 }
-const src = (kind: 'music' | 'sfx' | 'voice', name: string) => `/assets/audio/${kind}/${name}.mp3`;
+const src = (kind: 'themes' | 'sfx' | 'voice', name: string) => `/assets/audio/${kind}/${name}.mp3`;
 
 /** Plays everything through Web Audio, once the browser allows sound (after the first click or key press). Without Web Audio it stays silent. */
 export class AudioDirector {
@@ -76,13 +98,20 @@ export class AudioDirector {
  private buffers = new Map<string, Promise<AudioBuffer | undefined>>();
  private track?: { name: Track; source: AudioBufferSourceNode; gain: GainNode; rest: number };
  private wanted?: Track;
- /** How many phrases each theme has begun, and until when (performance.now) each one rests. */
- private phrases: Record<Track, number> = { map: 0, battle: 0 };
- private restUntil: Record<Track, number> = { map: 0, battle: 0 };
+ /** How many phrases each scene has begun, until when (performance.now) each one rests, and with which theme this session began. */
+ private phrases: Record<Track, number> = { map: 0, battle: 0, boss: 0 };
+ private restUntil: Record<Track, number> = { map: 0, battle: 0, boss: 0 };
+ private first: Record<Track, number>;
  private timer?: ReturnType<typeof setTimeout>;
  private voiceUntil = 0;
  private recent = new Map<string, number>();
  private listeners = new Set<() => void>();
+
+ /** `random` picks the theme each session starts with on the map and in battle; a boss fight always opens with the boss theme. */
+ constructor(random: () => number = Math.random) {
+  const pick = (track: Track) => Math.floor(random() * THEMES[track].length) % THEMES[track].length;
+  this.first = { map: pick('map'), battle: pick('battle'), boss: 0 };
+ }
 
  subscribe = (listener: () => void) => { this.listeners.add(listener); return () => { this.listeners.delete(listener); }; };
  snapshot = () => this.settings;
@@ -148,12 +177,14 @@ export class AudioDirector {
  }
 
  /**
-  * Keeps the scene's theme on its schedule: a phrase of a few cycles (the files loop without a seam), a fade, a rest, the next phrase.
-  * The other scene's theme fades out and starts its rest. A battle's theme begins with the battle; the map's waits out its rest.
-  * `now` skips the rest.
+  * Keeps the scene's music on its schedule: a phrase of a few cycles of one theme, a fade, a rest, the next theme. The other scene's
+  * music fades out and starts its rest. A battle's music begins with the battle, and a boss fight opens with the boss theme; the
+  * map's music waits out its rest. `now` skips the rest.
   */
  async music(name: Track, now = false) {
-  if (now || name === 'battle' && this.wanted !== name) this.restUntil[name] = 0;
+  const entering = this.wanted !== name;
+  if (now || name !== 'map' && entering) this.restUntil[name] = 0;
+  if (name === 'boss' && entering) this.phrases.boss = 0;
   this.wanted = name;
   clearTimeout(this.timer);
   if (!this.ready() || this.settings.music <= 0 || this.track?.name === name) return;
@@ -163,15 +194,19 @@ export class AudioDirector {
    this.timer = setTimeout(() => { if (this.wanted === name) void this.music(name); }, wait);
    return;
   }
-  const buffer = await this.load(src('music', name));
-  if (!buffer || !this.ctx || !this.buses || this.wanted !== name || this.track?.name === name || !this.ready()) return;
+  const n = this.phrases[name], buffer = await this.load(src('themes', theme(name, n, this.first[name])));
+  if (!this.ctx || !this.buses || this.wanted !== name || this.track?.name === name || this.phrases[name] !== n || !this.ready()) return;
+  this.phrases[name] = n + 1;
+  // A theme that cannot be loaded gives its turn to the next one at the next call.
+  if (!buffer) return;
   this.stopMusic(CROSSFADE, true);
-  const { cycles, rest } = phrase(name, this.phrases[name]++), play = buffer.duration * cycles;
+  const { cycles, rest } = phrase(name, n), play = LOOP.period * cycles;
   const gain = this.ctx.createGain(), source = this.ctx.createBufferSource(), t = this.ctx.currentTime;
   gain.gain.setValueAtTime(0, t); gain.gain.linearRampToValueAtTime(1, t + FADE_IN);
   gain.gain.setValueAtTime(1, t + play - FADE_OUT); gain.gain.linearRampToValueAtTime(0, t + play);
   gain.connect(this.buses.music);
-  source.buffer = buffer; source.loop = true; source.connect(gain); source.start(); source.stop(t + play + 0.05);
+  source.buffer = buffer; source.loop = true; source.loopStart = LOOP.lead; source.loopEnd = LOOP.lead + LOOP.period;
+  source.connect(gain); source.start(t, LOOP.lead); source.stop(t + play + 0.05);
   const track = { name, source, gain, rest };
   // The phrase ran its length (audio time: a hidden tab pauses it): the rest begins, and the next phrase follows it.
   source.onended = () => {
@@ -195,12 +230,12 @@ export class AudioDirector {
  }
 
  /** No music while there is no campaign on the table. */
- silence() { this.wanted = undefined; clearTimeout(this.timer); this.stopMusic(); this.restUntil = { map: 0, battle: 0 }; this.phrases = { map: 0, battle: 0 }; }
+ silence() { this.wanted = undefined; clearTimeout(this.timer); this.stopMusic(); this.restUntil = { map: 0, battle: 0, boss: 0 }; this.phrases = { map: 0, battle: 0, boss: 0 }; }
 }
 
 export const audio = new AudioDirector();
 
-/** The map theme on the table, the battle theme in combat, and the cues of each change of the game state. */
+/** The map's themes on the table, the battle themes in combat, the boss theme against the Overlord, and the cues of each change of the game state. */
 export function useGameAudio(p: ContentPack, state: GameView | undefined) {
  const previous = useRef<GameView | undefined>(undefined);
  useEffect(() => {
@@ -215,7 +250,7 @@ export function useGameAudio(p: ContentPack, state: GameView | undefined) {
   previous.current = state;
   if (sfx) void audio.play('sfx', sfx);
   if (voice) void audio.play('voice', voice);
-  void audio.music(state.phase === 'combat' ? 'battle' : 'map');
+  void audio.music(scene(state));
  }, [p, state]);
 }
 
@@ -235,6 +270,6 @@ export function SoundControls() {
   <label className="setting-row"><input type="checkbox" checked={!s.muted} onChange={e => { audio.unlock(); audio.update({ muted: !e.target.checked }); }} />Play music and sound effects</label>
   {volume('music', 'Music')}{volume('effects', 'Effects')}
   <label className="setting-row"><input type="checkbox" checked={s.voices} onChange={e => { audio.unlock(); audio.update({ voices: e.target.checked }); }} />Voice lines (battle cries, turns, quests, the Overlord)</label>
-  <p className="sound-credit">The music comes and goes: each theme plays for about a minute, then rests. Music, effects and voices made with Fish Audio.</p>
+  <p className="sound-credit">The music comes and goes: a theme plays for about a minute, then rests, and another follows. Music, effects and voices made with Fish Audio.</p>
  </section>;
 }
