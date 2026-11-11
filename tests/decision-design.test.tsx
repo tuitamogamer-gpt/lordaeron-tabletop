@@ -4,6 +4,7 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
 import { character } from '../src/rules/common';
 import { createGame } from '../src/rules/game';
+import { legalActions } from '../src/rules/legal';
 import type { Command, State } from '../src/rules/model';
 import { view } from '../src/rules/view';
 import WorldDecision from '../src/campaign/WorldDecision';
@@ -11,6 +12,21 @@ import { BossPortrait } from '../src/campaign/design-system';
 
 afterEach(cleanup);
 const decision = (s: State, legal: Command[], send = vi.fn()) => <WorldDecision state={view(s)} legal={legal} send={send} inspect={vi.fn()} botStep={() => {}} botReady={false} auto={false} toggleBots={() => {}}/>;
+
+describe('new talent', () => {
+ it('names the character who gained the level, one character at a time', () => {
+  const s = createGame(p, DEFAULT_SETUP), [first, second] = s.heroes;
+  first.level = 2; first.talentChoices = [2]; second.level = 3; second.talentChoices = [3];
+  const ui = render(decision(s, legalActions(p, s)));
+  const dialog = () => screen.getByRole('dialog', { name: 'New talent' });
+  expect(dialog().textContent).toContain(`${character(p, first.id).name} · level 2`);
+  expect(dialog().textContent).toContain(`${character(p, first.id).name.split(' ')[0]} reached level 2: choose one permanent talent.`);
+  first.talentChoices = [];
+  ui.rerender(decision(s, legalActions(p, s)));
+  expect(dialog().textContent).toContain(`${character(p, second.id).name} · level 3`);
+  expect(dialog().textContent).toContain(`${character(p, second.id).name.split(' ')[0]} reached level 3: choose one permanent talent.`);
+ });
+});
 
 describe('auction house', () => {
  const auction = () => {
