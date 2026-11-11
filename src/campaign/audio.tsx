@@ -30,7 +30,8 @@ export function cues(p: ContentPack, prev: GameView | undefined, next: GameView)
  }
  const dice = (v: GameView) => v.battle?.active?.dice.map(d => `${d.id}:${d.value}:${d.rerolled ? 1 : 0}`).join(',') ?? '';
  if (dice(next) && dice(next) !== dice(prev) && (next.battle?.active?.dice.length ?? 0) >= (prev.battle?.active?.dice.length ?? 0)) out.push({ sfx: 'dice' });
- if (next.eventSeen.length > prev.eventSeen.length) out.push({ sfx: 'card', voice: 'event' });
+ // The discard pile grows with every Event card drawn; eventSeen is emptied again when an Event resolves without a decision.
+ if (next.eventDiscard.length > prev.eventDiscard.length) out.push({ sfx: 'card', voice: 'event' });
  if (next.quests.some(q => !prev.quests.includes(q))) out.push({ sfx: 'card', voice: 'new-quest' });
  if (next.auction && !prev.auction) out.push({ voice: 'auction' });
  const gold = (v: GameView) => v.heroes.reduce((n, h) => n + h.gold, 0);

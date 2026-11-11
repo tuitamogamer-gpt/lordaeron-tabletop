@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
 import { cues, pick } from '../src/campaign/audio';
 import { faction } from '../src/rules/common';
-import { createGame } from '../src/rules/game';
+import { apply, createGame } from '../src/rules/game';
 import { view, type GameView } from '../src/rules/view';
 
 const start = (overlord = 'kelthuzad') => view(createGame(p, { ...DEFAULT_SETUP, overlord }));
@@ -42,11 +42,22 @@ describe('the sound of the game state', () => {
 
  it('announces events, new quests, auctions and the next faction’s turn', () => {
   const a = start();
-  expect(pick(cues(p, a, step(a, n => { n.eventSeen.push('Plague'); })))).toEqual({ sfx: 'card', voice: 'event' });
+  expect(pick(cues(p, a, step(a, n => { n.eventDiscard.push('event-11'); })))).toEqual({ sfx: 'card', voice: 'event' });
   expect(pick(cues(p, a, step(a, n => { n.quests = [...n.quests.slice(1), 'a-new-quest']; })))).toEqual({ sfx: 'card', voice: 'new-quest' });
   expect(pick(cues(p, a, step(a, n => { n.auction = { event: 'auction-house', item: 'x', submitted: [], ownBids: {} }; }))).voice).toBe('auction');
   const next = step(a, n => { n.faction = n.faction === 'horde' ? 'alliance' : 'horde'; n.phase = 'actions'; });
   expect(pick(cues(p, a, next)).voice).toBe(`turn-${next.faction}`);
+ });
+
+ it('is heard for an Event card that resolves without any decision, at the end of a real turn', () => {
+  // Turn 3 is the Horde’s and space 4 draws an Event card; a War needs no decision, so the whole Event step passes within one command.
+  const s = createGame(p, DEFAULT_SETUP); s.turn = 3; s.eventDeck = ['event-24', ...s.eventDeck.filter(id => id !== 'event-24')];
+  for (const h of s.heroes) h.actions = 0;
+  let last = apply(p, s, { type: 'endActions' });
+  for (const h of last.heroes.filter(h => faction(p, h.id) === last.faction)) last = apply(p, last, { type: 'manage', hero: h.id, slots: h.slots, discard: [] });
+  const next = apply(p, last, { type: 'endManagement' });
+  expect(next.eventDiscard).toEqual(['event-24']);
+  expect(pick(cues(p, view(last), view(next)))).toEqual({ sfx: 'card', voice: 'event' });
  });
 
  it('ends with the winner’s fanfare, or with the draw line when Nefarian outlasts both', () => {
