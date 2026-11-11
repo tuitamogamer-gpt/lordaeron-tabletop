@@ -33,6 +33,8 @@ import { UNDO_DEPTH, undoable, undoName } from './campaign/undo';
 import CharacterSheet, { CardRules, startingHero } from './campaign/CharacterSheet';
 import { AUTO_CONTINUE_MS, bookkeepingStep, combatCandidates, COMBAT_STEP_MS, DICE_SETTLE_MS, rollSignature, useCombatPresentation } from './campaign/combat-flow';
 import ChallengeDialog from './campaign/ChallengeDialog';
+import ChallengeInvite from './campaign/ChallengeInvite';
+import { invitedPlayers, inviteKey, jointChallenges, type Challenge } from './campaign/invitations';
 import { BOTS_KEY as BOTS, loadBots, loadCampaign, PREVIOUS_SAVE_KEY, readSave, RECOVERY_SAVE_KEY, recoverySave, SAVE_KEY as SAVE } from './campaign/saves';
 const CampaignCombat=lazy(()=>import('./campaign/Combat'));
 const DesignGallery=lazy(()=>import('./campaign/DesignGallery'));
@@ -63,11 +65,15 @@ export default function Campaign(){
  useEffect(()=>{const news=game.needsSetup?undefined:warNews(p,lastView.current,state);lastView.current=game.needsSetup?undefined:state;if(news)setToast(news);},[state,game.needsSetup]);
  const legal=allLegal.filter(c=>decisionOwners(p,state,c).some(id=>controlled.includes(id)));
  const h=state.heroes.find(h=>h.id===heroId)??state.heroes[0];
- const automationPaused=importBusy||!!panel||detailOpen||workspaceOpen||questOpen||mapFocus||page!=='board';
+ // A bot's invitation to its challenge, waiting for the player's answer, and the characters who declined this faction turn.
+ const[invitation,setInvitation]=useState<{command:Challenge;reason:string;source:typeof game.state}>(),declined=useRef(new Set<string>());
+ const automationPaused=importBusy||!!panel||detailOpen||workspaceOpen||questOpen||mapFocus||page!=='board'||!!invitation;
  const can=(type:Command['type'])=>legal.some(c=>c.type===type&&(!('hero'in c)||c.hero===h.id));
  const nextPhase=game.needsSetup?undefined:legal.find(c=>c.type==='endActions'||c.type==='endManagement');
  const availableBotMoves=state.phase==='combat'?combatCandidates(p,state,allLegal,bots,{resolve:true,campaignAuto:auto,difficulty}):allLegal.filter(c=>botOwns(p,game.state,c,bots));
  const botReady=availableBotMoves.length>0;
+ // What the bots may do on the table: their own moves, and challenges that ask a player's character along.
+ const tableMoves=(s:typeof game.state,legalNow:Command[])=>[...legalNow.filter(c=>botOwns(p,s,c,currentBots.current)),...jointChallenges(s,legalNow,currentBots.current,declined.current)];
  const afterHumanResponse=state.phase==='combat'?combatCandidates(p,state,allLegal,bots,{resolve:true,campaignAuto:auto,difficulty,humanResponsePassed:true}):[];
  const botResponsePending=!availableBotMoves.length&&afterHumanResponse.length>0;
  useEffect(()=>{
@@ -97,15 +103,25 @@ export default function Campaign(){
   const request=Symbol();botRequest.current=request;
   try{
    planner.current??=new PlannerClient();
-   const decision=await planner.current.plan(view(source,bots),candidates,difficulty);
-   if(decision&&botRequest.current===request&&valid()&&current.current.state===source&&currentBots.current===seats&&botOwns(p,source,decision.command,currentBots.current)){
+   const decision=await planner.current.plan(view(source,bots),candidates,difficulty,{independent:source.heroes.filter(v=>!seats.includes(v.id)).map(v=>v.id)});
+   const fresh=!!decision&&botRequest.current===request&&valid()&&current.current.state===source&&currentBots.current===seats;
+   // The bot wants a player's character beside it: ask, do not draft.
+   if(fresh&&decision.command.type==='challenge'&&invitedPlayers(decision.command,seats).length){botRequest.current=null;setInvitation({command:decision.command,reason:decision.reason,source});}
+   else if(fresh&&botOwns(p,source,decision.command,currentBots.current)){
     const stillBotWindow=source.phase!=='combat'||combatCandidates(p,view(source),legalActions(p,source),currentBots.current,{resolve:true,campaignAuto:auto,difficulty,humanResponsePassed}).length>0;
     if(stillBotWindow){botRequest.current=null;setBotReason(decision.reason);send(decision.command);}
    }
   }catch(e){if(botRequest.current===request&&valid()&&current.current.state===source){setAuto(false);setCombatResolve(false);setToast((e as Error).message);}}
   finally{if(botRequest.current===request)botRequest.current=null;}
  };
- const botStep=()=>{if(state.phase==='combat'&&(diceRolling||presentation.busy))return;void planMove(availableBotMoves);};
+ const botStep=()=>{if(state.phase==='combat'&&(diceRolling||presentation.busy))return;void planMove(state.phase==='combat'?availableBotMoves:tableMoves(game.state,allLegal));};
+ useEffect(()=>{setInvitation(v=>v&&v.source!==game.state?undefined:v);},[game.state]);
+ const joinInvitation=()=>{const v=invitation;setInvitation(undefined);if(v&&v.source===current.current.state)send(v.command);};
+ const declineInvitation=()=>{
+  const v=invitation;setInvitation(undefined);if(!v)return;
+  for(const id of invitedPlayers(v.command,currentBots.current))declined.current.add(inviteKey(v.source,id));
+  if(v.source===current.current.state)void planMove(tableMoves(v.source,legalActions(p,v.source)));
+ };
  // The move advisor: the planner weighs the selected character's own actions on request. Its own worker keeps it apart from the bots' turn.
  const advisor=useRef<PlannerClient|null>(null),hintRequest=useRef(0);
  const[hint,setHint]=useState<Hint&{command?:Command;source?:typeof game.state}>();
@@ -127,7 +143,7 @@ export default function Campaign(){
  // What the advisor expects of one exact challenge: the Challenge dialog shows it under the party the player has put together.
  const assessChallenge=async(c:Command)=>{advisor.current??=new PlannerClient();return (await advisor.current.plan(view(current.current.state,controlled),[c],difficulty))?.reason;};
  const passHumanResponse=()=>{if(!botResponsePending||diceRolling||presentation.busy)return;void planMove(afterHumanResponse,()=>true,true);};
- useEffect(()=>{if(!auto||!botReady||automationPaused||state.phase==='combat')return;let cancelled=false;const t=setTimeout(()=>{void planMove(allLegal.filter(c=>botOwns(p,game.state,c,bots)),()=>!cancelled);},550);return()=>{cancelled=true;clearTimeout(t);};},[auto,botReady,automationPaused,game.state,bots,difficulty]);
+ useEffect(()=>{if(!auto||!botReady||automationPaused||state.phase==='combat')return;let cancelled=false;const t=setTimeout(()=>{void planMove(tableMoves(game.state,allLegal),()=>!cancelled);},550);return()=>{cancelled=true;clearTimeout(t);};},[auto,botReady,automationPaused,game.state,bots,difficulty]);
  const rollingKey=rollSignature(state),diceRolling=!!rollingKey&&rollingKey!==settledRoll;
  useEffect(()=>{if(!rollingKey){setSettledRoll('');return;}const t=setTimeout(()=>setSettledRoll(rollingKey),DICE_SETTLE_MS);return()=>clearTimeout(t);},[rollingKey]);
  useEffect(()=>{setCombatOpen(state.phase==='combat');},[state.phase]);
@@ -191,6 +207,7 @@ export default function Campaign(){
  {panel==='settings'&&<div className="dialog-content"><SaveManager needsSetup={!!game.needsSetup} unavailable={saveUnavailable} importing={importBusy} previous={previousSave} recovered={recoveredSave} legacy={legacySave} exported={exportJSON} onExport={exportSave} onImport={()=>file.current?.click()} onDownload={(raw,name)=>{setExportJSON(raw);try{downloadSession(raw,name);}catch{setToast('Copy the game backup below and save it as a JSON file.');}}} onRestore={()=>{if(!previousSave)return;try{const next=importSession(p,previousSave),human=next.state.heroes.find(hero=>faction(p,hero.id)===next.state.faction)??next.state.heroes[0];importRequest.current++;setImportBusy(false);replaceCampaign(next,human.id,[]);setToast('Previous campaign restored. All characters are under your control; assign AI in Settings.');}catch(e){setToast((e as Error).message);}}}/><SoundControls/><label className="setting-row">Bot play style<select value={difficulty} onChange={e=>setDifficulty(e.target.value as Difficulty)}><option value="balanced">Balanced</option><option value="cautious">Cautious</option><option value="aggressive">Aggressive</option></select></label><div className="bot-seats">{state.heroes.map(hero=><label key={hero.id}><HeroPortrait id={hero.id} small/><span>{character(p,hero.id).name}</span><input type="checkbox" checked={bots.includes(hero.id)} onChange={e=>setBots(v=>e.target.checked?[...v,hero.id]:v.filter(id=>id!==hero.id))}/>AI</label>)}</div><button className="gold-button full-width" onClick={()=>open('new')}>New campaign</button><p className="muted">Online rooms are not yet available. Export a backup to continue on another device.</p><BuildStamp rules={game.needsSetup?undefined:state.variants?.rules??1}/></div>}
  {panel==='new'&&<>{game.unreadableSave&&<p className="setup-recovery-notice" role="alert">Your saved game could not be opened. Its original file is preserved. <button className="quiet-button" onClick={()=>open('settings')}>Open save recovery</button></p>}<CampaignSetup onStart={reset} onCancel={()=>setPanel(null)} existing={!game.needsSetup}/></>}
  </Modal>}
+ {invitation&&invitation.source===game.state&&<Modal title="An ally asks for help" onClose={declineInvitation}><ChallengeInvite state={state} command={invitation.command} reason={invitation.reason} bots={bots} onJoin={joinInvitation} onDecline={declineInvitation}/></Modal>}
  {detailOpen&&<Modal title={card(p,detailCard).name} onClose={()=>setDetailOpen(false)}><div className="card-detail"><GameCard card={card(p,detailCard)}/><div>{panel==='train'&&<button className="quiet-button" onClick={()=>setDetailOpen(false)}>← Back to training</button>}<h3>{card(p,detailCard).name}</h3><p>Level {card(p,detailCard).level} · {card(p,detailCard).trait||card(p,detailCard).type} · {card(p,detailCard).energy} energy</p><CardRules value={card(p,detailCard)}/><a className="source-link" href={card(p,detailCard).source.url} target="_blank" rel="noreferrer">Original card ↗</a></div></div></Modal>}
  </div>;
 }

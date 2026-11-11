@@ -253,7 +253,11 @@ export function lateTokens(p: ContentPack, h: Hero, live: Die[], rule: string, e
 }
 function oRule(p: ContentPack, s: State) { return p.creatures.find(c => c.id === s.enemies.find(e => e.id === s.battle?.enemies[0])?.creature)?.rule ?? 'none'; }
 
-export function createStrategy(p: ContentPack, s: GameView, risk: number) {
+/**
+ * `independent` names the characters this planner does not steer (a player's own, when it plans for the bots beside them). A party
+ * may count on such a character only where he already stands: he can be invited to a challenge there, but nobody can make him travel.
+ */
+export function createStrategy(p: ContentPack, s: GameView, risk: number, independent: string[] = []) {
  const nefarian = nefarianSteps(p, s);
  const distances = new Map<string, number>(), forecasts = new Map<string, Forecast>(), plans = new Map<string, Plan | undefined>();
  const goals = new Map<Faction, Objective[]>();
@@ -341,6 +345,7 @@ export function createStrategy(p: ContentPack, s: GameView, risk: number) {
    for (let mask = 0; mask < 1 << friends.length; mask++) {
     const party = [h, ...friends.filter((_, i) => mask & (1 << i))];
     if (o.clue && party.length > 1) continue;
+    if (party.some(a => a.id !== h.id && independent.includes(a.id) && a.location !== o.region)) continue;
     const travels = party.map(a => Math.ceil(distance(a.location, o.region, side) / 2));
     if (travels.some((t,i) => t > 6 || (!s.variants?.overlordOnly && t+1>party[i].actions+2*Math.floor((30-s.turn)/2)))) continue;
     const wait = Math.max(...travels.map((t, i) => Math.max(0, t + 1 - party[i].actions)));

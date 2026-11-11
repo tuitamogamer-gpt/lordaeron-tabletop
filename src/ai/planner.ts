@@ -28,9 +28,11 @@ function distance(p: ContentPack, from: string, to: string, f: string): number {
  } return 100;
 }
 const itemValue=cardValue;
-export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty: Difficulty = 'balanced'): Decision | undefined {
+/** What the caller knows beyond the table: `independent` are the characters played by someone else than these bots (see createStrategy). */
+export interface PlanOptions { independent?: string[] }
+export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty: Difficulty = 'balanced', options: PlanOptions = {}): Decision | undefined {
  const risk = difficulty === 'cautious' ? 1.5 : difficulty === 'aggressive' ? .65 : 1;
- const strategy = createStrategy(p,s,risk), training = new Map<string,number>();
+ const strategy = createStrategy(p,s,risk,options.independent), training = new Map<string,number>();
  let equipment=equipmentCaches.get(p);if(!equipment){equipment=new Map();equipmentCaches.set(p,equipment);}
  const bestEquipment = (h:Hero) => {
   const key=JSON.stringify([h.id,h.level,h.learned,h.bag,h.slots,h.energy,h.talents,h.auctionItems,h.pets]);

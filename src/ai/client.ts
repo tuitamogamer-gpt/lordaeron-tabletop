@@ -1,5 +1,5 @@
 import { BASE_PACK } from '../data/base/index.js';
-import { decide, type Decision, type Difficulty } from './planner.js';
+import { decide, type Decision, type Difficulty, type PlanOptions } from './planner.js';
 import type { Command } from '../rules/model.js';
 import type { GameView } from '../rules/view.js';
 
@@ -17,8 +17,8 @@ export class PlannerClient {
   for(const request of this.pending.values()){clearTimeout(request.timer);request.reject(error);}
   this.pending.clear();worker.terminate();this.worker=undefined;
  }
- async plan(state:GameView,legal:Command[],difficulty:Difficulty):Promise<Decision|undefined>{
-  if(typeof Worker==='undefined')return Promise.resolve(decide(BASE_PACK,state,legal,difficulty));
+ async plan(state:GameView,legal:Command[],difficulty:Difficulty,options:PlanOptions={}):Promise<Decision|undefined>{
+  if(typeof Worker==='undefined')return Promise.resolve(decide(BASE_PACK,state,legal,difficulty,options));
   if(!this.worker){
    const worker=this.factory();this.worker=worker;
    worker.onmessage=({data}:{data:{id:number;decision?:Decision;error?:string}})=>{
@@ -34,7 +34,7 @@ export class PlannerClient {
   return new Promise((resolve,reject)=>{
    const timer=setTimeout(()=>this.fail(worker,new Error('AI planning timed out. Try Step bot again.')),AI_PLAN_TIMEOUT_MS);
    this.pending.set(id,{resolve,reject,timer});
-   try{worker.postMessage({id,state,legal,difficulty});}
+   try{worker.postMessage({id,state,legal,difficulty,options});}
    catch{this.fail(worker,new Error('AI planning could not start. Try Step bot again.'));}
   });
  }

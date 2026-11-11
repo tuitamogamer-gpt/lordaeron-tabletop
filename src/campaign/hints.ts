@@ -15,6 +15,13 @@ export function hintCandidates(legal: Command[], heroId: string): Command[] {
 const first = (p: ContentPack, id: string) => character(p, id).name.split(' ')[0];
 const regionName = (p: ContentPack, id: string) => p.regions.find(r => r.id === id)?.name ?? id;
 
+/** Whom a challenge fights, as a sentence would name them: “the Wraith”, “the 2 Crusaders”, “Kel’Thuzad”, “the enemy characters”. */
+export function foeName(p: ContentPack, state: Pick<GameView, 'enemies'>, c: Extract<Command, { type: 'challenge' }>): string {
+ const enemy = state.enemies.find(e => e.id === c.target), creature = p.creatures.find(v => v.id === enemy?.creature);
+ const group = enemy ? state.enemies.filter(e => e.region === enemy.region && e.creature === enemy.creature && (e.color === 'blue') === (enemy.color === 'blue') && e.faction === enemy.faction).length : 0;
+ return c.target === 'pvp' ? 'the enemy characters' : creature ? group > 1 ? `the ${group} ${creature.name}s` : `the ${creature.name}` : p.overlords.find(o => o.id === c.target)?.name ?? p.events.find(e => e.id === c.target)?.name ?? 'the boss';
+}
+
 /** What a suggested action is, in the words of the action buttons: “Travel to Stillwater Pond”, “Challenge the Crusader with Sofeea”. */
 export function hintLabel(p: ContentPack, state: Pick<GameView, 'heroes' | 'enemies' | 'overlord'>, c: Command): string {
  switch (c.type) {
@@ -31,10 +38,7 @@ export function hintLabel(p: ContentPack, state: Pick<GameView, 'heroes' | 'enem
   }
   case 'challenge': {
    const hero = state.heroes.find(h => h.id === c.hero), at = c.region ?? hero?.location ?? '';
-   const enemy = state.enemies.find(e => e.id === c.target), creature = p.creatures.find(v => v.id === enemy?.creature);
-   const group = enemy ? state.enemies.filter(e => e.region === enemy.region && e.creature === enemy.creature && (e.color === 'blue') === (enemy.color === 'blue') && e.faction === enemy.faction).length : 0;
-   const foe = c.target === 'pvp' ? 'the enemy characters' : creature ? group > 1 ? `the ${group} ${creature.name}s` : `the ${creature.name}` : p.overlords.find(o => o.id === c.target)?.name ?? p.events.find(e => e.id === c.target)?.name ?? 'the boss';
-   return `Challenge ${foe} in ${regionName(p, at)}${c.allies.length ? ` with ${listed(c.allies.map(id => first(p, id)))}` : ''}`;
+   return `Challenge ${foeName(p, state, c)} in ${regionName(p, at)}${c.allies.length ? ` with ${listed(c.allies.map(id => first(p, id)))}` : ''}`;
   }
   case 'power-action': return `Use ${card(p, c.card).name}`;
   case 'portal': return `Open a Portal home${c.allies.length ? ` for ${listed(c.allies.map(id => first(p, id)))}` : ''}${c.self === false ? ' (you stay)' : ''}`;
