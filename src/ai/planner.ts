@@ -28,6 +28,8 @@ function distance(p: ContentPack, from: string, to: string, f: string): number {
  } return 100;
 }
 const itemValue=cardValue;
+/** The score of a move that is never worth making, such as a transfer that improves nobody's equipment. */
+const NEVER = -1000;
 /** What the caller knows beyond the table: `independent` are the characters played by someone else than these bots (see createStrategy). */
 export interface PlanOptions { independent?: string[] }
 export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty: Difficulty = 'balanced', options: PlanOptions = {}): Decision | undefined {
@@ -180,7 +182,7 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
     const next=structuredClone(h!);next.bag=next.bag.filter(id=>!command.items.includes(id));
     const recipient=structuredClone(to);recipient.bag.push(...command.items);
     score=(bestEquipment(recipient)-bestEquipment(to)+bestEquipment(next)-bestEquipment(h!))*3-.8;
-    if(score<=0)score=-1000;
+    if(score<=0)score=NEVER;
     reason='Sharing an unused item with an ally who can equip it.';break;
    }
    case 'power-action': {
@@ -228,7 +230,9 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
   for(const v of scored)if(v.command.type==='ability'&&v.score<=0)v.score=-10000;
  }
  scored.sort((a,b)=>b.score-a.score||(JSON.stringify(a.command)<JSON.stringify(b.command)?-1:JSON.stringify(a.command)>JSON.stringify(b.command)?1:0));
- if (!scored.length) return undefined;
+ // On the table, a move marked NEVER is no move at all. When nothing else is on offer (bots out of actions while a player beside
+ // them still acts, with only free transfers left to them) the planner declines; it used to pass an item back and forth without end.
+ if (!scored.length || !s.battle && scored[0].score <= NEVER) return undefined;
  const best = scored[0]; return { command: best.command, score: Math.round(best.score * 100) / 100, reason: best.reason, alternatives: legal.length,
   considered:scored.slice(0,3).map(({command,score,reason})=>({command,score:Math.round(score*100)/100,reason})) };
 }

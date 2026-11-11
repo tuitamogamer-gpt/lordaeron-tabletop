@@ -173,6 +173,17 @@ describe('campaign objectives and economy',()=>{
   const d=choose(s,c=>c.type==='trade'||c.type==='rest'&&c.hero===h.id);
   expect(d.command.type).toBe('rest');
  });
+ it('declines to act when only transfers that improve nothing are left to it',()=>{
+  // Bots out of actions beside a player who still has some: the phase cannot end yet, and free trades are all they are offered.
+  const {s,h}=game('mage'),to=s.heroes.find(v=>v.id!==h.id&&faction(p,v.id)===faction(p,h.id))!;
+  to.location=h.location;s.tradeWindow=true;s.enemies=[];
+  const item=p.cards.find(c=>c.kind==='item'&&c.level===5&&!c.soulbound&&c.price>10)!;h.bag=[item.id];to.level=1;
+  const trades=legalActions(p,s).filter(c=>c.type==='trade');
+  expect(trades.length).toBeGreaterThan(0);
+  expect(decide(p,view(s,s.heroes.map(v=>v.id)),trades)).toBeUndefined();
+  // With anything else on offer it still plays on.
+  expect(decide(p,view(s,s.heroes.map(v=>v.id)),[...trades,{type:'endActions'}])?.command.type).toBe('endActions');
+ });
  it('does not prefer a known false Kazzak challenge',()=>{
   const s=createGame(p,{...DEFAULT_SETUP,overlord:'kazzak'}),h=s.heroes[0],t=s.kazzak!.find(t=>!t.real)!;
   h.location=t.region;t.known=['horde'];s.enemies=[];

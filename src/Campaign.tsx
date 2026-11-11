@@ -95,7 +95,7 @@ export default function Campaign(){
  useEffect(()=>{const handler=(e:KeyboardEvent)=>{if(!(e.ctrlKey||e.metaKey)||e.key.toLowerCase()!=='z'||e.shiftKey||(e.target as HTMLElement).closest('input,select,textarea,[contenteditable=true]'))return;if(!undoStack.length||page!=='board'||panel||document.querySelector('dialog[open]'))return;e.preventDefault();undo();};window.addEventListener('keydown',handler);return()=>window.removeEventListener('keydown',handler);});
  // A rendered combat control must never act on a newer combat state.
  const sendCombat=(c:Command)=>{const human=decisionOwners(p,state,c).some(id=>!currentBots.current.includes(id));const acknowledge=state.battle?.stage==='over'&&c.type==='closeBattle';if(!diceRolling&&!presentation.busy&&current.current.state===game.state&&(human||acknowledge))send(c);};
- const planMove=async(candidates:Command[],valid=()=>true,humanResponsePassed=false)=>{
+ const planMove=async(candidates:Command[],valid=()=>true,humanResponsePassed=false,explain=false)=>{
   if(botRequest.current||current.current.needsSetup||importBusy)return;
   const source=current.current.state;
   const seats=currentBots.current;
@@ -105,6 +105,8 @@ export default function Campaign(){
    planner.current??=new PlannerClient();
    const decision=await planner.current.plan(view(source,bots),candidates,difficulty,{independent:source.heroes.filter(v=>!seats.includes(v.id)).map(v=>v.id)});
    const fresh=!!decision&&botRequest.current===request&&valid()&&current.current.state===source&&currentBots.current===seats;
+   // The planner found nothing worth doing (bots without actions while a player still has some): say so when asked for a move.
+   if(!decision&&explain&&botRequest.current===request&&current.current.state===source)setToast('The AI characters have nothing useful to do now. A human player acts next.');
    // The bot wants a player's character beside it: ask, do not draft.
    if(fresh&&decision.command.type==='challenge'&&invitedPlayers(decision.command,seats).length){botRequest.current=null;setInvitation({command:decision.command,reason:decision.reason,source});}
    else if(fresh&&botOwns(p,source,decision.command,currentBots.current)){
@@ -114,7 +116,7 @@ export default function Campaign(){
   }catch(e){if(botRequest.current===request&&valid()&&current.current.state===source){setAuto(false);setCombatResolve(false);setToast((e as Error).message);}}
   finally{if(botRequest.current===request)botRequest.current=null;}
  };
- const botStep=()=>{if(state.phase==='combat'&&(diceRolling||presentation.busy))return;void planMove(state.phase==='combat'?availableBotMoves:tableMoves(game.state,allLegal));};
+ const botStep=()=>{if(state.phase==='combat'&&(diceRolling||presentation.busy))return;void planMove(state.phase==='combat'?availableBotMoves:tableMoves(game.state,allLegal),()=>true,false,true);};
  useEffect(()=>{setInvitation(v=>v&&v.source!==game.state?undefined:v);},[game.state]);
  const joinInvitation=()=>{const v=invitation;setInvitation(undefined);if(v&&v.source===current.current.state)send(v.command);};
  const declineInvitation=()=>{
