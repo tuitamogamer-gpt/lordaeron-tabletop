@@ -25,6 +25,8 @@
 .challenge-advice>svg{flex:none;margin-top:1px;color:#a9c7e8}
 .challenge-confirm>.gold-button{flex:none}
 @media(max-width:560px){.challenge-confirm{flex-direction:column;align-items:stretch}.campaign-app .challenge-member{flex:1 1 100%}}
+/* On a phone the opponent's values wrap under its name instead of running off the card. */
+@media(max-width:560px){.challenge-card>header,.invite-target{align-items:flex-start;gap:11px}.challenge-card>header>.creature-glyph,.invite-target>.creature-glyph{width:54px;height:54px}.challenge-card .challenge-stats,.invite-target .challenge-stats{flex-wrap:wrap;gap:5px 10px}}
 /* A bot's invitation to its challenge (ChallengeInvite.tsx). */
 .challenge-invite{display:flex;flex-direction:column;gap:13px}
 .invite-ask{display:flex;align-items:center;gap:14px}
