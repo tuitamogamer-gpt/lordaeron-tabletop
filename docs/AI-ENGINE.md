@@ -43,6 +43,10 @@ Reviewed on 27 September 2026, specifically for the 2005 base game:
 
 The objective scores and search budgets are our engineering interpretation of those priorities. The BGG file listing identifies a *WoW Player's Guide*, but access was blocked; its contents were not used. No MMO, TCG, Adventure Game or expansion rules were imported.
 
+## Later changes
+
+On 11 November 2026 the planner learned to spend gold by what the purse still holds, to walk to town for equipment, to commit a faction at level 5 to the Overlord (rested), to hold the regions of a War, to ask a player's character to join a challenge instead of leaving him out, and to decline when only worthless free moves are on offer. Measurements and reasons: [AI-BOTS-2026-11-11.md](AI-BOTS-2026-11-11.md).
+
 ## Limits
 
 This is bounded, state-dependent planning, not a solved optimal policy. Encounter forecasts approximate later rounds and do not exhaust every post-roll combo, future event, alternative purchase transaction or opponent response. Legal candidates themselves are bounded (for example, training bundles contain up to three powers). The planner never treats a forecast as a guaranteed outcome. Automated scenarios and completed campaigns verify legality, practical decisions, termination and deterministic replay; they do not establish a universal win rate.

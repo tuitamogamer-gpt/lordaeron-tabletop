@@ -4,7 +4,9 @@ Desktop adaptacija osnovne igre iz 2005. i službenog FAQ-a 1.4. React interfejs
 
 [Otvori igru](https://lordaeron-tabletop.vercel.app)
 
-Najnoviji prolaz dodaje muziku: umjesto dvije teme igra ih ima sedam, četiri za mapu, dvije za borbu i jednu za borbu s Overlordom. Teme se smjenjuju, pa se ista na mapi vrati tek nakon šest do sedam minuta. Pri obradi je ispravljena i rupa od 51 ms tišine na svakom ponavljanju stare dvije teme. Pet novih tema napravljeno je s Fish Audio (39.750 kredita, uz odobrenje vlasnika). Detalji: [MUSIC-THEMES-2026-11-11.md](docs/MUSIC-THEMES-2026-11-11.md).
+Najnoviji prolaz popravlja botove i saradnju s njima. U prozoru **Challenge** protivnik sada ima jednu karticu na kojoj se saborci iz iste regije pozivaju dugmadima, a bot koji stoji uz igračevog lika pita ga da se pridruži borbi, umjesto da se bori bez njega. Mjerenje cijelih AI kampanja pokazalo je da botovi gomilaju zlato, ignorišu ratove i na nivou 5 odlažu napad na Overlorda (u jednoj partiji 238 poteza). Sada troše zlato, idu u grad po opremu, drže regije ratova i na Overlorda kreću odmoreni čim je cijela frakcija na nivou 5: na osam partija kampanja traje prosječno 45 poteza frakcija umjesto 99. Detalji i granice: [AI-BOTS-2026-11-11.md](docs/AI-BOTS-2026-11-11.md).
+
+Prethodni prolaz dodaje muziku: umjesto dvije teme igra ih ima sedam, četiri za mapu, dvije za borbu i jednu za borbu s Overlordom. Teme se smjenjuju, pa se ista na mapi vrati tek nakon šest do sedam minuta. Pri obradi je ispravljena i rupa od 51 ms tišine na svakom ponavljanju stare dvije teme. Pet novih tema napravljeno je s Fish Audio (39.750 kredita, uz odobrenje vlasnika). Detalji: [MUSIC-THEMES-2026-11-11.md](docs/MUSIC-THEMES-2026-11-11.md).
 
 Prethodni prolaz dodaje savjetnika za potez i usklađuje ratove s pravilnikom. Dugme **Hint** (tipka **H**) na stolu pita planer koji vodi AI likove koju bi akciju odigrao odabrani lik i zašto; **Do this** je odigra. **Pass** troši preostale akcije lika, jer po pravilniku lik smije, a ne mora, odigrati dvije. Zdravlje i energija su žetoni kao na odštampanom listu lika. Muzika više ne vrti petlju od 13 sekundi bez prestanka, nego svira u frazama s pauzama. Ratovi se ocjenjuju na kraju poteza frakcije, nakon karte događaja (revizija pravila 3; započete kampanje zadržavaju svoja pravila), a osvojeni rat ima zapis u Chronicleu i obavijest na stolu. Detalji: [ADVISOR-TOKENS-WARS-2026-11-11.md](docs/ADVISOR-TOKENS-WARS-2026-11-11.md).
 
@@ -100,7 +102,7 @@ Prečice: **1–5** akcije, **H** savjet za potez, **F** interakcija s mapom, **
 
 ## Provjera i granice
 
-Aktuelni prolaz ima **1.198 testova** ([MUSIC-THEMES-2026-11-11.md](docs/MUSIC-THEMES-2026-11-11.md)); prolaz sa savjetnikom i ratovima imao je 1.189 ([ADVISOR-TOKENS-WARS-2026-11-11.md](docs/ADVISOR-TOKENS-WARS-2026-11-11.md)); prolaz kroz igru imao je 1.145 ([PLAYTHROUGH-2026-11-11.md](docs/PLAYTHROUGH-2026-11-11.md)); dizajnerski prolaz imao je 1.108 testova, build, render 621 komponente i dizajnerski audit 39 ekrana na tri veličine: [DESIGN-PASS-2026-10-22.md](docs/DESIGN-PASS-2026-10-22.md). AI prolaz dodaje sedam završenih AI kampanja protiv sva tri Overlorda i nezavisni replay audit dvije od njih: [AI-OVERLORD-2026-10-22.md](docs/AI-OVERLORD-2026-10-22.md). Prethodni prolaz dodaje render 621 komponente, izvoz mape i nastavak dvije zaglavljene kampanje: [RELIABILITY-2026-10-20.md](docs/RELIABILITY-2026-10-20.md).
+Aktuelni prolaz ima **1.234 testa** ([AI-BOTS-2026-11-11.md](docs/AI-BOTS-2026-11-11.md)); prolaz s muzikom imao je 1.198 ([MUSIC-THEMES-2026-11-11.md](docs/MUSIC-THEMES-2026-11-11.md)); prolaz sa savjetnikom i ratovima imao je 1.189 ([ADVISOR-TOKENS-WARS-2026-11-11.md](docs/ADVISOR-TOKENS-WARS-2026-11-11.md)); prolaz kroz igru imao je 1.145 ([PLAYTHROUGH-2026-11-11.md](docs/PLAYTHROUGH-2026-11-11.md)); dizajnerski prolaz imao je 1.108 testova, build, render 621 komponente i dizajnerski audit 39 ekrana na tri veličine: [DESIGN-PASS-2026-10-22.md](docs/DESIGN-PASS-2026-10-22.md). AI prolaz dodaje sedam završenih AI kampanja protiv sva tri Overlorda i nezavisni replay audit dvije od njih: [AI-OVERLORD-2026-10-22.md](docs/AI-OVERLORD-2026-10-22.md). Prethodni prolaz dodaje render 621 komponente, izvoz mape i nastavak dvije zaglavljene kampanje: [RELIABILITY-2026-10-20.md](docs/RELIABILITY-2026-10-20.md).
 
 Raniji audit enginea popravlja Vanish bonuse, duplirane figure pri recikliranju questova i ponovno zatvaranje borbe. Tadašnjih 838 testova, build, render i tri AI partije s 4.312 naredbi i identičnim replayom: [ENGINE-SCRIPT-AUDIT.md](docs/ENGINE-SCRIPT-AUDIT.md). Prethodna provjera svih event karata, klasnih moći, talenata i smjene Horda → Alijansa kroz svih 30 poteza: [CARD-EVENT-TURN-AUDIT.md](docs/CARD-EVENT-TURN-AUDIT.md).
 
@@ -124,6 +126,7 @@ Granice mape ručno su precrtane iz dvije fotografije originala, uz dijagrame iz
 - [Prolaz kroz igru i provjera pravila prema pravilniku](docs/PLAYTHROUGH-2026-11-11.md)
 - [Savjetnik za potez, žetoni, muzika u frazama i ratovi po pravilniku](docs/ADVISOR-TOKENS-WARS-2026-11-11.md)
 - [Sedam muzičkih tema i petlje bez rupe](docs/MUSIC-THEMES-2026-11-11.md)
+- [Botovi: saradnja s igračem, zlato, ratovi i odlučna završnica](docs/AI-BOTS-2026-11-11.md)
 
 ## Autorska prava
 
