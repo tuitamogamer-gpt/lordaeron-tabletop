@@ -20,6 +20,9 @@ export const capacity = (p: ContentPack, h: Hero) => {
  for(const id of new Set(ids)){const modifier=p.cards.find(c=>c.id===id)?.capacity;if(modifier){base.health+=modifier.health??0;base.energy+=modifier.energy??0;}}
  return base;
 };
+/** For the chronicle: "The Horde" / "The Alliance", and names joined as "A, B and C". */
+export const factionName = (f: string) => f === 'horde' ? 'The Horde' : f === 'alliance' ? 'The Alliance' : f;
+export const listed = (names: string[]) => names.length < 2 ? names.join('') : `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`;
 export const note = (s: State, text: string) => { s.log.push({ id: (s.log.at(-1)?.id ?? 0) + 1, turn: s.turn, text }); if (s.log.length > 250) s.log.shift(); };
 export function random(s: { rng: number }, n: number): number { assert(integer(n, 1), "Invalid range."); let x = s.rng; x ^= x << 13; x ^= x >>> 17; x ^= x << 5; s.rng = x >>> 0; return Math.floor(s.rng / 0x100000000 * n); }
 export function shuffle<T>(s: { rng: number }, values: T[]): T[] { const a = [...values]; for (let i = a.length - 1; i > 0; i--) { const j = random(s, i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }

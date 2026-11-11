@@ -1,4 +1,4 @@
-import { assert, card, faction, hero, integer, note, other, random, shuffle } from './common.js';
+import { assert, card, character, faction, factionName, hero, integer, note, other, random, shuffle } from './common.js';
 import { beginBattle } from './combat.js';
 import { drawQuest, finalAttacker, rewards, stronger } from './rewards.js';
 import { activeEvent, nefarianDestinations } from './world.js';
@@ -6,7 +6,7 @@ import { resolveEvent } from './event-choices.js';
 import type { ContentPack, Faction, State, WorldEvent } from './model.js';
 export { eventChoice } from './event-choices.js';
 export { battleEvents, purify } from './event-rewards.js';
-export function finishEvent(s:State){delete s.eventFlow;s.eventSeen=[];s.faction=other(s.faction);s.phase='actions';s.tradeWindow=false;note(s,`${s.faction} begins faction turn ${s.turn}.`);}
+export function finishEvent(s:State){delete s.eventFlow;s.eventSeen=[];s.faction=other(s.faction);s.phase='actions';s.tradeWindow=false;note(s,`${factionName(s.faction)} begins faction turn ${s.turn}.`);}
 export const removeWorld=(s:State,id:string)=>{s.world=s.world?.filter(e=>e.id!==id);};
 export function addWorld(s:State,id:string):WorldEvent{
  const e:WorldEvent={id,tokens:[],attempts:[],gold:0,items:[],trophies:{horde:[],alliance:[]}};(s.world??=[]).push(e);return e;
@@ -15,7 +15,7 @@ export const teamLeader=(p:ContentPack,s:State,f:Faction)=>shuffle(s,s.heroes.fi
 export function startNefarian(p:ContentPack,s:State,f:Faction){
  (s.nefarianFinal??=[]).push(f);delete s.eventFlow;
  beginBattle(s,'pve',s.heroes.filter(h=>faction(p,h.id)===f).map(h=>h.id),[],f,'bulwark',s.overlord.id);
- note(s,`Nefarian has reached the Bulwark. ${f} enters the final battle.`);
+ note(s,`Nefarian has reached the Bulwark. ${factionName(f)} enters the final battle.`);
 }
 export function nextNefarianBattle(p:ContentPack,s:State){
  if(!s.nefarianFinal)return false;
@@ -50,7 +50,7 @@ export function drawEvents(p:ContentPack,s:State){
 }
 export function bid(p:ContentPack,s:State,id:string,amount:number){
  const a=s.auction,h=hero(s,id);assert(a&&!Object.hasOwn(a.bids,id)&&integer(amount,0,h.gold),"Invalid bid or bid already submitted.");a.bids[id]=amount;
- if(Object.keys(a.bids).length===s.heroes.length){const max=Math.max(...Object.values(a.bids)),tied=s.heroes.filter(h=>a.bids[h.id]===max),winner=tied[random(s,tied.length)];winner.gold-=max;winner.auctionItems.push(a.item);if(card(p,a.item).extraInstantSlot)winner.slots.push({addons:[]});note(s,`${winner.id} wins the auction for ${max} gold.`);delete s.auction;drawEvents(p,s);}
+ if(Object.keys(a.bids).length===s.heroes.length){const max=Math.max(...Object.values(a.bids)),tied=s.heroes.filter(h=>a.bids[h.id]===max),winner=tied[random(s,tied.length)];winner.gold-=max;winner.auctionItems.push(a.item);if(card(p,a.item).extraInstantSlot)winner.slots.push({addons:[]});note(s,`${character(p,winner.id).name} wins the auction for ${card(p,a.item).name} with ${max} gold.`);delete s.auction;drawEvents(p,s);}
 }
 export function checkWars(p:ContentPack,s:State):boolean{
  const f=other(s.faction),hs=s.heroes.filter(h=>faction(p,h.id)===f),war=s.wars.find(w=>w.regions.every(r=>hs.some(h=>h.location===r)));if(!war)return false;

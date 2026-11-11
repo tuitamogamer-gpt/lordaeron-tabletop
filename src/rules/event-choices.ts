@@ -71,5 +71,5 @@ export function eventChoice(p:ContentPack,s:State,id:string,c:EventChoiceArgs){
    const winds=activeEvent(p,s,'winds');if(winds&&!s.enemies.some(v=>v.color==='blue'&&plagued(p,v.region)))removeWorld(s,winds.id);break;
   }
  }
- note(s,`${character(p,id).name}: ${e.name}.`);flow.steps.shift();if(step.kind==='nefarian'&&flow.started){finishEvent(s);return;}drawEvents(p,s);
+ note(s,`${character(p,id).name} resolves ${e.name}.`);flow.steps.shift();if(step.kind==='nefarian'&&flow.started){finishEvent(s);return;}drawEvents(p,s);
 }

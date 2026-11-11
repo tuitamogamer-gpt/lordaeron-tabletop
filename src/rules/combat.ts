@@ -150,7 +150,7 @@ export function defeat(p: ContentPack, s: State, id: string, destination: string
  if(b)b.defeated.push(id); h.health = 1; h.energy = 1; h.actions = 0; h.stun = 0; h.curse = 0; h.location = destination;
  for (const pet of Object.keys(h.pets)) unequip(p, h, pet);
  h.auctionItems = [];h.slots=h.slots.slice(0,character(p,h.id).slots.length); s.respawns = s.respawns.filter(x => x !== id);
- note(s, `${character(p, id).name} is defeated and returns to ${destination}.`);
+ note(s, `${character(p, id).name} is defeated and returns to ${p.regions.find(r => r.id === destination)?.name ?? destination}.`);
  if(!b)return;
  if (b.stage === 'wounds') { if (!s.respawns.length) continueWounds(p, s); }
  else if (!checkElimination(p, s) && b.active?.heroId === id) { b.stage = 'tokens'; placeTokens(p, s); }

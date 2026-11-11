@@ -1,4 +1,4 @@
-import { assert, capacity, card, character, faction, hero, integer, note, other, region, shuffle, unique } from './common.js';
+import { assert, capacity, card, character, faction, factionName, hero, integer, listed, note, other, region, shuffle, unique } from './common.js';
 import { activate, automatic, effects, settleAutomatic, spendEnergy } from './effects.js';
 import { beginBattle, chooseAttacker, continueWounds, creatureRule, defeat, defense, enforceDicePenalties, finishAttack, living, monsterEffect, nextRound, omitDice, placeTokens, poolPenalties, removePenalty, reroll, resolution, wound } from './combat.js';
 import { battleEvents, bid, checkWars, drawEvents, eventChoice, finishEvent, nextNefarianBattle, purify, removeWorld, replacement, skipReplacement } from './events.js';
@@ -110,34 +110,34 @@ export function apply(p: ContentPack, state: State, command: Command): State {
     travel(p,s,h,c.path,2+extra);s.travels??={};s.travels[h.id]=(s.travels[h.id]??0)+1;
    }
    for(const id of h.auctionItems){const n=card(p,id).travelEnergy??0;h.energy=Math.max(h.energy,Math.min(capacity(p,h).energy,h.energy+n));}
-   actionDone(s,h,`${h.id} travels to ${h.location}.`);break;
+   actionDone(s,h,`${character(p,h.id).name} travels to ${region(p,h.location).name}.`);break;
   }
   case 'portal': {
    const h=actionable(p,s,c.hero,true),portal=equipped(p,h).map(id=>card(p,id)).find(c=>c.actionPower==='portal');
    assert(portal&&unique(c.allies)&&!c.allies.includes(h.id),"Portal is unavailable.");
    const group=[...(c.self===false?[]:[h.id]),...c.allies];assert(group.length,"Choose at least one traveler.");for(const id of group)assert(hero(s,id).location===h.location&&faction(p,id)===s.faction,"Portal only accepts allies in the same region.");
    spendEnergy(s,h,portal.energy);const home=p.regions.find(r=>r.home===s.faction)!.id;
-   for(const id of group)hero(s,id).location=home;s.pendingPortal=h.id;note(s,`${h.id} opens a Portal.`);break;
+   for(const id of group)hero(s,id).location=home;s.pendingPortal=h.id;note(s,`${character(p,h.id).name} opens a Portal to ${region(p,home).name}.`);break;
   }
   case 'summon': {
    const h=actionable(p,s,c.hero,true),power=equipped(p,h).map(id=>card(p,id)).find(c=>c.actionPower==='summon'),t=hero(s,c.target);
    assert(power&&t.id!==h.id&&faction(p,t.id)===s.faction,"Choose a friendly character to summon.");
-   spendEnergy(s,h,power.energy);t.location=h.location;s.pendingPortal=h.id;note(s,`${h.id} summons ${t.id}.`);break;
+   spendEnergy(s,h,power.energy);t.location=h.location;s.pendingPortal=h.id;note(s,`${character(p,h.id).name} summons ${character(p,t.id).name} to ${region(p,h.location).name}.`);break;
   }
   case 'power-action': {
    const power=card(p,c.card),h=actionable(p,s,c.hero,power.actionPower==='lay-on-hands');assert(equipped(p,h).includes(power.id)&&['prayer','lay-on-hands'].includes(power.actionPower??''),"The action power is not equipped.");
    const discount=[...h.talents,...equipped(p,h)].reduce((n,id)=>{const t=card(p,id);return n+(t.powerDiscount??0)+(t.instantDiscount??0)+(t.discount?.cards.includes(power.id)?t.discount.amount:0);},0);
    spendEnergy(s,h,Math.max(0,power.energy-discount));
-   if(power.actionPower==='lay-on-hands'){assert(!s.pendingPortal,"The preparatory power has already been used.");h.health=capacity(p,h).health;s.pendingPortal=h.id;note(s,`${h.id}: ${power.name}.`);break;}
+   if(power.actionPower==='lay-on-hands'){assert(!s.pendingPortal,"The preparatory power has already been used.");h.health=capacity(p,h).health;s.pendingPortal=h.id;note(s,`${character(p,h.id).name} uses ${power.name}.`);break;}
    for(const t of s.heroes.filter(t=>t.location===h.location&&faction(p,t.id)===s.faction))t.health=capacity(p,t).health;
-   unequip(p,h,power.id);actionDone(s,h,`${h.id}: ${power.name}.`);break;
+   unequip(p,h,power.id);actionDone(s,h,`${character(p,h.id).name} uses ${power.name}.`);break;
   }
-  case 'rest': { const h = actionable(p, s, c.hero), town = ['both', s.faction].includes(region(p, h.location).town ?? ''); rest(p, h, h.level * (town ? 3 : 2), c.health); if(c.food){const food=card(p,c.food);assert(h.bag.includes(c.food)&&food.trait==='Food',"Food is unavailable.");for(const a of food.abilities.filter(a=>a.timing==='rest'))effects(p,s,h,food.id,a.effects,{});}h.curse = town ? 0 : Math.max(0, h.curse - 1); automatic(p,s,h.id,'rest');actionDone(s, h, `${h.id} rests.`); break; }
-  case 'train': { const h = actionable(p, s, c.hero); assert(c.cards.length && unique(c.cards), "Choose distinct powers."); for (const id of c.cards) train(p, h, id); actionDone(s, h, `${h.id} learns ${c.cards.length} powers.`); break; }
+  case 'rest': { const h = actionable(p, s, c.hero), town = ['both', s.faction].includes(region(p, h.location).town ?? ''), before = { health: h.health, energy: h.energy, curse: h.curse }; rest(p, h, h.level * (town ? 3 : 2), c.health); if(c.food){const food=card(p,c.food);assert(h.bag.includes(c.food)&&food.trait==='Food',"Food is unavailable.");for(const a of food.abilities.filter(a=>a.timing==='rest'))effects(p,s,h,food.id,a.effects,{});}h.curse = town ? 0 : Math.max(0, h.curse - 1); automatic(p,s,h.id,'rest');{const gains=[h.health>before.health?`+${h.health-before.health} health`:'',h.energy>before.energy?`+${h.energy-before.energy} energy`:'',h.curse<before.curse?`−${before.curse-h.curse} Curse`:''].filter(Boolean);actionDone(s, h, `${character(p,h.id).name} rests${town?' in town':''}${gains.length?`: ${gains.join(', ')}`:''}.`);} break; }
+  case 'train': { const h = actionable(p, s, c.hero); assert(c.cards.length && unique(c.cards), "Choose distinct powers."); for (const id of c.cards) train(p, h, id); actionDone(s, h, `${character(p,h.id).name} learns ${listed(c.cards.map(id => card(p, id).name))}.`); break; }
   case 'town': {
    const h = actionable(p, s, c.hero); assert(['both', s.faction].includes(region(p, h.location).town ?? ''), "A friendly town is required.");
    townOperations(p,s,h,c.health,c.operations,c.recoverAfter);
-   actionDone(s, h, `${h.id} visits town.`); break;
+   {const deals=(['buy','sell','train'] as const).map(op=>{const names=c.operations.filter(o=>o.op===op).map(o=>card(p,o.card).name);return names.length?`${op==='buy'?'buys':op==='sell'?'sells':'learns'} ${listed(names)}`:'';}).filter(Boolean);actionDone(s, h, `${character(p,h.id).name} visits town${deals.length?`: ${deals.join('; ')}`:''}.`);} break;
   }
   case 'trade': {
    assert(s.phase === 'actions' && s.tradeWindow && c.hero !== c.to, "Trading is available after an action."); const h = hero(s, c.hero), to = hero(s, c.to);
@@ -163,7 +163,9 @@ export function apply(p: ContentPack, state: State, command: Command): State {
     const e = s.enemies.find(e => e.id === c.target); assert(e && e.region === h.location && (!e.faction || e.faction === s.faction || !!activeEvent(p,s,'subterfuge')) && (!independent.length || e.color === 'blue'), "This opponent is unavailable.");
     enemies = s.enemies.filter(a => a.region === h.location && a.creature === e.creature && (a.color === 'blue') === (e.color === 'blue') && a.faction === e.faction).map(e => e.id);
    }
-   ids.forEach(id => hero(s, id).actions--);delete s.pendingPortal;beginBattle(s, defenders.length ? 'pvp' : 'pve', [...ids, ...defenders], enemies, s.faction, h.location, boss); note(s, `Challenge: ${ids.join(', ')}.`); break;
+   ids.forEach(id => hero(s, id).actions--);delete s.pendingPortal;beginBattle(s, defenders.length ? 'pvp' : 'pve', [...ids, ...defenders], enemies, s.faction, h.location, boss);
+   {const first=s.enemies.find(e=>e.id===enemies[0]),creature=p.creatures.find(v=>v.id===first?.creature)?.name??'creature',foe=defenders.length?listed(defenders.map(id=>character(p,id).name)):boss?p.overlords.find(o=>o.id===boss)?.name??p.events.find(e=>e.id===boss)?.name??'a boss':enemies.length>1?`${enemies.length} × ${creature}`:creature;
+   note(s, `${listed(ids.map(id=>character(p,id).name))} ${ids.length>1?'challenge':'challenges'} ${foe} in ${region(p,h.location).name}.`);} break;
   }
   case 'endActions': assert(s.phase === 'actions' && s.heroes.filter(h => faction(p, h.id) === s.faction).every(h => !h.actions), "All active heroes must use two actions first."); s.phase = 'management'; s.managed = []; s.tradeWindow = false; break;
   case 'manage': {
@@ -206,7 +208,7 @@ export function apply(p: ContentPack, state: State, command: Command): State {
    for (const id of b.participants) {
     automatic(p,s,id,'combat-end');const h=hero(s,id),cap=capacity(p,h);h.stun=0;h.health=Math.min(h.health,cap.health);h.energy=Math.min(h.energy,cap.energy);
    }
-   if (s.winner) { s.phase = 'finished'; note(s, s.winner === 'draw' ? "The game ends in a draw." : `${s.winner} wins!`); break; }
+   if (s.winner) { s.phase = 'finished'; note(s, s.winner === 'draw' ? "The game ends in a draw." : `${factionName(s.winner)} wins!`); break; }
    if(nextNefarianBattle(p,s))break;
    s.lastActions=b.participants.filter(id=>faction(p,id)===b.first);s.lastAction=s.lastActions[0];battleEvents(p,s);if(s.reward){if(!s.reward.offered.length)nextItem(s);break;}
    if (!nextQuestReward(p, s)) { delete s.battle; s.phase = 'actions'; s.tradeWindow = true; }
