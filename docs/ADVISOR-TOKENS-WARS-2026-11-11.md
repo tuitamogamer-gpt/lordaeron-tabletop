@@ -51,6 +51,8 @@ Teme mape i borbe su petlje od 13,6 sekundi i svirale su bez prestanka, oko 260 
 
 **Settings › Sound** to kaže jednom rečenicom. Nije potrošen nijedan novi Fish Audio kredit. Duža muzika s više tema tražila bi nove snimke (oko 8.000 kredita po isječku od 15 sekundi).
 
+> Naknadno, istog dana: vlasnik je odobrio nove snimke. Tema je sada sedam, pauze su kraće, a borba s Overlordom ima svoju temu: [MUSIC-THEMES-2026-11-11.md](MUSIC-THEMES-2026-11-11.md).
+
 ## Zvuk karte događaja
 
 Karta događaja koja se riješi bez odluke (rat, većina svjetskih događaja) nije imala zvuk. Zvuk je bio vezan za popis događaja izvučenih u koraku, a engine taj popis isprazni u istoj naredbi. Sada prati hrpu odbačenih događaja, koja raste sa svakom izvučenom kartom.
