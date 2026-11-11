@@ -1,0 +1,27 @@
+/* Choosing a challenge (ChallengeDialog.tsx): one card per opponent, with the party built on it. */
+.campaign-app .challenge-dialog>p{margin:0 0 14px;font:13px/1.55 var(--sans);color:#d5cbb4}
+.challenge-card{display:flex;flex-direction:column;gap:12px;padding:14px 16px;border:1px solid #8f764b;background:linear-gradient(#363931,#202729);box-shadow:inset 0 1px #ecd39119;color:#ddc99f}
+.challenge-card>header{display:flex;align-items:center;gap:15px}
+.challenge-card>header>.creature-glyph{border:2px ridge #b39155;border-radius:3px;flex:none}
+.challenge-card>header strong{display:block;font:600 16px/1.3 var(--sans);color:#eed6a5}
+.challenge-card>header small{display:block;font:11px var(--sans);color:#b2a687}
+.challenge-card .challenge-stats{margin:6px 0 2px}
+.challenge-party{display:flex;flex-wrap:wrap;gap:8px}
+.campaign-app .challenge-member{display:inline-flex;align-items:center;gap:9px;min-height:46px;padding:5px 12px 5px 6px;border:1px solid #6d6247;border-radius:4px;background:#1c2220;color:#e6d8bc;text-align:left;font:13px var(--sans)}
+.campaign-app .challenge-member.leader{border-style:dashed;background:#00000026}
+.campaign-app button.challenge-member{cursor:pointer;transition:border-color .15s,background .15s}
+.campaign-app button.challenge-member:hover:not(:disabled){border-color:#caab68;background:#2c2a20}
+.campaign-app button.challenge-member.invited{border-color:#e2c27a;background:#3d3420;box-shadow:inset 0 0 0 1px #e2c27a55}
+.campaign-app button.challenge-member:disabled{opacity:.55;cursor:not-allowed}
+.challenge-member .campaign-portrait{width:34px;height:34px;flex:none}
+.challenge-member b{display:flex;align-items:center;gap:6px;font:600 13px/1.3 var(--sans);color:#f1e2bd}
+.challenge-member b>i{padding:1px 4px;border:1px solid #ffffff3a;border-radius:3px;font:600 9px/1.3 var(--sans);font-style:normal;color:#b9c7d8}
+.challenge-member small{display:block;font:11px/1.3 var(--sans);color:#b2a687}
+.challenge-member.invited small{color:#e9d49c}
+.challenge-member>svg{flex:none;color:#cdb47a}
+.challenge-alone{align-self:center;font:12px var(--sans);color:#a99f88}
+.challenge-confirm{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.campaign-app .challenge-advice{display:flex;align-items:flex-start;gap:7px;min-height:18px;margin:0;font:12px/1.45 var(--sans);color:#c9d3c0}
+.challenge-advice>svg{flex:none;margin-top:1px;color:#a9c7e8}
+.challenge-confirm>.gold-button{flex:none}
+@media(max-width:560px){.challenge-confirm{flex-direction:column;align-items:stretch}.campaign-app .challenge-member{flex:1 1 100%}}

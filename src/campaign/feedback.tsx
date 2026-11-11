@@ -43,13 +43,16 @@ export function encounterProfile(state: GameView, target: string, region?: strin
  if (event) return { ...event.stats, attack: event.stats.attack + worldAttack(p, { world: state.world }, region ?? event.region) };
 }
 
+/** What a challenge fights, whoever takes part: a whole group of matching creatures (mixed quest colours included), a boss, the enemy party; apart for each region an Intercept can reach. */
+export function challengeTarget(state: GameView, command: Extract<Command, { type: 'challenge' }>) {
+ const enemy = state.enemies.find(e => e.id === command.target);
+ return JSON.stringify([enemy ? ['creatures', enemy.region, enemy.creature, enemy.color === 'blue', enemy.faction] : ['target', command.target], command.region ?? null]);
+}
 /** A challenge fights the entire matching group, including mixed quest colors. */
 export function distinctChallenges(state: GameView, commands: Extract<Command, { type: 'challenge' }>[]) {
  const seen = new Set<string>();
  return commands.filter(command => {
-  const enemy = state.enemies.find(e => e.id === command.target);
-  const target = enemy ? ['creatures', enemy.region, enemy.creature, enemy.color === 'blue', enemy.faction] : ['target', command.target];
-  const key = JSON.stringify([command.hero, target, command.region, [...command.allies].sort()]);
+  const key = JSON.stringify([command.hero, challengeTarget(state, command), [...command.allies].sort()]);
   if (seen.has(key)) return false;
   seen.add(key); return true;
  });

@@ -105,7 +105,8 @@ export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty
     const at=command.region??h!.location;
     let objective=strategy.targets(f).find(o=>o.id===command.target&&o.region===at);
     if(command.target==='pvp')objective={id:'pvp',region:at,label:'opposing party',enemies:[],pvp:s.heroes.filter(v=>faction(p,v.id)!==f&&v.location===at).map(v=>v.id)} satisfies Objective;
-    if(!objective||objective.clue){score=-30;reason='Investigate the clue before committing a Challenge.';break;}
+    if(!objective){score=-30;reason='This opponent is not among this faction’s objectives: the fight brings no reward.';break;}
+    if(objective.clue){score=-30;reason='Investigate the clue before committing a Challenge.';break;}
     const forecast=strategy.forecast(objective,party);
     score=strategy.value(objective,party,forecast);
     if(objective.enemies[0]?.color==='blue')score+=5;

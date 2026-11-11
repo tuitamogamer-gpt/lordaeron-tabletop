@@ -13,9 +13,7 @@ import { botOwns, decisionOwners } from './multiplayer/ownership';
 import { Icon, Modal } from './components';
 import { TownEditor, EquipmentEditor, TradeEditor } from './campaign/Interactions';
 import { GameCard, HeroPortrait, factionLabel, phaseLabel } from './campaign/parts';
-import { CreatureGlyph } from './campaign/design-system';
 import { FactionCrest } from './campaign/Art';
-import { regionName } from './campaign/event-text';
 import Tabletop, { type TablePanel } from './campaign/Tabletop';
 import BaseCatalog from './campaign/BaseCatalog';
 import Chronicle from './campaign/Chronicle';
@@ -34,7 +32,7 @@ import CampaignSummary from './campaign/CampaignSummary';
 import { UNDO_DEPTH, undoable, undoName } from './campaign/undo';
 import CharacterSheet, { CardRules, startingHero } from './campaign/CharacterSheet';
 import { AUTO_CONTINUE_MS, bookkeepingStep, combatCandidates, COMBAT_STEP_MS, DICE_SETTLE_MS, rollSignature, useCombatPresentation } from './campaign/combat-flow';
-import { challengeProfile, distinctChallenges, ThreatLevel } from './campaign/feedback';
+import ChallengeDialog from './campaign/ChallengeDialog';
 import { BOTS_KEY as BOTS, loadBots, loadCampaign, PREVIOUS_SAVE_KEY, readSave, RECOVERY_SAVE_KEY, recoverySave, SAVE_KEY as SAVE } from './campaign/saves';
 const CampaignCombat=lazy(()=>import('./campaign/Combat'));
 const DesignGallery=lazy(()=>import('./campaign/DesignGallery'));
@@ -126,6 +124,8 @@ export default function Campaign(){
   }catch(e){if(hintRequest.current===request)setHint({busy:false,error:(e as Error).message.replace('Try Step bot again.','Ask again.')});}
  };
  const useHint=()=>{if(hint?.command&&hint.source===current.current.state)send(hint.command);};
+ // What the advisor expects of one exact challenge: the Challenge dialog shows it under the party the player has put together.
+ const assessChallenge=async(c:Command)=>{advisor.current??=new PlannerClient();return (await advisor.current.plan(view(current.current.state,controlled),[c],difficulty))?.reason;};
  const passHumanResponse=()=>{if(!botResponsePending||diceRolling||presentation.busy)return;void planMove(afterHumanResponse,()=>true,true);};
  useEffect(()=>{if(!auto||!botReady||automationPaused||state.phase==='combat')return;let cancelled=false;const t=setTimeout(()=>{void planMove(allLegal.filter(c=>botOwns(p,game.state,c,bots)),()=>!cancelled);},550);return()=>{cancelled=true;clearTimeout(t);};},[auto,botReady,automationPaused,game.state,bots,difficulty]);
  const rollingKey=rollSignature(state),diceRolling=!!rollingKey&&rollingKey!==settledRoll;
@@ -187,7 +187,7 @@ export default function Campaign(){
  {panel==='town'&&<TownEditor hero={h} merchant={state.merchant} busy={false} send={closeAfter}/>}
  {panel==='manage'&&<EquipmentEditor key={h.id} hero={h} busy={!can('manage')} send={closeAfter}/>}
  {panel==='trade'&&<TradeEditor hero={h} heroes={state.heroes} busy={false} send={closeAfter}/>}
- {panel==='challenge'&&<div className="dialog-content"><p>Each invited ally spends one action. Blue creatures take priority.</p><div className="challenge-list">{distinctChallenges(state,legal.filter((c):c is Extract<Command,{type:'challenge'}>=>c.type==='challenge'&&c.hero===h.id)).map((c,i)=>{const e=state.enemies.find(e=>e.id===c.target),creature=p.creatures.find(a=>a.id===e?.creature);const profile=challengeProfile(state,c);const name=creature?.name??p.events.find(e=>e.id===c.target)?.name??p.overlords.find(o=>o.id===c.target)?.name??(c.target==='pvp'?"Enemy party":"Kazzak clue");return <button key={i} className="merchant-row" onClick={()=>closeAfter(c)}>{creature?<CreatureGlyph type={creature.rule}/>:<Icon name="swords" size={30}/>}<span><strong>{profile&&profile.count>1?`${profile.count} × `:""}{name}</strong>{profile&&<span className="challenge-stats"><ThreatLevel value={profile.threat} compact/><span><Icon name="swords" size={13}/>{profile.attack} attack</span><span><Icon name="heart" size={13}/>{profile.health} health</span></span>}<small>{c.region?`${regionName(c.region)} · Intercept · `:''}{c.allies.length?c.allies.map(id=>character(p,id).name.split(' ')[0]).join(' + '):"Solo challenge"}</small></span><Icon name="arrow"/></button>;})}</div></div>}
+ {panel==='challenge'&&<ChallengeDialog key={h.id} state={state} hero={h.id} legal={legal} bots={bots} send={closeAfter} assess={assessChallenge}/>}
  {panel==='settings'&&<div className="dialog-content"><SaveManager needsSetup={!!game.needsSetup} unavailable={saveUnavailable} importing={importBusy} previous={previousSave} recovered={recoveredSave} legacy={legacySave} exported={exportJSON} onExport={exportSave} onImport={()=>file.current?.click()} onDownload={(raw,name)=>{setExportJSON(raw);try{downloadSession(raw,name);}catch{setToast('Copy the game backup below and save it as a JSON file.');}}} onRestore={()=>{if(!previousSave)return;try{const next=importSession(p,previousSave),human=next.state.heroes.find(hero=>faction(p,hero.id)===next.state.faction)??next.state.heroes[0];importRequest.current++;setImportBusy(false);replaceCampaign(next,human.id,[]);setToast('Previous campaign restored. All characters are under your control; assign AI in Settings.');}catch(e){setToast((e as Error).message);}}}/><SoundControls/><label className="setting-row">Bot play style<select value={difficulty} onChange={e=>setDifficulty(e.target.value as Difficulty)}><option value="balanced">Balanced</option><option value="cautious">Cautious</option><option value="aggressive">Aggressive</option></select></label><div className="bot-seats">{state.heroes.map(hero=><label key={hero.id}><HeroPortrait id={hero.id} small/><span>{character(p,hero.id).name}</span><input type="checkbox" checked={bots.includes(hero.id)} onChange={e=>setBots(v=>e.target.checked?[...v,hero.id]:v.filter(id=>id!==hero.id))}/>AI</label>)}</div><button className="gold-button full-width" onClick={()=>open('new')}>New campaign</button><p className="muted">Online rooms are not yet available. Export a backup to continue on another device.</p><BuildStamp rules={game.needsSetup?undefined:state.variants?.rules??1}/></div>}
  {panel==='new'&&<>{game.unreadableSave&&<p className="setup-recovery-notice" role="alert">Your saved game could not be opened. Its original file is preserved. <button className="quiet-button" onClick={()=>open('settings')}>Open save recovery</button></p>}<CampaignSetup onStart={reset} onCancel={()=>setPanel(null)} existing={!game.needsSetup}/></>}
  </Modal>}
