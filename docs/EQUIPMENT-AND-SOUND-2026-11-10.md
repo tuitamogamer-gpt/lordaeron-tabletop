@@ -59,6 +59,7 @@ Analiza prije upotrebe: obje muzike su tonalne (vrhovi na tonovima C, G i D) i s
 
 - Zvuk prati promjene stanja igre, pa se isto čuje bez obzira je li potez napravio igrač ili AI. Po promjeni se pušta najviše jedan efekat i jedan glas, po važnosti; glasovi se ne preklapaju, a ista stvar se ne ponavlja u roku od 0,35 s. Nova ili uvezena partija i Undo su tihi.
 - Preglednici dozvoljavaju zvuk tek nakon prvog klika ili tipke, pa muzika kreće tada. Skriven tab utišava zvuk.
+- Od 11. 11. 2026. teme ne sviraju bez prestanka nego u frazama s pauzama, a karta događaja se čuje i kad se riješi bez odluke: [ADVISOR-TOKENS-WARS-2026-11-11.md](ADVISOR-TOKENS-WARS-2026-11-11.md).
 - **Zvučnik u zaglavlju** uključuje i isključuje sve. **Settings › Sound**: muzika (35 %), efekti (80 %) i glasovne linije. Izbor se pamti u pregledniku.
 - Glasovi su zvanični Fish glasovi (Adrian, Ethan), ne kloniranje glumaca ili likova, a linije su nove, ne citati iz igara.
 - Datoteke: `public/assets/audio/` (24 MP3, 0,85 MB). Sirovi snimci su lokalno u `.local-data/audio/raw`, a obrada je `python3 scripts/prepare-audio.py`. Kod: `src/campaign/audio.tsx`, testovi `tests/game-audio.test.ts`.

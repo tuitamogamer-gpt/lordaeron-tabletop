@@ -12,9 +12,11 @@ Igra je odigrana u Chromiumu korak po korak (setup, putovanje, izazov, sve faze 
 
 Druga dva slučaja pogađaju samo Kel’Thuzadove događaje Soul Taint i Spread the Plague, koji uzimaju zdravlje van borbe.
 
-**Započete kampanje se ne mijenjaju.** Sačuvana partija je lista naredbi koja se pri učitavanju ponovo odigra; pod izmijenjenim pravilima neka od tih naredbi mogla bi postati nelegalna i partija se ne bi učitala. Zato kampanja pamti reviziju pravila (`variants.rules`): nove kampanje počinju s revizijom 2, a ranije započete nemaju oznaku i zadržavaju pravila s kojima su igrane. **Settings** na dnu piše koja pravila koristi otvorena kampanja.
+**Započete kampanje se ne mijenjaju.** Sačuvana partija je lista naredbi koja se pri učitavanju ponovo odigra; pod izmijenjenim pravilima neka od tih naredbi mogla bi postati nelegalna i partija se ne bi učitala. Zato kampanja pamti reviziju pravila (`variants.rules`): nove kampanje su tada počinjale s revizijom 2 (sada 3), a ranije započete nemaju oznaku i zadržavaju pravila s kojima su igrane. **Settings** na dnu piše koja pravila koristi otvorena kampanja.
 
 ### Provjereno i ostavljeno
+
+> Naknadno, istog dana: ratovi se od revizije pravila 3 ocjenjuju na kraju poteza, a za odustajanje od akcije postoji dugme **Pass**. Vidi [ADVISOR-TOKENS-WARS-2026-11-11.md](ADVISOR-TOKENS-WARS-2026-11-11.md). Razmjena je ostala kako je opisana.
 
 - **Ratovi (War karte).** Pravilnik nagradu daje „at the end of your enemy’s faction turn”, dakle nakon Event koraka; igra rat provjerava prije pomjeranja markera i Event koraka. Razlika se vidi samo kad je rat izvučen dok protivnik slučajno već stoji u obje regije: tada bi po pravilniku nagradu dobio odmah, a u igri je dobija potez kasnije. Ispravka traži preuređenje kraja poteza i nastavka nakon nagrada, pa nije rađena.
 - **Razmjena.** Pravilnik (str. 36) razmjenu veže za lik koji je upravo završio akciju; igra je dozvoljava bilo koja dva saveznika u istoj regiji nakon bilo čije akcije. Tekst pravilnika je dvosmislen.
