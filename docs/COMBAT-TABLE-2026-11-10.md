@@ -31,6 +31,8 @@ Kartica je opis tog elementa (`aria-describedby`), pa je čitač ekrana pročita
 
 Desno su sposobnosti bile velike karte (oko 140×200 px u okvirima od pola ekrana), pa su potiskivale izbor kocki i bacanje. Sada je svaka karta jedan red: mala sličica (prelazak preko nje i dalje otvara cijelu kartu), mjesto, ime i stanje („Automatic effect”, „Used this round”, potrebna energija). Spremne sposobnosti imaju i dugme **Available +**. Klik otvara opcije ispod reda (jačina, kocke, energija prije i poslije) i dugme **Use … · n energy**.
 
+> Naknadno, 12. 11. 2026.: dva koraka su zamijenjena jednim. Spremna sposobnost ima dugme **Use** u svom redu, a izbor jačine, mete i kockica stoji u istom redu: [COMBAT-PLAY-2026-11-12.md](COMBAT-PLAY-2026-11-12.md).
+
 ## Provjera
 
 | Provjera | Rezultat |

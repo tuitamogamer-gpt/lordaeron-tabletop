@@ -4,7 +4,9 @@ Desktop adaptacija osnovne igre iz 2005. i službenog FAQ-a 1.4. React interfejs
 
 [Otvori igru](https://lordaeron-tabletop.vercel.app)
 
-Najnoviji prolaz popravlja botove i saradnju s njima. U prozoru **Challenge** protivnik sada ima jednu karticu na kojoj se saborci iz iste regije pozivaju dugmadima, a bot koji stoji uz igračevog lika pita ga da se pridruži borbi, umjesto da se bori bez njega. Mjerenje cijelih AI kampanja pokazalo je da botovi gomilaju zlato, ignorišu ratove i na nivou 5 odlažu napad na Overlorda (u jednoj partiji 238 poteza). Sada troše zlato, idu u grad po opremu, drže regije ratova i na Overlorda kreću odmoreni čim je cijela frakcija na nivou 5: na osam partija kampanja traje prosječno 45 poteza frakcija umjesto 99. Detalji i granice: [AI-BOTS-2026-11-11.md](docs/AI-BOTS-2026-11-11.md).
+Najnoviji prolaz mijenja kako se u borbi igraju moći. Svaka moć koja se može odigrati ima svoj red s dugmetom **Use** i cijenom, pa je jedan klik odigra; **Take back** je vraća dok kockice nisu bačene. List u borbi kaže odakle energija („+1 from Charge this round”) i zašto koja karta čeka, a dugme za izbor napadača šta lik donosi („2 energy · Heroic Strike ready”). Ranije je prije izbora napadača pisalo „Needs 2 energy · 1 available”, kao da Charge ne radi; engine ga je primjenjivao ispravno. Na telefonu moći i glavna akcija stoje na dnu ekrana. Detalji: [COMBAT-PLAY-2026-11-12.md](docs/COMBAT-PLAY-2026-11-12.md).
+
+Prethodni prolaz popravlja botove i saradnju s njima. U prozoru **Challenge** protivnik sada ima jednu karticu na kojoj se saborci iz iste regije pozivaju dugmadima, a bot koji stoji uz igračevog lika pita ga da se pridruži borbi, umjesto da se bori bez njega. Mjerenje cijelih AI kampanja pokazalo je da botovi gomilaju zlato, ignorišu ratove i na nivou 5 odlažu napad na Overlorda (u jednoj partiji 238 poteza). Sada troše zlato, idu u grad po opremu, drže regije ratova i na Overlorda kreću odmoreni čim je cijela frakcija na nivou 5: na osam partija kampanja traje prosječno 45 poteza frakcija umjesto 99. Detalji i granice: [AI-BOTS-2026-11-11.md](docs/AI-BOTS-2026-11-11.md).
 
 Prethodni prolaz dodaje muziku: umjesto dvije teme igra ih ima sedam, četiri za mapu, dvije za borbu i jednu za borbu s Overlordom. Teme se smjenjuju, pa se ista na mapi vrati tek nakon šest do sedam minuta. Pri obradi je ispravljena i rupa od 51 ms tišine na svakom ponavljanju stare dvije teme. Pet novih tema napravljeno je s Fish Audio (39.750 kredita, uz odobrenje vlasnika). Detalji: [MUSIC-THEMES-2026-11-11.md](docs/MUSIC-THEMES-2026-11-11.md).
 
@@ -127,6 +129,7 @@ Granice mape ručno su precrtane iz dvije fotografije originala, uz dijagrame iz
 - [Savjetnik za potez, žetoni, muzika u frazama i ratovi po pravilniku](docs/ADVISOR-TOKENS-WARS-2026-11-11.md)
 - [Sedam muzičkih tema i petlje bez rupe](docs/MUSIC-THEMES-2026-11-11.md)
 - [Botovi: saradnja s igračem, zlato, ratovi i odlučna završnica](docs/AI-BOTS-2026-11-11.md)
+- [Borba: moć jednim klikom, izvor energije, telefon](docs/COMBAT-PLAY-2026-11-12.md)
 
 ## Autorska prava
 
