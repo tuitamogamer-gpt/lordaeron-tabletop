@@ -34,9 +34,9 @@ function settle(state: State) {
 const wealth = (s: State, f: Faction) => side(s, f).map(h => [h.gold, h.xp]);
 
 describe('when a War is judged', () => {
- it('begins new campaigns with rules revision 3', () => {
-  expect(RULES_REVISION).toBe(3);
-  expect(createGame(p, DEFAULT_SETUP).variants?.rules).toBe(3);
+ it('begins new campaigns with a rules revision that judges Wars at the end of the turn', () => {
+  expect(RULES_REVISION).toBeGreaterThanOrEqual(3);
+  expect(createGame(p, DEFAULT_SETUP).variants?.rules).toBe(RULES_REVISION);
  });
 
  it('rewards the opposing faction at once when a War is drawn over regions it already holds', () => {

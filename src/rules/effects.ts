@@ -185,6 +185,11 @@ export function effects(p: ContentPack, s: State, h: Hero, id: string, list: Eff
    case 'escape': {
     assert(b?.kind==='pve'&&a?.heroId===h.id,"You can only flee PvE combat.");
     b.participants=b.participants.filter(id=>id!==h.id);b.report.push(`escaped:${h.id}`);delete b.active;
+    // A character who escapes "is no longer participating in the combat" (Ice Block): for him it has ended. What he gained above
+    // capacity goes (rules p. 13: gained Health or Energy exceeds capacity "for that ability's duration"; Arcane Intellect: "After
+    // combat, you must immediately lose any Energy in excess of your capacity"), and so does Stun (rules p. 36). Campaigns begun
+    // before rules revision 4 kept all three, because only the characters still in the combat were tidied up when it closed.
+    if(revised(s,4)){const cap=capacity(p,h);h.stun=0;h.health=Math.min(h.health,cap.health);h.energy=Math.min(h.energy,cap.energy);}
     if(!b.participants.some(id=>!b.defeated.includes(id))){b.winner=other(b.first);b.stage='over';}
     else b.stage=b.participants.some(id=>!b.defeated.includes(id)&&!b.acted.includes(id))?'attacker':'defense';break;
    }
