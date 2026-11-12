@@ -30,8 +30,10 @@ export interface Beat {
  hold: number;
 }
 
-export type Pace = 'relaxed' | 'normal' | 'brisk' | 'off';
+export type Pace = 'step' | 'relaxed' | 'normal' | 'brisk' | 'off';
 export const PACES: { id: Pace; label: string; note: string; factor: number }[] = [
+ // Nothing moves on by itself: each step stays until a click, Space or Enter, and the bots' own fights wait to be closed.
+ { id: 'step', label: 'Step by step', note: 'Each step waits for your click', factor: 1 },
  { id: 'relaxed', label: 'Relaxed', note: 'Every step stays longer', factor: 1.5 },
  { id: 'normal', label: 'Normal', note: 'Each step is shown in turn', factor: 1 },
  { id: 'brisk', label: 'Brisk', note: 'Short notices', factor: 0.55 },

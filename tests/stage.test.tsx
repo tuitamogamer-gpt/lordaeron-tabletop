@@ -164,7 +164,7 @@ describe('the pace of the table', () => {
   expect(loadPace()).toBe('relaxed');
   localStorage.setItem('lordaeron-pace-v1', 'nonsense');
   expect(loadPace()).toBe('off');
-  expect(PACES.map(v => v.id)).toEqual(['relaxed', 'normal', 'brisk', 'off']);
+  expect(PACES.map(v => v.id)).toEqual(['step', 'relaxed', 'normal', 'brisk', 'off']);
  });
  it('holds a step longer at a relaxed pace and never shorter than the minimum', () => {
   const beat = { hold: 2000 } as Beat;
@@ -172,6 +172,28 @@ describe('the pace of the table', () => {
   expect(holdOf(beat, 'relaxed')).toBe(3000);
   expect(holdOf(beat, 'brisk')).toBe(1100);
   expect(holdOf({ hold: 900 } as Beat, 'brisk')).toBe(MIN_HOLD);
+ });
+ it('step by step, keeps every step up until the player moves on', () => {
+  vi.useFakeTimers(); vi.spyOn(audio, 'play').mockResolvedValue(undefined); vi.spyOn(audio, 'stinger').mockImplementation(() => {});
+  const { before, after, command } = untilEvent();
+  let list = beats(p, before, after, command, false); const next = vi.fn(() => { list = list.slice(1); r.rerender(<Stage queue={list} pace="step" next={next} clear={vi.fn()} />); });
+  const r = render(<Stage queue={list} pace="step" next={next} clear={vi.fn()} />), stage = screen.getByRole('status', { name: 'What just happened at the table' });
+  // The card: no hold runs out, and no timer is drawn.
+  act(() => { vi.advanceTimersByTime(list[0].hold * 20); });
+  expect(next).not.toHaveBeenCalled();
+  expect(stage.className).toContain('waits');
+  expect(stage.querySelector('.stage-timer')).toBeNull();
+  expect(screen.getByText('Click or press Space for the next step')).toBeTruthy();
+  fireEvent.click(stage);
+  expect(next).toHaveBeenCalledOnce();
+  // The banner that follows waits as well, and says how to go on.
+  expect(screen.getByText('Alliance · turn 4')).toBeTruthy();
+  act(() => { vi.advanceTimersByTime(60000); });
+  expect(next).toHaveBeenCalledOnce();
+  expect(screen.getByText('Click for the next step')).toBeTruthy();
+  fireEvent.keyDown(window, { key: ' ' });
+  expect(next).toHaveBeenCalledTimes(2);
+  expect(screen.queryByRole('status', { name: 'What just happened at the table' })).toBeNull();
  });
 });
 
@@ -222,14 +244,31 @@ describe('the stage on screen', () => {
   fireEvent.keyDown(screen.getByRole('button', { name: 'Travel' }), { key: ' ' });
   expect(next).not.toHaveBeenCalled();
  });
- it('keeps a card up while the pointer rests on it', () => {
+ it('keeps a card up when its Hold button is pressed, and not because the pointer rests on it', () => {
   vi.useFakeTimers(); vi.spyOn(audio, 'play').mockResolvedValue(undefined); vi.spyOn(audio, 'stinger').mockImplementation(() => {});
   const list = queue(), next = vi.fn(), r = render(<Stage queue={list} pace="normal" next={next} clear={vi.fn()} />), card = r.container.querySelector('.stage-card')!;
-  fireEvent.pointerEnter(card, { pointerType: 'mouse' });
+  // Cards appear in the middle of the table, where the pointer often is: a pointer on the card holds nothing any more.
+  fireEvent.pointerEnter(card, { pointerType: 'mouse' }); fireEvent.mouseEnter(card); fireEvent.pointerMove(card, { pointerType: 'mouse' });
+  act(() => { vi.advanceTimersByTime(list[0].hold - 1); });
+  expect(next).not.toHaveBeenCalled();
+  // Asked for, the card stays; the button does not move the stage on.
+  fireEvent.click(screen.getByRole('button', { name: 'Hold' }));
+  expect(next).not.toHaveBeenCalled();
   act(() => { vi.advanceTimersByTime(list[0].hold * 3); });
   expect(next).not.toHaveBeenCalled();
-  expect(screen.getByText(/Held while you read/)).toBeTruthy();
-  fireEvent.pointerLeave(card);
+  expect(screen.getByText(/Held while you read · click or press Space to continue/)).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Release' }).getAttribute('aria-pressed')).toBe('true');
+  // Let go, its time starts again.
+  fireEvent.click(screen.getByRole('button', { name: 'Release' }));
+  act(() => { vi.advanceTimersByTime(list[0].hold - 1); });
+  expect(next).not.toHaveBeenCalled();
+  act(() => { vi.advanceTimersByTime(1); });
+  expect(next).toHaveBeenCalledOnce();
+ });
+ it('left alone under a resting pointer, moves on by itself', () => {
+  vi.useFakeTimers(); vi.spyOn(audio, 'play').mockResolvedValue(undefined); vi.spyOn(audio, 'stinger').mockImplementation(() => {});
+  const list = queue(), next = vi.fn(), r = render(<Stage queue={list} pace="normal" next={next} clear={vi.fn()} />);
+  fireEvent.pointerEnter(r.container.querySelector('.stage-card')!, { pointerType: 'mouse' });
   act(() => { vi.advanceTimersByTime(list[0].hold); });
   expect(next).toHaveBeenCalledOnce();
  });

@@ -17,7 +17,9 @@
 .stage-text>p+p{padding-top:7px;border-top:1px solid #c9a35f33}
 .stage-foot{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px 12px;font:11px var(--sans);color:#a99c80}
 .stage-foot>.stage-timer{grid-column:1/-1}
-.campaign-app .stage-foot>button{min-height:28px;padding:3px 11px;font-size:11px}
+.stage-buttons{display:inline-flex;gap:6px;align-items:center}
+.campaign-app .stage-foot button{min-height:28px;padding:3px 11px;font-size:11px}
+.campaign-app .stage-foot .stage-hold[aria-pressed=true]{border-color:#e7c67b;color:#f3deaa}
 .stage-timer{display:block;height:3px;border-radius:2px;background:linear-gradient(90deg,#e7c67b,#b98d45);transform-origin:left center;animation:stage-timer var(--stage-hold,3000ms) linear both}
 .stage-timer.held{animation-play-state:paused}
 .stage-touch{display:none}
