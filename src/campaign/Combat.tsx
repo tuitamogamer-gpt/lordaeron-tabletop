@@ -18,7 +18,7 @@ import D8 from './D8';
 import RulesText from './RulesText';
 import CombatScene from './CombatScene';
 import { AnimatedValue, ThreatLevel } from './feedback';
-import { combatStep, combatSteps, type CombatPresentation } from './combat-flow';
+import { combatStep, combatSteps, lightCue, type CombatPresentation } from './combat-flow';
 import { BossPortrait, CreatureGlyph, creatureRules } from './design-system';
 import { bossRuleText, regionName } from './event-text';
 import { ConditionToken, factionLabel, HeroPortrait, phaseLabel, pretty } from './parts';
@@ -59,7 +59,8 @@ type CombatProps = {
 };
 
 export default function CampaignCombat({ state: liveState, legal, send, busy, botStep, botReady, open = true, onClose, bots = [], resolve = true, toggleResolve, automationPending = false, presentation, botResponsePending=false, onPassHumanWindow, autoContinue = false, toggleAutoContinue, autoStep }: CombatProps) {
- const anticipating = presentation?.cue && ['anticipation', 'action'].includes(presentation.phase);
+ // An exchange holds its outcome back until the blow lands. A power or a new attacker has nothing to hold back: it shows at once.
+ const anticipating = presentation?.cue && !lightCue(presentation.cue) && ['anticipation', 'action'].includes(presentation.phase);
  const state = anticipating ? presentation.cue!.before : liveState;
  const locked = busy || !!presentation?.busy;
  const b = state.phase === 'combat' ? state.battle : undefined, a = b?.active;

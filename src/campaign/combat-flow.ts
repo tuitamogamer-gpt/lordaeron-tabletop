@@ -13,6 +13,8 @@ export const COMBAT_STEP_MS = 750;
 /** A bookkeeping step stays visible for a beat before it continues on its own. */
 export const AUTO_CONTINUE_MS = 900;
 export const COMBAT_BEATS = { action: 420, impact: 980, recovery: 1600, complete: 2200 } as const;
+/** A power or a new attacker has no outcome to wait for: what it did shows at once, and the table is free again after a short flourish. */
+export const LIGHT_BEATS = { action: 110, impact: 240, recovery: 430, complete: 600 } as const;
 export const REDUCED_COMBAT_MS = 180;
 export type CombatCue = {
  key: number;
@@ -23,6 +25,7 @@ export type CombatCue = {
  heroId?: string;
  before: GameView;
 };
+export const lightCue = (cue?: Pick<CombatCue, 'kind'>) => cue?.kind === 'power' || cue?.kind === 'prepare';
 export type CombatPresentation = {
  cue?: CombatCue;
  phase: 'idle' | 'anticipation' | 'action' | 'impact' | 'recovery';
@@ -59,7 +62,11 @@ export function combatCue(before: GameView, after: GameView): CombatCue | undefi
  const total = battle.boxes[side], previous = old.boxes[side];
  const gained = total.damage + total.defense + total.armor + total.attrition - previous.damage - previous.defense - previous.armor - previous.attrition;
  if (gained > 0) return make('bank', 'Hits secured', 'Gathering your successes', `+${gained} to the shared battle pool`);
- if (battle.active && old.active?.heroId === battle.active.heroId && battle.active.used.length > old.active.used.length) return make('power', 'Power unleashed', `${name(battle.active.heroId)} channels a power`, 'The ability takes effect');
+ if (battle.active && old.active?.heroId === battle.active.heroId && battle.active.used.length > old.active.used.length) {
+  // Name the card: `used` records "<card>:<ability>" for each power of this attack.
+  const key = battle.active.used.at(-1)!, played = BASE_PACK.cards.find(c => c.id === key.slice(0, key.lastIndexOf(':')))?.name;
+  return make('power', played ?? 'Power unleashed', `${name(battle.active.heroId)} uses ${played ?? 'a power'}`, 'Its effect is on the table');
+ }
  if (battle.active && battle.active.heroId !== old.active?.heroId) return make('prepare', `${name(battle.active.heroId)} steps forward`, 'A new attacker takes position', 'Choose your powers, then roll');
 }
 
@@ -91,7 +98,8 @@ export function useCombatPresentation(state: GameView): CombatPresentation {
    return () => clearTimeout(timer);
   }
   setPhase('anticipation');
-  const timers = [setTimeout(() => setPhase('action'), COMBAT_BEATS.action), setTimeout(() => setPhase('impact'), COMBAT_BEATS.impact), setTimeout(() => setPhase('recovery'), COMBAT_BEATS.recovery), setTimeout(finish, COMBAT_BEATS.complete)];
+  const beats = lightCue(cue) ? LIGHT_BEATS : COMBAT_BEATS;
+  const timers = [setTimeout(() => setPhase('action'), beats.action), setTimeout(() => setPhase('impact'), beats.impact), setTimeout(() => setPhase('recovery'), beats.recovery), setTimeout(finish, beats.complete)];
   return () => timers.forEach(clearTimeout);
  }, [cue, reducedMotion]);
  return { cue, phase, busy: !!cue };
