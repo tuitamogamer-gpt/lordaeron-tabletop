@@ -7,13 +7,13 @@ Aktivni paket `base-2005-faq-1.4-v7` ima sve komponente osnovnog seta. `official
 | Sistem | Implementirano | Preostala provjera |
 | --- | --- | --- |
 | Setup | 4/6 likova, jedinstvene klase, frakcije, originalni slotovi, rasne moći, početni questovi i trgovac | Šira igranja različitih postava |
-| Mapa | 67 omeđenih polja; susjedstvo iz istih segmenata koji se crtaju; letovi, dvije etape, plave blokade i posebne moći | Konture su rekonstrukcija iz fotografija; pregled na stvarnom browseru |
+| Mapa | 67 omeđenih polja; susjedstvo iz istih segmenata koji se crtaju; letovi, dvije etape, plave blokade i posebne moći. Od revizije pravila 4 šest veza je ispravljeno prema fotografijama table, a staza poteza i staza iskustva su potvrđene polje po polje: [MAP-AUDIT-2026-11-12.md](MAP-AUDIT-2026-11-12.md) | Konture su rekonstrukcija iz fotografija; dio spojeva je pregledan samo na manjem uvećanju |
 | Akcije | Svih pet; višestruke gradske transakcije, proizvoljan redoslijed oporavka, korpa više treninga, hrana, posebne akcijske moći | Duge sekvence kroz UI |
 | Inventar | Sedam mjesta, osobine, addon funkcije, unique moći, kapaciteti, aktivni trošak po mjestu, ponovno opremanje ljubimaca, torba i razmjena | Sve kombinacije popusta i promjena kapaciteta |
 | Klase | 108 Power i 108 Talent karata iz devet klasa; automatski, uslovni i izborni efekti | Iscrpno testiranje svih kombinacija i efekata u istom vremenskom prozoru |
 | Predmeti | 46 triangle, 30 square, 16 circle, 28 special; četiri aukcijska predmeta | Balans i strategija njihovog korištenja |
 | Questovi | Svih 80, obje frakcije, živi tokeni povezani s kartama, brojači špilova, spawnovi, konačne zalihe figura, nagrade i zamjene | Vrlo dugo iscrpljivanje svih zamjenskih špilova |
-| Borba | PvE/PvP, d8, fizičke zalihe boja, Spot, promjene, nezavisni reroll, Stun/Curse, pogoci, rane, ljubimci, poraz i oživljavanje | Sve konkurentne reakcije u grupnoj borbi |
+| Borba | PvE/PvP, d8, fizičke zalihe boja, Spot, promjene, nezavisni reroll, Stun/Curse, pogoci, rane, ljubimci, poraz i oživljavanje. Gain ide iznad kapaciteta, Regain ne (str. 13); od revizije pravila 4 višak gubi i lik koji napusti borbu: [GAIN-REGAIN-2026-11-12.md](GAIN-REGAIN-2026-11-12.md) | Sve konkurentne reakcije u grupnoj borbi |
 | Minioni | 13 vrsta, raspoložive boje i originalne vrijednosti iz referentnog lista | Više grupnih kombinacija u igranju |
 | Događaji | 47 + 5 Kel’Thuzad; bonusi, aukcije, kupovina, retrening, putovanja, premještanje grupa, bounty, trofeji, ratovi (od revizije pravila 3 ocjenjuju se na kraju poteza frakcije, str. 12 i 26: [ADVISOR-TOKENS-WARS-2026-11-11.md](ADVISOR-TOKENS-WARS-2026-11-11.md)), kuga, sedam boss događaja | Više preklapanja trajnih događaja |
 | Overlordi | Oba profila svakog bossa; pet Kazzakovih tragova, Nefarian Fate i Bulwark, Kel’Thuzadove sposobnosti i događaji | Kel’Thuzadov Attrition je od 11. 11. 2026. usklađen s pravilnikom (str. 19), vidi [PLAYTHROUGH-2026-11-11.md](PLAYTHROUGH-2026-11-11.md) |

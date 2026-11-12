@@ -6,6 +6,8 @@ The action dock shows the purpose of Travel, Rest, Train, Town and Challenge dir
 
 ## Sources and interpretation
 
+**12 November 2026:** the tracing was laid over both photographs again. Six connections that a black border separates on the printed board were removed and three missing ones added (115 connections instead of 118); the turn track, the experience track, the keys and the Combat Area were compared with the board as well. New campaigns play on the corrected map (rules revision 4) and earlier ones keep theirs. In the overview the board now lies on the table, seen a little from the front, and the fullscreen map stays flat. Method, the six places, what was not enlarged and the measurements: [MAP-AUDIT-2026-11-12.md](MAP-AUDIT-2026-11-12.md). The paragraphs below describe the first tracing.
+
 - [FFG rules](https://images-cdn.fantasyflightgames.com/ffg_content/WoWBG/wowrules.pdf): quest tokens pp. 4, 7, 20; Travel and flight paths pp. 9–10; replacement decks pp. 20–22. The four-player setup has three grey quests plus one green per faction (p. 35); six characters use four grey plus one green.
 - [JudgeHype original-board photograph](https://worldofwarcraft.judgehype.com/image/16487/), already stored as `public/assets/original-board.jpg`, provides the 1600 × 1108 tracing coordinate space.
 - [Second full-board photograph](https://www.mandisattictoys.com/products/world-of-warcraft-the-boardgame-2005-fantasy-flight-games-unpunched), [image](https://www.mandisattictoys.com/cdn/shop/files/IMG_7419_7a13025a-e184-4c87-bbc8-913b0876e3a1.jpg?v=1689555834), cross-checks region outlines, town/flight/graveyard icons, and mountain pockets. This reference is local only.
