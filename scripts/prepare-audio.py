@@ -6,7 +6,7 @@ say how each was made):
   music-<theme>.mp4                  15 s clips of Fish's heygen-video-1 model; only their generated soundtrack is used
                                      (map, map-road, map-blight, map-council, battle, battle-charge, boss)
   sfx-<name>.mp4                     5 s clips of the same model, one sound each
-  voice-<name>.mp3                   Fish text-to-speech lines (drama-3)
+  voice-<name>.mp3                   Fish text-to-speech lines (drama-3); scripts/voice-lines.json says what each one says and who speaks it
 This writes public/assets/audio/{themes,sfx,voice}/*.mp3: the music as loops of 13.6 s (the last 1.5 s crossfaded into the first)
 with 0.2 s of the same music before and after, so that the game can loop inside continuous sound,
 each effect cut to its sound, the voices without leading or trailing silence, all at an even loudness.
@@ -17,12 +17,25 @@ files had the right length and the game played them (docs/SOUND-2026-11-12.md).
 
     python3 scripts/prepare-audio.py
 """
-import array, glob, json, os, subprocess, sys
+import array, glob, json, os, subprocess, sys, tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RAW, OUT = os.path.join(ROOT, '.local-data', 'audio', 'raw'), os.path.join(ROOT, 'public', 'assets', 'audio')
 # Where each effect's sound lies in its 5 s clip (seconds), measured on the loudness envelope of the downloads.
 EFFECTS = {'dice': (0.12, 2.3), 'sword': (1.45, 3.6), 'card': (2.45, 3.6), 'coins': (0.28, 1.9), 'levelup': (2.8, 5.2), 'victory': (1.35, 5.2)}
+# The combat effects of 12 Nov 2026: the stretches of each clip that are used (two stretches are joined), how long the end fades,
+# and how much faster the sound is played. These clips carry much of their energy below 90 Hz, which small speakers do not play
+# and which would hold the loudness back, so that part is filtered out before the level is set.
+#   hit    a blade into a training dummy: the slash and the thud
+#   block  an axe caught on a wooden shield: the first knock
+#   hurt   a mace on chain mail: the first of the clip's two blows
+#   roar   a beast's roar, shortened from 2.8 s
+#   slain  the beast's groan and the fall of its body, without the pause between them, a little faster
+#   spell  the second and brightest of the three surges of a bolt of arcane fire
+COMBAT = {
+    'hit': ([(0.22, 1.05)], 0.3, 1.0), 'block': ([(0.54, 1.25)], 0.3, 1.0), 'hurt': ([(1.48, 2.42)], 0.3, 1.0),
+    'roar': ([(0.62, 2.45)], 0.55, 1.0), 'slain': ([(1.24, 2.36), (2.76, 3.95)], 0.4, 1.15), 'spell': ([(2.72, 3.50)], 0.25, 1.0),
+}
 # Music: seconds used of each clip, the crossfade of its end into its start, the period that results, and the extra kept at each end.
 LOOP, FADE = 15.1, 1.5
 PERIOD, LEAD = LOOP - FADE, 0.2
@@ -97,6 +110,18 @@ def main():
         ffmpeg('-i', os.path.join(RAW, f'sfx-{name}.mp4'), '-vn', '-af',
                f'atrim={start}:{end},asetpts=N/SR/TB,afade=t=in:d=0.02,afade=t=out:st={max(0, length - 0.4):.2f}:d=0.4,loudnorm=I=-17:TP=-1.5',
                '-ar', '32000', '-ac', '1', '-c:a', 'libmp3lame', '-b:a', '80k', os.path.join(OUT, 'sfx', f'{name}.mp3'))
+    with tempfile.TemporaryDirectory() as tmp:
+        for name, (stretches, fade, speed) in COMBAT.items():
+            src, cut = os.path.join(RAW, f'sfx-{name}.mp4'), os.path.join(tmp, f'{name}.wav')
+            # 1. The stretches, joined with a short crossfade where there are two.
+            parts = ''.join(f'[0:a]aresample=32000,atrim={a}:{b},asetpts=N/SR/TB[p{i}];' for i, (a, b) in enumerate(stretches))
+            join = '[p0]anull[cut]' if len(stretches) == 1 else '[p0][p1]acrossfade=d=0.05:c1=tri:c2=tri[cut]'
+            ffmpeg('-i', src, '-filter_complex', parts + join, '-map', '[cut]', '-ar', '32000', '-ac', '1', cut)
+            # 2. Without the rumble, faster where asked, faded at both ends, then one gain for the whole sound.
+            length = samples(cut, 32000) / 32000 / speed
+            chain = (f'highpass=f=90,asetrate={round(32000 * speed)},aresample=32000,'
+                     f'afade=t=in:d=0.012,afade=t=out:st={max(0, length - fade):.3f}:d={fade}')
+            ffmpeg('-i', cut, '-af', levelled(cut, chain, -17), '-ar', '32000', '-ac', '1', '-c:a', 'libmp3lame', '-b:a', '80k', os.path.join(OUT, 'sfx', f'{name}.mp3'))
     for src in sorted(glob.glob(os.path.join(RAW, 'voice-*.mp3'))):
         name = os.path.basename(src)[len('voice-'):-len('.mp3')]
         trim = 'silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.05'

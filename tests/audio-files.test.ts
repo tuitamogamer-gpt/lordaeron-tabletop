@@ -1,8 +1,9 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import { recording, THEMES, VOICES, type Voice } from '../src/campaign/audio';
 
 /**
- * The recordings the game plays, against their content.
+ * The recordings the game plays, against the game's own lists and against their content.
  *
  * From 10 to 12 Nov 2026 every voice line was silent after its first hundredth of a second: the preparation script ran the
  * lines through a fade that ended there. The files had the right names, sizes and lengths, the game requested and played
@@ -11,6 +12,8 @@ import { describe, expect, it } from 'vitest';
  */
 const ROOT = 'public/assets/audio';
 const files = (dir: string) => readdirSync(`${ROOT}/${dir}`).filter(name => name.endsWith('.mp3')).map(name => name.slice(0, -4)).sort();
+const SFX = ['block', 'card', 'coins', 'dice', 'hit', 'hurt', 'levelup', 'roar', 'slain', 'spell', 'sword', 'victory'];
+const script = JSON.parse(readFileSync('scripts/voice-lines.json', 'utf8')) as { model: string; voices: Record<string, string>; lines: { file: string; voice: string; direction: string; text: string; made: string }[] };
 
 /**
  * How much of an MP3 carries sound. The files are MPEG-1 Layer III at a constant bit rate (scripts/prepare-audio.py): each
@@ -41,6 +44,43 @@ function sounding(file: Buffer) {
  }
  return { granules, share: granules ? heard / granules : 0, until: granules ? last / granules : 0 };
 }
+
+describe('the voice recordings', () => {
+ it('are exactly the recordings the game’s cues ask for', () => {
+  const wanted = (Object.keys(VOICES) as Voice[]).flatMap(voice => Array.from({ length: VOICES[voice] }, (_, n) => recording(voice, n))).sort();
+  expect(files('voice')).toEqual(wanted);
+  expect(wanted).toHaveLength(79);
+  expect(recording('horde', 0)).toBe('horde'); expect(recording('horde', 2)).toBe('horde-3');
+ });
+ it('are the lines written down in scripts/voice-lines.json, each spoken by an official Fish voice', () => {
+  expect(script.lines.map(line => line.file).sort()).toEqual(files('voice'));
+  expect(script.model).toBe('drama-3');
+  expect(Object.keys(script.voices).sort()).toEqual(['Adrian', 'Eoin', 'Ethan', 'Margaret', 'Thaddeus']);
+  for (const line of script.lines) {
+   expect(script.voices[line.voice], line.file).toMatch(/^[0-9a-f]{32}$/);
+   expect(line.text.trim().length, line.file).toBeGreaterThan(5);
+   expect(line.direction.trim().length, line.file).toBeGreaterThan(2);
+   // The direction is given to the model in brackets and must not be part of the words.
+   expect(line.text, line.file).not.toMatch(/[[\]]/);
+  }
+  // No sentence is recorded twice.
+  expect(new Set(script.lines.map(line => line.text)).size).toBe(script.lines.length);
+ });
+ it('give every cue with several recordings different words', () => {
+  const words = (file: string) => script.lines.find(line => line.file === file)!.text;
+  for (const voice of Object.keys(VOICES) as Voice[]) {
+   const said = Array.from({ length: VOICES[voice] }, (_, n) => words(recording(voice, n)));
+   expect(new Set(said).size, voice).toBe(said.length);
+  }
+ });
+});
+
+describe('the effects and the music', () => {
+ it('are the files the game asks for', () => {
+  expect(files('sfx')).toEqual(SFX);
+  expect(files('themes')).toEqual([...new Set(Object.values(THEMES).flat())].sort());
+ });
+});
 
 describe('every recording', () => {
  it('sounds through its length', () => {

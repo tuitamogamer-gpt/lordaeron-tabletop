@@ -23,6 +23,8 @@ export type CombatCue = {
  anticipation: string;
  detail: string;
  heroId?: string;
+ /** Enemies that fell in this exchange. */
+ kills?: number;
  before: GameView;
 };
 export const lightCue = (cue?: Pick<CombatCue, 'kind'>) => cue?.kind === 'power' || cue?.kind === 'prepare';
@@ -40,8 +42,8 @@ export function combatCue(before: GameView, after: GameView): CombatCue | undefi
  const heroId = actor?.heroId ?? battle.participants.find(id => !battle.defeated.includes(id)) ?? battle.participants[0];
  const side = heroId ? faction(BASE_PACK, heroId) : battle.first;
  const name = (id: string) => character(BASE_PACK, id).name.split(' ')[0];
- const make = (kind: CombatCue['kind'], title: string, anticipation: string, detail: string, hero = heroId): CombatCue => ({ key: after.revision, kind, title, anticipation, detail, heroId: hero, before });
  const kills = Math.max(0, (battle.killed?.length ?? 0) - (old.killed?.length ?? 0));
+ const make = (kind: CombatCue['kind'], title: string, anticipation: string, detail: string, hero = heroId): CombatCue => ({ key: after.revision, kind, title, anticipation, detail, heroId: hero, ...(kills ? { kills } : {}), before });
  const defeated = kills ? `${kills} ${kills === 1 ? 'enemy falls' : 'enemies fall'}` : '';
  const health = battle.participants.map(id => ({ id, delta: (after.heroes.find(h => h.id === id)?.health ?? 0) - (before.heroes.find(h => h.id === id)?.health ?? 0) })).filter(h => h.delta);
  if (health.length) {

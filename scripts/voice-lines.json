@@ -1,0 +1,566 @@
+{
+ "about": "Every voice line of the game: the file in public/assets/audio/voice (without .mp3), the official Fish Audio voice that speaks it, the direction given to the drama-3 model in square brackets, and the words. The lines are new sentences, not quotations from the games. scripts/prepare-audio.py prepares the recordings; tests/audio-files.test.ts keeps this list, the files and the game's list of cues in step. Every line was transcribed back on 12 Nov 2026 and matched its words.",
+ "model": "drama-3",
+ "voices": {
+  "Adrian": "bf322df2096a46f18c579d0baa36f41d",
+  "Ethan": "536d3a5e000945adb7038665781a4aca",
+  "Margaret": "22220edad3e748d386b68377ae0fe0f2",
+  "Eoin": "2091911675124249a73d321664ef94a7",
+  "Thaddeus": "88db76d4fab54ed494ce4da746d1027f"
+ },
+ "lines": [
+  {
+   "file": "alliance",
+   "voice": "Ethan",
+   "direction": "rousing heroic battle shout",
+   "text": "For the Alliance!",
+   "made": "2026-11-10"
+  },
+  {
+   "file": "alliance-2",
+   "voice": "Ethan",
+   "direction": "rousing heroic battle shout",
+   "text": "Alliance, stand together!",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "alliance-3",
+   "voice": "Margaret",
+   "direction": "rousing heroic battle shout",
+   "text": "Hold the line, and strike!",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "auction",
+   "voice": "Adrian",
+   "direction": "announcing, grand",
+   "text": "The auction begins!",
+   "made": "2026-11-10"
+  },
+  {
+   "file": "auction-2",
+   "voice": "Adrian",
+   "direction": "announcing, grand",
+   "text": "Open your purses. The bidding starts!",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "battle-lost",
+   "voice": "Adrian",
+   "direction": "grim, urgent",
+   "text": "Fall back!",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "battle-lost-2",
+   "voice": "Adrian",
+   "direction": "grim, low",
+   "text": "The day is lost. Retreat.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "battle-won",
+   "voice": "Adrian",
+   "direction": "triumphant",
+   "text": "Victory!",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "battle-won-2",
+   "voice": "Adrian",
+   "direction": "triumphant",
+   "text": "The enemy is broken!",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "battle-won-3",
+   "voice": "Adrian",
+   "direction": "triumphant",
+   "text": "The field is ours!",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "draw",
+   "voice": "Adrian",
+   "direction": "grim, low",
+   "text": "Both factions have fallen. Nefarian reigns.",
+   "made": "2026-11-10"
+  },
+  {
+   "file": "event",
+   "voice": "Adrian",
+   "direction": "ominous, low",
+   "text": "Fate turns...",
+   "made": "2026-11-10"
+  },
+  {
+   "file": "event-2",
+   "voice": "Adrian",
+   "direction": "ominous, low",
+   "text": "The winds of fate shift...",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "event-3",
+   "voice": "Adrian",
+   "direction": "ominous, low",
+   "text": "A new page of history is written.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "event-beasts",
+   "voice": "Adrian",
+   "direction": "ominous, low",
+   "text": "The wild grows restless.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "event-boss",
+   "voice": "Adrian",
+   "direction": "ominous, low",
+   "text": "A terror walks the land.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "event-boss-2",
+   "voice": "Adrian",
+   "direction": "ominous, low",
+   "text": "Something ancient has awoken.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "event-bounty",
+   "voice": "Adrian",
+   "direction": "announcing, brisk",
+   "text": "A bounty is posted.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "event-cleanse",
+   "voice": "Adrian",
+   "direction": "hopeful, solemn",
+   "text": "The land may yet be cleansed.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "event-ears",
+   "voice": "Adrian",
+   "direction": "announcing, brisk",
+   "text": "Trophies will be rewarded.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "event-hatreds",
+   "voice": "Adrian",
+   "direction": "grim",
+   "text": "Old hatreds burn again.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "event-horizons",
+   "voice": "Adrian",
+   "direction": "inviting",
+   "text": "New roads lie open.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "event-professions",
+   "voice": "Adrian",
+   "direction": "inviting",
+   "text": "Time to practice your craft.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "event-retrain",
+   "voice": "Adrian",
+   "direction": "intrigued, inviting",
+   "text": "Another path to power opens.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "event-subterfuge",
+   "voice": "Adrian",
+   "direction": "low, conspiratorial",
+   "text": "Trust no one.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "event-traders",
+   "voice": "Adrian",
+   "direction": "announcing, brisk",
+   "text": "Traders are on the road.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "event-war",
+   "voice": "Adrian",
+   "direction": "announcing, grave",
+   "text": "War is declared!",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "event-war-2",
+   "voice": "Adrian",
+   "direction": "announcing, grave",
+   "text": "The banners are raised. War has come.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "event-winds",
+   "voice": "Adrian",
+   "direction": "ominous, low",
+   "text": "Foul winds blow from the east.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "event-zeppelin",
+   "voice": "Adrian",
+   "direction": "announcing, brisk",
+   "text": "The zeppelin is ready to fly.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "fallen",
+   "voice": "Ethan",
+   "direction": "pained, defiant gasp",
+   "text": "I will return...",
+   "made": "2026-11-10"
+  },
+  {
+   "file": "fallen-2",
+   "voice": "Ethan",
+   "direction": "pained, defiant gasp",
+   "text": "This is not the end...",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "fallen-3",
+   "voice": "Margaret",
+   "direction": "pained, defiant gasp",
+   "text": "I shall rise again...",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "horde",
+   "voice": "Adrian",
+   "direction": "roaring war cry, rough and gravelly",
+   "text": "For the Horde!",
+   "made": "2026-11-10"
+  },
+  {
+   "file": "horde-2",
+   "voice": "Adrian",
+   "direction": "roaring war cry, rough and gravelly",
+   "text": "Horde, strike as one!",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "horde-3",
+   "voice": "Adrian",
+   "direction": "roaring war cry, rough and gravelly",
+   "text": "Break their line!",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "kazzak-decoy",
+   "voice": "Adrian",
+   "direction": "dry, low",
+   "text": "A false trail.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "kazzak-found",
+   "voice": "Adrian",
+   "direction": "roaring with fury",
+   "text": "So. You have found me. A fatal mistake!",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "lap",
+   "voice": "Adrian",
+   "direction": "solemn, measured",
+   "text": "The year turns. The war goes on.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "level",
+   "voice": "Adrian",
+   "direction": "triumphant",
+   "text": "Level up!",
+   "made": "2026-11-10"
+  },
+  {
+   "file": "level-2",
+   "voice": "Adrian",
+   "direction": "triumphant",
+   "text": "Stronger than before!",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "level-3",
+   "voice": "Adrian",
+   "direction": "triumphant",
+   "text": "A new level of power!",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "level-5",
+   "voice": "Adrian",
+   "direction": "triumphant, booming",
+   "text": "A champion stands ready!",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "merchant",
+   "voice": "Adrian",
+   "direction": "announcing, brisk",
+   "text": "New wares at the merchant.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "merchant-2",
+   "voice": "Adrian",
+   "direction": "announcing, brisk",
+   "text": "The merchant has restocked.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "nefarian-arrives",
+   "voice": "Adrian",
+   "direction": "arrogant, booming",
+   "text": "I am at your gates. Kneel, or burn.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "new-quest",
+   "voice": "Adrian",
+   "direction": "intrigued, inviting",
+   "text": "A new quest awaits.",
+   "made": "2026-11-10"
+  },
+  {
+   "file": "new-quest-2",
+   "voice": "Adrian",
+   "direction": "intrigued, inviting",
+   "text": "New orders have arrived.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "new-quest-3",
+   "voice": "Adrian",
+   "direction": "intrigued, inviting",
+   "text": "Another task calls.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "overlord-kazzak",
+   "voice": "Adrian",
+   "direction": "roaring with fury",
+   "text": "Your blood will feed the Legion!",
+   "made": "2026-11-10"
+  },
+  {
+   "file": "overlord-kelthuzad",
+   "voice": "Adrian",
+   "direction": "cold, menacing whisper",
+   "text": "The dead do not rest. Neither will you.",
+   "made": "2026-11-10"
+  },
+  {
+   "file": "overlord-nefarian",
+   "voice": "Adrian",
+   "direction": "arrogant, booming",
+   "text": "Crawl, little heroes. The Bulwark will burn.",
+   "made": "2026-11-10"
+  },
+  {
+   "file": "quest",
+   "voice": "Adrian",
+   "direction": "proud",
+   "text": "Quest complete!",
+   "made": "2026-11-10"
+  },
+  {
+   "file": "quest-2",
+   "voice": "Adrian",
+   "direction": "proud",
+   "text": "The task is done.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "quest-3",
+   "voice": "Adrian",
+   "direction": "proud",
+   "text": "Well fought. The quest is complete.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "taunt-kazzak",
+   "voice": "Adrian",
+   "direction": "roaring with fury",
+   "text": "You seek me? Come, then!",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "taunt-kazzak-2",
+   "voice": "Adrian",
+   "direction": "roaring with fury",
+   "text": "Your hunt amuses me!",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "taunt-kazzak-3",
+   "voice": "Adrian",
+   "direction": "roaring with fury",
+   "text": "Bring me more souls!",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "taunt-kelthuzad",
+   "voice": "Adrian",
+   "direction": "cold, menacing whisper",
+   "text": "My plague will find you all.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "taunt-kelthuzad-2",
+   "voice": "Adrian",
+   "direction": "cold, menacing whisper",
+   "text": "Every grave is a door, and I hold the key.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "taunt-kelthuzad-3",
+   "voice": "Adrian",
+   "direction": "cold, menacing whisper",
+   "text": "Struggle. It only feeds the frost.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "taunt-nefarian",
+   "voice": "Adrian",
+   "direction": "arrogant, booming",
+   "text": "I draw nearer, little heroes.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "taunt-nefarian-2",
+   "voice": "Adrian",
+   "direction": "arrogant, booming",
+   "text": "Your walls will not hold me.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "taunt-nefarian-3",
+   "voice": "Adrian",
+   "direction": "arrogant, booming",
+   "text": "Run while your legs still serve you.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "town",
+   "voice": "Eoin",
+   "direction": "warm, dry humour",
+   "text": "Pleasure doing business.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "town-2",
+   "voice": "Eoin",
+   "direction": "warm, dry humour",
+   "text": "A fine choice. Mind the edge.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "town-3",
+   "voice": "Eoin",
+   "direction": "warm, dry humour",
+   "text": "Come back when your purse is heavier.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "train",
+   "voice": "Thaddeus",
+   "direction": "gravelly, approving",
+   "text": "You learn quickly.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "train-2",
+   "voice": "Thaddeus",
+   "direction": "gravelly, approving",
+   "text": "Good. Now go and use it.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "turn-alliance",
+   "voice": "Adrian",
+   "direction": "commanding, measured",
+   "text": "The Alliance marches.",
+   "made": "2026-11-10"
+  },
+  {
+   "file": "turn-alliance-2",
+   "voice": "Adrian",
+   "direction": "commanding, measured",
+   "text": "The Alliance takes the field.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "turn-alliance-3",
+   "voice": "Adrian",
+   "direction": "commanding, measured",
+   "text": "Alliance, the hour is yours.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "turn-horde",
+   "voice": "Adrian",
+   "direction": "commanding, measured",
+   "text": "The Horde marches.",
+   "made": "2026-11-10"
+  },
+  {
+   "file": "turn-horde-2",
+   "voice": "Adrian",
+   "direction": "commanding, measured",
+   "text": "The Horde takes the field.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "turn-horde-3",
+   "voice": "Adrian",
+   "direction": "commanding, measured",
+   "text": "Horde, the hour is yours.",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "victory-alliance",
+   "voice": "Adrian",
+   "direction": "triumphant, booming",
+   "text": "The Alliance is victorious!",
+   "made": "2026-11-10"
+  },
+  {
+   "file": "victory-horde",
+   "voice": "Adrian",
+   "direction": "triumphant, booming",
+   "text": "The Horde is victorious!",
+   "made": "2026-11-10"
+  },
+  {
+   "file": "war-won-alliance",
+   "voice": "Adrian",
+   "direction": "booming, triumphant",
+   "text": "The Alliance wins the war!",
+   "made": "2026-11-12"
+  },
+  {
+   "file": "war-won-horde",
+   "voice": "Adrian",
+   "direction": "booming, triumphant",
+   "text": "The Horde wins the war!",
+   "made": "2026-11-12"
+  }
+ ]
+}

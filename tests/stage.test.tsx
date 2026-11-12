@@ -42,7 +42,7 @@ describe('what the stage announces', () => {
   const { before, after, command } = untilEvent(), list = beats(p, before, after, command, false);
   expect(kinds(list)).toEqual(['event', 'turn']);
   const [event, turn] = list, drawn = p.events.find(e => e.id === after.eventDiscard.at(-1))!;
-  expect(event).toMatchObject({ size: 'card', title: drawn.name, eyebrow: 'Event card · end of the Horde’s turn', art: { kind: 'event', id: drawn.id }, cue: { sfx: 'card', voice: 'event', stinger: 'drum' } });
+  expect(event).toMatchObject({ size: 'card', title: drawn.name, eyebrow: 'Event card · end of the Horde’s turn', art: { kind: 'event', id: drawn.id }, cue: { sfx: 'card', voice: 'event-war', stinger: 'wardrums' } });
   expect(event.lines[0]).toContain('Occupy Ambermill and Shining Strand');
   expect(event.hold).toBeGreaterThan(turn.hold);
   expect(turn).toMatchObject({ size: 'banner', title: 'Alliance · turn 4', art: { kind: 'faction', id: 'alliance' }, cue: { voice: 'turn-alliance', stinger: 'horn' } });
@@ -69,10 +69,10 @@ describe('what the stage announces', () => {
   expect(beats(p, s, apply(p, s, pass), pass, true)[0]).toMatchObject({ kind: 'pass', title: 'Sofeea passes' });
   const rest = legalActions(p, s).filter((c): c is Extract<Command, { type: 'rest' }> => c.type === 'rest' && c.hero === MAGE && !c.food).at(-1)!;
   const rested = apply(p, s, rest), [beat] = beats(p, s, rested, rest, true);
-  expect(beat).toMatchObject({ kind: 'rest', title: 'Sofeea rests', cue: { stinger: 'chime' } });
+  expect(beat).toMatchObject({ kind: 'rest', title: 'Sofeea rests', cue: { stinger: 'heal' } });
   expect(beat.lines[0]).toBe([`+${hero(rested, MAGE).health - 1} health`, `+${hero(rested, MAGE).energy} energy`].filter(text => !text.startsWith('+0')).join(' · '));
   const train = legalActions(p, s).find((c): c is Extract<Command, { type: 'train' }> => c.type === 'train' && c.hero === WARRIOR && c.cards.length === 1 && c.cards[0] === 'warrior-heroic-strike')!;
-  expect(beats(p, s, apply(p, s, train), train, true)[0]).toMatchObject({ kind: 'train', title: 'Grumbaz trains', lines: ['Learns Heroic Strike for 3 gold.'] });
+  expect(beats(p, s, apply(p, s, train), train, true)[0]).toMatchObject({ kind: 'train', title: 'Grumbaz trains', lines: ['Learns Heroic Strike for 3 gold.'], cue: { stinger: 'page', voice: 'train' } });
  });
  it('announces a bot’s challenge before the combat opens, and nothing while the combat runs', () => {
   let s = createGame(p, DEFAULT_SETUP);
@@ -106,7 +106,7 @@ describe('what the stage announces', () => {
   for (const b of beats(p, before, after, command, false)) if (b.cue.voice) played.add(b.cue.voice);
   const next = structuredClone(s); next.revision++; next.completed.push(next.quests[0]); next.quests = [...next.quests.slice(1), p.quests.find(q => !next.quests.includes(q.id))!.id]; hero(next, WARRIOR).level = 2;
   for (const b of beats(p, s, next, undefined, false)) if (b.cue.voice) played.add(b.cue.voice);
-  expect([...played].sort()).toEqual(['event', 'level', 'new-quest', 'quest', 'turn-alliance']);
+  expect([...played].sort()).toEqual(['event-war', 'level', 'new-quest', 'quest', 'turn-alliance']);
   expect([...played].every(voice => STAGED_VOICES.includes(voice as never))).toBe(true);
  });
 });
@@ -141,8 +141,8 @@ describe('the stage on screen', () => {
   expect(screen.getByText('The Silverpine War')).toBeTruthy();
   expect(screen.getByRole('img', { name: 'The Silverpine War card' })).toBeTruthy();
   expect(screen.getByText(/1 more/)).toBeTruthy();
-  expect(play.mock.calls).toEqual([['sfx', 'card'], ['voice', 'event']]);
-  expect(stinger).toHaveBeenCalledExactlyOnceWith('drum');
+  expect(play.mock.calls).toEqual([['sfx', 'card'], ['voice', 'event-war']]);
+  expect(stinger).toHaveBeenCalledExactlyOnceWith('wardrums');
   act(() => { vi.advanceTimersByTime(list[0].hold - 1); });
   expect(next).not.toHaveBeenCalled();
   act(() => { vi.advanceTimersByTime(1); });

@@ -23,10 +23,10 @@ import WorldDecision from './campaign/WorldDecision';
 import RestEditor from './campaign/RestEditor';
 import SaveManager from './campaign/SaveManager';
 import BuildStamp from './campaign/BuildStamp';
-import { SoundControls, SoundToggle, useGameAudio } from './campaign/audio';
+import { audio, SoundControls, SoundToggle, useCombatAudio, useGameAudio } from './campaign/audio';
 import { warNews } from './campaign/war-news';
 import Stage from './campaign/Stage';
-import { beats, loadPace, paceFactor, PACES, savePace, type Beat, type Pace } from './campaign/stage';
+import { actionCue, beats, loadPace, paceFactor, PACES, savePace, type Beat, type Pace } from './campaign/stage';
 import { hintCandidates, hintLabel, type Hint } from './campaign/hints';
 import CampaignSetup from './campaign/CampaignSetup';
 import QuestActivity from './campaign/QuestReveal';
@@ -68,6 +68,7 @@ export default function Campaign(){
  // The bots keep the same pace between their own moves, on the table and in combat.
  const tempo=pace==='off'?1:Math.max(0.6,paceFactor(pace));
  useGameAudio(p,game.needsSetup?undefined:state,pace!=='off');
+ useCombatAudio(p,game.needsSetup?undefined:state,presentation);
  const lastView=useRef<typeof state|undefined>(undefined);
  useEffect(()=>{const news=game.needsSetup?undefined:warNews(p,lastView.current,state);lastView.current=game.needsSetup?undefined:state;if(news)setToast(news);},[state,game.needsSetup]);
  const legal=allLegal.filter(c=>decisionOwners(p,state,c).some(id=>controlled.includes(id)));
@@ -98,7 +99,10 @@ export default function Campaign(){
  const send=(c:Command)=>{if(current.current.needsSetup)return false;try{const before=current.current;const next={state:apply(p,before.state,c),session:{...before.session,commands:[...before.session.commands,c]}};current.current=next;setGame(next);
   // Only a human's choice that rolled and revealed nothing can be taken back; anything else closes the undo history.
   const human=decisionOwners(p,before.state,c).some(id=>!currentBots.current.includes(id));
-  if(pace!=='off'){const shown=beats(contentFor(p,next.state),before.state,next.state,c,!human);if(shown.length)setQueue(waiting=>[...waiting,...shown]);}setUndoStack(stack=>human&&undoable(before.state,next.state,c)?[...stack.slice(1-UNDO_DEPTH),{game:before,command:c}]:[]);return true;}catch(e){setToast((e as Error).message);return false;}};
+  if(pace!=='off'){const shown=beats(contentFor(p,next.state),before.state,next.state,c,!human);if(shown.length)setQueue(waiting=>[...waiting,...shown]);}
+  // A bot's action is heard with its announcement; a player's own action, and every action while nothing is announced, at once.
+  const acted=before.state.phase==='combat'?undefined:actionCue(contentFor(p,next.state),before.state,next.state,c);if(acted&&(pace==='off'||human))audio.cue(acted);
+  setUndoStack(stack=>human&&undoable(before.state,next.state,c)?[...stack.slice(1-UNDO_DEPTH),{game:before,command:c}]:[]);return true;}catch(e){setToast((e as Error).message);return false;}};
  const undo=()=>{const last=undoStack.at(-1);if(!last||current.current!==game)return;setQueue([]);planner.current?.dispose();planner.current=null;botRequest.current=null;current.current=last.game;setGame(last.game);setUndoStack(stack=>stack.slice(0,-1));setPanel(null);setMapFocus(false);if('hero'in last.command){const id=last.command.hero;setHeroId(id);const hero=last.game.state.heroes.find(hero=>hero.id===id);if(hero)setSelected(hero.location);}const what=undoName(last.command);setToast(last.command.type==='ability'?`${card(p,last.command.card).name} taken back: nothing was spent.`:`${what[0].toUpperCase()}${what.slice(1)} undone.`);};
  useEffect(()=>{const handler=(e:KeyboardEvent)=>{if(!(e.ctrlKey||e.metaKey)||e.key.toLowerCase()!=='z'||e.shiftKey||(e.target as HTMLElement).closest('input,select,textarea,[contenteditable=true]'))return;const dialogs=[...document.querySelectorAll('dialog[open]')],inCombat=undoStack.at(-1)?.command.type==='ability'&&dialogs.length===1&&dialogs[0].classList.contains('combat-room');if(!undoStack.length||page!=='board'||panel||dialogs.length&&!inCombat)return;e.preventDefault();undo();};window.addEventListener('keydown',handler);return()=>window.removeEventListener('keydown',handler);});
  // A rendered combat control must never act on a newer combat state.
