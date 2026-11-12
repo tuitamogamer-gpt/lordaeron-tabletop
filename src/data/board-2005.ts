@@ -1,5 +1,5 @@
 import type { Region, Source } from '../rules/model.js';
-import { BOARD_NEIGHBORS, BOARD_SHAPE_BY_ID } from './board-geometry.js';
+import { BOARD, LEGACY_BOARD, type Board } from './board-geometry.js';
 export const BOARD_SOURCE: Source = { url: 'https://worldofwarcraft.judgehype.com/image/16487/', reference: '2005 board photographs; shared polygon borders, with FFG rules pp. 9–10', status: 'community' };
 // Names are printed on the original board; geometry and adjacency live in board-geometry.ts.
 const rows: [string, string, string][] = [
@@ -19,16 +19,21 @@ const rows: [string, string, string][] = [
  ['marris','Marris Stead','Eastern Plaguelands'], ['crown','Crown Guard Tower','Eastern Plaguelands'], ['infectis','The Infectis Scar','Eastern Plaguelands'], ['pestilent','Pestilent Scar','Eastern Plaguelands'],
  ['darrowshire','Darrowshire','Eastern Plaguelands'], ['corins','Corin’s Crossing','Eastern Plaguelands'], ['tyrs','Tyr’s Hand','Eastern Plaguelands'],
 ];
-export const BOARD_REGIONS: Region[] = rows.map(([id, name, zone]) => {
- const [x,y] = BOARD_SHAPE_BY_ID[id].center;
- return { id, name, zone, x:x/16, y:y/11.08, neighbors:BOARD_NEIGHBORS[id] };
-});
-for (const r of BOARD_REGIONS) {
- if (['brill', 'north-tide', 'caer', 'pestilent'].includes(r.id)) r.flight = 'horde';
- if (['southshore', 'sorrow', 'aerie'].includes(r.id)) r.flight = 'alliance';
- if (['brill', 'north-tide'].includes(r.id)) r.town = 'horde';
- if (['southshore', 'aerie'].includes(r.id)) r.town = 'alliance';
- if (['olsen', 'andorhal', 'quel-danil', 'corins'].includes(r.id)) r.graveyard = true;
- if (r.id === 'brill') r.home = 'horde'; if (r.id === 'southshore') r.home = 'alliance';
- if (r.id === 'pestilent') { r.flight = 'both'; r.town = 'both'; }
+function regions(board: Board): Region[] {
+ const list: Region[] = rows.map(([id, name, zone]) => {
+  const [x,y] = board.byId[id].center;
+  return { id, name, zone, x:x/16, y:y/11.08, neighbors:board.neighbors[id] };
+ });
+ for (const r of list) {
+  if (['brill', 'north-tide', 'caer', 'pestilent'].includes(r.id)) r.flight = 'horde';
+  if (['southshore', 'sorrow', 'aerie'].includes(r.id)) r.flight = 'alliance';
+  if (['brill', 'north-tide'].includes(r.id)) r.town = 'horde';
+  if (['southshore', 'aerie'].includes(r.id)) r.town = 'alliance';
+  if (['olsen', 'andorhal', 'quel-danil', 'corins'].includes(r.id)) r.graveyard = true;
+  if (r.id === 'brill') r.home = 'horde'; if (r.id === 'southshore') r.home = 'alliance';
+  if (r.id === 'pestilent') { r.flight = 'both'; r.town = 'both'; }
+ }
+ return list;
 }
+/** The regions of new campaigns, and those of campaigns begun before rules revision 4 (the first tracing of the board). */
+export const BOARD_REGIONS = regions(BOARD), LEGACY_REGIONS = regions(LEGACY_BOARD);

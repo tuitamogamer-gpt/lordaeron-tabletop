@@ -7,7 +7,12 @@ export const MAX_SESSION_SIZE=4_000_000;
 export function contentHash(p:ContentPack){let hash=2166136261;for(const c of JSON.stringify(p)){hash^=c.charCodeAt(0);hash=Math.imul(hash,16777619);}return(hash>>>0).toString(16);}
 // The pack ID also versions engine semantics, including combat pool replacement.
 // Previous releases remain preserved under their own browser storage keys.
-function compatibleHash(p:ContentPack,saved:string){return saved===contentHash(p);}
+/**
+ * The pack before the map was corrected (12. 11. 2026) had this fingerprint. Its campaigns began under rules revision 3 or earlier
+ * and are replayed on the map they were played on (ContentPack.earlierMaps), so they stay loadable: nothing else in the pack changed.
+ */
+const BEFORE_MAP_CORRECTION='c3affbac';
+function compatibleHash(p:ContentPack,saved:string,rules:number){return saved===contentHash(p)||saved===BEFORE_MAP_CORRECTION&&!!p.earlierMaps?.some(m=>rules<m.before);}
 export const newSession=(p:ContentPack,setup:Setup):Session=>({format:'lordaeron-rules-session',version:2,pack:p.id,contentHash:contentHash(p),setup,commands:[]});
 export function importSession(p:ContentPack,text:string){
  assert(text.length<=MAX_SESSION_SIZE,"The game file is too large.");
@@ -15,7 +20,7 @@ export function importSession(p:ContentPack,text:string){
  try{parsed=JSON.parse(text);}catch{throw new Error('The game file is not valid JSON.');}
  assert(parsed!==null&&typeof parsed==='object'&&!Array.isArray(parsed),"This file is not a saved game.");
  const raw=parsed as Session;
- assert(raw.format==='lordaeron-rules-session'&&raw.version===2&&raw.pack===p.id&&compatibleHash(p,raw.contentHash),"This saved game requires a different version of the rules or cards.");
+ assert(raw.format==='lordaeron-rules-session'&&raw.version===2&&raw.pack===p.id&&compatibleHash(p,raw.contentHash,Number((raw.setup as {variants?:{rules?:unknown}}|undefined)?.variants?.rules??1)),"This saved game requires a different version of the rules or cards.");
  const setup=setupSchema.parse(raw.setup);assert(Array.isArray(raw.commands)&&raw.commands.length<=20000,"Too many commands.");
  const commands=raw.commands.map(c=>commandSchema.parse(c));let state=createGame(p,setup);for(const c of commands)state=apply(p,state,c);
  return{state,session:{...newSession(p,setup),commands}};

@@ -2,14 +2,17 @@
  * A planar tracing of the 2005 board, in the 1600 × 1108 reference photograph's
  * coordinates. Shared segments are the ONLY walking connections. Single-sided
  * segments border impassable terrain. No proximity/Voronoi inference is used.
- * Sources and review notes: docs/MAP.md.
+ * Sources and review notes: docs/MAP.md and docs/MAP-AUDIT-2026-11-12.md.
+ *
+ * There are two boards. TRACED is the first tracing; campaigns begun before rules revision 4 were played on it and keep
+ * it (LEGACY_BOARD). BOARD is the same tracing with six places put right against two photographs of the printed board.
  */
 export type MapPoint = readonly [number, number];
 export interface BoardShape { id: string; center: MapPoint; points: MapPoint[]; }
 const shape = (id: string, x: number, y: number, outline: string): BoardShape => ({
  id, center: [x, y], points: outline.split(' ').map(pair => pair.split(',').map(Number) as [number, number]),
 });
-export const BOARD_SHAPES: BoardShape[] = [
+const TRACED: BoardShape[] = [
  // Tirisfal Glades. Agamand's eastern mountains separate it from Garren's Haunt.
  shape('agamand',355,258,'282,278 299,255 307,239 340,220 354,205 379,220 413,209 430,225 416,253 397,277 376,294 342,301 306,297'),
  shape('garrens-haunt',478,269,'443,228 472,237 518,219 526,258 520,281 501,295 491,320 460,314 431,302 405,303 422,277'),
@@ -86,20 +89,47 @@ export const BOARD_SHAPES: BoardShape[] = [
  shape('tyrs',1421,454,'1346,414 1355,421 1382,413 1407,412 1409,424 1428,421 1455,425 1480,431 1491,450 1489,467 1477,479 1454,481 1441,474 1428,482 1409,476 1395,479 1375,468 1352,461 1346,442'),
 ];
 
+/**
+ * Regions redrawn on 12. 11. 2026, each checked against both photographs at 6–9× (docs/MAP-AUDIT-2026-11-12.md):
+ * - The unnamed field under Shining Strand has green borders to the north, west and east and only a cliff drawn to the south:
+ *   it is part of Deep Elem Mine, not of North Tide's Hollow. North Tide's Hollow has no lake shore.
+ * - Deep Elem Mine ends at the green line east of its name. The hills beyond it, up to the lake and Dalaran, are Ambermill's.
+ * - Corrahn's Dagger does not reach the ring around the Ruins of Alterac: a black-edged ridge lies between them.
+ * - The border between Sofera's Naze and Chillwind Point begins on the end of that ridge, so Sofera's Naze does not touch The Uplands.
+ * - Gahrron's Withering ends at the closed, black-edged pocket north of the Caer Darrow lake and does not reach Marris Stead.
+ * - Fungal Vale is ringed by a black-edged crescent on its east and south-east: it does not touch The Infectis Scar.
+ */
+const CORRECTED: Record<string, string> = {
+ 'north-tide': '155,520 252,532 257,541 274,573 285,606 270,629 244,634 216,626 188,635 176,605 170,558 153,550',
+ 'deep-elem': '309,587 316,595 337,604 345,630 377,644 347,656 344,707 294,755 291,710 287,685 291,656 270,629 285,606 274,573 289,559 318,565',
+ ambermill: '390,704 394,666 377,644 347,656 344,707 294,755 297,790 297,820 285,839 292,873 316,870 342,882 365,874 387,878 409,869 424,863 426,848 399,835 371,835 370,804 375,776 389,743',
+ corrahn: '439,744 470,724 487,701 512,694 525,720 541,730 561,722 574,723 583,744 586,769 568,783 538,788 507,779 475,782 459,772 435,765',
+ sohrans: '642,627 647,613 662,632 680,655 684,678 677,698 677,717 689,744 653,735 625,739 605,766 586,769 583,744 574,723 580,709 601,695 615,669 617,638',
+ chillwind: '695,588 708,605 733,609 747,622 757,641 779,647 787,671 779,689 754,701 727,704 719,725 719,747 705,752 689,744 677,717 677,698 684,678 680,655 662,632 647,613 645,599 676,602',
+ weeping: '820,349 843,354 854,373 877,388 896,374 914,359 900,341 903,318 916,322 920,339 935,350 948,371 948,402 944,430 921,436 909,445 893,451 869,442 838,430 813,417 799,409 813,380',
+ gahrron: '799,409 813,417 838,430 869,442 893,451 909,445 915,456 883,467 854,478 847,495 833,501 809,486 810,450 793,429',
+ infectis: '1192,293 1190,311 1201,318 1213,302 1232,304 1268,313 1294,323 1297,353 1294,372 1277,385 1263,371 1251,376 1232,393 1205,398 1186,407 1154,402 1142,391 1126,371 1148,370 1166,355 1183,333 1187,316',
+};
+
 export interface BoardBorder { a: MapPoint; b: MapPoint; regions: string[]; }
+export interface Board { shapes: BoardShape[]; byId: Record<string, BoardShape>; borders: BoardBorder[]; neighbors: Record<string, string[]>; }
 const segmentKey = (a: MapPoint, b: MapPoint) => [a.join(','), b.join(',')].sort().join('|');
-const segments = new Map<string, BoardBorder>();
-for (const region of BOARD_SHAPES) region.points.forEach((a, i) => {
- const b = region.points[(i + 1) % region.points.length], key = segmentKey(a, b);
- const border = segments.get(key) ?? { a, b, regions: [] };
- border.regions.push(region.id); segments.set(key, border);
-});
-export const BOARD_BORDERS = [...segments.values()];
-export const BOARD_NEIGHBORS = Object.fromEntries(BOARD_SHAPES.map(shape => [shape.id,
- [...new Set(BOARD_BORDERS.filter(b => b.regions.includes(shape.id) && b.regions.length === 2)
-  .flatMap(b => b.regions.filter(id => id !== shape.id)))],
-]));
-export const BOARD_SHAPE_BY_ID = Object.fromEntries(BOARD_SHAPES.map(s => [s.id, s]));
+function board(shapes: BoardShape[]): Board {
+ const segments = new Map<string, BoardBorder>();
+ for (const region of shapes) region.points.forEach((a, i) => {
+  const b = region.points[(i + 1) % region.points.length], key = segmentKey(a, b);
+  const border = segments.get(key) ?? { a, b, regions: [] };
+  border.regions.push(region.id); segments.set(key, border);
+ });
+ const borders = [...segments.values()];
+ return { shapes, borders, byId: Object.fromEntries(shapes.map(s => [s.id, s])),
+  neighbors: Object.fromEntries(shapes.map(shape => [shape.id, [...new Set(borders.filter(b => b.regions.includes(shape.id) && b.regions.length === 2).flatMap(b => b.regions.filter(id => id !== shape.id)))]])) };
+}
+/** The board of campaigns begun before rules revision 4. */
+export const LEGACY_BOARD = board(TRACED);
+/** The board of new campaigns. */
+export const BOARD = board(TRACED.map(s => CORRECTED[s.id] ? shape(s.id, s.center[0], s.center[1], CORRECTED[s.id]) : s));
+export const BOARD_SHAPES = BOARD.shapes, BOARD_BORDERS = BOARD.borders, BOARD_NEIGHBORS = BOARD.neighbors, BOARD_SHAPE_BY_ID = BOARD.byId;
 export const BOARD_VIEW = { x: 135, y: 95, width: 1380, height: 920 };
 export function pointInRegion(point: MapPoint, polygon: MapPoint[]): boolean {
  let inside = false;
@@ -135,9 +165,9 @@ function interiorPath(start:MapPoint,end:MapPoint,polygon:MapPoint[]):MapPoint[]
  }
  const result:MapPoint[]=[];for(let at=1;at>=0;at=prev[at])result.unshift(points[at]);return result;
 }
-export function walkingLine(from:string,to:string):MapPoint[]{
- const a=BOARD_SHAPE_BY_ID[from],b=BOARD_SHAPE_BY_ID[to];
- const border=BOARD_BORDERS.filter(edge=>edge.regions.includes(from)&&edge.regions.includes(to))
+export function walkingLine(from:string,to:string,on:Board=BOARD):MapPoint[]{
+ const a=on.byId[from],b=on.byId[to];
+ const border=on.borders.filter(edge=>edge.regions.includes(from)&&edge.regions.includes(to))
   .sort((a,b)=>Math.hypot(b.b[0]-b.a[0],b.b[1]-b.a[1])-Math.hypot(a.b[0]-a.a[0],a.b[1]-a.a[1]))[0];
  if(!border)return [];
  const crossing:MapPoint=[(border.a[0]+border.b[0])/2,(border.a[1]+border.b[1])/2];

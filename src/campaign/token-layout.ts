@@ -2,7 +2,7 @@
 // Tokens used to sit at fixed offsets from the region's label: heroes above it, creatures below, quest markers to the right. In small
 // regions that put them outside their own border: a hero in Nightmare Vale stood on the creatures of Stillwater Pond, and it was hard to
 // tell which region a creature was in. Each token now takes the free spot inside its region's border that is nearest to its usual place.
-import { BOARD_SHAPE_BY_ID, pointInRegion, type BoardShape, type MapPoint } from '../data/board-geometry';
+import { BOARD, pointInRegion, type Board, type BoardShape, type MapPoint } from '../data/board-geometry';
 import type { ContentPack } from '../rules/model';
 import type { GameView } from '../rules/view';
 import type { QuestMarker } from './map-state';
@@ -20,7 +20,8 @@ export interface LabelBox { halfWidth: number; top: number; bottom: number }
 
 const STEP = 6;
 type Spot = { x: number; y: number; clear: number };
-const spots = new Map<string, Spot[]>();
+// Keyed by the shape itself: the same region is drawn differently on the two boards (board-geometry.ts).
+const spots = new WeakMap<BoardShape, Spot[]>();
 
 function edgeDistance([px, py]: MapPoint, [ax, ay]: MapPoint, [bx, by]: MapPoint) {
  const dx = bx - ax, dy = by - ay, t = Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / (dx * dx + dy * dy || 1)));
@@ -33,7 +34,7 @@ export function clearance(shape: BoardShape, point: MapPoint) {
 }
 /** Every grid point inside the region with its distance to the border, computed once per region. */
 function candidates(shape: BoardShape) {
- let list = spots.get(shape.id);
+ let list = spots.get(shape);
  if (!list) {
   const xs = shape.points.map(p => p[0]), ys = shape.points.map(p => p[1]);
   list = [];
@@ -42,7 +43,7 @@ function candidates(shape: BoardShape) {
    if (clear >= 0) list.push({ x, y, clear });
   }
   if (!list.length) list.push({ x: shape.center[0], y: shape.center[1], clear: 0 });
-  spots.set(shape.id, list);
+  spots.set(shape, list);
  }
  return list;
 }
@@ -100,10 +101,10 @@ export const TOKEN_RADIUS = { hero: 23, overlord: 27, creature: 20, quest: 21, w
  * The place of every token on the board, by key: `h:<hero>`, `overlord`, `c:<region>:<creature>:<color>`, `q:<region>:<quest>` and
  * `w:<region>:<event>`. Heroes are placed first, then the Overlord, creatures, quest markers and world markers.
  */
-export function boardTokenPositions(p: ContentPack, state: Pick<GameView, 'heroes' | 'enemies' | 'overlord' | 'world'>, markers: QuestMarker[]): Record<string, MapPoint> {
+export function boardTokenPositions(p: ContentPack, state: Pick<GameView, 'heroes' | 'enemies' | 'overlord' | 'world'>, markers: QuestMarker[], on: Board = BOARD): Record<string, MapPoint> {
  const at: Record<string, MapPoint> = {};
  for (const r of p.regions) {
-  const shape = BOARD_SHAPE_BY_ID[r.id];
+  const shape = on.byId[r.id];
   if (!shape) continue;
   const people = state.heroes.filter(h => h.location === r.id), stacks = creatureStacks(state.enemies.filter(e => e.region === r.id)), quests = markers.filter(m => m.region === r.id);
   const world = (state.world ?? []).filter(w => !w.cleared).filter(w => { const e = p.events.find(e => e.id === w.id); return e?.boss ? e.boss.region === r.id : e?.script === 'plague' && w.tokens.includes(r.id); });

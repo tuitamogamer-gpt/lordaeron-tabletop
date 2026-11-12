@@ -101,7 +101,10 @@ export type EventEffect =
  | { op: 'overlord'; attack?: number; health?: number; threat?: number };
 export interface EventCard { script?:EventScript;boss?:EventBoss; id: string; name: string; fate: 0 | 1 | 2; bonus: boolean; effects: EventEffect[]; overlord?: string; source: Source; }
 export interface Overlord { id: string; name: string; region: string; stats: Record<4 | 6, { threat: number; attack: number; health: number }>; combat: 'none' | 'nefarian' | 'kelthuzad' | 'kazzak'; route?: string[]; source: Source; }
-export interface ContentPack { id: string; name: string; officialComplete: boolean; regions: Region[]; characters: Character[]; cards: Card[]; creatures: Creature[]; quests: Quest[]; events: EventCard[]; overlords: Overlord[]; xp: number[]; track: Record<number, 'event' | ItemDeck>; }
+export interface ContentPack {
+ /** The map as it was before a rules revision corrected it. A campaign begun under an earlier revision is played on that map: see contentFor. */
+ earlierMaps?: { before: number; regions: Region[] }[];
+ id: string; name: string; officialComplete: boolean; regions: Region[]; characters: Character[]; cards: Card[]; creatures: Creature[]; quests: Quest[]; events: EventCard[]; overlords: Overlord[]; xp: number[]; track: Record<number, 'event' | ItemDeck>; }
 export interface Equipped { card?: string; addons: string[]; }
 export interface Hero { id: string; location: string; health: number; energy: number; gold: number; level: number; xp: number; actions: number; curse: number; stun: number; learned: string[]; talents: string[]; bag: string[]; slots: Equipped[]; pets: Record<string, number>; auctionItems: string[]; talentChoices: number[]; }
 export interface Enemy { id: string; creature: string; color: Color; region: string; quest?: string; faction?: Faction; }
@@ -121,6 +124,7 @@ export interface Log { id: number; turn: number; text: string; }
  * campaign is its list of commands replayed: under changed rules those commands could stop being legal.
  * Revision 3 judges Wars at the end of the faction turn. Revision 4 (12. 11. 2026) ends combat for a character who escapes it:
  * Health or Energy gained above capacity and Stun leave with him, as they do for everyone else when the combat ends.
+ * Revision 4 also plays on the map corrected against the printed board (six connections; docs/MAP-AUDIT-2026-11-12.md).
  */
 export interface Variants { deadlyPvp?: boolean; overlordOnly?: boolean; rules?: number; }
 export interface State { variants?: Variants; lap?: number; factions?:Record<string,Faction>; world?:WorldEvent[];eventFlow?:EventFlow;lastAction?:string;lastActions?:string[];travelPowers?:string[];nefarianFinal?:Faction[];kazzak?:KazzakToken[]; pendingPortal?: string; energySpent?: string[]; travels?: Record<string,number>; turnStarted?: number; version: 2; pack: string; revision: number; rng: number; phase: 'actions' | 'management' | 'combat' | 'reward' | 'event' | 'final-management' | 'finished'; turn: number; faction: Faction; heroes: Hero[]; enemies: Enemy[]; quests: string[]; completed: string[]; questDecks: Record<Faction, Record<Tier, string[]>>; itemDecks: Record<ItemDeck, string[]>; merchant: string[]; eventDeck: string[]; eventDiscard: string[]; eventSeen: string[]; wars: War[]; auction?: Auction; overlord: { id: string; region: string; attack: number; health: number; threat: number }; battle?: Battle; reward?: RewardState; tradeWindow: boolean; finalReady: string[]; managed: string[]; respawns: string[]; winner?: Faction | 'draw'; log: Log[]; }

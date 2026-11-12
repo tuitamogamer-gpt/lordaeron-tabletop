@@ -1,4 +1,4 @@
-import { assert, capacity, card, character, faction, factionName, hero, integer, listed, note, other, region, revised, shuffle, unique } from './common.js';
+import { assert, capacity, card, character, contentFor, faction, factionName, hero, integer, listed, note, other, region, revised, shuffle, unique } from './common.js';
 import { activate, automatic, effects, settleAutomatic, spendEnergy } from './effects.js';
 import { beginBattle, chooseAttacker, continueWounds, creatureRule, defeat, defense, enforceDicePenalties, finishAttack, living, monsterEffect, nextRound, omitDice, placeTokens, poolPenalties, removePenalty, reroll, resolution, wound } from './combat.js';
 import { battleEvents, bid, checkWars, drawEvents, endFactionTurn, eventChoice, nextNefarianBattle, purify, removeWorld, replacement, skipReplacement } from './events.js';
@@ -13,7 +13,10 @@ export function validatePack(p: ContentPack): string[] {
  const errors: string[] = [];
  const ids = (values: { id: string }[], name: string) => { if (!unique(values.map(v => v.id))) errors.push(`${name}: duplicate IDs`); };
  ids(p.cards, "Cards"); ids(p.characters, "Characters"); ids(p.quests, "Quests"); ids(p.events, "Events"); ids(p.regions, "Regions"); ids(p.creatures,"Creatures"); ids(p.overlords,"Overlords");
- for (const r of p.regions) for (const n of r.neighbors) if (!p.regions.some(a => a.id === n && a.neighbors.includes(r.id))) errors.push(`Connection ${r.id}–${n} is not bidirectional`);
+ for (const [map, list] of [['', p.regions], ...(p.earlierMaps ?? []).map(m => [` (map before rules revision ${m.before})`, m.regions])] as [string, typeof p.regions][]) {
+  for (const r of list) for (const n of r.neighbors) if (!list.some(a => a.id === n && a.neighbors.includes(r.id))) errors.push(`Connection ${r.id}–${n} is not bidirectional${map}`);
+  if (list.length !== p.regions.length || list.some((r, i) => r.id !== p.regions[i].id)) errors.push(`The regions differ${map}`);
+ }
  if (p.xp.length !== 5 || p.xp[0] !== 0 || p.xp.some((n, i) => i > 0 && n <= p.xp[i - 1])) errors.push("XP thresholds");
  for (const c of p.characters) if (c.capacities.length !== 5 || c.slots.length !== 7 || c.capacities.some(v=>!integer(v.health,1)||!integer(v.energy)) || c.slots.some(s => s.printed && !p.cards.some(c => c.id === s.printed)) || (c.racial && !p.cards.some(a=>a.id===c.racial))) errors.push(`Character sheet ${c.id}`);
  for (const f of ['horde','alliance'] as const) if (p.regions.filter(r=>r.home===f).length !== 1) errors.push(`Starting region: ${f}`);
@@ -26,8 +29,9 @@ export function validatePack(p: ContentPack): string[] {
  }
  return errors;
 }
-export function createGame(p: ContentPack, setup: Setup): State {
- const errors = validatePack(p); assert(!errors.length, errors.join('; '));
+export function createGame(pack: ContentPack, setup: Setup): State {
+ const errors = validatePack(pack); assert(!errors.length, errors.join('; '));
+ const p = contentFor(pack, setup);
  assert(integer(setup.seed, 1, 0xffffffff), "The seed must be a positive 32-bit integer.");
  assert([4, 6].includes(setup.roster.length) && unique(setup.roster), "The base game uses four or six different characters.");
  const defs = setup.roster.map(id => character(p, id));
@@ -82,8 +86,10 @@ function advanceTurn(p: ContentPack, s: State) {
  else { if (icon) s.merchant.push(...s.itemDecks[s.variants?.overlordOnly&&(s.lap??1)>1?'circle':icon].splice(0, 1)); endFactionTurn(p, s); }
 }
 /** Atomic deterministic reducer. A rejected command never changes the original state. */
-export function apply(p: ContentPack, state: State, command: Command): State {
- assert(state.pack === p.id, "The content version does not match this game.");
+export function apply(pack: ContentPack, state: State, command: Command): State {
+ assert(state.pack === pack.id, "The content version does not match this game.");
+ // A campaign is played on the map of the rules revision it began under.
+ const p = contentFor(pack, state);
  assert(state.phase !== 'finished', "The game has ended.");
  assert(command && typeof command.type === 'string', "Invalid command.");
  const s = structuredClone(state), c = command;

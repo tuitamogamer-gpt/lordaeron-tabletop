@@ -1,4 +1,4 @@
-import { capacity, card, character, faction, hero, other } from './common.js';
+import { capacity, card, character, contentFor, faction, hero, other } from './common.js';
 import { creatureRule, eligibleAttackers, living, poolPenaltyDice } from './combat.js';
 import { availableCards, condition, immune, matches, timing } from './effects.js';
 import { eventCommands } from './legal-events.js';
@@ -56,8 +56,8 @@ export function abilityCommands(p: ContentPack, s: State): Command[] {
  });
 }
 function discards(p: ContentPack, h: Hero, incoming: string): (string | undefined)[] { return bagSize(p, [...h.bag, incoming]) > 3 ? [...h.bag, incoming].filter(id => !card(p, id).bagExempt) : [undefined]; }
-export function legalActions(p: ContentPack, s: State): Command[] {
- const list: Command[] = [];
+export function legalActions(pack: ContentPack, s: State): Command[] {
+ const p = contentFor(pack, s), list: Command[] = [];
  if (s.phase === 'finished') return list;
  for(const h of s.heroes)for(const token of s.kazzak??[])if(h.location===token.region)list.push({type:'peek',hero:h.id,region:token.region});
  if(!s.battle)list.push(...abilityCommands(p,s));

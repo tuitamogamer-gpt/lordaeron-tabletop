@@ -2,8 +2,8 @@ import { type PointerEvent, useEffect, useLayoutEffect, useMemo, useRef, useStat
 import { createPortal } from 'react-dom';
 import { Icon, useModalDialog } from '../components';
 import { BASE_PACK as p } from '../data/base';
-import { BOARD_BORDERS, BOARD_SHAPE_BY_ID, BOARD_SHAPES, BOARD_VIEW as board, ZONE_COLORS, walkingLine } from '../data/board-geometry';
-import { capacity, card, character } from '../rules/common';
+import { BOARD, BOARD_VIEW as board, LEGACY_BOARD, ZONE_COLORS, walkingLine } from '../data/board-geometry';
+import { capacity, card, character, contentFor, revised } from '../rules/common';
 import type { Command, Color } from '../rules/model';
 import type { GameView } from '../rules/view';
 import { clampCamera, OVERVIEW_CAMERA, panCamera, pinchCamera, questMarkers, zoomCamera, questLabel, type Pinch, type QuestMarker } from './map-state';
@@ -19,12 +19,13 @@ import { bossRuleText, eventText } from './event-text';
 export type Spotlight = { region?: string; from?: string; path?: string[] };
 type Props = { spotlight?: Spotlight; focused: boolean; onToggleFocus: () => void; state: GameView; selected: string; heroId: string; legal: Command[]; onSelect: (id: string) => void; onMove: (c: Command) => void; selectedQuest?: string; onQuest?: (id: string, region: string) => void; onInspectQuest?: (id: string) => void; onHero?: (id: string) => void; controlled?: string[]; };
 const ratio = board.width / board.height;
-const centers = Object.fromEntries(BOARD_SHAPES.map(s => [s.id, s.center]));
-const points = (id: string) => BOARD_SHAPE_BY_ID[id].points.map(p => p.join(',')).join(' ');
-const regionById = Object.fromEntries(p.regions.map(r => [r.id,r]));
 const colorLabel: Record<Color,string> = { green: "green", red: "red", blue: "blue" };
 
 export default function CampaignMap({ state, selected, heroId, legal, onSelect, onMove, focused, onToggleFocus, selectedQuest, onQuest, onInspectQuest, onHero, controlled, spotlight }: Props) {
+ // A campaign is drawn on the board it is played on: the corrected one from rules revision 4, the first tracing before.
+ const geo=revised(state,4)?BOARD:LEGACY_BOARD,regions=contentFor(p,state).regions;
+ const centers=useMemo(()=>Object.fromEntries(geo.shapes.map(s=>[s.id,s.center])),[geo]),regionById=useMemo(()=>Object.fromEntries(regions.map(r=>[r.id,r])),[regions]);
+ const points=(id:string)=>geo.byId[id].points.map(v=>v.join(',')).join(' ');
  const [camera,setCamera]=useState(OVERVIEW_CAMERA),[dragging,setDragging]=useState(false),[routeIndex,setRouteIndex]=useState(0),[showLabels,setShowLabels]=useState(true),[showRules,setShowRules]=useState(false),[strongBorders,setStrongBorders]=useState(false),[showDetails,setShowDetails]=useState(false);
  const [tokenHelp,setTokenHelp]=useState<(TokenHelp&{x:number;y:number;below:boolean})|null>(null);
  const canvas=useRef<HTMLDivElement>(null),entryButton=useRef<HTMLButtonElement>(null),tooltip=useRef<HTMLDivElement>(null);
@@ -44,7 +45,7 @@ export default function CampaignMap({ state, selected, heroId, legal, onSelect, 
  };
  const markers=useMemo(()=>questMarkers(p,state),[state.quests,state.enemies]);
  // Every token stands inside its own region's border (token-layout.ts).
- const tokenAt=useMemo(()=>boardTokenPositions(p,state,markers),[state.heroes,state.enemies,state.overlord.region,state.world,markers]);
+ const tokenAt=useMemo(()=>boardTokenPositions(p,state,markers,geo),[state.heroes,state.enemies,state.overlord.region,state.world,markers,geo]);
  const me=state.heroes.find(h=>h.id===heroId)!;
  const moves=legal.filter((c):c is Extract<Command,{type:'travel'}>=>c.type==='travel'&&c.hero===heroId);
  const reachable=new Map(moves.map(c=>[c.path.at(-1)!,c.path.length]));
@@ -106,7 +107,7 @@ export default function CampaignMap({ state, selected, heroId, legal, onSelect, 
  const boss=p.overlords.find(o=>o.id===state.overlord.id)!,bossStats=encounterProfile(state,boss.id)!;
  const map=<section className={`campaign-map territorial-map ${focused?'interacting':'overview'} ${strongBorders?'strong-borders':''}`} aria-label="Map of Lordaeron">
   <div className="map-toolbar"><span><Icon name="compass"/>LORDAERON <small>67 REGIONS · 7 ZONES</small></span><div>
-   {focused&&<><select className="map-jump" aria-label="Find a region" value={selected} onChange={e=>{onSelect(e.target.value);focusRegion(e.target.value);}}>{p.regions.map(r=><option key={r.id} value={r.id}>{r.name}</option>)}</select><button className="icon-button" aria-label="Find your hero" onClick={()=>{onSelect(me.location);focusRegion(me.location);}}><Icon name="target"/></button><button className="icon-button" aria-label="Zoom out" onClick={()=>changeZoom(-.25)} disabled={camera.zoom===1}><Icon name="minus"/></button><output className="map-zoom" aria-label="Map zoom">{Math.round(camera.zoom*100)}%</output><button className="icon-button" aria-label="Zoom in" onClick={()=>changeZoom(.25)} disabled={camera.zoom===4}><Icon name="plus"/></button><button className="icon-button" title="Entire map (0)" aria-label="Entire map" onClick={reset}><Icon name="reset"/></button><button className={`icon-button ${showLabels?'selected':''}`} aria-label="Region labels" aria-pressed={showLabels} onClick={()=>setShowLabels(v=>!v)}><Icon name="pin"/></button></>}
+   {focused&&<><select className="map-jump" aria-label="Find a region" value={selected} onChange={e=>{onSelect(e.target.value);focusRegion(e.target.value);}}>{regions.map(r=><option key={r.id} value={r.id}>{r.name}</option>)}</select><button className="icon-button" aria-label="Find your hero" onClick={()=>{onSelect(me.location);focusRegion(me.location);}}><Icon name="target"/></button><button className="icon-button" aria-label="Zoom out" onClick={()=>changeZoom(-.25)} disabled={camera.zoom===1}><Icon name="minus"/></button><output className="map-zoom" aria-label="Map zoom">{Math.round(camera.zoom*100)}%</output><button className="icon-button" aria-label="Zoom in" onClick={()=>changeZoom(.25)} disabled={camera.zoom===4}><Icon name="plus"/></button><button className="icon-button" title="Entire map (0)" aria-label="Entire map" onClick={reset}><Icon name="reset"/></button><button className={`icon-button ${showLabels?'selected':''}`} aria-label="Region labels" aria-pressed={showLabels} onClick={()=>setShowLabels(v=>!v)}><Icon name="pin"/></button></>}
    <button className="map-border-toggle" aria-pressed={strongBorders} onClick={()=>setStrongBorders(v=>!v)}><Icon name="map" size={14}/>Borders</button>
    <button className="icon-button" aria-label="Map rules" aria-expanded={showRules} onClick={()=>setShowRules(v=>!v)}><Icon name="help"/></button>
    <button ref={entryButton} className="map-interact" aria-pressed={focused} onClick={onToggleFocus}><Icon name={focused?'x':'expand'} size={15}/>{focused?"Done interacting":'Interact with map'}<kbd>{focused?'ESC':'F'}</kbd></button>
@@ -131,13 +132,13 @@ export default function CampaignMap({ state, selected, heroId, legal, onSelect, 
     </defs>
     <rect x={board.x} y={board.y} width={board.width} height={board.height} fill="#25291f"/>
     <image className="board-terrain" href="/assets/warcraft/lordaeron-relief-v3.webp" x={board.x} y={board.y} width={board.width} height={board.height} preserveAspectRatio="none" pointerEvents="none"/>
-    {p.regions.map(r=><polygon key={r.id} points={points(r.id)} fill={r.home==='horde'?'#8d463a':r.home==='alliance'?'#3d6982':ZONE_COLORS[r.zone].fill} fillOpacity={r.home ? .28 : .06} pointerEvents="none"/>)}
-    <g className="board-borders" pointerEvents="none">{BOARD_BORDERS.map((b,i)=>{const passable=b.regions.length===2,path=`M${b.a.join(',')} L${b.b.join(',')}`;return <g key={i}><path className="border-underlay" d={path} fill="none" stroke={passable?'#17140e':'#ccb680'} strokeWidth={passable?4.6:6} vectorEffect="non-scaling-stroke" strokeLinecap="round" opacity={strongBorders?1:.35}/><path data-border={passable?'passable':'impassable'} d={path} fill="none" stroke={passable?(strongBorders?'#efd69b':ZONE_COLORS[regionById[b.regions[0]].zone].border):'#080d09'} strokeWidth={passable?(strongBorders?1.7:1):4.1} vectorEffect="non-scaling-stroke" strokeLinejoin="round" strokeLinecap="round"/></g>;})}</g>
+    {regions.map(r=><polygon key={r.id} points={points(r.id)} fill={r.home==='horde'?'#8d463a':r.home==='alliance'?'#3d6982':ZONE_COLORS[r.zone].fill} fillOpacity={r.home ? .28 : .06} pointerEvents="none"/>)}
+    <g className="board-borders" pointerEvents="none">{geo.borders.map((b,i)=>{const passable=b.regions.length===2,path=`M${b.a.join(',')} L${b.b.join(',')}`;return <g key={i}><path className="border-underlay" d={path} fill="none" stroke={passable?'#17140e':'#ccb680'} strokeWidth={passable?4.6:6} vectorEffect="non-scaling-stroke" strokeLinecap="round" opacity={strongBorders?1:.35}/><path data-border={passable?'passable':'impassable'} d={path} fill="none" stroke={passable?(strongBorders?'#efd69b':ZONE_COLORS[regionById[b.regions[0]].zone].border):'#080d09'} strokeWidth={passable?(strongBorders?1.7:1):4.1} vectorEffect="non-scaling-stroke" strokeLinejoin="round" strokeLinecap="round"/></g>;})}</g>
     <g className="map-zone-titles" pointerEvents="none">{[['TIRISFAL GLADES',439,176],['SILVERPINE FOREST',218,497],['ALTERAC MOUNTAINS',591,491],['HILLSBRAD FOOTHILLS',579,978],['WESTERN PLAGUELANDS',800,169],['EASTERN PLAGUELANDS',1260,117],['THE HINTERLANDS',1100,910]].map(([name,x,y])=><text key={name} x={x} y={y} textAnchor="middle">{name}</text>)}</g>
     {/* The physical board folds into six panels and has a printed frame; both stay faint under the regions. */}
     <g className="board-folds" pointerEvents="none">{[1,2].map(i=><line key={i} x1={board.x+board.width*i/3} y1={board.y} x2={board.x+board.width*i/3} y2={board.y+board.height}/>)}<line x1={board.x} y1={board.y+board.height/2} x2={board.x+board.width} y2={board.y+board.height/2}/></g>
     <rect className="board-frame" x={board.x+4} y={board.y+4} width={board.width-8} height={board.height-8} pointerEvents="none"/>
-    <g className="map-field-layer">{p.regions.map(r=>{
+    <g className="map-field-layer">{regions.map(r=>{
      const active=r.id===selected,can=reachable.has(r.id),target=markers.some(m=>m.region===r.id&&m.quest.id===selectedQuest),[x,y]=centers[r.id];
      return <g key={r.id}>
       <polygon className={`map-field ${active?'selected':''} ${can?'reachable':''} ${target?'quest-target':''}`} data-region={r.id} points={points(r.id)} role="button" tabIndex={0} aria-pressed={active} aria-label={`${r.name}${can?` · reachable in ${reachable.get(r.id)} steps`:''}`} onClick={()=>onSelect(r.id)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();onSelect(r.id);}}}><title>{`${r.name} · ${r.zone}${can?` · ${reachable.get(r.id)} steps in one action`:''}`}</title></polygon>
@@ -147,15 +148,15 @@ export default function CampaignMap({ state, selected, heroId, legal, onSelect, 
      </g>;
     })}</g>
     {spotlight?.region&&centers[spotlight.region]&&<g className="map-spotlight" key={`${spotlight.from}:${spotlight.path?.join()}:${spotlight.region}`} pointerEvents="none">
-     {spotlight.from&&spotlight.path?.map((id,i,all)=>{const from=i?all[i-1]:spotlight.from!;if(!centers[from]||!centers[id])return null;const[ax,ay]=centers[from],[bx,by]=centers[id];return <path key={i} className="spotlight-route" d={flight(from,id)?`M${ax},${ay} Q${(ax+bx)/2},${Math.min(ay,by)-100} ${bx},${by}`:`M${walkingLine(from,id).map(v=>v.join(',')).join(' L')}`}/>;})}
+     {spotlight.from&&spotlight.path?.map((id,i,all)=>{const from=i?all[i-1]:spotlight.from!;if(!centers[from]||!centers[id])return null;const[ax,ay]=centers[from],[bx,by]=centers[id];return <path key={i} className="spotlight-route" d={flight(from,id)?`M${ax},${ay} Q${(ax+bx)/2},${Math.min(ay,by)-100} ${bx},${by}`:`M${walkingLine(from,id,geo).map(v=>v.join(',')).join(' L')}`}/>;})}
      <polygon className="spotlight-field" points={points(spotlight.region)}/>
      <circle className="spotlight-ring" cx={centers[spotlight.region][0]} cy={centers[spotlight.region][1]} r="30"/>
     </g>}
     {move&&<g className="map-route" pointerEvents="none">{move.path.map((id,i)=>{
-     const from=allRoute[i],[ax,ay]=centers[from],[bx,by]=centers[id],air=flight(from,id),line=air?`M${ax},${ay} Q${(ax+bx)/2},${Math.min(ay,by)-100} ${bx},${by}`:`M${walkingLine(from,id).map(p=>p.join(',')).join(' L')}`;
+     const from=allRoute[i],[ax,ay]=centers[from],[bx,by]=centers[id],air=flight(from,id),line=air?`M${ax},${ay} Q${(ax+bx)/2},${Math.min(ay,by)-100} ${bx},${by}`:`M${walkingLine(from,id,geo).map(p=>p.join(',')).join(' L')}`;
      return <g key={i}><path d={line} className={air?'flight-route':'walking-route'}/><circle cx={bx} cy={by-25} r="12"/><text x={bx} y={by-21} textAnchor="middle">{i+1}</text></g>;
     })}</g>}
-    {p.regions.map(r=>{
+    {regions.map(r=>{
      const [x,y]=centers[r.id],enemies=state.enemies.filter(e=>e.region===r.id),people=state.heroes.filter(h=>h.location===r.id);
      const stacks=creatureStacks(enemies);
      const tokens=markers.filter(m=>m.region===r.id);

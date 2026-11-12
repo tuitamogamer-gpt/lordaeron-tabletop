@@ -1,4 +1,4 @@
-import { capacity, card, faction } from '../rules/common.js';
+import { capacity, card, contentFor, faction } from '../rules/common.js';
 import type { Command, ContentPack, Hero, Pool } from '../rules/model.js';
 import type { GameView } from '../rules/view.js';
 import { availableCards } from '../rules/effects.js';
@@ -34,7 +34,9 @@ const GOLD_RESERVE = 20, SHOP_WORTH = 4;
 const NEVER = -1000;
 /** What the caller knows beyond the table: `independent` are the characters played by someone else than these bots (see createStrategy). */
 export interface PlanOptions { independent?: string[] }
-export function decide(p: ContentPack, s: GameView, legal: Command[], difficulty: Difficulty = 'balanced', options: PlanOptions = {}): Decision | undefined {
+export function decide(pack: ContentPack, s: GameView, legal: Command[], difficulty: Difficulty = 'balanced', options: PlanOptions = {}): Decision | undefined {
+ // Distances are measured on the map this campaign is played on.
+ const p = contentFor(pack, s);
  const risk = difficulty === 'cautious' ? 1.5 : difficulty === 'aggressive' ? .65 : 1;
  const strategy = createStrategy(p,s,risk,options.independent), training = new Map<string,number>();
  let equipment=equipmentCaches.get(p);if(!equipment){equipment=new Map();equipmentCaches.set(p,equipment);}

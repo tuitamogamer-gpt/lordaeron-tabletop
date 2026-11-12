@@ -22,6 +22,18 @@ export const capacity = (p: ContentPack, h: Hero) => {
 };
 /** The rules revision new campaigns begin with; see Variants.rules. */
 export const RULES_REVISION = 4;
+const maps = new WeakMap<ContentPack, Map<number, ContentPack>>();
+/**
+ * The content a campaign is played with: the pack itself, or the pack with the map of the rules revision the campaign
+ * began under. Travel is legal along the borders of that map only, so a campaign saved before a correction replays move for move.
+ */
+export function contentFor(p: ContentPack, s: { variants?: { rules?: number } }): ContentPack {
+ const rules = s.variants?.rules ?? 1, earlier = [...p.earlierMaps ?? []].sort((a, b) => a.before - b.before).find(m => rules < m.before);
+ if (!earlier) return p;
+ let cached = maps.get(p); if (!cached) maps.set(p, cached = new Map());
+ let pack = cached.get(earlier.before); if (!pack) cached.set(earlier.before, pack = { ...p, regions: earlier.regions });
+ return pack;
+}
 /** True for a campaign begun with at least this rules revision. */
 export const revised = (s: { variants?: { rules?: number } }, revision = 2) => (s.variants?.rules ?? 1) >= revision;
 /** For the chronicle: "The Horde" / "The Alliance", and names joined as "A, B and C". */

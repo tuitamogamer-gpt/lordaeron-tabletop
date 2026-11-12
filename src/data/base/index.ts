@@ -1,6 +1,6 @@
 import type { ContentPack, Setup } from '../../rules/model.js';
 import { RULES_REVISION } from '../../rules/common.js';
-import { BOARD_REGIONS } from '../board-2005.js';
+import { BOARD_REGIONS, LEGACY_REGIONS } from '../board-2005.js';
 import { BASE_CHARACTERS, STARTING_CARDS } from './characters.js';
 import { BASE_CREATURES } from './creatures.js';
 import { BASE_QUESTS } from './quests.js';
@@ -23,7 +23,7 @@ export const CLASS_CARDS=[...WARRIOR_CARDS,...MAGE_CARDS,...HUNTER_CARDS,...ROGU
 export const BASE_ITEMS=[...TRIANGLE_ITEMS,...SQUARE_ITEMS,...CIRCLE_ITEMS,...SPECIAL_ITEMS];
 export const BASE_PACK:ContentPack={
  id:'base-2005-faq-1.4-v7',name:'World of Warcraft · 2005 + FAQ 1.4',officialComplete:true,
- regions:BOARD_REGIONS,characters:BASE_CHARACTERS,creatures:BASE_CREATURES,quests:BASE_QUESTS,events:BASE_EVENTS,overlords:BASE_OVERLORDS,
+ regions:BOARD_REGIONS,earlierMaps:[{before:4,regions:LEGACY_REGIONS}],characters:BASE_CHARACTERS,creatures:BASE_CREATURES,quests:BASE_QUESTS,events:BASE_EVENTS,overlords:BASE_OVERLORDS,
  cards:[...STARTING_CARDS,...CLASS_CARDS,...BASE_ITEMS,...AUCTION_CARDS],xp:[0,4,10,18,28],
  track:{2:'triangle',4:'event',5:'triangle',7:'event',8:'triangle',10:'event',11:'triangle',13:'event',14:'square',16:'event',17:'square',19:'event',20:'square',22:'event',23:'circle',25:'event',26:'circle',29:'circle'},
 };

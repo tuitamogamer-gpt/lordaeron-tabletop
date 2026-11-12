@@ -1,4 +1,4 @@
-import { card, faction } from '../rules/common.js';
+import { card, contentFor, faction } from '../rules/common.js';
 import { beginBattle, poolPenalties, stats } from '../rules/combat.js';
 import { apply } from '../rules/game.js';
 import { abilityCommands } from '../rules/legal.js';
@@ -262,7 +262,8 @@ function oRule(p: ContentPack, s: State) { return p.creatures.find(c => c.id ===
  * `independent` names the characters this planner does not steer (a player's own, when it plans for the bots beside them). A party
  * may count on such a character only where he already stands: he can be invited to a challenge there, but nobody can make him travel.
  */
-export function createStrategy(p: ContentPack, s: GameView, risk: number, independent: string[] = []) {
+export function createStrategy(pack: ContentPack, s: GameView, risk: number, independent: string[] = []) {
+ const p = contentFor(pack, s);
  const nefarian = nefarianSteps(p, s);
  const distances = new Map<string, number>(), forecasts = new Map<string, Forecast>(), plans = new Map<string, Plan | undefined>();
  const goals = new Map<Faction, Objective[]>();
