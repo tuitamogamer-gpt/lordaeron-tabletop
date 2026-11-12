@@ -2,8 +2,13 @@ import { useId, type CSSProperties } from 'react';
 import type { Die } from '../rules/model';
 import { faces, side, height, pitch, yaw, facetColor } from './dice-geometry';
 
-export default function D8({ die, hit = false, selected = false, selectionOrder, disabled = true, animate = true, index = 0, onSelect }: {
+/** A card name under a die: the first word on one line, the rest on the next, each cut with an ellipsis if it is too long. */
+const sourceLines = (name: string) => { const [first, ...rest] = name.split(' '); return <><i>{first}</i>{rest.length > 0 && <> <i>{rest.join(' ')}</i></>}</>; };
+
+export default function D8({ die, hit = false, selected = false, selectionOrder, disabled = true, animate = true, index = 0, source, onSelect }: {
  die: Die; hit?: boolean; selected?: boolean; selectionOrder?: number; disabled?: boolean; animate?: boolean; index?: number; onSelect?: () => void;
+ /** The card this die was taken for: named under the die until it is rolled, as each die on the table lies by its card. */
+ source?: string;
 }) {
  const result = die.removed ? 'removed' : die.value ? hit ? 'hit' : 'miss' : 'ready';
  const id = useId().replace(/[^a-zA-Z0-9_-]/g, '');
@@ -12,7 +17,7 @@ export default function D8({ die, hit = false, selected = false, selectionOrder,
  const tilt = (index % 5 - 2) * 7;
  const style = { '--die-tilt': `${tilt}deg`, '--die-delay': `${index % 7 * 20}ms` } as CSSProperties;
  return <button type="button" className={`combat-d8 physical-d8 ${die.color} ${result} ${selected ? 'selected' : ''}`} style={style}
-  aria-label={label} aria-description={`Die #${die.id}${selected && selectionOrder ? ` · selection ${selectionOrder}` : ''}`} aria-pressed={selected} disabled={disabled || die.removed} onClick={onSelect} title={`${label} · #${die.id}`}>
+  aria-label={label} aria-description={`Die #${die.id}${source ? ` · from ${source}` : ''}${selected && selectionOrder ? ` · selection ${selectionOrder}` : ''}`} aria-pressed={selected} disabled={disabled || die.removed} onClick={onSelect} title={`${label} · #${die.id}${source ? ` · from ${source}` : ''}`}>
   <span className="d8-ground" aria-hidden="true" />
   <span key={`${die.value}:${die.rerolled}`} className={`d8-tumble ${animate && die.value ? 'rolling' : ''}`} aria-hidden="true">
    <span className="d8-body" style={{ transform: `rotateZ(var(--die-tilt)) rotateX(${pitch}deg) rotateY(${yaw}deg) ${face.facing}` }}>
@@ -30,7 +35,7 @@ export default function D8({ die, hit = false, selected = false, selectionOrder,
     </span>)}
    </span>
   </span>
-  <span className="d8-result" aria-hidden="true">{die.removed ? 'Removed' : die.value ? `${die.value} · ${hit ? 'HIT' : 'MISS'}` : 'D8'}</span>
+  <span className={`d8-result ${!die.removed && !die.value && source ? 'd8-source' : ''}`} aria-hidden="true">{die.removed ? 'Removed' : die.value ? `${die.value} · ${hit ? 'HIT' : 'MISS'}` : source ? sourceLines(source) : 'D8'}</span>
   {(die.spotted || die.rerolled) && <span className="d8-mark" aria-hidden="true">{die.spotted ? '✦' : '↻'}</span>}
   {selected && selectionOrder && <span className="d8-selection-order" aria-hidden="true">{selectionOrder}</span>}
  </button>;

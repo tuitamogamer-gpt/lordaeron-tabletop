@@ -1,0 +1,128 @@
+/* ---------- Combat: play a power from its own row (12. 11. 2026.) ----------
+   The sheet has two parts. Above, for reference: the character, health and energy, every card with what it does or why it waits.
+   Below, docked together: the energy to spend, each power that can be played now with its own Use button, and the step's main action.
+   On a phone the dock stays at the bottom of the screen and the reference part unfolds on request. */
+
+.combat-sheet-summary{display:none}
+/* The reference part takes what the dock leaves and scrolls its card list; it must be free to shrink, or a long list pushes the dock out of sight. */
+.combat-sheet-reference{display:flex;flex-direction:column;flex:1 1 0;min-width:0;min-height:0}
+.combat-sheet-reference>.combat-choice-content{padding-bottom:4px}
+/* A short desktop screen puts health and energy beside the name instead of below it. */
+@media(max-height:800px) and (min-width:801px){.combat-sheet-reference{display:grid;grid-template-columns:minmax(0,1fr) 152px;grid-template-rows:auto auto minmax(0,1fr);column-gap:10px}}
+.combat-play-dock{display:flex;flex-direction:column;flex:0 1 auto;min-height:0;min-width:0;padding-top:7px;border-top:1px solid #c9a35f66}
+.combat-play-dock>.combat-sheet-controls{flex:none;border-top:0;padding-top:0}
+.combat-hand{display:flex;flex-direction:column;gap:5px;flex:0 1 auto;min-height:44px;max-height:44dvh;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#b3945c #182724;padding-right:2px}
+.combat-hand>*{flex:none}
+.combat-hand>.combat-no-powers{margin:0;font-size:10.5px}
+
+/* The energy to spend, and where this round's energy came from or will come from. */
+.combat-energy-line{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px;margin:0;font:10.5px/1.45 var(--sans);color:#b9c7b4}
+.combat-energy-line>svg{align-self:center;flex:none;color:#7cc4f0}
+.combat-energy-line>b{font:600 12px/1.3 var(--sans);color:#a9d8f2;white-space:nowrap}
+.combat-energy-line>b>small{font:500 10px var(--sans);color:#8fa7a8}
+.combat-energy-line>span{color:#ecd596}
+
+/* A playable power: face, name and effect, and the button that plays it. */
+.combat-room .combat-power{display:grid;grid-template-columns:40px minmax(0,1fr) auto;column-gap:10px;row-gap:5px;align-items:center;width:auto;padding:5px 7px 5px 5px;border:1px solid #c8a865aa;border-radius:6px;background:linear-gradient(120deg,#353020,#1c2a22);box-shadow:inset 0 0 0 1px #0007,0 2px 8px #0005}
+.combat-room .combat-power>.combat-power-thumbnail{grid-column:1;grid-row:1;width:40px;height:60px;padding:0;border-radius:4px}
+.combat-power-text{grid-column:2;grid-row:1;display:grid;gap:1px;min-width:0;text-align:left}
+.combat-power-text>strong{font:600 13.5px/1.25 var(--serif);color:#ffe4ab;overflow-wrap:anywhere}
+.combat-room .combat-power .combat-power-effect{margin:0;font:11.5px/1.4 var(--sans);color:#ece2c5}
+.combat-room .combat-power .combat-power-bonus{margin:0;font:10.5px/1.4 var(--sans);color:#bfdaaa}
+.combat-room .combat-power-bonus>strong{font:600 10px/1.4 var(--sans);color:#dcc88d}
+.combat-power-meta{display:flex;flex-wrap:wrap;gap:1px 9px;font:10px/1.4 var(--sans);color:#a3b8a4}
+.combat-power-meta>b{font-weight:600;color:#e1d3aa}
+.combat-power-meta output{font-weight:600;color:#a9d8f2;white-space:nowrap}
+.combat-power-meta>em{font-style:normal;color:#d9c182}
+.campaign-app .combat-room .combat-power-use{grid-column:3;grid-row:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:88px;min-height:42px;padding:6px 11px;font:700 13px/1 var(--sans);letter-spacing:.3px}
+.combat-power-use>b{display:inline-flex;align-items:center;gap:1px;padding:3px 6px 3px 7px;border-radius:11px;background:#1b130acc;color:#a6daf8;font:700 12.5px/1 var(--sans)}
+.combat-power-use>b>svg{color:#7cc4f0}
+.combat-power-use:disabled>b{background:#1b130a66}
+.combat-power-options{grid-column:1/-1;display:grid;gap:4px;min-width:0}
+.combat-power-options>[role=radiogroup],.combat-power-options>label{display:flex;flex-wrap:wrap;align-items:center;gap:4px;min-width:0}
+.combat-power-options>*>span:first-child{flex:none;min-width:52px;font:600 9.5px var(--sans);letter-spacing:.6px;text-transform:uppercase;color:#bfae80}
+.combat-room .combat-power-chip{min-height:28px;padding:3px 9px;border:1px solid #6f7557;border-radius:14px;background:#17251f;color:#d6d2b4;font:500 11px/1.25 var(--sans);text-align:left}
+.combat-room .combat-power-chip[aria-checked=true]{border-color:#e2bf73;background:#4a3d20;color:#ffe9b6;box-shadow:inset 0 0 0 1px #e2bf7355}
+.combat-room .combat-power-chip:enabled:hover{border-color:#c9a35f}
+.combat-room .combat-power-options select{flex:1 1 160px;min-width:0;max-width:100%;height:30px;padding:3px 7px;font:500 11px/1.4 var(--sans);color:#f0e3bd;background:#243a2d;border:1px solid #84784a;border-radius:4px;text-overflow:ellipsis}
+.combat-room .combat-power .combat-power-target{grid-column:1/-1;margin:0;font:10px/1.45 var(--sans);color:#b0c4af;overflow-wrap:anywhere}
+.combat-power-dice{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px}
+.combat-power-dice label{display:flex;align-items:center;gap:7px;font:10.5px/1.4 var(--sans);color:#d6d2b1}
+.combat-power-dice input{width:15px;height:15px;accent-color:#d8bc72;flex:none}
+.combat-power-dice>small{flex-basis:100%;font:10px/1.45 var(--sans);color:#afc7b0}
+.combat-room .combat-power .combat-power-validation{grid-column:1/-1;margin:0;padding:6px 9px;border:1px solid #ad754d66;border-radius:4px;font:11px/1.45 var(--sans);color:#f3c096;background:#7f492421}
+
+/* Powers already played this round, the last of them with a way back. */
+.combat-played{display:grid;gap:2px;margin:0;padding:0;list-style:none}
+.combat-played>li{display:flex;align-items:center;gap:6px;min-width:0;font:10.5px/1.4 var(--sans);color:#a9bca8}
+.combat-played>li>svg{flex:none;color:#9fd49b}
+.combat-played>li>span{min-width:0}
+.combat-played>li b{font-weight:600;color:#dccfa9}
+.campaign-app .combat-room .combat-played>li>button{flex:none;margin-left:auto;min-height:26px;padding:2px 9px;font-size:10.5px}
+.combat-played.brief{display:flex;flex-wrap:wrap;gap:1px 12px}
+.combat-played.brief>li:has(>button){flex-basis:100%}
+
+/* Cards on the sheet: why each waits. */
+.combat-room .combat-sheet-card:not(.ready){grid-template-columns:34px minmax(0,1fr) auto;grid-template-areas:"thumb name label" "thumb status status";row-gap:1px;padding:3px 8px 3px 4px}
+.combat-room .combat-sheet-card>.card-thumbnail{width:34px;height:51px}
+.combat-room .combat-sheet-card>.combat-sheet-slot-label{align-self:center;padding:0;text-align:right;white-space:nowrap;color:#9fa98f}
+.combat-room .combat-sheet-card>.combat-sheet-card-name{align-self:end}
+.combat-room .combat-sheet-card>.combat-sheet-card-status{white-space:normal;overflow-wrap:anywhere;line-height:1.35}
+.combat-room .combat-sheet-card.soon{border-color:#c8a86590;background:#3a321a55}
+.combat-room .combat-sheet-card.soon>.combat-sheet-card-status{color:#f2d792}
+.combat-room .combat-sheet-card.wait>.combat-sheet-card-status{color:#d7b693}
+.combat-room .combat-sheet-card.spent>.combat-sheet-card-status{color:#9fc39b}
+.combat-room .combat-sheet-card.spent>.card-thumbnail{opacity:.6}
+
+/* The main action. Rolling fewer dice than prepared is a rare choice, so its controls open on request. */
+.player-driven-combat .combat-action-row:has(>.combat-pool-toggle){grid-template-columns:minmax(0,1fr) auto}
+.player-driven-combat .combat-action-row:has(>.combat-pool-toggle)>.combat-roll-button{grid-column:1}
+.campaign-app .player-driven-combat .combat-action-row>.combat-pool-toggle{min-height:32px;padding:4px 10px;font-size:10.5px;color:#c9c3a4}
+.campaign-app .player-driven-combat .combat-action-row>.combat-roll-button{min-height:40px;font-size:13px}
+.player-driven-combat .combat-action-row>.combat-attacker-choice{display:grid;justify-items:center;gap:2px}
+.player-driven-combat .combat-action-row>.combat-attacker-choice>small{margin:0;font:500 10px/1.3 var(--sans);opacity:.86}
+.player-driven-combat .combat-action-row>.combat-attacker-choice:only-of-type{grid-column:1/-1}
+
+/* Each die lies by the card it was taken for until it is rolled. */
+.campaign-app .combat-room .combat-d8 .d8-result.d8-source{left:1px;right:1px;bottom:0;font-size:8px!important;line-height:9px;letter-spacing:0;color:#d2c59f}
+.combat-room .d8-source>i{display:block;overflow:hidden;font-style:normal;white-space:nowrap;text-overflow:ellipsis}
+.combat-room .combat-d8.ready{animation:die-arrive .3s cubic-bezier(.2,.8,.3,1.25) both}
+@keyframes die-arrive{from{opacity:0;transform:translateY(-12px) scale(.72)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.combat-room .combat-d8.ready{animation:none}}
+
+/* A phone: the table scrolls above, the dock with the powers and the main action stays in reach below. */
+@media(max-width:800px){
+ .campaign-app .combat-room .combat-decisions{padding:6px 10px 8px;max-height:66%;border-inline:0;border-top:1px solid #c9a35f88;box-shadow:0 -8px 18px #0009;overflow:hidden}
+ .combat-room .combat-decision-heading{display:none}
+ .combat-room .combat-sheet-summary{display:flex;align-items:center;gap:9px;flex:none;width:100%;min-height:36px;padding:2px 2px 4px;color:#e9dcb8;font:600 12px var(--sans);text-align:left}
+ .combat-room .combat-sheet-summary>.portrait{width:28px;height:28px;border-radius:50%;flex:none}
+ .combat-room .combat-sheet-summary>strong{font:600 14px var(--serif);color:#f2dab0}
+ .combat-room .combat-sheet-summary>span{display:inline-flex;align-items:center;gap:3px;font-variant-numeric:tabular-nums;color:#d8ccaa}
+ .combat-room .combat-sheet-summary>span:nth-of-type(1)>svg{color:#e2705f}
+ .combat-room .combat-sheet-summary>span:nth-of-type(2)>svg{color:#7cc4f0}
+ .combat-room .combat-sheet-summary>em{display:inline-flex;align-items:center;gap:4px;margin-left:auto;padding:4px 9px;border:1px solid #6f7557;border-radius:12px;font:500 10.5px var(--sans);font-style:normal;color:#cfc9a8}
+ .combat-room .combat-sheet-summary>i{display:inline-flex;align-items:center;gap:3px;font:600 10.5px var(--sans);font-style:normal;color:#f0b9a2}
+ .combat-room .combat-sheet-reference{display:none}
+ /* Unfolded, the reference lists the cards; the line above already carries the name, health and energy. */
+ .combat-room .sheet-open>.combat-sheet-reference{display:flex;flex:0 1 auto;min-height:90px;max-height:36dvh;overflow-y:auto;overscroll-behavior:contain;padding-bottom:6px}
+ .combat-room .sheet-open>.combat-sheet-reference>*{flex:none}
+ .combat-room .sheet-open>.combat-sheet-reference>.combat-sheet-profile,.combat-room .sheet-open>.combat-sheet-reference>.combat-sheet-vitals{display:none}
+ .combat-room .sheet-open>.combat-sheet-reference>.combat-choice-content{overflow:visible}
+ .campaign-app .combat-room .combat-tray-heading{flex-wrap:wrap;gap:4px 10px;padding:8px 10px}
+ .combat-room .combat-tray-heading small{display:none}
+ .combat-room .combat-tray-meta{margin-left:auto;gap:8px;white-space:nowrap}
+ .combat-room .combat-tray-meta .threat-level{white-space:nowrap}
+ .combat-room .combat-play-dock{flex:none;padding-top:5px}
+ .combat-room .combat-hand{max-height:32dvh}
+ .campaign-app .combat-room .combat-power-use{min-height:46px;min-width:92px}
+ .combat-room .combat-power-chip{min-height:34px}
+ /* The main action spans the dock; lesser choices sit two to a row, so four buttons never cover the dice. */
+ .player-driven-combat .combat-action-row{grid-template-columns:repeat(2,minmax(0,1fr));max-height:none;overflow:visible}
+ .player-driven-combat .combat-action-row>.gold-button,.player-driven-combat .combat-action-row>p{grid-column:1/-1}
+ .campaign-app .player-driven-combat .combat-action-row button{min-height:38px;font-size:12px}
+ .campaign-app .player-driven-combat .combat-action-row>.gold-button{min-height:44px}
+ .player-driven-combat .combat-action-row>.quiet-button:last-child:nth-child(odd){grid-column:1/-1}
+ .campaign-app .combat-room .combat-room-footer{padding:5px 10px;gap:8px}
+ .combat-room .combat-room-footer .combat-switch small{display:none}
+ .combat-room .combat-room-footer>div:last-child>span{display:none}
+}

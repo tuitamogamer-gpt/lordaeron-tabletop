@@ -39,11 +39,6 @@
 .combat-sheet-profile>.portrait{width:42px;height:48px}
 .combat-sheet-profile h3{font-size:17px;margin:2px 0}
 .combat-sheet-vitals{padding-bottom:8px;margin-bottom:7px}
-/* The first row of cards always fits the space left by the controls below it. */
-.combat-choice-content{container-type:size}
-.combat-sheet-card .card-thumbnail{height:clamp(150px,calc(100cqh - 66px),270px)}
-.combat-sheet-card .combat-power-thumbnail{height:clamp(140px,calc(100cqh - 100px),270px)}
-.combat-sheet-card .combat-power-choice.expanded .combat-power-thumbnail{height:150px}
 /* A percentage here resolves against the auto grid row and clips the buttons; use a fixed cap. */
 .combat-sheet-controls{max-height:min(240px,36dvh)}
 .combat-sheet-controls .combat-pool-builder{padding:6px 9px 7px;margin-top:4px}

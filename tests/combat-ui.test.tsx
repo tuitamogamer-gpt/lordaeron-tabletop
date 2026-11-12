@@ -60,7 +60,7 @@ describe('combat room controls and dice', () => {
   r.rerender(<Combat {...props(next)} />);
   expect(within(screen.getByRole('article', { name: `${name} character sheet` })).getByRole('button', { name: 'Resolve ranged & defense' })).toBeTruthy();
  });
- it('chooses a supporting character’s ability directly from their sheet and retains the busy lock', () => {
+ it('offers a supporting character’s power beside the attacker’s, plays it with one click and retains the busy lock', () => {
   const priest = p.characters.find(c => c.classId === 'priest' && c.faction === 'horde')!;
   const roster = [...DEFAULT_SETUP.roster]; roster[2] = priest.id;
   let s = createGame(p, { ...DEFAULT_SETUP, roster }); const warrior = s.heroes[0], support = s.heroes[2];
@@ -69,9 +69,11 @@ describe('combat room controls and dice', () => {
   beginBattle(s, 'pve', [warrior.id, support.id], ['enemy'], 'horde', 'brill');
   s = apply(p, s, { type: 'attacker', hero: warrior.id });
   const pr = props(s), r = render(<Combat {...pr} />);
-  fireEvent.click(screen.getByRole('button', { name: `Show ${priest.name} character sheet` }));
-  const sheet = screen.getByRole('article', { name: `${priest.name} character sheet` });
-  fireEvent.click(within(sheet).getByRole('button', { name: 'Choose Power Word: Shield' }));
+  // The Warrior attacks and his sheet is the open one, yet the Priest's power lies in the hand under her name.
+  const sheet = screen.getByRole('article', { name: `${p.characters.find(c => c.id === warrior.id)!.name} character sheet` });
+  const hand = within(sheet).getByRole('region', { name: 'Powers to use now' });
+  const row = within(hand).getByRole('region', { name: 'Power Word: Shield power' });
+  expect(row.querySelector('.combat-power-meta>b')!.textContent).toBe(priest.name.split(' ')[0]);
   expect(pr.send).not.toHaveBeenCalled();
   r.rerender(<Combat {...pr} busy />);
   expect((within(sheet).getByRole('button', { name: 'Use Power Word: Shield · 1 energy' }) as HTMLButtonElement).disabled).toBe(true);
@@ -79,8 +81,12 @@ describe('combat room controls and dice', () => {
   fireEvent.click(within(sheet).getByRole('button', { name: 'Use Power Word: Shield · 1 energy' }));
   expect(pr.send).toHaveBeenCalledExactlyOnceWith({ type: 'ability', hero: support.id, card: 'priest-power-word-shield', ability: 'pool', args: {} });
   expect(() => apply(p, s, pr.send.mock.calls[0][0])).not.toThrow();
+  // Her own sheet opens from the tabs; the hand stays the same.
+  fireEvent.click(screen.getByRole('button', { name: `Show ${priest.name} character sheet` }));
+  const hers = screen.getByRole('article', { name: `${priest.name} character sheet` });
+  expect(within(hers).getByRole('button', { name: 'Use Power Word: Shield · 1 energy' })).toBeTruthy();
  });
- it('reviews Heroic Strike without spending, then confirms energy and an explicitly chosen dice pool', () => {
+ it('names Charge as the source of the second energy, plays Heroic Strike with one click and rolls an explicitly chosen pool', () => {
   let s = createGame(p, DEFAULT_SETUP); const h = s.heroes[0];
   h.learned = ['warrior-heroic-strike']; h.slots[1].card = 'warrior-heroic-strike';
   s.enemies = [{ id: 'enemy', creature: 'murloc', color: 'green', region: 'brill' }];
@@ -89,9 +95,12 @@ describe('combat room controls and dice', () => {
   const send = vi.fn((c: Command) => { s = apply(p, s, c); r.rerender(<Combat {...props(s)} send={send} />); });
   const r = render(<Combat {...props(s)} send={send} />);
   expect(s.heroes[0].energy).toBe(2);
-  expect(screen.getByText('Automatic · already applied')).toBeTruthy();
-  fireEvent.click(screen.getByRole('button', { name: 'Choose Heroic Strike' }));
+  expect(screen.getByLabelText('Grumbaz energy').textContent).toContain('+1 from Charge this round');
   expect(screen.getByLabelText('Heroic Strike energy after cost').textContent).toBe('2 → 0');
+  // Rolling fewer dice than prepared is a rare choice: its inputs open on request.
+  expect(screen.queryByRole('spinbutton', { name: 'Roll red dice' })).toBeNull();
+  expect(screen.getByRole('button', { name: 'Roll 3 D8' })).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: 'Roll fewer dice' }));
   fireEvent.change(screen.getByRole('spinbutton', { name: 'Roll red dice' }), { target: { value: '1' } });
   expect(send).not.toHaveBeenCalled();
   expect(screen.getByRole('button', { name: 'Roll 2 D8' })).toBeTruthy();
@@ -100,7 +109,10 @@ describe('combat room controls and dice', () => {
   expect(s.heroes[0].energy).toBe(0);
   expect(s.battle!.active!.reroll).toBe(1);
   expect((screen.getByRole('spinbutton', { name: 'Roll red dice' }) as HTMLInputElement).value).toBe('2');
-  expect(screen.queryByRole('button', { name: 'Choose Heroic Strike' })).toBeNull();
+  expect(screen.queryByRole('button', { name: /^Use Heroic Strike/ })).toBeNull();
+  expect(within(screen.getByRole('list', { name: 'Powers used this round' })).getByText('Heroic Strike')).toBeTruthy();
+  // The die it added lies in the tray under the card's name.
+  expect(screen.getAllByTitle(/from Heroic Strike/)).toHaveLength(1);
   fireEvent.click(screen.getByRole('button', { name: 'Roll 3 D8' }));
   expect(send).toHaveBeenLastCalledWith({ type: 'roll', omit: { red: 1, blue: 0, green: 0 } });
   expect(s.battle!.stage).toBe('after-pool');

@@ -137,8 +137,7 @@
 .combat-room .combat-arena{display:flex;flex-direction:column;padding:0;overflow:hidden}
 .combat-arena-scroll{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:17px 22px}
 .combat-room .combat-decisions{position:relative;bottom:auto;flex-shrink:0;max-height:46%;overflow-y:auto;overscroll-behavior:contain;padding:12px 22px;margin:0;background:#152127;border-top:1px solid #526358;box-shadow:0 -5px 18px #0003}
-.combat-room .combat-skill-list{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));max-height:150px;align-items:start}
-.combat-room .combat-skill-group{min-width:0}.combat-room .combat-skill-group>div{min-width:0}.combat-room .combat-skill-group select{max-width:100%}
+
 .combat-room .combat-advanced{margin-top:10px}
 
 @keyframes panel-arrive{from{opacity:0;transform:translateY(10px) scale(.992)}to{opacity:1;transform:none}}

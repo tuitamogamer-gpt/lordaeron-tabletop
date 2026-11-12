@@ -252,9 +252,8 @@
 .v2-die {width:53px;height:53px;border:3px ridge #c88152;border-radius:6px;box-shadow:inset 0 2px 5px #ffb77933,0 6px 0 #211310,0 7px 10px #0008;background:linear-gradient(135deg,#b64934,#592124);color:#ffe3b6;font-size:24px}
 .v2-die.blue {background:linear-gradient(135deg,#438fce,#20426a);border-color:#90bdd7;color:#e3f4ff}.v2-die.green {background:linear-gradient(135deg,#7b9c44,#2d562c);border-color:#b5c67d;color:#edf6cb}
 .combat-boxes>div {border:2px ridge #8b7549;background:linear-gradient(#343932,#1d272b);border-radius:2px}
-.combat-skill-list>button {border:2px ridge #8e764b;background:linear-gradient(#3b3730,#1d272c);border-radius:2px;color:#e4cfab}
-.combat-skill-list>button:hover {background:#55432c;border-color:#d6b168}.combat-skill-list strong {color:#f0d6a4}.combat-skill-list small {color:#b3aa94}
-.combat-skill-list .painted-art {width:43px;height:43px;border:2px ridge #bda167;border-radius:2px}
+
+
 .combat-boxes>div>span {display:flex;align-items:center;gap:9px}.combat-boxes .faction-crest {width:30px;height:30px}
 .transaction-item {position:relative;padding:13px 12px 13px 69px;min-height:92px;border-bottom:1px solid #89744466;background:#111d222b}
 .transaction-item>.painted-art {position:absolute;left:5px;top:13px;width:51px;height:51px;border:2px ridge #af8d55}

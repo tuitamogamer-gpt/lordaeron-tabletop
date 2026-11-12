@@ -73,21 +73,12 @@
 .enemy-info-card p{margin:0;color:#d8cbb0}
 .enemy-info-note{color:#b4a687!important;font-style:italic}
 
-/* Powers as compact rows: a small face (hover it for the whole card), the name, when it works and its cost; choosing one opens its options below. */
+/* Cards on the sheet as compact rows: a small face (hover it for the whole card), the name and what it does or why it waits. Playable powers are styled in combat-play.css. */
 .combat-room .combat-sheet-card-grid{display:flex;flex-direction:column;gap:5px}
 .combat-room .combat-sheet-card{display:grid;grid-template-columns:44px minmax(0,1fr);grid-template-areas:"thumb label" "thumb status";column-gap:10px;row-gap:2px;align-items:center;padding:4px 8px 4px 4px;border-radius:5px}
 .combat-room .combat-sheet-card>.combat-sheet-slot-label{grid-area:label;align-self:end;font-size:9.5px;letter-spacing:.3px}
 .combat-room .combat-sheet-card>.card-thumbnail{grid-area:thumb;width:44px;height:66px;padding:0;border-radius:4px}
 .combat-room .combat-sheet-card>.combat-sheet-card-status{grid-area:status;align-self:start;margin:0;text-align:left;font-size:10px}
-.combat-room .combat-sheet-card.ready{grid-template-columns:minmax(0,1fr);grid-template-areas:"label" "power";padding:5px 8px;border-color:#c8a86580;background:#2a2a1c99}
-.combat-room .combat-sheet-card.ready>.combat-power-choice{grid-area:power;min-width:0}
-.combat-room .combat-sheet-card .combat-power-choice .combat-power-summary{display:grid;grid-template-columns:44px minmax(0,1fr);align-items:center;gap:10px;padding:0}
-.combat-room .combat-sheet-card .combat-power-choice .combat-power-thumbnail,.combat-room .combat-sheet-card .combat-power-choice.expanded .combat-power-thumbnail{width:44px;height:66px;padding:0;border-radius:4px}
-.combat-room .combat-sheet-card .combat-power-caption{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:1px 10px;text-align:left}
-.combat-room .combat-sheet-card .combat-power-caption>strong{grid-column:1;font-size:13px;line-height:1.25}
-.combat-room .combat-sheet-card .combat-power-caption>small{grid-column:1;font-size:10px}
-.combat-room .combat-sheet-card .combat-power-caption>.combat-power-ready{grid-column:2;grid-row:1/3;align-self:center;margin:0}
-.combat-room .combat-sheet-card .combat-power-review{margin-top:7px}
 @media(max-width:600px){.combat-room .combat-sheet-card-grid{gap:4px}}
 
 /* On desktop the Combat Area sits beside the dice tray, as on the table: dice are rolled on the left and their hits land in the circles. */
@@ -105,8 +96,6 @@
 }
 .combat-room .combat-sheet-card-grid{align-items:stretch}
 .combat-room .combat-sheet-card{width:auto;min-width:0}
-.combat-room .combat-sheet-card .combat-power-caption>strong{display:block}
-.combat-room .combat-sheet-card .combat-power-caption>.combat-power-ready{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border:1px solid #c9a35f;border-radius:12px;background:#3a3020;color:#f3dca4;font:600 10px var(--sans);white-space:nowrap}
 /* Fine-tuning: the Damage count sits clear of the Attrition circle, unready powers show their name, and the tray heading wraps cleanly. */
 .combat-token-box.damage>output.combat-token-count{left:auto;right:9%;bottom:30%;transform:none}
 .combat-room .combat-ledger .combat-token-boxes{max-width:238px}
