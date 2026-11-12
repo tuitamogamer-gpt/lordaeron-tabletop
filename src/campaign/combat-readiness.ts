@@ -3,8 +3,9 @@ import { eligibleAttackers } from '../rules/combat';
 import { card, character, colors, emptyPool } from '../rules/common';
 import { abilityEnergyCost, availableCards, condition, timing } from '../rules/effects';
 import { apply } from '../rules/game';
+import { heroSlots } from '../rules/inventory';
 import { legalActions } from '../rules/legal';
-import type { Ability, Card, Command, ContentPack, Effect, Pool, State, Timing } from '../rules/model';
+import type { Ability, Card, Command, ContentPack, Effect, Hero, Pool, State, Timing } from '../rules/model';
 import type { GameView } from '../rules/view';
 import { conditionText, effectText } from './rules-text';
 
@@ -31,6 +32,14 @@ export function energySources(p: ContentPack, state: Pick<GameView, 'battle' | '
   const amount = a.automatic && IN_COMBAT.includes(a.timing) ? energyOf(a.effects) : 0;
   return amount > 0 ? [{ card: id, name: card(p, id).name, amount, timing: a.timing, applied: used.includes(`${id}:${a.id}`) }] : [];
  }));
+}
+
+/**
+ * Preprinted cards of the sheet that lie under another card. A covered card "is no longer considered to be equipped"
+ * (rulebook p. 14): a Warrior with a bow or a gun in his Ranged area has no Charge.
+ */
+export function coveredCards(p: ContentPack, h: Hero): { printed: Card; by: Card }[] {
+ return heroSlots(p, h).flatMap((slot, index) => slot.printed && h.slots[index]?.card ? [{ printed: card(p, slot.printed), by: card(p, h.slots[index].card!) }] : []);
 }
 
 export type AttackPreview = {
@@ -127,5 +136,6 @@ export function energyNote(p: ContentPack, view: GameView, heroId: string, capac
  const preview = b.stage === 'attacker' ? attackPreview(p, view, heroId) : undefined;
  if (preview && preview.gained > 0) parts.push(`${preview.sources.map(s => s.name).join(' and ') || 'A card'} ${preview.sources.length > 1 ? 'give' : 'gives'} +${preview.gained} when ${name} attacks: ${preview.energy} to spend`);
  if (h.energy > capacity) parts.push(`${h.energy - capacity} above capacity is lost when combat ends`);
+ for (const { printed, by } of coveredCards(p, h)) if (printed.abilities.some(a => a.automatic && energyOf(a.effects) > 0)) parts.push(`${printed.name} lies under ${by.name} and gives no energy`);
  return parts.join(' · ');
 }

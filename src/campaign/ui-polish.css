@@ -58,6 +58,8 @@
 .loadout-picker{padding:17px;border:1px solid #647159;border-radius:7px;background:#0e1915;min-width:0}
 .loadout-picker-title h4{font:600 18px/1.5 var(--serif);color:#e5cea0;margin:5px 0}.loadout-picker-title p{font:11px/1.7 var(--sans);color:#a2b09c;margin:4px 0 15px}
 .loadout-comparison{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:0 0 13px;padding:9px 11px;background:#a1b96914;border-radius:4px;font:10px/1.6 var(--sans);color:#9cac92}.loadout-comparison strong{font-weight:500;color:#d9ddb3}
+/* A card laid on a preprinted one switches that card off (rulebook p. 14): say so where the choice is made. */
+.loadout-covered{display:flex;align-items:flex-start;gap:6px;flex-basis:100%;font-style:normal;color:#e6c88c}.loadout-covered>svg{flex:none;margin-top:2px}.loadout-covered b{font-weight:600;color:#f4dca6}
 .loadout-choices{display:grid;gap:7px;max-height:300px;overflow-y:auto;padding:3px;overscroll-behavior:contain}
 .loadout-choice{display:flex;align-items:center;gap:11px;width:100%;padding:11px;border:1px solid #62705475;border-radius:5px;background:#233024;text-align:left;transition:background 180ms,border-color 180ms}
 .loadout-choice:hover:not(:disabled){background:#35432e;border-color:#adbb89}.loadout-choice[aria-pressed=true]{background:#465035;border-color:#c8b77c}

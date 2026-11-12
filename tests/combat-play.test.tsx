@@ -4,6 +4,7 @@ import { act, cleanup, fireEvent, render, screen, within } from '@testing-librar
 import Campaign from '../src/Campaign';
 import Combat from '../src/campaign/Combat';
 import { LIGHT_BEATS } from '../src/campaign/combat-flow';
+import EquipmentEditor from '../src/campaign/EquipmentEditor';
 import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
 import { beginBattle } from '../src/rules/combat';
 import { hero } from '../src/rules/common';
@@ -13,7 +14,7 @@ import { newSession } from '../src/rules/session';
 import { view } from '../src/rules/view';
 import type { Command, State } from '../src/rules/model';
 
-const WARRIOR = 'grumbaz-crowsblood', MAGE = 'sofeea-icecall', STRIKE = 'warrior-heroic-strike';
+const WARRIOR = 'grumbaz-crowsblood', MAGE = 'sofeea-icecall', STRIKE = 'warrior-heroic-strike', BOW = 'triangle-6-laminated-recurve-bow';
 beforeEach(() => {
  localStorage.clear(); window.scrollTo = vi.fn();
  vi.stubGlobal('ResizeObserver', class { observe() {} disconnect() {} });
@@ -50,6 +51,13 @@ describe('choosing who attacks', () => {
   expect(screen.queryByText(/Needs 2 energy/)).toBeNull();
   fireEvent.click(grumbaz);
   expect(pr.send).toHaveBeenCalledExactlyOnceWith({ type: 'attacker', hero: WARRIOR });
+ });
+ it('says plainly when a covered Charge gives nothing', () => {
+  const s = fight([WARRIOR, MAGE], s => { const h = hero(s, WARRIOR); h.bag = []; h.slots[3].card = BOW; });
+  render(<Combat {...props(s)} />);
+  expect(screen.getByLabelText('Grumbaz energy').textContent).toContain('Charge lies under Laminated Recurve Bow and gives no energy');
+  expect(screen.getByRole('button', { name: /^Grumbaz attacks/ }).textContent).toBe('Grumbaz attacks2 red, 1 blue, 1 green dice · 1 energy');
+  expect(within(sheet()).getByText('Heroic Strike').closest('.combat-sheet-card')!.querySelector('.combat-sheet-card-status')!.textContent).toBe('Needs 2 energy · Grumbaz will have 1');
  });
 });
 
@@ -158,5 +166,23 @@ describe('a power used in a real campaign', () => {
   fireEvent.click(screen.getByRole('button', { name: /^Roll \d+ D8/ }));
   expect(screen.queryByRole('button', { name: 'Take back Dire Wand' })).toBeNull();
   expect(commands().slice(-2).map(c => c.type)).toEqual(['ability', 'roll']);
+ });
+});
+
+describe('covering a starting card', () => {
+ it('warns in the loadout that a bow laid on Charge switches Charge off', () => {
+  const s = createGame(p, DEFAULT_SETUP), h = hero(s, WARRIOR); h.bag = [BOW];
+  render(<EquipmentEditor hero={h} send={vi.fn()} busy={false} />);
+  fireEvent.click(screen.getByRole('button', { name: /^Slot 4: / }));
+  expect(screen.queryByRole('note')).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Equip Laminated Recurve Bow' }));
+  const note = screen.getByRole('note');
+  expect(note.textContent).toContain('Laminated Recurve Bow covers Charge.');
+  expect(note.textContent).toContain('Charge does nothing while it lies underneath');
+  expect(note.textContent).toContain('Gain 1 energy');
+  expect(screen.getByRole('button', { name: /^Slot 4: / }).textContent).toContain('covers Charge');
+  // Taking the bow off again brings Charge back, and the warning goes.
+  fireEvent.click(within(screen.getByRole('complementary', { name: 'Cards for slot 4' })).getByRole('button', { name: /Charge/ }));
+  expect(screen.queryByRole('note')).toBeNull();
  });
 });

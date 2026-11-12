@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { attackPreview, cardNote, diceWords, energyNote, energySources } from '../src/campaign/combat-readiness';
+import { attackPreview, cardNote, coveredCards, diceWords, energyNote, energySources } from '../src/campaign/combat-readiness';
 import { undoable } from '../src/campaign/undo';
 import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
 import { beginBattle } from '../src/rules/combat';
@@ -10,7 +10,7 @@ import { view } from '../src/rules/view';
 import type { Command, State } from '../src/rules/model';
 
 const WARRIOR = 'grumbaz-crowsblood', MAGE = 'sofeea-icecall';
-const STRIKE = 'warrior-heroic-strike', CHARGE = `${WARRIOR}-ranged`, SWORD = `${WARRIOR}-melee`;
+const STRIKE = 'warrior-heroic-strike', CHARGE = `${WARRIOR}-ranged`, SWORD = `${WARRIOR}-melee`, BOW = 'triangle-6-laminated-recurve-bow';
 /** A level 1 Warrior with Heroic Strike (2 energy) and a Mage ally face a creature; nobody has attacked yet. */
 function fight(change: (s: State) => void = () => {}) {
  const s = createGame(p, DEFAULT_SETUP), h = hero(s, WARRIOR);
@@ -110,6 +110,15 @@ describe('where the energy comes from', () => {
   expect(s.battle).toMatchObject({ round: 2, stage: 'attacker' });
   expect(attackPreview(p, view(s), WARRIOR)).toMatchObject({ energy: 1, gained: 1, powers: [] });
   expect(cardNote(p, view(s), WARRIOR, STRIKE).text).toBe('Needs 2 energy · Grumbaz will have 1 · Charge gives 1 each round');
+ });
+ it('knows a preprinted card under another card is not equipped: a Warrior with a bow has no Charge (rulebook p. 14)', () => {
+  const s = fight(s => { const h = hero(s, WARRIOR); h.bag = []; h.slots[3].card = BOW; }), v = view(s);
+  expect(coveredCards(p, hero(s, WARRIOR)).map(({ printed, by }) => [printed.name, by.name])).toEqual([['Charge', 'Laminated Recurve Bow']]);
+  expect(energySources(p, v, WARRIOR)).toEqual([]);
+  expect(attackPreview(p, v, WARRIOR)).toMatchObject({ energy: 1, gained: 0, powers: [] });
+  expect(hero(apply(p, s, { type: 'attacker', hero: WARRIOR }), WARRIOR).energy).toBe(1);
+  expect(cardNote(p, v, WARRIOR, STRIKE)).toEqual({ tone: 'wait', text: 'Needs 2 energy · Grumbaz will have 1' });
+  expect(energyNote(p, v, WARRIOR, 1)).toBe('Charge lies under Laminated Recurve Bow and gives no energy');
  });
 });
 
