@@ -33,7 +33,8 @@ describe('table overview and map interaction',()=>{
  it('leaves the world view fixed, enables zoom and drag on request, and restores the overview on Escape',()=>{
   render(<Table/>);let svg=screen.getByRole('group',{name:'2D board with 67 bordered regions'});
   const overview=screen.getByRole('region',{name:"Entire board overview"});
-  fireEvent.wheel(overview,{deltaY:-100,clientX:450,clientY:300});expect(svg.getAttribute('style')).toContain('scale(1)');
+  // The overview lies on the table and has no camera to move (the flat overview: lying-board-ui.test.tsx).
+  fireEvent.wheel(overview,{deltaY:-100,clientX:450,clientY:300});expect(svg.getAttribute('style')).toBeNull();
   fireEvent.click(screen.getByRole('button',{name:/Interact with map/}));
   svg=screen.getByRole('group',{name:'2D board with 67 bordered regions'});
   const canvas=screen.getByRole('region',{name:/Interactive map:/});
@@ -42,7 +43,7 @@ describe('table overview and map interaction',()=>{
   fireEvent.click(screen.getByRole('button',{name:"Zoom in"}));expect(screen.getByLabelText("Map zoom").textContent).toBe('125%');
   fireEvent.pointerDown(canvas,{button:0,clientX:350,clientY:250});fireEvent.pointerMove(canvas,{clientX:420,clientY:290});fireEvent.pointerUp(canvas);
   expect(svg.getAttribute('style')).toContain('translate(70px,40px)');
-  fireEvent.keyDown(canvas,{key:'Escape'});expect(screen.getByRole('group',{name:'2D board with 67 bordered regions'}).getAttribute('style')).toContain('scale(1)');
+  fireEvent.keyDown(canvas,{key:'Escape'});expect(screen.getByRole('group',{name:'2D board with 67 bordered regions'}).getAttribute('style')).toBeNull();
   expect(document.activeElement).toBe(screen.getByRole('button',{name:/Interact with map/}));
  });
  it('pans with wheel and trackpad on both axes, uses Shift for horizontal scrolling, and reserves Control-wheel for zoom',()=>{
@@ -55,8 +56,8 @@ describe('table overview and map interaction',()=>{
   fireEvent.wheel(canvas,{deltaY:-100,ctrlKey:true,clientX:450,clientY:300});expect(screen.getByLabelText('Map zoom').textContent).toBe('218%');
   fireEvent.click(screen.getByRole('button',{name:/Done interacting/}));
   const overview=screen.getByRole('region',{name:'Entire board overview'}),fitted=screen.getByRole('group',{name:'2D board with 67 bordered regions'});
-  expect(fitted.getAttribute('style')).toContain('translate(0px,0px) scale(1)');
-  fireEvent.wheel(overview,{deltaX:100,deltaY:100});expect(fitted.getAttribute('style')).toContain('translate(0px,0px) scale(1)');
+  expect(fitted.getAttribute('style')).toBeNull();
+  fireEvent.wheel(overview,{deltaX:100,deltaY:100});expect(fitted.getAttribute('style')).toBeNull();
  });
  it('moves the interactive map into a modal viewport and returns it to the table on native Escape',()=>{
   document.body.style.overflow='auto';

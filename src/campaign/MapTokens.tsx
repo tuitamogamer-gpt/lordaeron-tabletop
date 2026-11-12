@@ -17,13 +17,17 @@ export function creatureStacks(enemies: Enemy[]) {
 }
 
 /** Isolated portraits, distinct faction rings, accessible hit areas and live counters. */
-export function MapPortraitToken({ x, y, src, name, label, kind, color, count, level, active, bare, onClick, help, onHelp }: {
- x:number; y:number; src:string; name:string; label?:string; kind:'hero'|'overlord'|'creature'; color?:string; count?:number; level?:number; active?:boolean; bare?:boolean; onClick:()=>void; help?:TokenHelp; onHelp?:ShowTokenHelp;
+export function MapPortraitToken({ x, y, scale, src, name, label, kind, color, count, level, active, bare, onClick, help, onHelp }: {
+ x:number; y:number; scale?:number; src:string; name:string; label?:string; kind:'hero'|'overlord'|'creature'; color?:string; count?:number; level?:number; active?:boolean; bare?:boolean; onClick:()=>void; help?:TokenHelp; onHelp?:ShowTokenHelp;
 }) {
  const clip=`token-${useId().replace(/:/g,'')}`,r=kind==='overlord'?26:kind==='hero'?21:17;
+ // On the lying board a counter is drawn at the size things have where it stands (lying-board.ts); on the flat one at its own size.
+ const size=scale?` scale(${scale})`:'';
  // The CSS transform repeats the attribute so that a character's counter can glide to its new region (map.css); creatures simply appear.
- return <g className={`portrait-map-token ${kind} ${color??''} ${active?'active':''}`} transform={`translate(${x},${y})`} style={kind==='creature'?undefined:{transform:`translate(${x}px,${y}px)`}} role="button" tabIndex={0} aria-label={label??name} aria-describedby={help?`${clip}-help`:undefined} onClick={onClick} onPointerEnter={e=>help&&onHelp?.(help,e.currentTarget)} onPointerLeave={()=>onHelp?.(null)} onFocus={e=>help&&onHelp?.(help,e.currentTarget)} onBlur={()=>onHelp?.(null)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();onClick();}}}>
+ return <g className={`portrait-map-token ${kind} ${color??''} ${active?'active':''}`} transform={`translate(${x},${y})${size}`} style={kind==='creature'?undefined:{transform:`translate(${x}px,${y}px)${size}`}} role="button" tabIndex={0} aria-label={label??name} aria-describedby={help?`${clip}-help`:undefined} onClick={onClick} onPointerEnter={e=>help&&onHelp?.(help,e.currentTarget)} onPointerLeave={()=>onHelp?.(null)} onFocus={e=>help&&onHelp?.(help,e.currentTarget)} onBlur={()=>onHelp?.(null)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();onClick();}}}>
   <title>{label??name}</title>{help&&<desc id={`${clip}-help`}>{[help.category,help.summary,...help.details??[],help.hint].filter(Boolean).join('. ')}</desc>}<defs><clipPath id={clip}><circle r={r-2}/></clipPath></defs>
+  {/* Where the piece stands: seen only on the lying board (board-3d.css). */}
+  <ellipse className="portrait-token-ground" cy={r*.62} rx={r*.92} ry={r*.5}/>
   {bare?<circle className="portrait-token-shadow" r={r+1}/>:<circle className="portrait-token-shadow" r={r+2}/>}{active&&<circle className="portrait-token-active" r={r+5}/>}
   {bare
    ?<image className="portrait-token-counter" href={src} x={-r-3} y={-r-3} width={(r+3)*2} height={(r+3)*2} preserveAspectRatio="xMidYMid meet"/>

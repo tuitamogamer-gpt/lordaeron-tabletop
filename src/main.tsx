@@ -43,6 +43,7 @@ import './campaign/saves.css';
 import './campaign/decision-flow.css';
 import './campaign/readability.css';
 import './campaign/board-table.css';
+import './campaign/board-3d.css';
 import './campaign/scan-assets.css';
 import './campaign/audio.css';
 import './campaign/combat-board.css';
