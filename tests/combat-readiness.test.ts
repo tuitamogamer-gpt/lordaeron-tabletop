@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { attackPreview, cardNote, diceWords, energyNote, energySources } from '../src/campaign/combat-readiness';
+import { undoable } from '../src/campaign/undo';
 import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
 import { beginBattle } from '../src/rules/combat';
 import { capacity, hero } from '../src/rules/common';
@@ -109,5 +110,29 @@ describe('where the energy comes from', () => {
   expect(s.battle).toMatchObject({ round: 2, stage: 'attacker' });
   expect(attackPreview(p, view(s), WARRIOR)).toMatchObject({ energy: 1, gained: 1, powers: [] });
   expect(cardNote(p, view(s), WARRIOR, STRIKE).text).toBe('Needs 2 energy · Grumbaz will have 1 · Charge gives 1 each round');
+ });
+});
+
+describe('taking a power back', () => {
+ it('allows it while the power only spent energy and prepared dice', () => {
+  const attacking = apply(p, fight(), { type: 'attacker', hero: WARRIOR }), used = apply(p, attacking, strike);
+  expect(used.rng).toBe(attacking.rng);
+  expect(undoable(attacking, used, strike)).toBe(true);
+ });
+ it('never takes back a roll, a choice of attacker or a step forward', () => {
+  const s = fight(), attacking = apply(p, s, { type: 'attacker', hero: WARRIOR }), rolled = apply(p, attacking, { type: 'roll' });
+  expect(undoable(s, attacking, { type: 'attacker', hero: WARRIOR })).toBe(false);
+  expect(undoable(attacking, rolled, { type: 'roll' })).toBe(false);
+  expect(undoable(rolled, apply(p, rolled, { type: 'advance' }), { type: 'advance' })).toBe(false);
+ });
+ it('keeps a power that threw a die: one added after the roll is rolled at once', () => {
+  // The Mage's wand adds a blue die for 1 energy. Before the roll the die waits; after the roll it would be thrown.
+  const attacking = apply(p, fight(), { type: 'attacker', hero: MAGE });
+  const empower = legalActions(p, attacking).find((c): c is Extract<Command, { type: 'ability' }> => c.type === 'ability' && c.card === `${MAGE}-ranged`)!;
+  const prepared = apply(p, attacking, empower);
+  expect(prepared.battle!.active!.dice.at(-1)).toMatchObject({ color: 'blue', value: 0 });
+  expect(undoable(attacking, prepared, empower)).toBe(true);
+  const moved = structuredClone(prepared); moved.rng = prepared.rng + 1;
+  expect(undoable(attacking, moved, empower)).toBe(false);
  });
 });

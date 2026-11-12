@@ -10,7 +10,7 @@ import type { GameView } from '../rules/view';
 import CombatArea from './CombatArea';
 import EnemyInfo from './CombatEnemyInfo';
 import { type AbilityCommand } from './CombatAbilities';
-import CombatCharacterSheet from './CombatCharacterSheet';
+import CombatCharacterSheet, { type TakeBack } from './CombatCharacterSheet';
 import CombatLoadout from './CombatLoadout';
 import { combatPool } from './combat-pool';
 import { attackPreview, diceWords } from './combat-readiness';
@@ -56,9 +56,11 @@ type CombatProps = {
  botResponsePending?:boolean; onPassHumanWindow?:()=>void;
  /** Bookkeeping steps with a single outcome continue on their own while this is on. */
  autoContinue?: boolean; toggleAutoContinue?: () => void; autoStep?: Command;
+ /** The power a player just used, while it can still be taken back. */
+ takeBack?: TakeBack;
 };
 
-export default function CampaignCombat({ state: liveState, legal, send, busy, botStep, botReady, open = true, onClose, bots = [], resolve = true, toggleResolve, automationPending = false, presentation, botResponsePending=false, onPassHumanWindow, autoContinue = false, toggleAutoContinue, autoStep }: CombatProps) {
+export default function CampaignCombat({ state: liveState, legal, send, busy, botStep, botReady, open = true, onClose, bots = [], resolve = true, toggleResolve, automationPending = false, presentation, botResponsePending=false, onPassHumanWindow, autoContinue = false, toggleAutoContinue, autoStep, takeBack }: CombatProps) {
  // An exchange holds its outcome back until the blow lands. A power or a new attacker has nothing to hold back: it shows at once.
  const anticipating = presentation?.cue && !lightCue(presentation.cue) && ['anticipation', 'action'].includes(presentation.phase);
  const state = anticipating ? presentation.cue!.before : liveState;
@@ -182,7 +184,7 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
    </div>
     <section className="combat-decisions" aria-label="Combat decisions" aria-busy={locked}>
      <div className="combat-decision-heading"><h4>Character sheet</h4><span>{botResponsePending?'Your reaction':actingBot?'Bot turn':b.stage==='over'?'Review the outcome':'Your decision'}{powerCount?` · ${powerCount} ${powerCount===1?'power':'powers'} to use`:''}</span></div>
-     <CombatCharacterSheet state={state} skills={skills} dice={selectedIds} send={send} busy={locked} bots={bots}>
+     <CombatCharacterSheet state={state} skills={skills} dice={selectedIds} send={send} busy={locked} bots={bots} takeBack={takeBack}>
      {a&&pool&&b.stage==='pool'&&roll&&poolShown&&<fieldset className="combat-pool-builder" disabled={locked}><legend>Choose your dice pool</legend><div>{channels.map(({color})=><label className={color} key={color}><span>{color}</span><input aria-label={`Roll ${color} dice`} type="number" min={0} max={pool.maximum[color]} value={pool.kept[color]} onChange={e=>setOmit(v=>({...v,[color]:pool.available[color]-Math.max(0,Math.min(pool.maximum[color],Math.floor(Number(e.target.value)||0)))}))}/><small>of {pool.available[color]}</small></label>)}</div><p><strong>{pool.total} D8 selected</strong> · Rerolls {Math.max(0,a.reroll)} · Attrition {Math.max(0,a.attrition)}</p>{!!pool.penalties.length&&<p>{pool.penalties.length} dice removed by equipment before this pool.</p>}{activeHero&&(activeHero.stun||activeHero.curse)>0&&(pool.total<activeHero.stun*2?<p className="combat-pool-danger" role="status">Stun requires {activeHero.stun*2} dice. Confirming this pool defeats {character(p,activeHero.id).name.split(' ')[0]} immediately.</p>:<p>Stun / Curse: choose {Math.min(pool.total,activeHero.stun*2+activeHero.curse)} dice to remove before rolling.</p>)}</fieldset>}
      <div className="combat-action-row">
       {rollCommand && <button className="gold-button combat-roll-button" disabled={locked} onClick={() => send(rollCommand)}><Icon name="spark" />{activeHero&&(activeHero.stun||activeHero.curse)>0?'Confirm pool · ':'Roll '}{pool?.total} D8 <Icon name="arrow" size={16} /></button>}

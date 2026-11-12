@@ -1,12 +1,15 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
+import Campaign from '../src/Campaign';
 import Combat from '../src/campaign/Combat';
+import { LIGHT_BEATS } from '../src/campaign/combat-flow';
 import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
 import { beginBattle } from '../src/rules/combat';
 import { hero } from '../src/rules/common';
 import { apply, createGame } from '../src/rules/game';
 import { legalActions } from '../src/rules/legal';
+import { newSession } from '../src/rules/session';
 import { view } from '../src/rules/view';
 import type { Command, State } from '../src/rules/model';
 
@@ -76,6 +79,21 @@ describe('the hand and the table', () => {
   expect(r.container.querySelectorAll('.d8-source')).toHaveLength(0);
   expect(screen.getAllByTitle(/from Heroic Strike/)).toHaveLength(1);
  });
+ it('lists a played power with its effect and offers to take it back while nothing was rolled', () => {
+  const s = apply(p, apply(p, fight([WARRIOR]), { type: 'attacker', hero: WARRIOR }), strike), undo = vi.fn();
+  const r = render(<Combat {...props(s)} />);
+  const played = () => screen.getByRole('list', { name: 'Powers used this round' });
+  expect(within(played()).getByText('Heroic Strike')).toBeTruthy();
+  expect(played().textContent).toContain('+1 Reroll');
+  expect(screen.queryByRole('button', { name: 'Take back Heroic Strike' })).toBeNull();
+  expect(within(hand()).queryByText(/No power to use/)).toBeNull();
+  r.rerender(<Combat {...props(s)} takeBack={{ hero: WARRIOR, card: STRIKE, undo }} />);
+  r.rerender(<Combat {...props(s)} takeBack={{ hero: WARRIOR, card: STRIKE, undo }} busy />);
+  expect((screen.getByRole('button', { name: 'Take back Heroic Strike' }) as HTMLButtonElement).disabled).toBe(true);
+  r.rerender(<Combat {...props(s)} takeBack={{ hero: WARRIOR, card: STRIKE, undo }} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Take back Heroic Strike' }));
+  expect(undo).toHaveBeenCalledOnce();
+ });
  it('folds the sheet behind one line for a phone and unfolds it on request', () => {
   const s = apply(p, fight([WARRIOR]), { type: 'attacker', hero: WARRIOR });
   render(<Combat {...props(s)} />);
@@ -96,5 +114,49 @@ describe('the hand and the table', () => {
   const s = apply(p, fight([WARRIOR], s => { hero(s, WARRIOR).stun = 1; hero(s, WARRIOR).curse = 2; }), { type: 'attacker', hero: WARRIOR });
   render(<Combat {...props(s)} />);
   expect(screen.getByRole('button', { name: 'Show the cards on Grumbaz’s sheet' }).textContent).toBe('Grumbaz4/42/1Stun 1Curse 2Sheet');
+ });
+});
+
+describe('a power used in a real campaign', () => {
+ it('is played with one click, can be taken back before the roll, and leaves the saved campaign as it was', async () => {
+  let s = createGame(p, DEFAULT_SETUP); const session = newSession(p, DEFAULT_SETUP);
+  const send = (c: Command) => { s = apply(p, s, c); session.commands.push(c); };
+  send({ type: 'travel', hero: MAGE, path: ['brightwater'] });
+  send(legalActions(p, s).find(c => c.type === 'challenge' && c.hero === MAGE && !c.allies.length)!);
+  send({ type: 'attacker', hero: MAGE });
+  localStorage.setItem('lordaeron-base-save-v7', JSON.stringify(session));
+  localStorage.setItem('lordaeron-base-auto-continue', 'false');
+  // Every character is played by a person at this table.
+  localStorage.setItem('lordaeron-base-bots-v3', '[]');
+  await act(async () => { render(<Campaign />); });
+  await screen.findByRole('dialog', { name: 'Combat' });
+  const commands = () => JSON.parse(localStorage.getItem('lordaeron-base-save-v7')!).commands as Command[];
+  const energy = () => screen.getByLabelText('Sofeea energy').textContent;
+  expect(energy()).toBe('Sofeea · energy 4 / 4');
+  const before = commands().length, roll = screen.getByRole('button', { name: /^Roll \d+ D8/ }).textContent;
+  const takeBack = () => screen.getByRole('button', { name: 'Take back Dire Wand' }) as HTMLButtonElement;
+  vi.useFakeTimers();
+  fireEvent.click(screen.getByRole('button', { name: 'Use Dire Wand · 1 energy' }));
+  // The power takes effect at once: nothing waits for an animation to show the spent energy and the new die.
+  expect(commands()).toHaveLength(before + 1);
+  expect(commands().at(-1)).toMatchObject({ type: 'ability', hero: MAGE, card: `${MAGE}-ranged` });
+  expect(energy()).toBe('Sofeea · energy 3 / 4');
+  expect(screen.getByRole('button', { name: /^Roll \d+ D8/ }).textContent).not.toBe(roll);
+  // The table is locked only for a short flourish.
+  expect(takeBack().disabled).toBe(true);
+  await act(async () => { vi.advanceTimersByTime(LIGHT_BEATS.complete); });
+  expect(takeBack().disabled).toBe(false);
+  fireEvent.click(takeBack());
+  expect(commands()).toHaveLength(before);
+  expect(commands().at(-1)).toEqual({ type: 'attacker', hero: MAGE });
+  expect(energy()).toBe('Sofeea · energy 4 / 4');
+  expect(screen.getByRole('button', { name: /^Roll \d+ D8/ }).textContent).toBe(roll);
+  expect(screen.queryByRole('button', { name: 'Take back Dire Wand' })).toBeNull();
+  // Once the dice are thrown the power stays played.
+  fireEvent.click(screen.getByRole('button', { name: 'Use Dire Wand · 1 energy' }));
+  await act(async () => { vi.advanceTimersByTime(LIGHT_BEATS.complete); });
+  fireEvent.click(screen.getByRole('button', { name: /^Roll \d+ D8/ }));
+  expect(screen.queryByRole('button', { name: 'Take back Dire Wand' })).toBeNull();
+  expect(commands().slice(-2).map(c => c.type)).toEqual(['ability', 'roll']);
  });
 });

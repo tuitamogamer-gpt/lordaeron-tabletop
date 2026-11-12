@@ -12,9 +12,11 @@ import { CardThumbnail, ConditionToken, HeroPortrait } from './parts';
 import { effectText } from './rules-text';
 import RulesText from './RulesText';
 
+/** The last power a player used, while it can still be taken back: it rolled nothing and revealed nothing. */
+export type TakeBack = { hero: string; card: string; undo: () => void };
 type Props = {
  state: GameView; skills: AbilityCommand[]; dice: number[]; send: (command: Command) => void; busy: boolean;
- bots: string[]; children: ReactNode;
+ bots: string[]; takeBack?: TakeBack; children: ReactNode;
 };
 const first = (id: string) => character(p, id).name.split(' ')[0];
 /** More played powers than this are listed by name only. */
@@ -25,7 +27,7 @@ const BRIEF = 3;
  * why it waits. Below, docked together: the powers that can be played right now, each with its own Use button, and the
  * step's main action. A phone keeps that dock at the bottom of the screen.
  */
-export default function CombatCharacterSheet({ state, skills, dice, send, busy, bots, children }: Props) {
+export default function CombatCharacterSheet({ state, skills, dice, send, busy, bots, takeBack, children }: Props) {
  const b = state.battle!, activeId = b.active?.heroId;
  const heroIds = [...new Set([...b.participants, ...skills.map(command => command.hero)])];
  const preferredId = activeId && !bots.includes(activeId) ? activeId : skills[0]?.hero ?? activeId ?? heroIds.find(id => !bots.includes(id)) ?? heroIds[0];
@@ -82,9 +84,11 @@ export default function CombatCharacterSheet({ state, skills, dice, send, busy, 
     <p className="combat-energy-line" aria-label={`${first(h.id)} energy`}><Icon name="bolt" size={13} /><b>{first(h.id)} · energy {h.energy}<small> / {cap.energy}</small></b>{note && <span>{note}</span>}</p>
     {hand.map(({ key, commands }) => <CombatAbilities key={`${b.round}:${b.stage}:${key}`} commands={commands} state={state} dice={dice} send={send} busy={busy} owner={many} />)}
     {!hand.length && !played.length && <p className="combat-no-powers">{soon.length ? `No power to use yet. Ready: ${soon.join(', ')}.` : 'No power to use at this step.'}</p>}
-    {!!played.length && <ul className={`combat-played ${played.length > BRIEF ? 'brief' : ''}`} aria-label="Powers used this round">{played.map(({ hero, card: id, ability }) =>
-     // A long list keeps to names.
-     <li key={`${hero}:${id}:${ability.id}`}><Icon name="check" size={12} /><span><b>{many ? `${first(hero)} · ` : ''}{card(p, id).name}</b>{played.length <= BRIEF && <> <RulesText>{ability.effects.map(effectText).join(' · ')}</RulesText></>}</span></li>)}</ul>}
+    {!!played.length && <ul className={`combat-played ${played.length > BRIEF ? 'brief' : ''}`} aria-label="Powers used this round">{played.map(({ hero, card: id, ability }) => {
+     const back = takeBack?.hero === hero && takeBack.card === id;
+     // A long list keeps to names; the card that can still be taken back always shows what it did.
+     return <li key={`${hero}:${id}:${ability.id}`}><Icon name="check" size={12} /><span><b>{many ? `${first(hero)} · ` : ''}{card(p, id).name}</b>{(played.length <= BRIEF || back) && <> <RulesText>{ability.effects.map(effectText).join(' · ')}</RulesText></>}</span>{back && <button type="button" className="quiet-button" disabled={busy} onClick={takeBack.undo} aria-label={`Take back ${card(p, id).name}`}>Take back</button>}</li>;
+    })}</ul>}
    </section>}
    <div className="combat-sheet-controls" aria-label="Character combat controls">{children}</div>
   </div>
