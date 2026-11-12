@@ -11,9 +11,13 @@ This writes public/assets/audio/{themes,sfx,voice}/*.mp3: the music as loops of 
 with 0.2 s of the same music before and after, so that the game can loop inside continuous sound,
 each effect cut to its sound, the voices without leading or trailing silence, all at an even loudness.
 
+It ends by decoding every file it wrote and fails if one of them does not sound through its length. From 10 to 12 Nov 2026 the
+voice lines went through a fade that silenced everything after their first hundredth of a second, and nothing noticed: the
+files had the right length and the game played them (docs/SOUND-2026-11-12.md).
+
     python3 scripts/prepare-audio.py
 """
-import glob, os, subprocess, sys
+import array, glob, json, os, subprocess, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RAW, OUT = os.path.join(ROOT, '.local-data', 'audio', 'raw'), os.path.join(ROOT, 'public', 'assets', 'audio')
@@ -26,6 +30,34 @@ PERIOD, LEAD = LOOP - FADE, 0.2
 
 def ffmpeg(*args):
     subprocess.run(['ffmpeg', '-v', 'error', '-y', *args], check=True)
+
+
+def loudness(src, chain):
+    """The integrated loudness (LUFS) and the true peak (dBTP) of a file after a filter chain, as ffmpeg's loudnorm measures them."""
+    err = subprocess.run(['ffmpeg', '-v', 'info', '-nostats', '-i', src, '-vn', '-af', f'{chain},loudnorm=print_format=json', '-f', 'null', '-'],
+                         capture_output=True, text=True, check=True).stderr
+    measured = json.loads(err[err.rindex('{'):err.rindex('}') + 1])
+    return float(measured['input_i']), float(measured['input_tp'])
+
+
+def levelled(src, chain, target, ceiling=-1.5, squeeze=0.0):
+    """The chain followed by one constant gain: up to the target loudness, and no higher than the peak ceiling allows.
+    A short sound gets the same gain from its first sample to its last; a normaliser that rides the gain has nothing to ride on.
+    With `squeeze`, the gain may exceed what the ceiling allows by that many dB, and a limiter holds the few peaks that would
+    pass it: a whispered line has sharp consonants over a quiet voice, and without this it would come out far quieter than a shout."""
+    loud, peak = loudness(src, chain)
+    gain = min(target - loud, ceiling - peak + squeeze)
+    limiter = f',alimiter=limit={10 ** (ceiling / 20):.3f}:attack=3:release=60:level=false' if gain > ceiling - peak else ''
+    return f'{chain},volume={gain:.2f}dB{limiter}'
+
+
+def sounding(path, rate=32000):
+    """The share of a file's 20 ms windows that sound (above -50 dB), and the second at which the last of them ends."""
+    raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', path, '-vn', '-ac', '1', '-ar', str(rate), '-f', 's16le', '-'], capture_output=True, check=True).stdout
+    pcm, n = array.array('h', raw[:len(raw) // 2 * 2]), rate // 50
+    floor = (32768 * 10 ** (-50 / 20)) ** 2 * n
+    heard = [sum(v * v for v in pcm[i:i + n]) > floor for i in range(0, len(pcm) - n + 1, n)]
+    return sum(heard) / max(1, len(heard)), (max((i for i, h in enumerate(heard) if h), default=-1) + 1) * n / rate, len(pcm) / rate
 
 
 def samples(path, rate):
@@ -68,10 +100,21 @@ def main():
     for src in sorted(glob.glob(os.path.join(RAW, 'voice-*.mp3'))):
         name = os.path.basename(src)[len('voice-'):-len('.mp3')]
         trim = 'silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.05'
-        ffmpeg('-i', src, '-af', f'{trim},areverse,{trim},areverse,afade=t=out:st=0:d=0.01:curve=nofade,loudnorm=I=-16:TP=-1.5',
-               '-ar', '32000', '-ac', '1', '-c:a', 'libmp3lame', '-b:a', '64k', os.path.join(OUT, 'voice', f'{name}.mp3'))
-    total = sum(os.path.getsize(f) for f in glob.glob(os.path.join(OUT, '*', '*.mp3')))
-    print(f'{len(glob.glob(os.path.join(OUT, "*", "*.mp3")))} files, {total / 1e6:.2f} MB in public/assets/audio')
+        # The silence before and after the line goes, the last 30 ms and the first 8 ms fade (the line is turned round for its
+        # end and turned back), and the whole line gets one gain, with a limiter for the lines whose peaks stand far above their voice.
+        chain = f'{trim},areverse,{trim},afade=t=in:d=0.03,areverse,afade=t=in:d=0.008'
+        ffmpeg('-i', src, '-af', levelled(src, chain, -16, squeeze=5), '-ar', '32000', '-ac', '1', '-c:a', 'libmp3lame', '-b:a', '64k', os.path.join(OUT, 'voice', f'{name}.mp3'))
+    written = sorted(glob.glob(os.path.join(OUT, '*', '*.mp3')))
+    # Every file must sound through its length: a line that is silent after its first syllable has the right size and duration.
+    quiet = []
+    for path in written:
+        share, until, length = sounding(path)
+        if share < 0.55 or until < length - 0.35:
+            quiet.append(f'{os.path.relpath(path, OUT)}: sounds in {share:.0%} of its {length:.2f} s, last at {until:.2f} s')
+    if quiet:
+        sys.exit('These files do not sound through their length:\n  ' + '\n  '.join(quiet))
+    total = sum(os.path.getsize(f) for f in written)
+    print(f'{len(written)} files, {total / 1e6:.2f} MB in public/assets/audio; every one sounds through its length')
 
 
 if __name__ == '__main__':
