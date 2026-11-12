@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { attackPreview, cardNote, coveredCards, diceWords, energyNote, energySources } from '../src/campaign/combat-readiness';
+import { attackPreview, cardNote, coveredCards, diceWords, energyNote, energySources, healthNote } from '../src/campaign/combat-readiness';
 import { undoable } from '../src/campaign/undo';
 import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
 import { beginBattle } from '../src/rules/combat';
@@ -119,6 +119,25 @@ describe('where the energy comes from', () => {
   expect(hero(apply(p, s, { type: 'attacker', hero: WARRIOR }), WARRIOR).energy).toBe(1);
   expect(cardNote(p, v, WARRIOR, STRIKE)).toEqual({ tone: 'wait', text: 'Needs 2 energy · Grumbaz will have 1' });
   expect(energyNote(p, v, WARRIOR, 1)).toBe('Charge lies under Laminated Recurve Bow and gives no energy');
+ });
+});
+
+describe('health gained above capacity', () => {
+ it('says nothing at or below capacity, and that the excess lasts until the combat ends', () => {
+  const s = apply(p, fight(), { type: 'attacker', hero: WARRIOR }), cap = capacity(p, hero(s, WARRIOR)).health;
+  expect(healthNote(p, view(s), WARRIOR, cap)).toBe('');
+  hero(s, WARRIOR).health = cap + 2;
+  expect(healthNote(p, view(s), WARRIOR, cap)).toBe('2 above capacity is lost when combat ends');
+ });
+ it('says Sacrifice takes its Health back at the end of the round', () => {
+  const WARLOCK = 'leeam-sagewind';
+  const s = createGame(p, { ...DEFAULT_SETUP, roster: [WARRIOR, WARLOCK, 'zowka-shattertusk', 'brandon-lightstone', 'burbon-fang', 'artumnis-moondream'] });
+  const h = hero(s, WARLOCK); h.level = 4; h.talents = ['warlock-sacrifice'];
+  s.enemies = [{ id: 'enemy', creature: 'murloc', color: 'green', region: 'brill' }];
+  beginBattle(s, 'pve', [WARLOCK], ['enemy'], 'horde', 'brill');
+  const cap = capacity(p, h).health;
+  h.health = cap + 4; s.battle!.current[WARLOCK] = { cards: ['warlock-sacrifice:after-reroll', 'warlock-sacrifice'], harmed: false };
+  expect(healthNote(p, view(s), WARLOCK, cap)).toBe('4 above capacity is lost at the end of this round');
  });
 });
 

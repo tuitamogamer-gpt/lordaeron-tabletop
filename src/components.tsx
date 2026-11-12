@@ -45,9 +45,10 @@ export function Modal({title,children,onClose,wide=false,className=''}:{title:st
  * Health and energy as on the printed character sheet: one token for each point the character has, and an empty place for each one
  * missing up to capacity. The number stays beside it for exact reading and for screen readers; the tokens are decoration.
  */
+/** Tokens above capacity were gained, not regained (rules p. 13): they are marked, because they leave when the combat ends. */
 export function ResourceBar({type,value,max}:{type:'health'|'energy';value:number;max:number}){
- const places=Math.max(max,value,0),printed=SCANS.tokens[type];
- return <div className={`resource ${type}`}><div className="resource-heading"><span><GameIcon name={type} size={24}/>{type==='health'?"Health":"Energy"}</span><b>{value}<small> / {max}</small></b></div>
-  <div className={`resource-tokens ${places>12?'many':''}`} aria-hidden="true">{Array.from({length:places},(_,i)=><i key={i} className={i<value?'held':'spent'}>{i<value&&printed&&<img src={printed} alt="" width={40} height={40} draggable={false}/>}</i>)}</div>
+ const places=Math.max(max,value,0),printed=SCANS.tokens[type],over=Math.max(0,value-max);
+ return <div className={`resource ${type} ${over?'above-capacity':''}`}><div className="resource-heading"><span><GameIcon name={type} size={24}/>{type==='health'?"Health":"Energy"}</span><b>{value}<small> / {max}</small>{over>0&&<em className="resource-over" title={`${over} above capacity: gained, and lost when the combat ends`}>+{over}</em>}</b></div>
+  <div className={`resource-tokens ${places>12?'many':''}`} aria-hidden="true">{Array.from({length:places},(_,i)=><i key={i} className={`${i<value?'held':'spent'}${i>=max?' over':''}`}>{i<value&&printed&&<img src={printed} alt="" width={40} height={40} draggable={false}/>}</i>)}</div>
  </div>;
 }

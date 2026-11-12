@@ -35,6 +35,20 @@ describe('health and energy as tokens', () => {
   expect([t.held, t.spent]).toEqual([9, 0]);
  });
 
+ it('marks the tokens gained above capacity and says how many they are', () => {
+  const { container } = render(<ResourceBar type="energy" value={3} max={1} />);
+  expect(container.querySelectorAll('.resource-tokens > i.held.over')).toHaveLength(2);
+  expect(container.querySelectorAll('.resource-tokens > i.held:not(.over)')).toHaveLength(1);
+  const chip = container.querySelector('.resource-over')!;
+  expect(chip.textContent).toBe('+2');
+  expect(chip.getAttribute('title')).toBe('2 above capacity: gained, and lost when the combat ends');
+  expect(container.querySelector('.resource')!.className).toContain('above-capacity');
+ });
+ it('marks nothing at or below capacity', () => {
+  const { container } = render(<ResourceBar type="health" value={4} max={4} />);
+  expect(container.querySelector('.over, .resource-over, .above-capacity')).toBeNull();
+ });
+
  it('uses smaller tokens once there are more than twelve places', () => {
   const twelve = tokens(render(<ResourceBar type="health" value={12} max={12} />).container), fourteen = tokens(render(<ResourceBar type="health" value={12} max={14} />).container);
   expect(twelve.row.classList.contains('many')).toBe(false);

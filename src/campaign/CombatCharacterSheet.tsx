@@ -7,7 +7,7 @@ import { heroSlots } from '../rules/inventory';
 import type { Command } from '../rules/model';
 import type { GameView } from '../rules/view';
 import CombatAbilities, { type AbilityCommand } from './CombatAbilities';
-import { attackPreview, cardNote, energyNote } from './combat-readiness';
+import { attackPreview, cardNote, energyNote, healthNote } from './combat-readiness';
 import { CardThumbnail, ConditionToken, HeroPortrait } from './parts';
 import { effectText } from './rules-text';
 import RulesText from './RulesText';
@@ -58,7 +58,7 @@ export default function CombatCharacterSheet({ state, skills, dice, send, busy, 
   return hero ? availableCards(p, hero).flatMap(cardId => card(p, cardId).abilities.filter(a => !a.automatic && !a.judgement && used.includes(`${cardId}:${a.id}`)).map(a => ({ hero: id, card: cardId, ability: a }))) : [];
  });
  const soon = b.stage === 'attacker' ? b.participants.filter(id => !bots.includes(id)).flatMap(id => (attackPreview(p, state, id)?.powers ?? []).map(cardId => `${card(p, cardId).name} once ${first(id)} attacks`)) : [];
- const note = energyNote(p, state, h.id, cap.energy), many = heroIds.length > 1;
+ const note = energyNote(p, state, h.id, cap.energy), gained = healthNote(p, state, h.id, cap.health), many = heroIds.length > 1;
  const [open, setOpen] = useState(false);
  return <article className={`combat-character-sheet ${d.faction} ${open ? 'sheet-open' : ''}`} aria-label={`${d.name} character sheet`}>
   {/* A phone shows this one line and keeps the rest of the sheet folded until asked for. */}
@@ -81,6 +81,7 @@ export default function CombatCharacterSheet({ state, skills, dice, send, busy, 
   </div>
   <div className="combat-play-dock">
    {b.stage !== 'over' && <section className="combat-hand" aria-label="Powers to use now">
+    {gained && <p className="combat-energy-line health" aria-label={`${first(h.id)} health`}><Icon name="heart" size={13} /><b>{first(h.id)} · health {h.health}<small> / {cap.health}</small></b><span>{gained}</span></p>}
     <p className="combat-energy-line" aria-label={`${first(h.id)} energy`}><Icon name="bolt" size={13} /><b>{first(h.id)} · energy {h.energy}<small> / {cap.energy}</small></b>{note && <span>{note}</span>}</p>
     {hand.map(({ key, commands }) => <CombatAbilities key={`${b.round}:${b.stage}:${key}`} commands={commands} state={state} dice={dice} send={send} busy={busy} owner={many} />)}
     {!hand.length && !played.length && <p className="combat-no-powers">{soon.length ? `No power to use yet. Ready: ${soon.join(', ')}.` : 'No power to use at this step.'}</p>}

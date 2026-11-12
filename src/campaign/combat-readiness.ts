@@ -126,6 +126,17 @@ export function cardNote(p: ContentPack, view: GameView, heroId: string, cardId:
  return { tone: 'wait', text: 'Nothing for it to do at this step' };
 }
 
+/**
+ * Health above capacity was gained (Power Word: Fortitude, Sacrifice): say when it goes. Sacrifice takes its excess back at the end
+ * of the round it was used in; everything else lasts until the combat ends.
+ */
+export function healthNote(p: ContentPack, view: GameView, heroId: string, capacity: number): string {
+ const b = view.battle, h = view.heroes.find(h => h.id === heroId);
+ if (!b || !h || b.stage === 'over' || h.health <= capacity) return '';
+ const used = b.current[heroId]?.cards ?? [];
+ const thisRound = availableCards(p, h).some(id => used.includes(id) && card(p, id).abilities.some(a => a.automatic && a.timing === 'round-end' && a.effects.some(e => e.op === 'clamp' && e.resource === 'health')));
+ return `${h.health - capacity} above capacity is lost ${thisRound ? 'at the end of this round' : 'when combat ends'}`;
+}
 /** One sentence under the energy tokens: where this round's energy came from, or where it will come from. */
 export function energyNote(p: ContentPack, view: GameView, heroId: string, capacity: number): string {
  const b = view.battle, h = view.heroes.find(h => h.id === heroId);
