@@ -15,14 +15,16 @@ import { ExperienceTrack, TurnTrack } from './BoardTracks';
 import { SCANS } from './scan-assets';
 import { bossRuleText, eventText } from './event-text';
 
-type Props = { focused: boolean; onToggleFocus: () => void; state: GameView; selected: string; heroId: string; legal: Command[]; onSelect: (id: string) => void; onMove: (c: Command) => void; selectedQuest?: string; onQuest?: (id: string, region: string) => void; onInspectQuest?: (id: string) => void; onHero?: (id: string) => void; controlled?: string[]; };
+/** Where the step being announced happened (campaign/stage.ts): the region, and for a journey where it began and the regions it passed. */
+export type Spotlight = { region?: string; from?: string; path?: string[] };
+type Props = { spotlight?: Spotlight; focused: boolean; onToggleFocus: () => void; state: GameView; selected: string; heroId: string; legal: Command[]; onSelect: (id: string) => void; onMove: (c: Command) => void; selectedQuest?: string; onQuest?: (id: string, region: string) => void; onInspectQuest?: (id: string) => void; onHero?: (id: string) => void; controlled?: string[]; };
 const ratio = board.width / board.height;
 const centers = Object.fromEntries(BOARD_SHAPES.map(s => [s.id, s.center]));
 const points = (id: string) => BOARD_SHAPE_BY_ID[id].points.map(p => p.join(',')).join(' ');
 const regionById = Object.fromEntries(p.regions.map(r => [r.id,r]));
 const colorLabel: Record<Color,string> = { green: "green", red: "red", blue: "blue" };
 
-export default function CampaignMap({ state, selected, heroId, legal, onSelect, onMove, focused, onToggleFocus, selectedQuest, onQuest, onInspectQuest, onHero, controlled }: Props) {
+export default function CampaignMap({ state, selected, heroId, legal, onSelect, onMove, focused, onToggleFocus, selectedQuest, onQuest, onInspectQuest, onHero, controlled, spotlight }: Props) {
  const [camera,setCamera]=useState(OVERVIEW_CAMERA),[dragging,setDragging]=useState(false),[routeIndex,setRouteIndex]=useState(0),[showLabels,setShowLabels]=useState(true),[showRules,setShowRules]=useState(false),[strongBorders,setStrongBorders]=useState(false),[showDetails,setShowDetails]=useState(false);
  const [tokenHelp,setTokenHelp]=useState<(TokenHelp&{x:number;y:number;below:boolean})|null>(null);
  const canvas=useRef<HTMLDivElement>(null),entryButton=useRef<HTMLButtonElement>(null),tooltip=useRef<HTMLDivElement>(null);
@@ -144,6 +146,11 @@ export default function CampaignMap({ state, selected, heroId, legal, onSelect, 
       {can&&<g className="step-counter" transform={`translate(${x-28},${y-18})`} pointerEvents="none"><circle r="8"/><text y="3" textAnchor="middle">{reachable.get(r.id)}</text></g>}
      </g>;
     })}</g>
+    {spotlight?.region&&centers[spotlight.region]&&<g className="map-spotlight" key={`${spotlight.from}:${spotlight.path?.join()}:${spotlight.region}`} pointerEvents="none">
+     {spotlight.from&&spotlight.path?.map((id,i,all)=>{const from=i?all[i-1]:spotlight.from!;if(!centers[from]||!centers[id])return null;const[ax,ay]=centers[from],[bx,by]=centers[id];return <path key={i} className="spotlight-route" d={flight(from,id)?`M${ax},${ay} Q${(ax+bx)/2},${Math.min(ay,by)-100} ${bx},${by}`:`M${walkingLine(from,id).map(v=>v.join(',')).join(' L')}`}/>;})}
+     <polygon className="spotlight-field" points={points(spotlight.region)}/>
+     <circle className="spotlight-ring" cx={centers[spotlight.region][0]} cy={centers[spotlight.region][1]} r="30"/>
+    </g>}
     {move&&<g className="map-route" pointerEvents="none">{move.path.map((id,i)=>{
      const from=allRoute[i],[ax,ay]=centers[from],[bx,by]=centers[id],air=flight(from,id),line=air?`M${ax},${ay} Q${(ax+bx)/2},${Math.min(ay,by)-100} ${bx},${by}`:`M${walkingLine(from,id).map(p=>p.join(',')).join(' L')}`;
      return <g key={i}><path d={line} className={air?'flight-route':'walking-route'}/><circle cx={bx} cy={by-25} r="12"/><text x={bx} y={by-21} textAnchor="middle">{i+1}</text></g>;

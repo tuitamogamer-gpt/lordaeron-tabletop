@@ -10,6 +10,7 @@ import { CardThumbnail } from './parts';
 import { eventText, regionName } from './event-text';
 import { QuestDecks } from './QuestLedger';
 import { questLabel } from './map-state';
+import { rasterFace } from './RasterCard';
 import RewardResolution from './RewardResolution';
 const choicesTypes=['talent','reward','quest','skip-quest','event-choice','respawn','claim-relic'];
 function Retrain({hero,send}:{hero:Hero;send:(c:Command)=>void}){
@@ -29,6 +30,7 @@ function QuestSwapChoices({state,swaps,skip,send}:{state:GameView;swaps:QuestSwa
   {skip&&<button className="quiet-button quest-swap-skip" onClick={()=>send(skip)}>Keep every quest</button>}
  </div>;
 }
+const faceOf=(id:string)=>{try{return rasterFace(id);}catch{return undefined;}};
 export default function WorldDecision({state,legal,send,inspect,botStep,botReady,auto,toggleBots}:{state:GameView;legal:Command[];send:(c:Command)=>void;inspect:(id:string)=>void;botStep:()=>void;botReady:boolean;auto:boolean;toggleBots:()=>void}){
  const [query,setQuery]=useState(''),[page,setPage]=useState(0);
  useEffect(()=>{setQuery('');setPage(0);},[state.revision]);
@@ -45,8 +47,10 @@ export default function WorldDecision({state,legal,send,inspect,botStep,botReady
  const options=talents.length?talents:filtered;
  const swaps=choices.filter((c):c is QuestSwap=>c.type==='event-choice'&&!!c.choice.quest&&!!c.choice.tier),skipSwap=choices.find(c=>c.type==='event-choice'&&c.choice.mode==='skip');
  const groupedSwaps=swaps.length>0&&swaps.length+(skipSwap?1:0)===choices.length;
+ // The Event card that asks for this decision lies beside it, as it would on the table.
+ const eventFace=event&&!pendingTalent&&!state.respawns.length&&!state.reward?faceOf(event.id):undefined;
  const pageSize=pendingTalent?6:12,currentPage=Math.min(page,Math.max(0,Math.ceil(options.length/pageSize)-1));
- return <div className="decision-overlay"><section className={`world-decision compact-decision ${pendingTalent?'talent-decision':''}`} style={pendingTalent?{'--talent-count':Math.min(6,Math.max(3,talents.length))} as CSSProperties:undefined} role="dialog" aria-modal="true" aria-label={title}><span className="eyebrow">{step?character(p,step.hero).name:learner?`${character(p,learner.id).name} · level ${learner.level}`:"PARTY DECISION"}</span><h2>{title}</h2><p>{pendingTalent?`${learner?`${character(p,learner.id).name.split(' ')[0]} reached level ${learner.talentChoices[0]}: choose`:'Choose'} one permanent talent. Hover or focus a card to read its full rules.`:state.respawns.length?`${choices.some(c=>c.type==='ability')?"A healing potion can still save this character. Otherwise choose your starting region or an available graveyard.":"Choose your starting region or an available graveyard."}${event?` ${event.name}: ${eventText(event)}`:''}`:event?eventText(event):state.auction?"Bids remain hidden until the auction ends.":"Choose a reward, recipient or the next quest’s difficulty."}</p>
+ return <div className="decision-overlay"><section className={`world-decision compact-decision ${pendingTalent?'talent-decision':''}`} style={pendingTalent?{'--talent-count':Math.min(6,Math.max(3,talents.length))} as CSSProperties:undefined} role="dialog" aria-modal="true" aria-label={title}>{eventFace&&<img className="decision-event-card" src={eventFace.src} width={eventFace.width} height={eventFace.height} alt={`${event!.name} event card`} draggable={false}/>}<span className="eyebrow">{step?character(p,step.hero).name:learner?`${character(p,learner.id).name} · level ${learner.level}`:"PARTY DECISION"}</span><h2>{title}</h2><p>{pendingTalent?`${learner?`${character(p,learner.id).name.split(' ')[0]} reached level ${learner.talentChoices[0]}: choose`:'Choose'} one permanent talent. Hover or focus a card to read its full rules.`:state.respawns.length?`${choices.some(c=>c.type==='ability')?"A healing potion can still save this character. Otherwise choose your starting region or an available graveyard.":"Choose your starting region or an available graveyard."}${event?` ${event.name}: ${eventText(event)}`:''}`:event?eventText(event):state.auction?"Bids remain hidden until the auction ends.":"Choose a reward, recipient or the next quest’s difficulty."}</p>
  {state.reward&&!pendingTalent&&<RewardResolution state={state} legal={legal} send={send} inspect={inspect}/>}
  {state.auction&&<div className="auction-house"><CardThumbnail card={card(p,state.auction.item)} onClick={()=>inspect(state.auction!.item)} footer="Up for auction"/><AuctionChoices heroes={state.heroes.filter(h=>legal.some(c=>c.type==='bid'&&c.hero===h.id))} submitted={state.auction.submitted} busy={false} send={send}/></div>}
  {step?.kind==='retrain'&&legal.some(c=>c.type==='event-choice'&&c.hero===step.hero)&&<Retrain key={`${step.hero}-${state.revision}`} hero={state.heroes.find(h=>h.id===step.hero)!} send={send}/>}

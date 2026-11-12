@@ -6,6 +6,8 @@ import { Icon } from '../components';
 import { faction } from '../rules/common';
 import type { ContentPack } from '../rules/model';
 import type { GameView } from '../rules/view';
+import { STAGED_VOICES, type Stinger } from './stage';
+import { STINGERS } from './stingers';
 
 export type Sfx = 'dice' | 'sword' | 'card' | 'coins' | 'levelup' | 'victory';
 export type Voice = 'horde' | 'alliance' | 'turn-horde' | 'turn-alliance' | 'quest' | 'level' | 'victory-horde' | 'victory-alliance' | 'draw' | 'event'
@@ -176,6 +178,15 @@ export class AudioDirector {
   source.buffer = buffer; source.connect(this.buses[kind]); source.start();
  }
 
+ /** A short sound made on the spot for a step that has no recording (stingers.ts); not repeated within a quarter of a second. */
+ stinger(name: Stinger) {
+  if (!this.ready() || !this.ctx || !this.buses) return;
+  const now = performance.now(), key = `stinger:${name}`;
+  if ((this.recent.get(key) ?? -1e9) > now - 250) return;
+  this.recent.set(key, now);
+  try { STINGERS[name](this.ctx, this.buses.sfx, this.ctx.currentTime + 0.01); } catch { /* a browser without these nodes stays silent */ }
+ }
+
  /**
   * Keeps the scene's music on its schedule: a phrase of a few cycles of one theme, a fade, a rest, the next theme. The other scene's
   * music fades out and starts its rest. A battle's music begins with the battle, and a boss fight opens with the boss theme; the
@@ -235,8 +246,12 @@ export class AudioDirector {
 
 export const audio = new AudioDirector();
 
-/** The map's themes on the table, the battle themes in combat, the boss theme against the Overlord, and the cues of each change of the game state. */
-export function useGameAudio(p: ContentPack, state: GameView | undefined) {
+/**
+ * The map's themes on the table, the battle themes in combat, the boss theme against the Overlord, and the cues of each change of
+ * the game state. With `staged`, the cues that belong to a step the stage announces (an Event card, a new quest, the next turn…)
+ * are left to the stage, which plays them when that step is shown.
+ */
+export function useGameAudio(p: ContentPack, state: GameView | undefined, staged = false) {
  const previous = useRef<GameView | undefined>(undefined);
  useEffect(() => {
   const unlock = () => audio.unlock(), visibility = () => audio.suspend(document.hidden);
@@ -246,12 +261,14 @@ export function useGameAudio(p: ContentPack, state: GameView | undefined) {
  }, []);
  useEffect(() => {
   if (!state) { audio.silence(); previous.current = undefined; return; }
-  const { sfx, voice } = pick(cues(p, previous.current, state));
+  // Inside a combat the stage is silent, so the combat's own changes keep all their cues.
+  const within = previous.current?.phase === 'combat' && state.phase === 'combat';
+  const { sfx, voice } = pick(cues(p, previous.current, state).filter(cue => !staged || within || !cue.voice || !STAGED_VOICES.includes(cue.voice)));
   previous.current = state;
   if (sfx) void audio.play('sfx', sfx);
   if (voice) void audio.play('voice', voice);
   void audio.music(scene(state));
- }, [p, state]);
+ }, [p, state, staged]);
 }
 
 export function useSoundSettings() { return useSyncExternalStore(audio.subscribe, audio.snapshot, audio.snapshot); }
