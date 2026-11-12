@@ -131,7 +131,7 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
  const canReroll = selectedDice.length > 0 && selectedDice.length <= (a?.reroll ?? 0) && selectedDice.every(rerollable);
  const penaltyCount = a ? Math.min(a.dice.filter(d => !d.removed).length, (state.heroes.find(h => h.id === a.heroId)?.stun ?? 0) * 2 + (state.heroes.find(h => h.id === a.heroId)?.curse ?? 0)) : 0;
  const step = combatStep(b.stage, b.afterWounds), actingBot = !!a && bots.includes(a.heroId);
- const stateText = busy ? 'Rolling D8s…' : presentation?.busy ? 'Battle in motion…' : autoStep ? 'Continuing automatically…' : botResponsePending?'Your reaction before the bot continues':automationPending ? 'AI is playing…' : b.stage === 'over' ? 'Result ready' : legal.length ? 'Your decision · waiting for you' : 'Waiting for another character';
+ const stateText = busy ? 'Rolling D8s…' : presentation?.busy ? 'Battle in motion…' : autoStep ? 'Continuing automatically…' : botResponsePending?'Your reaction before the bot continues':b.stage === 'over' ? automationPending ? 'Result ready · closes by itself' : 'Result ready' : automationPending ? 'AI is playing…' : legal.length ? 'Your decision · waiting for you' : 'Waiting for another character';
  const activeHero=state.heroes.find(h=>h.id===a?.heroId),pool=a&&activeHero?combatPool(p,activeHero,a,omit):undefined;
  const rollCommand:Command|undefined=roll&&pool?Object.values(pool.omit).some(Boolean)?{type:'roll',omit:pool.omit}:{type:'roll'}:undefined;
  const powerCount=new Set(skills.map(c=>`${c.hero}:${c.card}`)).size;

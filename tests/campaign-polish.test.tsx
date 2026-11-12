@@ -2,6 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import Campaign from '../src/Campaign';
+import { UNDO_GRACE_MS } from '../src/campaign/bot-turns';
 import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
 import { newSession } from '../src/rules/session';
 
@@ -123,7 +124,10 @@ describe('Campaign panel polish', () => {
   await act(async () => { vi.advanceTimersByTime(600); });
   fireEvent.click(screen.getByRole('button', { name: /^Rest.*Recover health/ }));
   fireEvent.click(screen.getByRole('button', { name: 'Rest · 1 action' }));
+  // The player's action can still be taken back: the bots leave him that moment before they plan again.
   await act(async () => { vi.advanceTimersByTime(600); });
+  expect(planner.plan).toHaveBeenCalledTimes(1);
+  await act(async () => { vi.advanceTimersByTime(UNDO_GRACE_MS); });
   expect(planner.plan).toHaveBeenCalledTimes(2);
   await act(async () => { finish[0](); });
   expect(JSON.parse(localStorage.getItem('lordaeron-base-save-v7')!).commands).toEqual([{ type: 'rest', hero: DEFAULT_SETUP.roster[0], health: 0 }]);
