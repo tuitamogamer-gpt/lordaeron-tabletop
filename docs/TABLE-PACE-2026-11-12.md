@@ -42,6 +42,7 @@ Dok ima koraka za prikaz, botovi ne igraju dalje, prozor borbe se ne otvara, a p
 - Klik, razmaknica ili Enter: sljedeći korak.
 - Escape ili **Skip all**: preskače sve što čeka.
 - Miš zadržan na karti drži je otvorenom dok se čita; vrijeme teče ponovo kad miš ode.
+- **Naknadno, istog dana:** karta se više ne zadržava mišem nego dugmetom **Hold** na njoj, dodat je tempo **Step by step** u kojem svaka najava čeka klik, a botovi igraju sami bez „Run AI”: [BOT-TURNS-2026-11-12.md](BOT-TURNS-2026-11-12.md).
 - Najkraće trajanje koraka je 0,7 s, kojim god tempom.
 
 Karta događaja sada leži i pored odluke koju traži, pa se ne mora pamtiti šta je na njoj pisalo.
