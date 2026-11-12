@@ -72,7 +72,42 @@ describe('what the stage announces', () => {
   expect(beat).toMatchObject({ kind: 'rest', title: 'Sofeea rests', cue: { stinger: 'heal' } });
   expect(beat.lines[0]).toBe([`+${hero(rested, MAGE).health - 1} health`, `+${hero(rested, MAGE).energy} energy`].filter(text => !text.startsWith('+0')).join(' · '));
   const train = legalActions(p, s).find((c): c is Extract<Command, { type: 'train' }> => c.type === 'train' && c.hero === WARRIOR && c.cards.length === 1 && c.cards[0] === 'warrior-heroic-strike')!;
-  expect(beats(p, s, apply(p, s, train), train, true)[0]).toMatchObject({ kind: 'train', title: 'Grumbaz trains', lines: ['Learns Heroic Strike for 3 gold.'], cue: { stinger: 'page', voice: 'train' } });
+  // What was learned is shown as the card itself, in the middle of the table.
+  expect(beats(p, s, apply(p, s, train), train, true)[0]).toMatchObject({ kind: 'train', size: 'card', art: { kind: 'card', id: 'warrior-heroic-strike' }, title: 'Grumbaz trains', lines: ['Learns Heroic Strike for 3 gold.'], cue: { stinger: 'page', voice: 'train' } });
+ });
+ it('shows what a bot takes as the card itself: a quest reward with what else was offered, a talent, a purchase', () => {
+  const s = createGame(p, DEFAULT_SETUP), items = p.cards.filter(c => c.kind === 'item' && !c.printed), [taken, left, dropped] = items;
+  // A quest reward: two cards lie face up, the mage takes one and makes room for it.
+  const offered = { ...s, phase: 'reward' as const, reward: { faction: 'horde' as const, eligible: [MAGE], items: [], special: [], offered: [taken.id, left.id], replacement: true } };
+  const claim: Command = { type: 'reward', hero: MAGE, card: taken.id, discard: dropped.id }, claimed = { ...structuredClone(offered), revision: s.revision + 1 };
+  const [reward] = beats(p, offered, claimed, claim, true);
+  expect(reward).toMatchObject({ kind: 'loot', size: 'card', eyebrow: 'Horde · Quest reward', title: `Sofeea takes ${taken.name}`, art: { kind: 'card', id: taken.id }, cue: { stinger: 'page' } });
+  expect(reward.lines.slice(1)).toEqual([`Also offered: ${left.name}, returned to its deck.`, `${dropped.name} is discarded to make room in the bag.`]);
+  expect(reward.hold).toBeGreaterThanOrEqual(4000);
+  // The only card offered: nothing else to mention.
+  expect(beats(p, { ...offered, reward: { ...offered.reward, offered: [taken.id] } }, claimed, { type: 'reward', hero: MAGE, card: taken.id }, true)[0].lines).toHaveLength(1);
+  // The player's own claim is not announced back to him.
+  expect(beats(p, offered, claimed, claim, false)).toEqual([]);
+  // A talent.
+  const talent = p.cards.find(c => c.kind === 'talent' && c.classId === 'mage')!, learned = { ...structuredClone(s), revision: s.revision + 1 };
+  expect(beats(p, s, learned, { type: 'talent', hero: MAGE, card: talent.id }, true)[0]).toMatchObject({ kind: 'talent', size: 'card', title: `Sofeea learns ${talent.name}`, art: { kind: 'card', id: talent.id }, lines: [`level ${talent.level} talent, kept for the rest of the campaign.`] });
+  // A purchase in town shows the card bought; a visit that only sells or recovers stays a banner.
+  const bought: Command = { type: 'town', hero: MAGE, health: 0, operations: [{ op: 'sell', card: dropped.id }, { op: 'buy', card: taken.id }] };
+  expect(beats(p, s, learned, bought, true)[0]).toMatchObject({ kind: 'town', size: 'card', art: { kind: 'card', id: taken.id }, lines: [`sells ${dropped.name} · buys ${taken.name}`] });
+  expect(beats(p, s, learned, { type: 'town', hero: MAGE, health: 0, operations: [{ op: 'sell', card: dropped.id }] }, true)[0]).toMatchObject({ kind: 'town', size: 'banner', art: { kind: 'hero', id: MAGE } });
+ });
+ it('announces the spoils a bot takes from a defeated character, and who won an auction', () => {
+  const s = createGame(p, DEFAULT_SETUP), item = p.cards.find(c => c.kind === 'item' && !c.printed)!;
+  // Inside a combat nothing else is announced here: the combat window shows the rest.
+  const fought = { ...s, phase: 'combat' as const }, after = { ...structuredClone(fought), revision: s.revision + 1 };
+  const loot: Command = { type: 'loot', hero: MAGE, from: 'brandon-lightstone', card: item.id };
+  expect(beats(p, fought, after, loot, true)).toMatchObject([{ kind: 'loot', size: 'card', eyebrow: 'Horde · Spoils of the battle', title: `Sofeea takes ${item.name} from Brandon`, art: { kind: 'card', id: item.id } }]);
+  expect(beats(p, fought, after, loot, false)).toEqual([]);
+  expect(beats(p, fought, after, { type: 'attacker', hero: MAGE }, true)).toEqual([]);
+  // The bids were sealed: the result is news to everyone, the player included.
+  const bidding = { ...s, auction: { item: item.id } }, sold = { ...structuredClone(s), revision: s.revision + 1 };
+  sold.log.push({ id: (s.log.at(-1)?.id ?? 0) + 1, turn: s.turn, text: `Sofeea Icecall wins the auction for ${item.name} with 7 gold.` });
+  expect(beats(p, bidding, sold, { type: 'bid', hero: WARRIOR, amount: 2 }, false)).toMatchObject([{ kind: 'loot', size: 'card', eyebrow: 'Auction house', title: `Sofeea wins ${item.name}`, lines: ['For 7 gold. The other bidders pay nothing.'], art: { kind: 'card', id: item.id } }]);
  });
  it('announces a bot’s challenge before the combat opens, and nothing while the combat runs', () => {
   let s = createGame(p, DEFAULT_SETUP);
@@ -93,6 +128,17 @@ describe('what the stage announces', () => {
   expect(list[1]).toMatchObject({ title: 'Grumbaz reaches level 2', cue: { sfx: 'levelup', voice: 'level' } });
   expect(list[2]).toMatchObject({ size: 'card', title: fresh.name, eyebrow: 'New Horde quest · green', cue: { sfx: 'card', voice: 'new-quest' } });
   expect(list[2].lines[1]).toMatch(/^Creatures appear in /);
+ });
+ it('says what a bot answers to an Event card that asks each character in turn', () => {
+  // Professions and Crafts: skip, take gold, or recover.
+  const { after } = untilEvent(7), asked = after.eventFlow!.steps[0].hero, name = p.characters.find(c => c.id === asked)!.name.split(' ')[0];
+  const gold: Command = { type: 'event-choice', hero: asked, choice: { mode: 'gold' } }, paid = apply(p, after, gold), gained = hero(paid, asked).gold - hero(after, asked).gold;
+  expect(gained).toBeGreaterThan(0);
+  expect(beats(p, after, paid, gold, true)[0]).toMatchObject({ kind: 'choice', size: 'banner', eyebrow: 'Alliance · Professions and Crafts', title: `${name} takes the gold`, lines: [`+${gained} gold`], art: { kind: 'hero', id: asked } });
+  const skip: Command = { type: 'event-choice', hero: asked, choice: { mode: 'skip' } };
+  expect(beats(p, after, apply(p, after, skip), skip, true)[0]).toMatchObject({ kind: 'choice', title: `${name} declines`, lines: [] });
+  // The player's own answer is not announced back to him.
+  expect(beats(p, after, paid, gold, false).filter(b => b.kind === 'choice')).toEqual([]);
  });
  it('stays silent for a change that is not a step forward', () => {
   const s = createGame(p, DEFAULT_SETUP), c: Command = { type: 'travel', hero: MAGE, path: [] }, next = apply(p, s, c);

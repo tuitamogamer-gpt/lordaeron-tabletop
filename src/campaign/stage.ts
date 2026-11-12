@@ -1,9 +1,9 @@
 import { capacity, card, character, faction } from '../rules/common';
-import type { Command, ContentPack, Faction } from '../rules/model';
+import type { Card, Command, ContentPack, Faction } from '../rules/model';
 import type { GameView } from '../rules/view';
 
 /** What the stage reads of a game: public fields only, so the engine's state and a player's view both fit. */
-export type StageView = Pick<GameView, 'pack' | 'revision' | 'phase' | 'faction' | 'turn' | 'lap' | 'variants' | 'winner' | 'heroes' | 'enemies' | 'log' | 'completed' | 'quests' | 'eventDiscard' | 'overlord' | 'wars' | 'merchant'> & { eventFlow?: { steps: unknown[] }; auction?: unknown };
+export type StageView = Pick<GameView, 'pack' | 'revision' | 'phase' | 'faction' | 'turn' | 'lap' | 'variants' | 'winner' | 'heroes' | 'enemies' | 'log' | 'completed' | 'quests' | 'eventDiscard' | 'overlord' | 'wars' | 'merchant'> & { eventFlow?: { event?: string; steps: unknown[] }; auction?: { item?: string }; reward?: { offered: string[] } };
 import { eventVoice, taunt, warWinner, type Cue, type Voice } from './audio';
 import { eventText, regionName, rewardText } from './event-text';
 import { foeName } from './hints';
@@ -19,7 +19,7 @@ export type BeatArt = { kind: 'event' | 'quest' | 'hero' | 'overlord' | 'faction
  */
 export interface Beat {
  id: string;
- kind: 'event' | 'war' | 'new-quest' | 'quest-done' | 'level' | 'fallen' | 'overlord' | 'turn' | 'travel' | 'pass' | 'rest' | 'train' | 'town' | 'challenge' | 'power' | 'talent' | 'loot' | 'merchant';
+ kind: 'event' | 'war' | 'new-quest' | 'quest-done' | 'level' | 'fallen' | 'overlord' | 'turn' | 'travel' | 'pass' | 'rest' | 'train' | 'town' | 'challenge' | 'power' | 'talent' | 'loot' | 'merchant' | 'choice';
  size: 'card' | 'banner';
  eyebrow: string; title: string; lines: string[];
  art?: BeatArt;
@@ -48,6 +48,9 @@ const side = (f: Faction | string) => f === 'horde' ? 'Horde' : 'Alliance';
 const first = (p: ContentPack, id: string) => character(p, id).name.split(' ')[0];
 const listed = (names: string[]) => names.length < 2 ? names.join('') : `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`;
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+/** What kind of card it is, in a few words: "Wand · ranged weapon", "Leather · armor". The printed face beside it has the rest. */
+const ITEM_KINDS: Record<string, string> = { melee: 'melee weapon', ranged: 'ranged weapon', armor: 'armor', bag: 'bag item', general: 'item' };
+const cardKind = (c: Card) => [c.trait, c.kind === 'item' ? ITEM_KINDS[c.type] ?? 'item' : c.kind === 'talent' ? `level ${c.level} talent` : `level ${c.level} power`].filter(Boolean).join(' · ');
 
 /** Whether a journey used a flight path: one of its legs joins two regions that share no border. */
 const flew = (p: ContentPack, from: string, path: string[]) => [from, ...path].some((id, i, all) => i > 0 && !p.regions.find(r => r.id === all[i - 1])?.neighbors.includes(id));
@@ -72,6 +75,8 @@ export function actionCue(p: ContentPack, prev: StageView, next: StageView, c: C
  }
 }
 
+/** A step that is about one card stands in the middle with that card's printed face; without a card it is a banner with the character. */
+const shown = (id: string | undefined, fallback: BeatArt): Pick<Beat, 'size' | 'art'> => id ? { size: 'card', art: { kind: 'card', id } } : { size: 'banner', art: fallback };
 /** What a bot's own action looks like to the people watching. A player's own action needs no announcement: he just did it. */
 function action(p: ContentPack, prev: StageView, next: StageView, c: Command): Omit<Beat, 'id'> | undefined {
  if (!('hero' in c)) return;
@@ -91,11 +96,13 @@ function action(p: ContentPack, prev: StageView, next: StageView, c: Command): O
    return { kind: 'rest', size: 'banner', eyebrow, title: `${name} rests`, art, region: after.location, cue, hold: 1700,
     lines: [[health > 0 ? `+${health} health` : '', energy > 0 ? `+${energy} energy` : '', c.food ? `eats ${card(p, c.food).name}` : ''].filter(Boolean).join(' · ') || 'Nothing to recover.'] };
   }
-  case 'train': return { kind: 'train', size: 'banner', eyebrow, title: `${name} trains`, art, region: after.location, cue, hold: 2000,
+  // What a bot learns or buys is shown as the card itself, so that the people watching can read it.
+  case 'train': return { kind: 'train', ...shown(c.cards[0], art), eyebrow, title: `${name} trains`, region: after.location, cue, hold: c.cards.length ? 3600 : 2000,
    lines: [`Learns ${listed(c.cards.map(id => card(p, id).name))}${before.gold > after.gold ? ` for ${before.gold - after.gold} gold` : ''}.`] };
   case 'town': {
    const done = c.operations.map(o => `${o.op === 'buy' ? 'buys' : o.op === 'sell' ? 'sells' : 'learns'} ${card(p, o.card).name}`), health = after.health - before.health, energy = after.energy - before.energy;
-   return { kind: 'town', size: 'banner', eyebrow, title: `${name} visits the town`, art, region: after.location, cue, hold: 2200,
+   const got = c.operations.find(o => o.op !== 'sell')?.card;
+   return { kind: 'town', ...shown(got, art), eyebrow, title: `${name} visits the town`, region: after.location, cue, hold: got ? 3600 : 2200,
     lines: [[...done, health > 0 ? `recovers ${health} health` : '', energy > 0 ? `recovers ${energy} energy` : ''].filter(Boolean).join(' · ') || 'Looks around and leaves.'] };
   }
   case 'challenge': return { kind: 'challenge', size: 'banner', eyebrow: `${side(faction(p, c.hero))} · Challenge`, art, region: before.location, cue: {}, hold: 2000,
@@ -103,8 +110,24 @@ function action(p: ContentPack, prev: StageView, next: StageView, c: Command): O
   case 'power-action': return { kind: 'power', size: 'banner', eyebrow, title: `${name} uses ${card(p, c.card).name}`, lines: [], art, region: after.location, cue, hold: 1700 };
   case 'portal': return { kind: 'power', size: 'banner', eyebrow, title: `${name} opens a Portal`, lines: [`To ${regionName(after.location)}${c.allies.length ? `, with ${listed(c.allies.map(id => first(p, id)))}` : ''}.`], art, region: after.location, from: before.location, cue, hold: 1900 };
   case 'summon': return { kind: 'power', size: 'banner', eyebrow, title: `${name} summons ${first(p, c.target)}`, lines: [`To ${regionName(after.location)}.`], art, region: after.location, cue, hold: 1900 };
-  case 'talent': return { kind: 'talent', size: 'banner', eyebrow: `${side(faction(p, c.hero))} · New talent`, title: `${name} learns ${card(p, c.card).name}`, lines: [], art: { kind: 'card', id: c.card }, cue, hold: 1800 };
-  case 'reward': return { kind: 'loot', size: 'banner', eyebrow: `${side(faction(p, c.hero))} · Reward`, title: `${name} takes ${card(p, c.card).name}`, lines: [], art: { kind: 'card', id: c.card }, cue, hold: 1700 };
+  case 'talent': return { kind: 'talent', size: 'card', eyebrow: `${side(faction(p, c.hero))} · New talent`, title: `${name} learns ${card(p, c.card).name}`, lines: [`${cardKind(card(p, c.card))}, kept for the rest of the campaign.`], art: { kind: 'card', id: c.card }, cue, hold: 3800 };
+  case 'reward': {
+   // The cards the party could choose from lay face up until this choice: say which were left.
+   const others = (prev.reward?.offered ?? []).filter(id => id !== c.card).map(id => card(p, id).name);
+   return { kind: 'loot', size: 'card', eyebrow: `${side(faction(p, c.hero))} · Quest reward`, title: `${name} takes ${card(p, c.card).name}`, art: { kind: 'card', id: c.card }, cue, hold: 4200,
+    lines: [`${cardKind(card(p, c.card))}.`, ...(others.length ? [`Also offered: ${listed(others)}, returned to ${others.length > 1 ? 'their' : 'its'} deck.`] : []), ...(c.discard ? [`${card(p, c.discard).name} is discarded to make room in the bag.`] : [])] };
+  }
+  case 'event-choice': {
+   // What a bot answers to an Event card that asks each character in turn: in a few words, with what it brought him.
+   const a = c.choice, quest = p.quests.find(q => q.id === a.quest), moved = next.enemies.find(e => e.id === a.enemy), creature = moved && p.creatures.find(v => v.id === moved.creature);
+   const what = a.mode === 'skip' ? 'declines' : a.mode === 'gold' ? 'takes the gold' : a.mode === 'recover' ? 'recovers' : a.mode === 'talents' ? 'replaces talents'
+    : quest ? `replaces ${quest.name} with a ${a.tier} quest` : creature && a.region ? `moves the ${creature.name} to ${regionName(a.region)}` : a.card ? `chooses ${card(p, a.card).name}` : a.region ? `chooses ${regionName(a.region)}` : 'decides';
+   const gains = [[after.gold - before.gold, 'gold'], [after.health - before.health, 'health'], [after.energy - before.energy, 'energy']] as const;
+   return { kind: 'choice', size: 'banner', eyebrow: `${side(faction(p, c.hero))} · ${p.events.find(e => e.id === prev.eventFlow?.event)?.name ?? 'Event'}`, title: `${name} ${what}`, art, region: after.location, cue: {}, hold: 1500,
+    lines: [gains.filter(([n]) => n).map(([n, word]) => `${n > 0 ? '+' : '−'}${Math.abs(n)} ${word}`).join(' · ')].filter(Boolean) };
+  }
+  case 'loot': return { kind: 'loot', size: 'card', eyebrow: `${side(faction(p, c.hero))} · Spoils of the battle`, title: `${name} takes ${card(p, c.card).name} from ${first(p, c.from)}`, art: { kind: 'card', id: c.card }, cue: { stinger: 'equip' }, hold: 3800,
+   lines: [`${cardKind(card(p, c.card))}.`, ...(c.discard ? [`${card(p, c.discard).name} is discarded to make room in the bag.`] : [])] };
  }
 }
 
@@ -115,8 +138,12 @@ function action(p: ContentPack, prev: StageView, next: StageView, c: Command): O
  */
 export function beats(p: ContentPack, prev: StageView | undefined, next: StageView, command: Command | undefined, watching: boolean): Beat[] {
  if (!prev || prev === next || next.pack !== prev.pack || next.revision <= prev.revision || next.revision - prev.revision > 30) return [];
- if (prev.phase === 'combat' && next.phase === 'combat') return [];
  const out: Omit<Beat, 'id'>[] = [], was = (id: string) => prev.heroes.find(h => h.id === id);
+ // Inside a combat only the spoils a bot takes from a defeated character are announced here; the rest is the combat window's.
+ if (prev.phase === 'combat' && next.phase === 'combat') {
+  const spoils = command?.type === 'loot' && watching ? action(p, prev, next, command) : undefined;
+  return spoils ? [{ ...spoils, id: `${next.revision}:0` }] : [];
+ }
  if (command && watching && prev.phase !== 'combat') { const done = action(p, prev, next, command); if (done) out.push(done); }
 
  // What the chronicle recorded since: a defeat on the way, a War won.
@@ -150,6 +177,10 @@ export function beats(p: ContentPack, prev: StageView | undefined, next: StageVi
   const f = warWinner(text) ?? (text.startsWith('The Horde') ? 'horde' : 'alliance'), war = prev.wars.find(w => !next.wars.some(v => v.id === w.id));
   out.push({ kind: 'war', size: 'card', eyebrow: `${side(f)} wins a War`, title: p.events.find(e => e.id === war?.id)?.name ?? 'The War', lines: [text.replace(/^.*?, holding /, 'Holding ')], art: war ? { kind: 'event', id: war.id } : { kind: 'faction', id: f }, region: war?.regions[0], cue: { stinger: 'horn', sfx: 'coins', voice: `war-won-${f}` }, hold: 4600 });
  }
+
+ // The auction's end: the bids were sealed, so who won, and for how much, is news to everyone.
+ const sold = notes.map(text => /^(.+) wins the auction for .+ with (\d+) gold\.$/.exec(text)).find(Boolean), lot = prev.auction?.item, winner = sold && next.heroes.find(h => character(p, h.id).name === sold[1]);
+ if (sold && lot && winner) out.push({ kind: 'loot', size: 'card', eyebrow: 'Auction house', title: `${first(p, winner.id)} wins ${card(p, lot).name}`, lines: [`For ${sold[2]} gold. The other bidders pay nothing.`], art: { kind: 'card', id: lot }, region: winner.location, cue: { sfx: 'coins' }, hold: 4200 });
 
  const fresh = next.merchant.filter(id => !prev.merchant.includes(id));
  if (fresh.length && next.turn !== prev.turn) out.push({ kind: 'merchant', size: 'banner', eyebrow: 'The merchant', title: `${plural(fresh.length, 'new item')} at the merchant`, lines: [listed(fresh.slice(0, 4).map(id => card(p, id).name)) + (fresh.length > 4 ? ` and ${fresh.length - 4} more` : '') + '.'], art: { kind: 'card', id: fresh[0] }, cue: { sfx: 'coins', voice: 'merchant' }, hold: 2400 });
