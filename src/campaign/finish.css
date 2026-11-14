@@ -286,3 +286,12 @@
  .campaign-app button.card-thumbnail,.campaign-app .gallery-card,.campaign-app .deck-card-entry>button:first-child{transition:transform .18s var(--f-ease),filter .18s}
  .campaign-app button.card-thumbnail:hover,.campaign-app .gallery-card:hover{transform:translateY(-3px);filter:drop-shadow(0 12px 14px #000b)}
 }
+
+
+/* ---------- Part four · the tooltip ---------- */
+/* The game's own tooltip (tooltips.ts): the control's title, in the game's hand, a third of a second after the pointer rests. */
+.game-tooltip{position:fixed;inset:auto;z-index:1000;margin:0;max-width:min(300px,calc(100vw - 16px));padding:7px 11px;border:1px solid #dcbc748f;border-radius:6px;
+ background:linear-gradient(180deg,#221c11f7,#120f09f7);color:#f4e4ba;font:500 12px/1.45 Inter,Arial,sans-serif;letter-spacing:.01em;text-align:left;white-space:normal;overflow:visible;
+ box-shadow:inset 0 1px 0 #ffeec224,0 14px 28px -10px #000,0 2px 6px #000b;pointer-events:none}
+.game-tooltip::backdrop{display:none}
+@media(prefers-reduced-motion:no-preference){.game-tooltip{animation:f-tip .14s ease-out both}@keyframes f-tip{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}}

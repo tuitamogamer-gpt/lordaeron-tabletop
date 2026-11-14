@@ -37,6 +37,7 @@ import { AUTO_CONTINUE_MS, bookkeepingStep, combatCandidates, COMBAT_STEP_MS, DI
 import ChallengeDialog from './campaign/ChallengeDialog';
 import ChallengeInvite from './campaign/ChallengeInvite';
 import { invitedPlayers, inviteKey, jointChallenges, type Challenge } from './campaign/invitations';
+import { useTooltips } from './campaign/tooltips';
 import { BOT_PATIENCE_MS, botCombatDelay, botsDecide, loadAuto, playerClaims, playerDecides, playerToAct, saveAuto, turnKey, UNDO_GRACE_MS } from './campaign/bot-turns';
 import { BOTS_KEY as BOTS, loadBots, loadCampaign, PREVIOUS_SAVE_KEY, readSave, RECOVERY_SAVE_KEY, recoverySave, SAVE_KEY as SAVE } from './campaign/saves';
 const CampaignCombat=lazy(()=>import('./campaign/Combat'));
@@ -63,6 +64,7 @@ export default function Campaign(){
  const controlled=game.state.heroes.filter(h=>!bots.includes(h.id)).map(h=>h.id);
  const state=useMemo(()=>view(game.state,controlled),[game.state,bots]),allLegal=useMemo(()=>legalActions(p,game.state),[game.state]);
  const presentation=useCombatPresentation(state);
+ useTooltips();
  // The table's pace: each thing that happens is shown by itself before the next (campaign/stage.ts). The bots and the dialogs wait for it.
  const[pace,setPace]=useState<Pace>(loadPace),[queue,setQueue]=useState<Beat[]>([]),staged=queue.length>0&&page==='board';
  useEffect(()=>{savePace(pace);if(pace==='off')setQueue([]);},[pace]);
