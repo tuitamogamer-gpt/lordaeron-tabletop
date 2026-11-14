@@ -99,3 +99,57 @@
 }
 /* A key's letter beside a button says nothing where the screen is worked with a finger. */
 @media(hover:none) and (pointer:coarse){.campaign-app button kbd{display:none}}
+
+
+/* ---------- Part two · type ---------- */
+
+/* Type. The floor is 10.5px. A few marks in tight places stay at 10px (the LEVEL label on a portrait, the word between
+   dice in a rule, the "+N" of a token box). Under 10px there are only card faces and the map's own lettering, which are
+   pictures and keep their scale, and the plaques of the combat area's token boxes.
+   The two lists below were made from the screens themselves: every element whose text measured under 10.5px on any of 43
+   screens at three sizes, kept only where the rule cannot make any larger text smaller. */
+ .campaign-app :is(
+  button.combat-switch>span>small,button.gold-button>small,button.loadout-choice>span>small,button.overlord-summary-button>span>small,
+  button.quest-activity-replay>span,button.quest-deck>span>small,button.quest-locate>span>em,button.quest-swap-tier>small,button.session-badge,
+  button.wordmark>span>em,details.combat-enemy-rule>p,details.combat-enemy-rule>summary,details.combat-power-status>div>small,
+  details.combat-power-status>div>span,details.combat-power-status>div>strong,details.combat-power-status>p,details.combat-power-status>summary,
+  details.combat-roll-history>div>strong,details.combat-roll-history>summary,div.battle-fighter>span,div.battle-scene-center>small,
+  div.board-turns>ol>li>b,div.campaign-destination>div>p,div.character-roster>button>span>small,div.chronicle-entries>article>span,
+  div.class-deck-footer>span,div.class-deck-piles>button>span>small,div.class-deck-toolbar>nav>button,div.combat-decision-heading>span,
+  div.combat-party>div>span>small,div.combat-party>div>span>strong,div.combat-sheet-card-heading>span,div.combat-sheet-conditions>span,
+  div.combat-toolbar>span,div.combat-tray-heading>span>small,div.combat-tray-note>span,div.current-location>span>small,div.dice-lane-count>small,
+  div.dice-lane-label>small,div.dice-lane-label>strong,div.loadout-receipt>span>small,div.map-legend>span,div.map-toolbar>span>small,
+  div.party-control-list>button>b,div.party-control-list>button>span>small,div.phase-copy>p,div.resource-heading>b>small,
+  div.reward-party-receipt>div>span>small,div.reward-quest-banner>small,div.reward-quest-banner>span,div.reward-recipients>span,
+  div.setup-checklist>article>div>p,div.sheet-conditions>span,div.sheet-conditions>span>b,div.sheet-currency>span>small,div.sheet-levels>div>small,
+  div.sheet-nameplate>p,div.sheet-section-title>span,div.slot-placeholder>span,div.slot-placeholder>strong,div.table-size-options>button>small,
+  footer.combat-room-footer>div>span,header.combat-encounter>dl>div>dt,header.combat-sheet-profile>div>p,li.board-turns-end,li.done>span>small,
+  nav.action-dock>button>span>small,nav.catalog-tabs>button>b,nav.combat-sheet-heroes>button>span,nav.flow-tabs>button>b,nav.sheet-tabs>button>b,
+  ol.combat-timeline>li>b,ol.combat-timeline>li>span,ol.reward-steps>li>span>small,p.combat-energy-line>b>small,p.dice-selection-help,
+  p.setup-variant-summary,p.sheet-help,p.sound-credit,section.character-slot>header>span,section.character-slot>header>span>small,
+  section.faction-quests>header>span,section.loadout-card-preview>p,section.turn-guidance>div>p,small.combat-power-meta>b,small.combat-power-meta>span,
+  small.combat-sheet-card-status,span.battle-health>small,span.board-turns-title,span.board-xp-level>b,span.board-xp-start,span.board-xp-title,
+  span.combat-live-status,span.combat-sheet-slot-label,span.combat-tray-meta>em,span.compact-stat>span>b>em,span.compact-stat>span>small,
+  span.deck-card-state,span.deck-purse>small,span.dice-lane-empty,span.eyebrow,span.gallery-browse-hint,span.gallery-footer-note,span.gallery-range,
+  span.legend-quests,span.loadout-draft,span.loadout-slot-bottom>span,span.loadout-slot-card>small,span.loadout-slot-type,span.pointer-hint,
+  span.quest-objective-preview>span,span.quest-progress-caption,span.quest-reference,span.quest-tier-line,span.setup-boss-selected,span.sheet-class,
+  span.sheet-dossier-class,span.sheet-eyebrow,span.sheet-faction>span,span.sheet-level>small,span.slash,span.summary-actions>small,
+  span.summary-name>small,span.threat-copy>small,span.touch-hint,span.world-view-label,span.world-view-label>span
+ ){font-size:10.5px!important}
+ .campaign-app :is(
+  button.combat-nav-toggle>b,button.combat-nav-toggle>span,button.map-border-toggle,div.boss-selection>button>small,div.encounter-next>span>small,
+  div.encounter-stat-grid>div>span,div.loadout-picker-title>p,div.rules-grid>article>small,div.setup-review-tabs>button,nav.catalog-pagination>span,
+  nav.catalog-tabs>button,nav.sheet-tabs>button,nav.workspace-toggles>button>b,nav.workspace-toggles>button>span,span.loadout-slot-card>strong
+ ){font-size:11px!important}
+ /* Sizes that follow the text around them keep their proportion, but not below the floor. */
+ .campaign-app .rules-dice>.dice-word{font-size:max(10.5px,.93em)}
+ .campaign-app .rules-dice>.dice-conjunction{font-size:max(10px,.8em)}
+ /* Buttons that an earlier layer set at 10px in their own corner of the screen. */
+ .campaign-app :is(.decision-bots,.catalog-pagination,.loadout-pagination,.sheet-controls,.setup-footer,.class-deck-footer,.gallery-footer,.campaign-turn,.class-deck-toolbar)>:is(.gold-button,.quiet-button),
+ .campaign-app .table-action-footer>.bot-status,.campaign-app .setup-steps>button{font-size:11.5px!important}
+
+/* Seen only on a wide screen, where the lists above were not checked. */
+.campaign-app button.quest-objective-row>span>small,.campaign-app button.quest-spawn>span>small,.campaign-app div.quest-reward-purse>span,.campaign-app nav.combat-sheet-heroes>button>span>small,.campaign-app p.quest-note{font-size:10.5px!important}
+/* The same floor for what the lists above leave to its context. */
+.campaign-app :is(.bot-control,.loadout-confirm,.loadout-footer,.combat-action-row,.deck-card-entry,.training-receipt,.reward-claim-form,.merchant-status)>:is(.gold-button,.quiet-button),
+.campaign-app .training-receipt>span>small,.campaign-app .loadout-heading>div>p,.campaign-app .character-codex .character-roster>button>span>strong{font-size:11.5px!important}
