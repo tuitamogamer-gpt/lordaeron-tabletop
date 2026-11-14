@@ -52,6 +52,7 @@ import './campaign/resource-tokens.css';
 import './campaign/challenge-dialog.css';
 import './campaign/stage.css';
 import './campaign/responsive.css';
+import './campaign/finish.css';
 // After a deployment, an open tab can ask for code chunks the server no longer has; reload once and resume from the autosave.
 window.addEventListener('vite:preloadError',event=>{if(reloadForUpdate())event.preventDefault();});
 createRoot(document.getElementById('root')!).render(<React.StrictMode><AppErrorBoundary><App /></AppErrorBoundary></React.StrictMode>);

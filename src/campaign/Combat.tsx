@@ -97,7 +97,7 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
  if (minimized && !onClose) return <button className="combat-reopen gold-button" onClick={() => setMinimized(false)}><Icon name="swords" />Combat</button>;
 
  const controls = <div className="combat-switches">
-  <button type="button" role="switch" aria-checked={resolve} onClick={toggleResolve} className="combat-switch" disabled={!toggleResolve}><i /><span>Auto-play bots<small>Your characters always wait for you</small></span></button>
+  {bots.length > 0 && <button type="button" role="switch" aria-checked={resolve} onClick={toggleResolve} className="combat-switch" disabled={!toggleResolve}><i /><span>Auto-play bots<small>Your characters always wait for you</small></span></button>}
   <button type="button" role="switch" aria-checked={autoContinue} onClick={toggleAutoContinue} className="combat-switch" disabled={!toggleAutoContinue}><i /><span>Auto-continue steps<small>Steps with a single outcome advance on their own</small></span></button>
  </div>;
  if (!b) return <Modal title="Combat" wide className="combat-room" onClose={close}><div className="combat-idle">
@@ -202,6 +202,6 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
     </section>
 
   </div>
-  <footer className="combat-room-footer">{controls}<div><span>{resolve ? 'Bots play automatically. Every player decision waits for confirmation.' : 'Bots paused. Your decisions remain manual.'}</span>{!resolve && <button className="quiet-button" disabled={!botReady || locked} onClick={botStep}>Step bot <Icon name="arrow" size={14} /></button>}</div></footer>
+  <footer className="combat-room-footer">{controls}<div><span>{!bots.length ? 'Every decision is yours and waits for confirmation.' : resolve ? 'Bots play automatically. Every player decision waits for confirmation.' : 'Bots paused. Your decisions remain manual.'}</span>{!resolve && <button className="quiet-button" disabled={!botReady || locked} onClick={botStep}>Step bot <Icon name="arrow" size={14} /></button>}</div></footer>
  </Modal>;
 }

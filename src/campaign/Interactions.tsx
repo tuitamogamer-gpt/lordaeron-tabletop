@@ -71,7 +71,7 @@ export function AuctionChoices({heroes,submitted=[],send,busy}:{heroes:Hero[];su
  return <div className="auction-choices">
   {heroes.map(h=>{const name=character(p,h.id).name,bid=bids[h.id]??0;return <form key={h.id} className={`auction-bidder ${faction(p,h.id)}`} onSubmit={e=>{e.preventDefault();send({type:'bid',hero:h.id,amount:bid});}}>
    <HeroPortrait id={h.id} small/>
-   <span className="auction-bidder-name"><strong>{name}</strong><small>{h.gold} gold available</small></span>
+   <span className="auction-bidder-name"><strong title={name}>{name.split(' ')[0]}</strong><small>{h.gold} gold available</small></span>
    <span className="auction-stepper"><button type="button" aria-label={`Lower bid: ${name}`} disabled={busy||bid<=0} onClick={()=>set(h,bid-1)}>−</button><input aria-label={`Bid: ${name}`} type="number" min={0} max={h.gold} value={bid} onChange={e=>set(h,Number(e.target.value))}/><button type="button" aria-label={`Raise bid: ${name}`} disabled={busy||bid>=h.gold} onClick={()=>set(h,bid+1)}>+</button></span>
    <button className="gold-button" disabled={busy}>Seal bid</button>
   </form>;})}
