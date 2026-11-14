@@ -69,3 +69,33 @@
  .campaign-app .workspace-modal>.workspace-toggles.inside::-webkit-scrollbar{display:none}
  .campaign-app .workspace-modal>.workspace-toggles.inside>button{flex:none;min-width:max-content;min-height:42px;padding:6px 12px;scroll-snap-align:center}
 }
+/* The fullscreen map's toolbar ran past the right edge between 760px and about 900px, an upright tablet, where a
+   finger's wider buttons need room as well: there it gives up its title and wraps, as it already did below 760px. */
+@media(max-width:920px){
+ .campaign-app.map-fullscreen-dialog .territorial-map .map-toolbar{flex-wrap:wrap;justify-content:flex-end;gap:4px}
+ .campaign-app.map-fullscreen-dialog .territorial-map .map-toolbar>span{display:none}
+ .campaign-app.map-fullscreen-dialog .territorial-map .map-toolbar>div{flex:1;flex-wrap:wrap;justify-content:flex-end;gap:4px}
+ .campaign-app.map-fullscreen-dialog .territorial-map .map-toolbar .map-jump{margin-right:auto}
+}
+/* Fingers need more than a mouse does. Older and more specific rules hold several of these at 25 to 30px, which is
+   why the second group insists. */
+@media(pointer:coarse){
+ .campaign-app .icon-button{min-width:42px;min-height:42px}
+ .campaign-app .combat-switch{min-height:42px}
+ .campaign-app .quest-activity>button{min-height:42px}
+ .campaign-app .flow-tabs>button{min-height:40px}
+ .campaign-app .campaign-title .campaign-turn>.quiet-button{min-height:40px}
+ .campaign-app :is(.catalog-pagination,.loadout-pagination,.advisor-actions,.sheet-controls,.class-deck-toolbar,.deck-card-action)>button,
+ .campaign-app .class-deck-toolbar>nav>button,
+ .campaign-app .map-border-toggle,.campaign-app .map-interact,
+ .campaign-app .auction-stepper>button,.campaign-app .auction-stepper>input,
+ .campaign-app .stage-buttons>button,.campaign-app .setup-steps>button{min-height:40px!important}
+ .campaign-app .auction-stepper>button,.campaign-app .advisor-actions>.advisor-dismiss{min-width:40px!important}
+ .campaign-app input[type=range]{min-height:32px}
+ .campaign-app .header-right .session-badge{min-height:36px}
+ .campaign-app .setup-footer>a,.campaign-app a.source-link{padding-block:10px}
+ /* A card's full view is drawn above the page, outside the app's own element. */
+ .card-preview-hint>a{margin-top:0;padding-block:9px}
+}
+/* A key's letter beside a button says nothing where the screen is worked with a finger. */
+@media(hover:none) and (pointer:coarse){.campaign-app button kbd{display:none}}

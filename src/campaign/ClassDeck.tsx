@@ -5,6 +5,7 @@ import { character } from '../rules/common';
 import { classDeck, equipped } from '../rules/inventory';
 import type { Card, Command, Hero } from '../rules/model';
 import { CardThumbnail } from './parts';
+import { byTouch } from './pointer';
 import { cardEnergyText } from './card-energy';
 import { SCANS } from './scan-assets';
 
@@ -27,7 +28,7 @@ export default function ClassDeck({ hero: h, inspect, legal = [], onLearn, send,
  return <section className="class-deck compact-class-deck portrait-class-deck" aria-label={`${cls} class deck`}>
   <div className="class-deck-heading"><div><span className="sheet-eyebrow">CLASS DECK · {deckSize} CARDS</span><h3>{cls} arts & talents</h3></div><span className="deck-purse" role="status" aria-label={`${toggle ? h.gold - total : h.gold} gold ${toggle && selected.length ? 'remaining after training' : 'available'}`}><GameIcon name="gold" />{toggle ? h.gold - total : h.gold}<small>{toggle && selected.length ? 'gold remaining' : 'gold available'}</small></span></div>
   <div className="class-deck-piles" aria-label="Class deck piles">{(['powers', 'talents'] as const).map(kind => <button key={kind} aria-pressed={tab === kind} onClick={() => { setTab(kind); setLevel(0); setPage(0); }}><span className={`class-deck-back ${kind} ${SCANS.backs[`class-${cls}`] ? 'scanned-back' : ''}`} aria-hidden="true">{SCANS.backs[`class-${cls}`] ? <img src={SCANS.backs[`class-${cls}`].src} alt="" draggable={false} /> : <GameIcon name={kind === 'powers' ? 'train' : 'experience'} size={20} />}</span><span><strong>{kind === 'powers' ? 'Power deck' : 'Talent deck'}</strong><small>{deck[kind].length} in deck · {kind === 'powers' ? h.learned.length : h.talents.length} {kind === 'powers' ? 'learned' : 'chosen'}</small><em>{kind === 'powers' ? 'Purchase with a Train or Town action' : 'Choose for free when you gain a level'}</em></span><b>{deck[kind].length}</b></button>)}</div>
-  <p className="sheet-help">{tab === 'powers' ? 'Hover to enlarge · train powers, then equip during management.' : 'Hover to enlarge · choose one free, permanent talent at each new level.'}</p>
+  <p className="sheet-help">{byTouch() ? 'Tap a card to read it' : 'Hover to enlarge'} · {tab === 'powers' ? 'train powers, then equip during management.' : 'choose one free, permanent talent at each new level.'}</p>
   <div className="class-deck-toolbar"><nav aria-label="Filter cards by level">{[0, 1, 2, 3, 4, 5].map(n => <button key={n} aria-pressed={level === n} onClick={() => { setLevel(n); setPage(0); }}>{n ? `Level ${n}` : 'All levels'}</button>)}</nav>{!toggle && tab === 'powers' && onLearn && <button className="gold-button" disabled={!canTrain} onClick={onLearn}>Train powers · 1 action</button>}</div>
   <div className="class-deck-cards">{filtered.slice(first, first + PAGE_SIZE).map(c => {
    const owned = (c.kind === 'power' ? h.learned : h.talents).includes(c.id), chosen = selected.includes(c.id), cost = total + (chosen ? 0 : c.price), talent = legal.find(a => a.type === 'talent' && a.hero === h.id && a.card === c.id);

@@ -8,6 +8,7 @@ import CardPortrait from './CardPortrait';
 import { CardRules, slotLabel } from './CharacterSheet';
 import { energyLabel } from './ClassDeck';
 import { CardThumbnail, HeroPortrait } from './parts';
+import { byTouch } from './pointer';
 import { effectText } from './rules-text';
 import RulesText from './RulesText';
 
@@ -95,7 +96,7 @@ export default function EquipmentEditor({ hero, send, busy }: { hero: Hero; send
     {choicePages>1&&<nav className="loadout-pagination" aria-label="Compatible card pages"><button className="quiet-button" disabled={busy || !visiblePage} onClick={()=>setChoicePage(visiblePage-1)}>Previous</button><span aria-live="polite">{visiblePage+1} / {choicePages}</span><button className="quiet-button" disabled={busy || visiblePage+1>=choicePages} onClick={()=>setChoicePage(visiblePage+1)}>Next</button></nav>}
     {!compatible.filter(id => !card(p, id).addon).length && <p className="loadout-empty-note">No other compatible cards. Learn powers with Train, or collect items from quests and the merchant.</p>}
     {attachments.length > 0 && <div className="loadout-attachments"><h4>Attachments <span>{attachments.length} compatible</span></h4>{attachments.slice(visibleAttachmentPage * 2, visibleAttachmentPage * 2 + 2).map(id => <div className="loadout-attachment-entry" key={id}><label><input type="checkbox" disabled={busy} checked={slots[selected].addons.includes(id)} onChange={() => attachment(id)} /><CardPortrait card={card(p, id)} /><span>{card(p, id).name}<small>{card(p, id).functionTrait} · one per function</small></span></label><details className="loadout-attachment-rules"><summary aria-label={`${card(p, id).name} rules`}>Read rules</summary><CardRules value={card(p, id)} /></details></div>)}{attachmentPages > 1 && <nav className="loadout-pagination" aria-label="Attachment pages"><button className="quiet-button" disabled={busy || !visibleAttachmentPage} onClick={() => setAttachmentPage(visibleAttachmentPage - 1)}>Previous</button><span>{visibleAttachmentPage + 1} / {attachmentPages}</span><button className="quiet-button" disabled={busy || visibleAttachmentPage + 1 >= attachmentPages} onClick={() => setAttachmentPage(visibleAttachmentPage + 1)}>Next</button></nav>}</div>}
-    {shown && <section className="loadout-card-preview" aria-label="Selected card preview"><CardThumbnail key={shown} card={card(p, shown)} footer={card(p, shown).printed ? 'Starting equipment · free' : energyLabel(card(p, shown))} /><p>{shown === selectedId ? `In slot ${String(selected + 1).padStart(2, '0')}.` : 'Not equipped yet.'} Hover or focus the card for every strength option.</p></section>}
+    {shown && <section className="loadout-card-preview" aria-label="Selected card preview"><CardThumbnail key={shown} card={card(p, shown)} footer={card(p, shown).printed ? 'Starting equipment · free' : energyLabel(card(p, shown))} /><p>{shown === selectedId ? `In slot ${String(selected + 1).padStart(2, '0')}.` : 'Not equipped yet.'} {byTouch() ? 'Tap' : 'Hover or focus'} the card for every strength option.</p></section>}
    </aside>
   </div>
   <div className="loadout-announcement" role="status"><Icon name={dirty ? 'spark' : 'shield'} size={15} />{announcement}</div>

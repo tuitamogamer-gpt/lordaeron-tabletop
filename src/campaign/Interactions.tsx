@@ -7,6 +7,7 @@ import type { Command, Hero, TownOperation } from '../rules/model';
 import { CardArt } from './Art';
 import { CardRules } from './CharacterSheet';
 import { CardThumbnail, HeroPortrait, pretty } from './parts';
+import { byTouch } from './pointer';
 
 type Submit = (c: Command) => void;
 
@@ -21,7 +22,7 @@ export function TownEditor({hero,merchant,send,busy}:{hero:Hero;merchant:string[
  const selling=[...preview.bag,...preview.slots.flatMap(s=>[s.card,...s.addons].filter((id):id is string=>!!id))].filter(id=>card(p,id).kind==='item'&&!card(p,id).soulbound);
  const training=p.cards.filter(c=>c.kind==='power'&&!c.printed&&c.classId===character(p,hero.id).classId&&!preview.learned.includes(c.id)&&c.level<=hero.level);
  const count=shelf==='buy'?market.merchant.length:shelf==='sell'?selling.length:training.length,pages=Math.max(1,Math.ceil(count/6)),visiblePage=Math.min(page,pages-1);
- return <div className="dialog-content compact-town town-flow"><p>Sell, buy and learn powers with one Town action. Hover or focus a card for its rules.</p>
+ return <div className="dialog-content compact-town town-flow"><p>Sell, buy and learn powers with one Town action. {byTouch()?'Tap':'Hover or focus'} a card for its rules.</p>
   <div className="town-preparation">
    <label className="town-recovery-order">Recovery order<select aria-label="Recovery order" disabled={busy} value={recoverAfter} onChange={e=>{setRecoverAfter(Number(e.target.value));setError('');}}><option value={-1}>Skip recovery</option><option value={0}>Before transactions</option>{operations.map((_,i)=><option key={i} value={i+1}>After transaction {i+1}</option>)}</select></label>
    {recoverAfter>=0&&<label className="rest-slider"><span>Health recovery: {recoveryHealth} / {hero.level}<small>Remaining points restore energy</small></span><input aria-label="Health recovery" disabled={busy} type="range" min={0} max={maxRecovery} value={recoveryHealth} onChange={e=>{setHealth(Number(e.target.value));setError('');}}/></label>}

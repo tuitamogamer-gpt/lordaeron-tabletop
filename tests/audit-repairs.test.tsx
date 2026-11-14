@@ -4,8 +4,9 @@ import { act, cleanup, fireEvent, render, screen, within } from '@testing-librar
 import Campaign from '../src/Campaign';
 import { audio } from '../src/campaign/audio';
 import { AuctionChoices } from '../src/campaign/Interactions';
+import { CardThumbnail } from '../src/campaign/parts';
 import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
-import { faction } from '../src/rules/common';
+import { card, faction } from '../src/rules/common';
 import { apply, createGame } from '../src/rules/game';
 import { legalActions } from '../src/rules/legal';
 import type { Command } from '../src/rules/model';
@@ -111,5 +112,20 @@ describe('a bidder at the auction', () => {
    expect(name.tagName).toBe('STRONG'); expect(name.getAttribute('title')).toBe(full);
    expect(screen.getByRole('spinbutton', { name: `Bid: ${full}` })).toBeTruthy();
   }
+ });
+});
+
+describe('a hint on a screen worked with a finger', () => {
+ const pointer = (coarse: boolean) => vi.stubGlobal('matchMedia', (query: string) => ({ matches: coarse && query.includes('pointer: coarse'), media: query, addEventListener() {}, removeEventListener() {} }));
+ const hint = () => { fireEvent.click(screen.getByRole('button', { name: 'Preview Fireball' })); return screen.getByRole('tooltip').querySelector('.card-preview-hint')!.textContent!; };
+ it('names a tap where a mouse is told to hover, click or press Esc', () => {
+  pointer(true);
+  render(<CardThumbnail card={card(p, 'mage-fireball')} />);
+  const touch = hint();
+  expect(touch).toContain('Tap outside to close');
+  expect(touch).not.toMatch(/Click|Esc|Hover/);
+  cleanup(); pointer(false);
+  render(<CardThumbnail card={card(p, 'mage-fireball')} />);
+  expect(hint()).toContain('Click outside or press Esc to close');
  });
 });

@@ -9,6 +9,7 @@ import type { GameView } from '../rules/view';
 import CombatAbilities, { type AbilityCommand } from './CombatAbilities';
 import { attackPreview, cardNote, energyNote, healthNote } from './combat-readiness';
 import { CardThumbnail, ConditionToken, HeroPortrait } from './parts';
+import { byTouch } from './pointer';
 import { effectText } from './rules-text';
 import RulesText from './RulesText';
 
@@ -71,7 +72,7 @@ export default function CombatCharacterSheet({ state, skills, dice, send, busy, 
    <header className="combat-sheet-profile"><HeroPortrait id={h.id} /><div><span className="sheet-eyebrow">LEVEL {h.level} · {d.race} · {d.classId}</span><h3>{d.name}</h3><p>{bots.includes(h.id) ? 'Bot character' : 'Player character'}{b.defeated.includes(h.id) ? ' · defeated' : activeId === h.id ? ' · current attacker' : ''}</p></div><div className="combat-sheet-conditions"><span><ConditionToken kind="stun" fallback={<Icon name="heart" size={12} />} />Stun <b>{h.stun}</b></span><span><ConditionToken kind="curse" fallback={<Icon name="skull" size={12} />} />Curse <b>{h.curse}</b></span></div></header>
    <div className="combat-sheet-vitals"><ResourceBar type="health" value={h.health} max={cap.health} /><ResourceBar type="energy" value={h.energy} max={cap.energy} /></div>
    <div className="combat-choice-content">
-    <div className="combat-sheet-card-heading"><h4>Powers & equipment</h4><span>Hover or focus a card for its full rules</span></div>
+    <div className="combat-sheet-card-heading"><h4>Powers & equipment</h4><span>{byTouch() ? 'Tap' : 'Hover or focus'} a card for its full rules</span></div>
     <div className="combat-sheet-card-grid">{resting.map(({ id, label }) => {
      const status = cardNote(p, state, h.id, id);
      return <div className={`combat-sheet-card ${status.tone}`} key={`${h.id}:${id}`}><span className="combat-sheet-slot-label">{label}</span><CardThumbnail card={card(p, id)} footer="Preview full rules" /><strong className="combat-sheet-card-name">{card(p, id).name}</strong><small className="combat-sheet-card-status" title={status.text}><RulesText>{status.text}</RulesText></small></div>;
