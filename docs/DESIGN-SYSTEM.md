@@ -1,5 +1,7 @@
 # Warforged Chronicles · desktop sto v3
 
+> Od 14. 11. 2026. preko ovog sistema stoji završni sloj `src/campaign/finish.css`: pod za veličinu teksta (10,5 px, nekoliko sitnih oznaka na 10 px), zlatno glavno dugme svuda, tanke linije umjesto reljefnih rubova, zlatni naslovi i kratak pokret. Opis i mjerenja: [PREMIUM-FINISH-2026-11-14.md](PREMIUM-FINISH-2026-11-14.md).
+
 Skenovi su izvori teksta, pravila i vrijednosti. Interfejs koristi vlastite ilustracije i predloške. Referenca za raspored je [fizički sto osnovne igre](https://www.ebgl.org/current.php?g=2): centralna ploča, questovi obje frakcije, lični listovi, špilovi i tracker.
 
 ## Raspored
