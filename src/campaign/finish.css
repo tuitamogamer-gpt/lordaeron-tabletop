@@ -153,3 +153,136 @@
 /* The same floor for what the lists above leave to its context. */
 .campaign-app :is(.bot-control,.loadout-confirm,.loadout-footer,.combat-action-row,.deck-card-entry,.training-receipt,.reward-claim-form,.merchant-status)>:is(.gold-button,.quiet-button),
 .campaign-app .training-receipt>span>small,.campaign-app .loadout-heading>div>p,.campaign-app .character-codex .character-roster>button>span>strong{font-size:11.5px!important}
+
+
+/* ---------- Part three · the finish ---------- */
+
+/* The palette and the materials everything below is made of. */
+.campaign-app{
+ --f-gold-hi:#fbe9b6;--f-gold:#e7c77f;--f-gold-mid:#c9a35b;--f-gold-low:#96773d;--f-gold-deep:#594421;
+ --f-line:#cfae6a3d;--f-line-strong:#dcbc748f;
+ --f-r-s:4px;--f-r-m:6px;--f-r-l:10px;
+ --f-lift-1:inset 0 1px 0 #ffeec21c,0 1px 2px #000a;
+ --f-lift-2:inset 0 1px 0 #ffeec224,0 12px 24px -12px #000e,0 2px 6px #0009;
+ --f-lift-3:inset 0 1px 0 #ffeec22b,0 40px 100px -28px #000,0 16px 34px -16px #000d;
+ --f-ease:cubic-bezier(.22,.72,.2,1);
+ text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+}
+.campaign-app ::selection{background:#e7c77f;color:#1d1406}
+.campaign-app *{scrollbar-color:#8f7646 transparent}
+.campaign-app ::-webkit-scrollbar{width:10px;height:10px}
+.campaign-app ::-webkit-scrollbar-track{background:transparent}
+.campaign-app ::-webkit-scrollbar-thumb{border:2px solid transparent;border-radius:8px;background:linear-gradient(#b0935c,#6f5a34) padding-box}
+.campaign-app ::-webkit-scrollbar-thumb:hover{background:linear-gradient(#d3b473,#8f7646) padding-box}
+.campaign-app :is(button,a,select,summary,[tabindex]):focus-visible{outline:2px solid #ffe9ad;outline-offset:2px}
+.campaign-app input:not([type=checkbox]):not([type=range]):focus-visible{outline:2px solid #ffe9ad;outline-offset:1px}
+
+/* The one thing to do next is gold. The fight's own Roll and Use were gold already; the rest of the game used a red
+   button with a ridged border, so the same action looked different on the table and in a combat. */
+.campaign-app .gold-button{
+ border:1px solid #f7e2a8;border-radius:var(--f-r-s);
+ background:linear-gradient(180deg,#f5de9b 0%,#dfbc69 48%,#be9644 100%);
+ color:#281a06;text-shadow:0 1px 0 #fff2c690;font-weight:600;
+ box-shadow:inset 0 1px 0 #fff9e0c2,inset 0 -1px 0 #6b4f1a5e,0 8px 16px -8px #000d,0 1px 2px #0009;
+ transition:transform .12s var(--f-ease),box-shadow .18s var(--f-ease),background .18s,border-color .18s,color .18s;
+}
+.campaign-app .gold-button:hover:not(:disabled){
+ background:linear-gradient(180deg,#fdecb6 0%,#edcc7b 48%,#cfa653 100%);border-color:#fff3c9;
+ box-shadow:inset 0 1px 0 #fffbe8de,inset 0 -1px 0 #6b4f1a5e,0 12px 22px -10px #000e,0 0 0 3px #f1d07f2b;
+}
+.campaign-app .gold-button:active:not(:disabled){transform:translateY(1px);box-shadow:inset 0 2px 5px #6a4c1299,0 1px 1px #0009}
+.campaign-app .gold-button:disabled{background:linear-gradient(180deg,#4d4838,#33302a);border-color:#756a4c;color:#b4a888;text-shadow:none;box-shadow:inset 0 1px 0 #ffffff10;opacity:.72}
+.campaign-app .gold-button svg{color:currentColor}
+.campaign-app .gold-button small{color:#4a3511}
+/* Where the same choice is offered several times over (a bid for each character, one talent of three), each is an outline
+   that fills when it is pointed at: six filled buttons in a row would all claim to be the next thing to do. The bots'
+   "Bot move" under a decision is an outline too: beside the player's own Claim it is the other way, not the main one. */
+.campaign-app :is(.auction-bidder,.talent-choice,.decision-bots)>.gold-button{
+ background:linear-gradient(180deg,#3b3422,#211d13);color:#f8e2a8;border-color:#d9b970;text-shadow:none;
+ box-shadow:inset 0 1px 0 #ffeec22e,0 1px 2px #0009;
+}
+.campaign-app :is(.auction-bidder,.talent-choice,.decision-bots)>.gold-button:hover:not(:disabled){background:linear-gradient(180deg,#f5de9b,#be9644);color:#281a06;text-shadow:0 1px 0 #fff2c690}
+
+/* Everything else that can be pressed: dark glass with a gold hairline. */
+.campaign-app .quiet-button{
+ border:1px solid #b3955d94;border-radius:var(--f-r-s);background:linear-gradient(180deg,#30362e,#1b211d);color:#f0ddb0;
+ box-shadow:var(--f-lift-1);transition:transform .12s var(--f-ease),box-shadow .18s var(--f-ease),background .18s,border-color .18s,color .18s;
+}
+.campaign-app .quiet-button:hover:not(:disabled){border-color:#edcb85;background:linear-gradient(180deg,#434637,#272c24);color:#fff3cd;box-shadow:inset 0 1px 0 #ffeec233,0 8px 16px -10px #000e}
+.campaign-app .quiet-button:active:not(:disabled){transform:translateY(1px);box-shadow:inset 0 2px 4px #0009}
+.campaign-app input:not([type=checkbox]):not([type=range]),.campaign-app select{border:1px solid #b3955d94;border-radius:var(--f-r-s);background-color:#0e1513;box-shadow:inset 0 1px 3px #000a;transition:border-color .18s,box-shadow .18s}
+.campaign-app input:not([type=checkbox]):not([type=range]):hover,.campaign-app select:hover{border-color:#dcbc74}
+
+/* The header: one dark bar, a gold line under it, and the page you are on marked in gold instead of a red box. */
+.campaign-app .topbar{border-bottom:1px solid #dcbc7473;box-shadow:0 1px 0 #000,0 14px 30px -18px #000}
+.campaign-app .topnav button{border-radius:var(--f-r-s);transition:color .18s,background-color .18s,border-color .18s,box-shadow .18s}
+.campaign-app .topnav button:hover{color:#fff0c4;background-color:#dcbc7414}
+.campaign-app .topnav button.active{
+ color:#fff1c8;border-color:#dcbc748f;background:linear-gradient(180deg,#3f3622,#221c11);
+ box-shadow:inset 0 1px 0 #ffeec238,inset 0 -2px 0 #e7c77f,0 8px 16px -10px #000d;
+}
+.campaign-app .brand-crest{border:1px solid #e0bf78;box-shadow:0 0 0 2px #0b0f0d,0 6px 12px -4px #000c,inset 0 1px 0 #ffd9a35c,inset 0 0 10px #140904}
+.campaign-app .session-badge{padding:6px 11px;border:1px solid var(--f-line);border-radius:999px;background:#ffffff06;transition:border-color .18s,background-color .18s}
+.campaign-app .session-badge:hover{border-color:var(--f-line-strong);background:#dcbc7414}
+.campaign-app .header-right>.icon-button{border-radius:var(--f-r-s);transition:background-color .18s,color .18s}
+.campaign-app .header-right>.icon-button:hover{background-color:#dcbc741f;color:#fff0c4}
+
+/* Panels of the table: a hairline, a faint light along the top edge, a soft shadow under. */
+.campaign-app.desktop-tabletop .table-control-rail .table-navigation>.workspace-toggles>button,
+.campaign-app .quest-activity,.campaign-app .active-character-summary,.campaign-app .overlord-summary-button,.campaign-app .rail-quests{
+ border:1px solid var(--f-line);border-radius:var(--f-r-m);box-shadow:var(--f-lift-1);
+ transition:border-color .18s,box-shadow .2s var(--f-ease),transform .16s var(--f-ease),background-color .18s;
+}
+.campaign-app.desktop-tabletop .table-control-rail .table-navigation>.workspace-toggles>button:hover:not(:disabled),
+.campaign-app .active-character-summary:hover,.campaign-app .overlord-summary-button:hover{border-color:var(--f-line-strong);box-shadow:var(--f-lift-2);transform:translateY(-1px)}
+.campaign-app .turn-guidance{border:1px solid var(--f-line);border-left:3px solid var(--f-gold);border-radius:var(--f-r-m);box-shadow:var(--f-lift-2)}
+/* The advisor was the one blue box on a gold table. */
+.campaign-app .turn-guidance.advisor{border-color:var(--f-line);border-left-color:var(--f-gold);background:linear-gradient(110deg,#2d3324e6,#161e1ae6)}
+.campaign-app .turn-guidance.advisor>svg{color:var(--f-gold)}
+.campaign-app .action-dock>button{border-radius:var(--f-r-m);border-color:var(--f-line)!important;transition:transform .14s var(--f-ease),box-shadow .2s var(--f-ease),background .18s,border-color .18s}
+.campaign-app .action-dock>button:hover:not(:disabled){transform:translateY(-1px);border-color:var(--f-line-strong)!important;box-shadow:inset 0 1px 0 #ffeec22e,0 10px 18px -10px #000e}
+.campaign-app .action-dock>button:active:not(:disabled){transform:translateY(1px)}
+.campaign-app .action-dock>button:disabled{filter:saturate(.35)}
+
+/* The names of things are lettered in gold that catches the light from above. The light is one line tall and repeats
+   down the block, so a title that runs to two lines is lit the same on both. */
+.campaign-app .campaign-title h1,.campaign-app .modal-head h2,.campaign-app .world-decision>h2,.campaign-app .stage-title{
+ background:linear-gradient(180deg,#fff4d3 8%,#ecce88 52%,#b9934d 100%) repeat-y;background-size:100% 1lh;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none}
+.campaign-app .campaign-title h1>span{-webkit-text-fill-color:currentColor}
+
+/* Windows: a deeper shadow, a darker room behind them, and an arrival that takes a fifth of a second. */
+.campaign-app .modal{box-shadow:0 0 0 1px #000,var(--f-lift-3)}
+.campaign-app .modal::backdrop{background:radial-gradient(ellipse at 50% 40%,#060c0ecc,#020506f0);backdrop-filter:blur(6px) saturate(.8)}
+.campaign-app .toast{border:1px solid var(--f-line-strong);border-radius:var(--f-r-m);box-shadow:var(--f-lift-2)}
+@media(prefers-reduced-motion:no-preference){
+ .campaign-app .modal[open]{animation:f-arrive .22s var(--f-ease) both}
+ .campaign-app .decision-overlay>.world-decision{animation:f-arrive .24s var(--f-ease) both}
+ @keyframes f-arrive{from{opacity:0;transform:translateY(10px) scale(.988)}to{opacity:1;transform:none}}
+}
+@media(prefers-reduced-motion:reduce){
+ .campaign-app :is(.gold-button,.quiet-button,.action-dock>button,.workspace-toggles>button,.active-character-summary,.overlord-summary-button){transition:none;transform:none!important}
+}
+
+/* Ridged and grooved borders are the bevels of an older screen. What frames a panel is a hairline with a dark line outside it. */
+.campaign-app .table-map-column .campaign-map,.campaign-app .command-table>.territorial-map.overview{border:1px solid #dcbc7473;border-radius:var(--f-r-m);box-shadow:0 0 0 1px #000,var(--f-lift-2)}
+.campaign-app .action-dock{border:0;background:none;box-shadow:none}
+.campaign-app .modal-head{border-bottom:1px solid #dcbc7480;box-shadow:0 1px 0 #0009}
+.campaign-app .modal-head .icon-button{border:1px solid #e3b57e;border-radius:var(--f-r-s);background:linear-gradient(180deg,#7d3428,#4a1c18);box-shadow:inset 0 1px 0 #ffb98a4d,0 2px 5px #0009;transition:background .18s,border-color .18s,transform .12s var(--f-ease)}
+.campaign-app .modal-head .icon-button:hover{background:linear-gradient(180deg,#a2412f,#5f231c);border-color:#ffd9a3}
+.campaign-app .modal-head .icon-button:active{transform:translateY(1px)}
+.campaign-app :is(.challenge-card>header,.invite-target,.merchant-row,.creature-rule)>.creature-glyph{border:1px solid #d6b56f;box-shadow:0 0 0 1px #000,0 3px 8px #000a}
+.campaign-app .folio-card{border:1px solid #c9a86a;box-shadow:0 0 0 1px #000,var(--f-lift-2)}
+
+/* A light passes over the gold button when the pointer comes to it. */
+@media(prefers-reduced-motion:no-preference){
+ .campaign-app .gold-button:not(:disabled){background-image:linear-gradient(110deg,transparent 42%,#fffbe66b 50%,transparent 58%),linear-gradient(180deg,#f5de9b 0%,#dfbc69 48%,#be9644 100%);background-size:55% 100%,100% 100%;background-position:-140% 0,0 0;background-repeat:no-repeat;transition:transform .12s var(--f-ease),box-shadow .18s var(--f-ease),border-color .18s,background-position .7s var(--f-ease)}
+ .campaign-app .gold-button:hover:not(:disabled){background-image:linear-gradient(110deg,transparent 42%,#fffbe68c 50%,transparent 58%),linear-gradient(180deg,#fdecb6 0%,#edcc7b 48%,#cfa653 100%);background-position:240% 0,0 0}
+ .campaign-app :is(.auction-bidder,.talent-choice,.decision-bots)>.gold-button:not(:disabled){background-image:linear-gradient(180deg,#3b3422,#211d13);background-size:100% 100%;background-position:0 0}
+ .campaign-app :is(.auction-bidder,.talent-choice,.decision-bots)>.gold-button:hover:not(:disabled){background-image:linear-gradient(180deg,#f5de9b,#be9644)}
+ /* A page arrives instead of being swapped in. */
+ .campaign-app .campaign-main>:is(.catalog-flow,.character-codex,.chronicle-flow,.rules-flow,.coverage-page){animation:f-page .26s var(--f-ease) both}
+ @keyframes f-page{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+ /* Cards rise a little under the pointer. */
+ .campaign-app button.card-thumbnail,.campaign-app .gallery-card,.campaign-app .deck-card-entry>button:first-child{transition:transform .18s var(--f-ease),filter .18s}
+ .campaign-app button.card-thumbnail:hover,.campaign-app .gallery-card:hover{transform:translateY(-3px);filter:drop-shadow(0 12px 14px #000b)}
+}
