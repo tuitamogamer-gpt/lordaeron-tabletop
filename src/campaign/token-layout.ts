@@ -7,6 +7,7 @@ import type { ContentPack } from '../rules/model';
 import type { GameView } from '../rules/view';
 import type { QuestMarker } from './map-state';
 import { creatureStacks } from './MapTokens';
+import { SERVICE_BOX, serviceRow, servicesOf, type Service } from './map-services';
 
 export interface TokenSpec {
  key: string;
@@ -15,8 +16,10 @@ export interface TokenSpec {
  /** Its usual place, relative to the region's centre: used when there is room, and as the tie-breaker otherwise. */
  prefer: MapPoint;
 }
-/** The region's name and service icons around its centre, which tokens avoid covering when they can. */
+/** The region's name and the marks under it around its centre, which tokens avoid covering when they can. */
 export interface LabelBox { halfWidth: number; top: number; bottom: number }
+/** A circle of the board that is taken before any token is placed: a town, flight path or graveyard mark. */
+export interface Taken { x: number; y: number; r: number }
 
 const STEP = 6;
 type Spot = { x: number; y: number; clear: number };
@@ -56,10 +59,11 @@ export const WEIGHTS = { border: 2, deep: 6, overlap: 8, label: 5, distance: 0.0
 
 /**
  * Places the tokens in order (the first ones get the best spots), each on the cheapest spot by WEIGHTS. A region too small for its
- * tokens still gets the least bad arrangement, and every token's centre stays inside the region.
+ * tokens still gets the least bad arrangement, and every token's centre stays inside the region. What is `taken` counts as placed
+ * already: a token keeps off it as it keeps off another token, which is more than it keeps off the region's name.
  */
-export function layoutTokens(shape: BoardShape, tokens: TokenSpec[], label?: LabelBox): Record<string, MapPoint> {
- const [cx, cy] = shape.center, placed: { x: number; y: number; r: number }[] = [], result: Record<string, MapPoint> = {};
+export function layoutTokens(shape: BoardShape, tokens: TokenSpec[], label?: LabelBox, taken: Taken[] = []): Record<string, MapPoint> {
+ const [cx, cy] = shape.center, placed: Taken[] = [...taken], result: Record<string, MapPoint> = {};
  for (const token of tokens) {
   const wantX = cx + token.prefer[0], wantY = cy + token.prefer[1];
   let best: Spot | undefined, bestCost = Infinity;
@@ -81,10 +85,54 @@ export function labelCover(label: LabelBox, cx: number, cy: number, x: number, y
  const dx = Math.max(0, Math.abs(x - cx) - label.halfWidth), dy = y < cy + label.top ? cy + label.top - y : y > cy + label.bottom ? y - cy - label.bottom : 0;
  return Math.max(0, r - Math.hypot(dx, dy));
 }
-/** The box of a region's name and its service icons, relative to the region's centre. */
-export function labelBox(name: string, services: boolean): LabelBox {
+/** The box of a region's name, relative to the region's centre. */
+export function labelBox(name: string): LabelBox {
  const lines = labelLines(name);
- return { halfWidth: Math.max(...lines.map(l => l.length)) * 3.3 + 3, top: -(lines.length - 1) * 6 - 11, bottom: (lines.length - 1) * 7 + (services ? 27 : 5) };
+ return { halfWidth: Math.max(...lines.map(l => l.length)) * 3.3 + 3, top: -(lines.length - 1) * 6 - 11, bottom: (lines.length - 1) * 7 + 5 };
+}
+
+export interface ServiceMark extends Service { dx: number; dy: number }
+const marks = new WeakMap<BoardShape, Map<string, ServiceMark[]>>();
+/**
+ * Where a region's town, flight path and graveyard marks stand, relative to its centre (map-services.ts draws them as a row).
+ * Their place is under the name. Five regions have no room there: the cross of the Ruins of Andorhal stood across the border,
+ * half on Sorrow Hill, and most of the larger headstone would stand there. In those regions the row takes the place near the
+ * name that is deepest inside the region's own border: under the name but to one side, then beside the name, then above it.
+ * The place depends on the region alone, so a mark never moves during a game.
+ */
+export function serviceMarks(shape: BoardShape, name: string, services: Service[]): ServiceMark[] {
+ if (!services.length) return [];
+ const key = `${name}:${services.map(s => `${s.kind}/${s.side}`).join()}`, known = marks.get(shape)?.get(key);
+ if (known) return known;
+ const label = labelBox(name), row = serviceRow(services, labelLines(name).length), [cx, cy] = shape.center, w = row.width / 2, h = row.height / 2;
+ /** How deep inside the border the row's box is with its centre at (x, y): negative where a corner is outside. */
+ const depth = (x: number, y: number) => Math.min(...[[-w, -h], [w, -h], [-w, h], [w, h], [0, -h], [0, h]].map(([dx, dy]) => clearance(shape, [cx + x + dx, cy + y + dy])));
+ const under = row.top + h, shifts = [0, 6, -6, 12, -12, 18, -18, 24, -24, 30, -30, 36, -36], beside = label.halfWidth + 4 + w, middle = (label.top + label.bottom) / 2;
+ // In order of preference: a place that is as good as an earlier one does not replace it.
+ const places: [number, number][] = [...shifts.map(x => [x, under] as [number, number]), [beside, middle], [-beside, middle], ...shifts.map(x => [x, label.top - 3 - h] as [number, number])];
+ const ROOM = 3;
+ let best = places[0], deepest = depth(...best);
+ for (const place of places) { if (deepest >= ROOM) break; const d = depth(...place); if (d > deepest + 1) { best = place; deepest = d; } }
+ const placed = row.marks.map(m => ({ ...m, dx: m.dx + best[0], dy: best[1] }));
+ if (!marks.has(shape)) marks.set(shape, new Map());
+ marks.get(shape)!.set(key, placed);
+ return placed;
+}
+/** The largest size at which a computer's overview draws the marks, compared with the fullscreen map (map.css). */
+export const MARK_ROOM = 1.4;
+/**
+ * The marks as circles of the board that tokens keep off: a town and a graveyard are one circle, a flight path with its wings
+ * two. The circles cover the marks at the size the overview draws them, as a row grown about its middle, so that a token
+ * placed clear of them is clear in both views.
+ */
+export function takenByServices(shape: BoardShape, name: string, services: Service[]): Taken[] {
+ const placed = serviceMarks(shape, name, services);
+ if (!placed.length) return [];
+ const [cx, cy] = shape.center, first = placed[0], last = placed.at(-1)!, middle = (first.dx - SERVICE_BOX[first.kind].w / 2 + last.dx + SERVICE_BOX[last.kind].w / 2) / 2;
+ return placed.flatMap(m => {
+  const x = cx + middle + (m.dx - middle) * MARK_ROOM, y = cy + m.dy, box = SERVICE_BOX[m.kind];
+  return m.kind === 'flight' ? [-1, 1].map(side => ({ x: x + side * box.w * MARK_ROOM / 4, y, r: box.h * MARK_ROOM / 2 })) : [{ x, y, r: (box.w + box.h) * MARK_ROOM / 4 }];
+ });
 }
 
 /** A region's name as it is broken into lines on the map. */
@@ -116,7 +164,8 @@ export function boardTokenPositions(p: ContentPack, state: Pick<GameView, 'heroe
    ...world.map(w => ({ key: `w:${r.id}:${w.id}`, r: TOKEN_RADIUS.world, prefer: [-34, 22] as const })),
   ];
   if (!specs.length) continue;
-  Object.assign(at, layoutTokens(shape, specs, labelBox(r.name, !!(r.flight || r.town || r.graveyard))));
+  const services = servicesOf(r);
+  Object.assign(at, layoutTokens(shape, specs, labelBox(r.name), takenByServices(shape, r.name, services)));
  }
  return at;
 }

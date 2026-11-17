@@ -27,7 +27,7 @@ describe('tokens stand inside their own region', () => {
  });
 
  it('keeps tokens apart and off the region’s name where the region has room', () => {
-  const shape = BOARD_SHAPE_BY_ID.hearthglen, [cx, cy] = shape.center, label = labelBox('Hearthglen', false);
+  const shape = BOARD_SHAPE_BY_ID.hearthglen, [cx, cy] = shape.center, label = labelBox('Hearthglen');
   const at = layoutTokens(shape, [{ key: 'a', r: 20, prefer: [0, -36] }, { key: 'b', r: 20, prefer: [0, 36] }, { key: 'c', r: 20, prefer: [44, -14] }], label);
   const keys = Object.keys(at);
   for (let i = 0; i < keys.length; i++) for (let j = i + 1; j < keys.length; j++) expect(Math.hypot(at[keys[i]][0] - at[keys[j]][0], at[keys[i]][1] - at[keys[j]][1]), `${keys[i]}/${keys[j]}`).toBeGreaterThanOrEqual(40);
