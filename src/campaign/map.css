@@ -36,9 +36,12 @@
 @media(max-width:600px){.territorial-map.overview .map-services-size{transform:scale(2.1)}.territorial-map.interacting .map-services-size{transform:scale(1.4)}}
 .map-service:hover .service-rim{stroke:#fff;stroke-width:1.9}
 .service-icon{display:block;flex:none;overflow:visible}
+/* Where a flight path leads, drawn from the selected region in its faction's colour. */
+.map-flight-network path{fill:none;stroke-width:2.2;stroke-linecap:round;stroke-dasharray:.1 7;opacity:.9;filter:drop-shadow(0 1px 1px #000a)}
+.map-flight-network path.horde{stroke:#ff9483}.map-flight-network path.alliance{stroke:#8fc4ff}
 .step-counter circle{fill:#334b39;stroke:#d3ddad;stroke-width:1.4}.step-counter text{font:bold 10px var(--sans);fill:#f0f8ca}
 .map-route path{fill:none;stroke:#ffdd89;stroke-width:3.5;stroke-linejoin:round;stroke-linecap:round;stroke-dasharray:7 6;filter:drop-shadow(0 1px 2px #171608)}
-.map-route .flight-route{stroke:#a9deff;stroke-dasharray:3 7}.map-route circle{fill:#ffdb8d;stroke:#3c321e;stroke-width:2}.map-route text{fill:#2c291b;font:700 13px var(--sans)}
+.map-route .flight-route{stroke:#a9deff;stroke-dasharray:3 7}.map-route .flight-route.horde{stroke:#ffb3a4}.map-route circle{fill:#ffdb8d;stroke:#3c321e;stroke-width:2}.map-route text{fill:#2c291b;font:700 13px var(--sans)}
 .creature-counter circle{stroke:#dfd2ac;stroke-width:1.3}.creature-counter.green circle{fill:#3e7b4d}.creature-counter.red circle{fill:#b14739}.creature-counter.blue circle{fill:#367ebc}.creature-counter text{font:700 12px var(--sans);fill:white;paint-order:stroke;stroke:#0005;stroke-width:1px}
 .quest-map-token{cursor:pointer;filter:drop-shadow(0 2px 2px #000a)}.quest-map-token path{stroke:#e4c07c;stroke-width:1.5;fill:#963f34}.quest-map-token.alliance path{fill:#315a8a}.quest-map-token text{fill:#fff3d1;font:700 11px var(--sans);pointer-events:none}.quest-map-token:hover path,.quest-map-token:focus-visible path,.quest-map-token.active path{stroke:#fff4bb;stroke-width:3;filter:brightness(1.2)}.quest-map-token:focus{outline:none}
 .map-overlord path{fill:#ecd08e;stroke:#322213;stroke-width:2}.map-cartouche text{font:600 29px var(--serif);letter-spacing:7px;fill:#b7a278}.map-cartouche .cartouche-small{font:9px var(--sans);letter-spacing:4px;fill:#8e886a}

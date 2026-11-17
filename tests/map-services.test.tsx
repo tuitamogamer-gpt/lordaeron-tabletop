@@ -207,14 +207,20 @@ describe('the marks on the map', () => {
   expect(tip.textContent).toContain(`Closed to ${mine} (Horde).`);
  });
 
- it('names the faction in the selected region’s line and details', () => {
+ it('names the faction in the selected region’s line and details, and draws where its flight path leads', () => {
   render(<Table />);
   fireEvent.click(screen.getByRole('button', { name: /Interact with map/ }));
-  const dialog = screen.getByRole('dialog', { name: 'Interact with map' }), line = () => dialog.querySelector('.region-places')!;
+  const dialog = screen.getByRole('dialog', { name: 'Interact with map' }), line = () => dialog.querySelector('.region-places')!, network = () => [...dialog.querySelectorAll<SVGPathElement>('.map-flight-network path')].map(path => path.dataset.flight);
   expect([...line().querySelectorAll('.place-chip')].map(c => c.textContent)).toEqual(['Horde starting region', 'Horde town', 'Horde flight path']);
   expect([...line().querySelectorAll('.place-chip')].map(c => c.className)).toEqual(['place-chip horde', 'place-chip horde', 'place-chip horde']);
+  expect(network()).toEqual(['horde:north-tide', 'horde:caer', 'horde:pestilent']);
   find('pestilent');
   expect([...line().querySelectorAll('.place-chip')].map(c => c.textContent)).toEqual(['Town of both factions', 'Flight path of both factions']);
+  expect(network()).toEqual(['horde:brill', 'horde:north-tide', 'horde:caer', 'alliance:southshore', 'alliance:sorrow', 'alliance:aerie']);
+  expect(dialog.querySelectorAll('.map-flight-network path.horde')).toHaveLength(3);
+  expect(dialog.querySelectorAll('.map-flight-network path.alliance')).toHaveLength(3);
+  // The flight the character in hand would take is drawn in his own faction's colour.
+  expect(dialog.querySelector('.map-route .flight-route.horde')).not.toBeNull();
   fireEvent.click(within(dialog).getByRole('button', { name: /^Region details/ }));
   const offers = within(dialog).getByRole('list', { name: 'What this region offers' });
   expect(offers.textContent).toContain('Town of both factions');
@@ -224,6 +230,7 @@ describe('the marks on the map', () => {
   expect(within(dialog).getByRole('list', { name: 'What this region offers' }).textContent).toMatch(/Alliance town.*Closed to \w+ \(Horde\)\..*Alliance flight path.*Flies to Southshore, Sorrow Hill or Pestilent Scar/);
   find('andorhal');
   expect([...line().querySelectorAll('.place-chip')].map(c => `${c.className}:${c.textContent}`)).toEqual(['place-chip neutral:Graveyard']);
+  expect(network()).toEqual([]);
   find('hearthglen');
   expect(line().querySelector('.place-chip')).toBeNull();
   expect(within(dialog).queryByRole('list', { name: 'What this region offers' })).toBeNull();

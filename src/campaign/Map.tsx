@@ -10,7 +10,7 @@ import { clampCamera, OVERVIEW_CAMERA, panCamera, pinchCamera, questMarkers, zoo
 import { BoardTokenArt } from './Art';
 import { creatureStacks, MapPortraitToken, type TokenHelp, type ShowTokenHelp } from './MapTokens';
 import { ServiceBadge, ServiceIcon } from './MapServices';
-import { factionName, placeNames, SERVICE_BOX, serviceName, serviceRule, servicesOf, serves, type Service } from './map-services';
+import { factionName, flightsFrom, placeNames, SERVICE_BOX, serviceName, serviceRule, servicesOf, serves, type Service } from './map-services';
 import { boardTokenPositions, labelLines, serviceMarks } from './token-layout';
 import { encounterProfile, ThreatLevel } from './feedback';
 import { ExperienceTrack, TurnTrack } from './BoardTracks';
@@ -198,9 +198,11 @@ export default function CampaignMap({ state, selected, heroId, legal, onSelect, 
      <polygon className="spotlight-field" points={points(spotlight.region)}/>
      {(()=>{const[cx,cy]=at(centers[spotlight.region]);return <circle className="spotlight-ring" cx={cx} cy={cy} r={lying?30*sizeAt(centers[spotlight.region][1]):30}/>;})()}
     </g>}
+    {/* Where the selected region's flight path leads, in its faction's colour: every other flight path of that faction. */}
+    {focused&&destination.flight&&centers[selected]&&<g className="map-flight-network" pointerEvents="none">{(['horde','alliance'] as const).flatMap(f=>flightsFrom(regions,destination,f).map(to=><path key={`${f}:${to.id}`} className={f} data-flight={`${f}:${to.id}`} d={arc(centers[selected],centers[to.id])}/>))}</g>}
     {move&&<g className="map-route" pointerEvents="none">{move.path.map((id,i)=>{
      const from=allRoute[i],[bx,by]=centers[id],air=flight(from,id),line=air?arc(centers[from],centers[id]):walk(from,id);
-     return <g key={i}><path d={line} className={air?'flight-route':'walking-route'}/>{lying?<g transform={stand(bx,by)}><circle cy="-25" r="12"/><text y="-21" textAnchor="middle">{i+1}</text></g>:<><circle cx={bx} cy={by-25} r="12"/><text x={bx} y={by-21} textAnchor="middle">{i+1}</text></>}</g>;
+     return <g key={i}><path d={line} className={air?`flight-route ${character(p,heroId).faction}`:'walking-route'}/>{lying?<g transform={stand(bx,by)}><circle cy="-25" r="12"/><text y="-21" textAnchor="middle">{i+1}</text></g>:<><circle cx={bx} cy={by-25} r="12"/><text x={bx} y={by-21} textAnchor="middle">{i+1}</text></>}</g>;
     })}</g>}
     {regions.map(r=>{
      const [x,y]=centers[r.id],enemies=state.enemies.filter(e=>e.region===r.id),people=state.heroes.filter(h=>h.location===r.id);
