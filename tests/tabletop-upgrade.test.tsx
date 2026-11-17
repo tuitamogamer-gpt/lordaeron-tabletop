@@ -37,7 +37,7 @@ describe('tabletop pieces and cards',()=>{
  });
  it('preserves a d8 result and its selection, removal and reroll states',()=>{
   const click=vi.fn(),die={id:1,color:'blue' as const,value:8,removed:false,spotted:false,rerolled:true};const r=render(<D8 die={die} selected disabled={false} onSelect={click}/>);
-  const button=screen.getByRole('button',{name:/blue D8 8, miss, rerolled/});expect(r.container.querySelectorAll('.d8-face')).toHaveLength(8);expect(r.container.querySelector('.d8-result')?.textContent).toContain('8');expect(button.getAttribute('aria-pressed')).toBe('true');fireEvent.click(button);expect(click).toHaveBeenCalledOnce();
+  const button=screen.getByRole('button',{name:/blue D8 8, miss, rerolled/});expect(r.container.querySelectorAll('.d8-face')).toHaveLength(8);expect(r.container.querySelector('.d8-face.up text')?.textContent).toBe('8');expect(r.container.querySelector('.d8-result')?.textContent).toBe('MISS');expect(button.getAttribute('aria-pressed')).toBe('true');fireEvent.click(button);expect(click).toHaveBeenCalledOnce();
   r.rerender(<D8 die={{...die,removed:true}} disabled={false} onSelect={click}/>);fireEvent.click(screen.getByRole('button'));expect(click).toHaveBeenCalledOnce();
  });
  it('counts only a quest’s own non-blue targets and preserves multi-spawn totals',()=>{

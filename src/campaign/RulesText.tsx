@@ -10,7 +10,7 @@ function DieGlyph({ color }: { color?: Color }) {
  return <svg className={`rule-die ${color ?? 'any'}`} viewBox="0 0 72 76" aria-hidden="true" focusable="false" data-die-color={color ?? 'any'}>
   {glyphFaces.map(face => <g key={face.value}>
    <polygon className={`die-facet${face.value === 8 ? ' die-top' : ''}`} points={face.points} style={{ fill: face.fill(color) }} />
-   {face.value === 8 && <path className="die-numeral" transform={face.plane} d="M24 17C17 17 17 25 24 25C31 25 31 17 24 17ZM24 25C16 25 16 34 24 34C32 34 32 25 24 25Z" />}
+   {face.value === 8 && <path className="die-numeral" transform={`${face.plane} translate(0 3)`} d="M24 17C17 17 17 25 24 25C31 25 31 17 24 17ZM24 25C16 25 16 34 24 34C32 34 32 25 24 25Z" />}
   </g>)}
  </svg>;
 }

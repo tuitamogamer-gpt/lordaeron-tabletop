@@ -3,6 +3,7 @@ import { cleanup, render, screen, fireEvent } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import D8 from '../src/campaign/D8';
 import RulesText from '../src/campaign/RulesText';
+import { camera, faces, facetColor, glyphFaces, pitch, rollOf, seen, side, spinOf } from '../src/campaign/dice-geometry';
 import type { Die } from '../src/rules/model';
 
 afterEach(cleanup);
@@ -51,7 +52,8 @@ describe('physical eight-sided dice', () => {
   const pitch = Number(body.style.transform.match(/rotateX\(([-\d.]+)deg\)/)![1]);
   expect(pitch).toBeGreaterThanOrEqual(35);
   expect(pitch).toBeLessThanOrEqual(55);
-  expect(screen.getByRole('button', { name: `blue D8 ${value}, miss` }).textContent).toContain(`${value} · MISS`);
+  // The number is on the die; under it stands whether it hit.
+  expect(screen.getByRole('button', { name: `blue D8 ${value}, miss` }).querySelector('.d8-result')?.textContent).toBe('MISS');
  });
 
  it('keeps the numbers on prepared dice without presenting them as a rolled result', () => {
@@ -86,9 +88,111 @@ describe('physical eight-sided dice', () => {
   expect(icons.map(icon => icon.getAttribute('data-die-color'))).toEqual(['red', 'blue']);
   expect(container.querySelector('.rule-die image')).toBeNull();
   for (const icon of icons) {
-   expect(icon.querySelectorAll('.die-facet')).toHaveLength(4);
+   // The icon is the die at rest, square to the reader: its result face and the face under it.
+   expect(icon.querySelectorAll('.die-facet')).toHaveLength(2);
    for (const face of icon.querySelectorAll('polygon')) expect(face.getAttribute('points')?.split(' ')).toHaveLength(3);
    expect(icon.querySelectorAll('.die-numeral')).toHaveLength(1);
   }
+ });
+});
+
+/**
+ * How a die at rest looks (docs/DICE-2026-11-17.md). The mesh was a true octahedron, but it was turned so that it showed a
+ * slanted wedge with three numbers of equal weight; a player could not tell it was a d8.
+ */
+describe('a die at rest is seen as a d8 is', () => {
+ const rgb = (color: string) => color.match(/\d+/g)!.map(Number), spread = (c: number[]) => Math.max(...c) - Math.min(...c), sum = (c: number[]) => c[0] + c[1] + c[2];
+ it.each([1, 2, 3, 4, 5, 6, 7, 8])('lies on a face with result %i level with the table, whichever way it has turned', value => {
+  const up = faces.find(f => f.value === value)!, lean = [0, -Math.sin(pitch * Math.PI / 180), Math.cos(pitch * Math.PI / 180)];
+  for (let index = 0; index < 5; index++) {
+   // Turning on the table is a turn about the result face's own upright, so that face stays level: it only leans back by the camera's pitch.
+   const normal = seen(up.normal, up, spinOf(index), 0);
+   normal.forEach((n, i) => expect(n).toBeCloseTo(lean[i], 6));
+   // The lean of the picture turns the die in the plane of the screen and leaves its depth alone.
+   expect(seen(up.normal, up, spinOf(index), rollOf(index))[2]).toBeCloseTo(lean[2], 6);
+   expect(Math.abs(spinOf(index))).toBeLessThanOrEqual(12);
+   expect(Math.abs(rollOf(index))).toBeLessThanOrEqual(5);
+  }
+ });
+
+ it('is a diamond: the result face an upright triangle, the face under it one that points down', () => {
+  for (const up of faces) {
+   const corners = new Map<string, number[]>();
+   for (const f of faces) for (const v of f.vertices) corners.set(v.join(), seen(v, up));
+   const points = [...corners.values()], xs = points.map(p => p[0]), ys = points.map(p => p[1]);
+   // As wide as one edge, as tall as the die is from corner to corner, and the same above and below its middle.
+   expect(Math.max(...xs) - Math.min(...xs)).toBeCloseTo(side, 1);
+   expect(Math.max(...ys)).toBeCloseTo(34, 0); expect(Math.min(...ys)).toBeCloseTo(-34, 0);
+   // Four corners lie on the middle line, two at each side: the die has no slanted waist.
+   const waist = points.filter(p => Math.abs(p[1]) < 2);
+   expect(waist).toHaveLength(4);
+   expect(waist.filter(p => p[0] < 0)).toHaveLength(2);
+   // The result face: its point at the top, its base on the middle line.
+   const [apex, left, right] = up.vertices.map(v => seen(v, up));
+   expect(apex[0]).toBeCloseTo(0, 6); expect(apex[1]).toBeLessThan(-33);
+   expect(Math.abs(left[1])).toBeLessThan(2); expect(Math.abs(right[1])).toBeLessThan(2);
+   // Exactly two faces are in plain view, the result face and the one that shares its base and points down.
+   const inView = faces.filter(f => seen(f.normal, up)[2] > .1);
+   expect(inView).toHaveLength(2);
+   const under = inView.find(f => f !== up)!, tip = under.vertices.map(v => seen(v, up)).sort((a, b) => b[1] - a[1])[0];
+   expect(tip[0]).toBeCloseTo(0, 6); expect(tip[1]).toBeGreaterThan(33);
+   // The light is on the result face.
+   expect(sum(rgb(facetColor(up.normal, up, 0, 0, 'red')))).toBeGreaterThan(sum(rgb(facetColor(under.normal, up, 0, 0, 'red'))) * 1.3);
+  }
+ });
+
+ it('draws the body under that camera', () => {
+  const { container } = render(<><D8 die={die} animate={false} index={0} /><D8 die={{ ...die, id: 2 }} animate={false} index={1} /></>);
+  const [first, second] = [...container.querySelectorAll<HTMLElement>('.d8-body')];
+  expect(first.style.transform.startsWith(camera(0, 0))).toBe(true);
+  expect(first.style.transform).toContain(`rotateX(${pitch}deg)`);
+  // The next die in the row has turned a little, as dice do.
+  expect(second.style.transform.startsWith(camera(spinOf(1), rollOf(1)))).toBe(true);
+  expect(second.style.transform).not.toBe(first.style.transform);
+  // Nothing tips the result face sideways.
+  expect(first.style.transform).not.toContain('rotateY');
+ });
+
+ it('has one number that counts, and says under the die whether it hit', () => {
+  const { container, rerender } = render(<D8 die={{ ...die, value: 6 }} hit animate={false} />);
+  const button = () => container.querySelector<HTMLElement>('.combat-d8')!;
+  expect(button().classList.contains('hit')).toBe(true);
+  expect(container.querySelectorAll('.d8-face.up')).toHaveLength(1);
+  expect(container.querySelector('.d8-face.up text')?.textContent).toBe('6');
+  expect(container.querySelector('.d8-result')?.textContent).toBe('HIT');
+  rerender(<D8 die={{ ...die, value: 3 }} animate={false} />);
+  expect(button().classList.contains('miss')).toBe(true);
+  expect(container.querySelector('.d8-face.up text')?.textContent).toBe('3');
+  expect(container.querySelector('.d8-result')?.textContent).toBe('MISS');
+  // A die that is only prepared has no result: the stylesheet inks a number only on a die that is not `ready`.
+  rerender(<D8 die={{ ...die, value: 0 }} animate={false} source="Dire Wand" />);
+  expect(button().classList.contains('ready')).toBe(true);
+  expect(container.querySelector('.d8-result')?.textContent).toBe('Dire Wand');
+ });
+
+ it('gives every face its full colour and the dull one of a die that missed, for the stylesheet to choose', () => {
+  const { container } = render(<D8 die={{ ...die, value: 2, color: 'blue' }} animate={false} />);
+  const resin = [...container.querySelectorAll<SVGPathElement>('.d8-resin')];
+  expect(resin).toHaveLength(8);
+  for (const path of resin) {
+   const full = rgb(path.style.getPropertyValue('--facet')), dull = rgb(path.style.getPropertyValue('--facet-dull'));
+   expect(full).toHaveLength(3); expect(dull).toHaveLength(3);
+   // Dull is grey: far less colour than the face in its own colour.
+   expect(spread(dull)).toBeLessThan(spread(full) * .55);
+  }
+  // In every colour, also in blue, where a darker blue once passed for dull.
+  const up = faces[0];
+  for (const color of ['red', 'blue', 'green'] as const) expect(spread(rgb(facetColor(up.normal, up, 0, 0, color, true)))).toBeLessThan(spread(rgb(facetColor(up.normal, up, 0, 0, color))) * .55);
+ });
+
+ it('uses the same die for the icons in rules text', () => {
+  expect(glyphFaces.map(f => f.value)).toContain(8);
+  expect(glyphFaces).toHaveLength(2);
+  const [top, under] = [glyphFaces.find(f => f.value === 8)!, glyphFaces.find(f => f.value !== 8)!].map(f => f.points.split(' ').map(pair => pair.split(',').map(Number)));
+  // An upright triangle over one that points down, sharing the middle line of a 72 by 76 box.
+  expect(Math.min(...top.map(p => p[1]))).toBeCloseTo(4, 0);
+  expect(Math.max(...under.map(p => p[1]))).toBeCloseTo(72, 0);
+  expect(top.filter(p => Math.abs(p[1] - 38) < 2)).toHaveLength(2);
+  expect(under.filter(p => Math.abs(p[1] - 38) < 2)).toHaveLength(2);
  });
 });

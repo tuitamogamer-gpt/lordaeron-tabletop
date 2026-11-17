@@ -1,18 +1,46 @@
-/* A d8 is an octahedron: a broad triangular top and two sloping side faces.
-   Keep these planes in one 3D context; filters on the body would flatten it. */
-.combat-d8.physical-d8{perspective:650px;perspective-origin:50% 32px}
+/* A d8 is an octahedron. At rest it lies on one face, and the face that shows its result is level with the table: seen from a
+   player's chair it is an upright triangle over a darker one that points down, a diamond (dice-geometry.ts).
+   The eight planes stay in one 3D context. A filter or an opacity on the body would flatten it, so a die's state is told by
+   the colour of its faces and by what stands around it, never by a filter on the die itself. */
+
+/* The die's size and the height of its middle in its box. The box differs by layout (combat.css); the die is 48 by 68 at full
+   size, a little wider where it has turned, and stands as large as leaves its box room for the line under it. */
+.combat-d8.physical-d8{--d8-scale:.9;--d8-top:35px;perspective:650px;perspective-origin:50% var(--d8-top)}
+.combat-room .combat-d8.physical-d8{--d8-scale:.8;--d8-top:28px}
+@media(min-width:1050px) and (max-height:850px){.combat-room .combat-d8.physical-d8{--d8-scale:.7;--d8-top:24px}}
+.physical-d8 .d8-tumble{top:var(--d8-top);scale:var(--d8-scale)}
+/* A prepared die stands by the name of its card, which takes two lines: the die is a little smaller there and leaves them room. */
+.physical-d8.named .d8-tumble{top:calc(var(--d8-top) - 2px);scale:calc(var(--d8-scale)*.92)}
 .physical-d8 .d8-tumble,.physical-d8 .d8-body{transform-style:preserve-3d}
 .physical-d8 .d8-face{backface-visibility:hidden;-webkit-backface-visibility:hidden}
 .physical-d8 .d8-face svg{overflow:visible}
-.physical-d8 .d8-face .d8-resin{stroke:#08121c99;stroke-width:.55;stroke-linejoin:round}
+.physical-d8 .d8-face .d8-resin{fill:var(--facet);stroke:#05090ccc;stroke-width:.9;stroke-linejoin:round}
+/* A die that missed is dull. It is thrown in its own colour and loses it when it has come to rest, with its result. */
+.physical-d8.miss .d8-face .d8-resin,.physical-d8.removed .d8-face .d8-resin{fill:var(--facet-dull)}
+.physical-d8.miss .d8-tumble.rolling .d8-resin{animation:d8-dull 1150ms both;animation-delay:var(--die-delay)}
+@keyframes d8-dull{0%,85%{fill:var(--facet)}}
 .physical-d8 .d8-face .d8-lustre{stroke:none}
-.physical-d8 .d8-face .d8-bevel{fill:none;stroke:#eaf9ff50;stroke-width:.6;stroke-linecap:round;stroke-linejoin:round}
-.physical-d8 .d8-face text{fill:#fff9e9;font:700 22px/1 Arial,Helvetica,sans-serif;text-anchor:middle;stroke:#06141c66;stroke-width:.65;paint-order:stroke fill;text-shadow:0 .5px 0 #0009}
-.physical-d8 .d8-face .d8-six-mark{fill:none;stroke:#fff9e9;stroke-width:1.15;stroke-linecap:round}
-.physical-d8 .d8-ground{left:13%;right:13%;top:52px;height:11px;background:#000b;filter:blur(3px);transform:rotate(-8deg)}
-.combat-room .physical-d8 .d8-ground{top:44px;height:9px}
-.physical-d8.hit .d8-ground{background:#000b;opacity:1;filter:blur(3px)}
-.physical-d8 .d8-result{font-size:8px;font-weight:600;letter-spacing:.25px;color:#a9b9bb}
+.physical-d8 .d8-face .d8-bevel{fill:none;stroke:#ffffff30;stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round}
+
+/* A real die has a number on every face. Only the one on the result face counts: it is inked, the others are engraved, and a
+   die that is only prepared has no result yet. */
+.physical-d8 .d8-face text{fill:#03080c;font:800 25px/1 var(--sans),Arial,Helvetica,sans-serif;text-anchor:middle;stroke:none;text-shadow:none;opacity:.34}
+.physical-d8 .d8-face .d8-six-mark{fill:none;stroke:#03080c;stroke-width:1.6;stroke-linecap:round;opacity:.34}
+.physical-d8:not(.ready) .d8-face.up text{fill:#fff;stroke:#04090d99;stroke-width:1.2;paint-order:stroke fill;opacity:1}
+.physical-d8:not(.ready) .d8-face.up .d8-six-mark{stroke:#fff;opacity:1}
+.physical-d8.miss .d8-face.up text{fill:#e9e4d6}.physical-d8.miss .d8-face.up .d8-six-mark{stroke:#e9e4d6}
+
+/* The shadow the die casts on the table, behind its lower half and a little to the right. */
+.physical-d8 .d8-ground{left:50%;right:auto;top:calc(var(--d8-top) + 2px);width:calc(52px*var(--d8-scale));height:calc(36px*var(--d8-scale));margin-left:calc(-21px*var(--d8-scale));border-radius:50%;background:#000c;filter:blur(4px);transform:none;opacity:1}
+.physical-d8.hit .d8-ground{background:#000c;opacity:1;filter:blur(4px)}
+/* A die that hit stands in a glow of its own colour; one that missed is dull (dice-geometry.ts) and has none. */
+.physical-d8.hit::before{content:'';position:absolute;z-index:0;left:50%;top:var(--d8-top);width:calc(96px*var(--d8-scale));height:calc(96px*var(--d8-scale));translate:-50% -50%;border-radius:50%;background:radial-gradient(closest-side,var(--channel) 0,transparent 74%);opacity:.5;pointer-events:none}
+
+/* Whether the die hit, under it. Its number is on the die. */
+.physical-d8 .d8-result{left:-7px;right:-7px;white-space:nowrap;font-weight:700;letter-spacing:0;color:#96a5a7}
+.physical-d8.hit .d8-result{color:var(--channel)}
+.physical-d8 .d8-result.d8-source{white-space:normal}
+
 .physical-d8 .d8-tumble.rolling{animation-name:physical-d8-toss;animation-duration:1050ms;animation-timing-function:cubic-bezier(.2,.65,.3,1);animation-fill-mode:both}
 @keyframes physical-d8-toss{
  0%{transform:translate3d(-9px,-23px,30px) rotateX(-270deg) rotateY(190deg) rotateZ(-100deg)}
@@ -21,4 +49,7 @@
  85%{transform:translate3d(-1px,-4px,2px) rotateX(-6deg) rotateY(364deg) rotateZ(-3deg)}
  100%{transform:translate3d(0,0,0) rotateX(0) rotateY(360deg) rotateZ(0)}
 }
-@media(prefers-reduced-motion:reduce){.physical-d8 .d8-tumble.rolling,.physical-d8 .d8-tumble.rolling~.d8-result{animation:none}}
+/* The glow arrives with the result, when the die has come to rest. */
+.physical-d8.hit:has(.d8-tumble.rolling)::before{animation:d8-glow 1150ms both;animation-delay:var(--die-delay)}
+@keyframes d8-glow{0%,85%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.physical-d8 .d8-tumble.rolling,.physical-d8 .d8-tumble.rolling~.d8-result,.physical-d8.hit:has(.d8-tumble.rolling)::before,.physical-d8.miss .d8-tumble.rolling .d8-resin{animation:none}}
