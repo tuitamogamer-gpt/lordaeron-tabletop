@@ -50,6 +50,8 @@ Ostalo:
 
 Ispod svake nebačene kockice piše karta zbog koje je uzeta: „Battle Stance”, „Rusty Sword”, „Slarkskin”, a nakon klika na Use i „Heroic Strike”. Nakon bacanja tu stoji rezultat, a izvor ostaje u opisu kockice.
 
+> Naknadno, 17. 11. 2026.: nakon bacanja tu stoji samo „HIT” ili „MISS”. Broj je na samoj kockici, koja sada izgleda kao D8: [DICE-2026-11-17.md](DICE-2026-11-17.md).
+
 ## Telefon
 
 Na ekranu 390 × 844 moći su počinjale 600 px ispod ruba ekrana, ispod dugmeta Roll. Sada:
