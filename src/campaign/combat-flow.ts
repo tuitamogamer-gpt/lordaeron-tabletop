@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { decide, type Difficulty } from '../ai/planner';
 import { publicState } from '../ai/public-state';
 import { BASE_PACK } from '../data/base';
@@ -7,11 +7,14 @@ import { botOwns } from '../multiplayer/ownership';
 import type { BattleStage, Command, ContentPack } from '../rules/model';
 import type { GameView } from '../rules/view';
 import { apply } from '../rules/game';
+import { roundForecast } from './combat-forecast';
 
 export const DICE_SETTLE_MS = 1350;
 export const COMBAT_STEP_MS = 750;
 /** A bookkeeping step stays visible for a beat before it continues on its own. */
 export const AUTO_CONTINUE_MS = 900;
+/** Wounds that fall on the only character who can take them follow one another without that pause. */
+export const AUTO_WOUND_MS = 350;
 export const COMBAT_BEATS = { action: 420, impact: 980, recovery: 1600, complete: 2200 } as const;
 /** A power or a new attacker has no outcome to wait for: what it did shows at once, and the table is free again after a short flourish. */
 export const LIGHT_BEATS = { action: 110, impact: 240, recovery: 430, complete: 600 } as const;
@@ -25,9 +28,11 @@ export type CombatCue = {
  heroId?: string;
  /** Enemies that fell in this exchange. */
  kills?: number;
+ /** One wound of several: the next one is still to be assigned, so this one does not hold the table for a full exchange. */
+ light?: boolean;
  before: GameView;
 };
-export const lightCue = (cue?: Pick<CombatCue, 'kind'>) => cue?.kind === 'power' || cue?.kind === 'prepare';
+export const lightCue = (cue?: Pick<CombatCue, 'kind' | 'light'>) => cue?.kind === 'power' || cue?.kind === 'prepare' || !!cue?.light;
 export type CombatPresentation = {
  cue?: CombatCue;
  phase: 'idle' | 'anticipation' | 'action' | 'impact' | 'recovery';
@@ -48,16 +53,22 @@ export function combatCue(before: GameView, after: GameView): CombatCue | undefi
  const health = battle.participants.map(id => ({ id, delta: (after.heroes.find(h => h.id === id)?.health ?? 0) - (before.heroes.find(h => h.id === id)?.health ?? 0) })).filter(h => h.delta);
  if (health.length) {
   const hurt = health.find(h => h.delta < 0), target = hurt ?? health[0];
-  return make(hurt ? 'hurt' : 'heal', hurt ? 'Enemy strike' : 'Restoring strength', hurt ? 'Brace for impact' : 'Gathering restorative energy', health.map(h => `${name(h.id)} ${h.delta > 0 ? '+' : '−'}${Math.abs(h.delta)} health`).join(' · '), target.id);
+  const cue = make(hurt ? 'hurt' : 'heal', hurt ? 'Enemy strike' : 'Restoring strength', hurt ? 'Brace for impact' : 'Gathering restorative energy', health.map(h => `${name(h.id)} ${h.delta > 0 ? '+' : '−'}${Math.abs(h.delta)} health`).join(' · '), target.id);
+  // A run of wounds: while more are waiting to be assigned, each one lands in a short beat (a full exchange each made five wounds last eleven seconds).
+  return hurt && old.stage === 'wounds' && battle.stage === 'wounds' && battle.wounds.horde + battle.wounds.alliance > 0 && !after.respawns.length ? { ...cue, light: true } : cue;
  }
  if (old.stage === 'defense' && battle.stage !== 'defense') {
   const ranged = old.boxes[side].damage > 0;
   const wounds = battle.wounds[side];
-  return make(ranged ? 'ranged' : 'defend', ranged ? 'Ranged volley' : 'Hold the line', ranged ? 'Taking aim' : 'Shields at the ready', [defeated, wounds > 0 ? `${wounds} ${wounds === 1 ? 'wound' : 'wounds'} to assign` : battle.stage === 'over' ? 'The encounter is decided' : 'The party holds its ground'].filter(Boolean).join(' · '));
+  // What the opponents struck with and how much of it was stopped, from the same forecast the Combat Area shows.
+  const f = old.kind === 'pve' && battle.stage !== 'over' ? roundForecast(BASE_PACK, before) : undefined;
+  const struck = f && !f.ranged.won ? `${f.foe} attacks for ${f.attack}${f.blocked + f.absorbed ? ` · ${f.blocked + f.absorbed} stopped` : ''}` : '';
+  return make(ranged ? 'ranged' : 'defend', ranged ? 'Ranged volley' : 'Hold the line', ranged ? 'Taking aim' : 'Shields at the ready', [defeated, struck, wounds > 0 ? `${wounds} ${wounds === 1 ? 'wound' : 'wounds'} to assign` : battle.stage === 'over' ? 'The encounter is decided' : 'The party holds its ground'].filter(Boolean).join(' · '));
  }
  if (old.stage === 'resolution' && battle.stage !== 'resolution') {
   const wounds = (['horde', 'alliance'] as const).filter(f => battle.wounds[f] > 0).map(f => `${f === 'horde' ? 'Horde' : 'Alliance'}: ${battle.wounds[f]} ${battle.wounds[f] === 1 ? 'wound' : 'wounds'} to assign`).join(' · ');
-  const detail = defeated || (battle.stage === 'over' ? 'The final exchange decides the battle' : battle.kind === 'pve' ? 'Damage carries into the next round' : wounds || 'Both factions clear their hit tokens');
+  const carried = battle.kind === 'pve' && battle.stage !== 'over' ? battle.boxes[side].damage : 0;
+  const detail = [defeated, battle.stage === 'over' ? defeated ? '' : 'The final exchange decides the battle' : battle.kind === 'pve' ? carried ? `${carried} damage ${carried === 1 ? 'token stays' : 'tokens stay'} for the next round` : 'No damage carries into the next round' : wounds || 'Both factions clear their hit tokens'].filter(Boolean).join(' · ');
   return make('melee', 'Melee & attrition', 'Closing the distance', detail);
  }
  if (kills) return make('ranged', 'A decisive strike', 'Finding an opening', defeated);
@@ -85,7 +96,9 @@ export function useCombatPresentation(state: GameView): CombatPresentation {
   media.addEventListener?.('change', change);
   return () => media.removeEventListener?.('change', change);
  }, []);
- useEffect(() => {
+ // Before the browser paints: an exchange holds its outcome back until the blow lands, so the new state must not be seen for
+ // the frame it would take an ordinary effect to announce the exchange. (It was: "Assign wounds" flashed, then "Defense" again.)
+ useLayoutEffect(() => {
   const before = previous.current; previous.current = state;
   if (before.revision === state.revision && before.phase === state.phase) return;
   const next = combatCue(before, state);
@@ -111,10 +124,21 @@ const BOOKKEEPING: Command['type'][] = ['advance', 'tokens', 'monster', 'attacke
 /** The single legal continuation of a combat step is bookkeeping, not a decision.
  * Rolling, rerolls, abilities, the outcome and any choice between targets or
  * characters stay with the player. Pending bot moves and other seats' options
- * keep the step manual, so a shared party decision is never taken on their behalf. */
+ * keep the step manual, so a shared party decision is never taken on their behalf.
+ * In the Armor step of a fight between the factions each faction sets its own armor: a faction with exactly one way to set
+ * it (no armor, or nothing to choose between) has no decision either, and its step continues even while the other
+ * faction still has a choice to make. */
 export function bookkeepingStep(state: GameView, human: Command[], all: Command[], botPending: boolean): Command | undefined {
  const b = state.battle;
- if (state.phase !== 'combat' || !b || b.stage === 'over' || botPending || human.length !== 1) return;
+ if (state.phase !== 'combat' || !b || b.stage === 'over' || botPending) return;
+ if (b.stage === 'defense' && b.kind !== 'pve' && human.length && human.every(c => c.type === 'armor')) {
+  for (const f of ['horde', 'alliance'] as const) {
+   const own = human.filter(c => c.type === 'armor' && c.faction === f);
+   if (own.length === 1 && all.filter(c => c.type === 'armor' && c.faction === f).length === 1) return own[0];
+  }
+  return;
+ }
+ if (human.length !== 1) return;
  const step = human[0];
  if (!BOOKKEEPING.includes(step.type)) return;
  return all.filter(c => c.type !== 'ability').length === 1 ? step : undefined;

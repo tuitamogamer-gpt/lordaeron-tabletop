@@ -33,7 +33,7 @@ import QuestActivity from './campaign/QuestReveal';
 import CampaignSummary from './campaign/CampaignSummary';
 import { UNDO_DEPTH, undoable, undoName } from './campaign/undo';
 import CharacterSheet, { CardRules, startingHero } from './campaign/CharacterSheet';
-import { AUTO_CONTINUE_MS, bookkeepingStep, combatCandidates, COMBAT_STEP_MS, DICE_SETTLE_MS, rollSignature, useCombatPresentation } from './campaign/combat-flow';
+import { AUTO_CONTINUE_MS, AUTO_WOUND_MS, bookkeepingStep, combatCandidates, COMBAT_STEP_MS, DICE_SETTLE_MS, rollSignature, useCombatPresentation } from './campaign/combat-flow';
 import ChallengeDialog from './campaign/ChallengeDialog';
 import ChallengeInvite from './campaign/ChallengeInvite';
 import { invitedPlayers, inviteKey, jointChallenges, type Challenge } from './campaign/invitations';
@@ -174,7 +174,7 @@ export default function Campaign(){
  const autoStep=autoContinue?bookkeepingStep(state,legal,allLegal,availableBotMoves.length>0):undefined;
  // The power a player used last stays on offer to take back until anything else happens: see undoable().
  const lastUndo=undoStack.at(-1)?.command,takenBack=lastUndo?.type==='ability'&&state.battle?{hero:lastUndo.hero,card:lastUndo.card,undo}:undefined;
- useEffect(()=>{if(!autoStep||diceRolling||presentation.busy||automationPaused||!combatOpen)return;const source=game.state;const t=setTimeout(()=>{if(current.current.state===source)send(autoStep);},AUTO_CONTINUE_MS);return()=>clearTimeout(t);},[autoStep,diceRolling,presentation.busy,automationPaused,combatOpen,game.state]);
+ useEffect(()=>{if(!autoStep||diceRolling||presentation.busy||automationPaused||!combatOpen)return;const source=game.state;const t=setTimeout(()=>{if(current.current.state===source)send(autoStep);},autoStep.type==='wound'?AUTO_WOUND_MS:AUTO_CONTINUE_MS);return()=>clearTimeout(t);},[autoStep,diceRolling,presentation.busy,automationPaused,combatOpen,game.state]);
  // The result of a fight the bots fought stays up long enough to be read before they close it; step by step, it waits to be closed.
  const combatDelay=botCombatDelay(automaticCombat,COMBAT_STEP_MS,tempo,pace==='step');
  useEffect(()=>{if(!automaticCombat.length||diceRolling||presentation.busy||automationPaused||combatDelay===undefined)return;let cancelled=false;const source=game.state;const t=setTimeout(()=>{if(cancelled||current.current.state!==source)return;const allowed=combatCandidates(p,view(source),allLegal,currentBots.current,{resolve:combatResolve,campaignAuto:auto,difficulty});if(!allowed.length)return;if(allowed.length===1)send(allowed[0]);else void planMove(allowed,()=>!cancelled);},combatDelay);return()=>{cancelled=true;clearTimeout(t);};},[automaticCombat,diceRolling,presentation.busy,automationPaused,game.state,combatDelay]);
