@@ -46,6 +46,8 @@ Ostalo:
 - Polja za broj kockica („Choose your dice pool”) su sklopljena iza dugmeta **Roll fewer dice**. Otvorena su odmah samo kad lik ima Stun ili Curse.
 - Dok napada AI lik, vide se i njegove odigrane moći.
 
+> Naknadno, 18. 11. 2026.: kartice likova na vrhu lista pokazuju i zdravlje i energiju, a rane se dodjeljuju dugmadima koja kažu šta rana ostavlja liku („Health 4 → 3”, „Last Health: Artumnis falls”). Iznad glavnog dugmeta na telefonu stoji rečenica na šta se runda svodi. Detalji: [COMBAT-ROUND-2026-11-18.md](COMBAT-ROUND-2026-11-18.md).
+
 ## Kockice leže uz svoju kartu
 
 Ispod svake nebačene kockice piše karta zbog koje je uzeta: „Battle Stance”, „Rusty Sword”, „Slarkskin”, a nakon klika na Use i „Heroic Strike”. Nakon bacanja tu stoji rezultat, a izvor ostaje u opisu kockice.

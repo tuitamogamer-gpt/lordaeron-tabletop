@@ -4,7 +4,9 @@ Desktop adaptacija osnovne igre iz 2005. i službenog FAQ-a 1.4. React interfejs
 
 [Otvori igru](https://lordaeron-tabletop.vercel.app)
 
-Najnoviji prolaz: **kockice izgledaju kao D8**. Kockica je bila pravi oktaedar, ali okrenuta ukoso: vidio se iskošen klin s tri bijela broja iste težine. Sada leži kako D8 leži na stolu, sa stranom rezultata vodoravno i jednom ivicom prema igraču, pa je to dijamant koji svi znaju: uspravan trokut s rezultatom nad tamnijim trokutom okrenutim naniže. Rezultat je jedini bijeli broj. Brojevi na ostalim stranama su tamna gravura, a pripremljena kockica nema nijedan bijeli. Pogodak stoji u sjaju svoje boje, promašaj se zagasi kad kockica stane, a ispod kockice piše samo „HIT” ili „MISS”. Sličica kockice u tekstu karata je ista kockica. Detalji: [DICE-2026-11-17.md](docs/DICE-2026-11-17.md).
+Najnoviji prolaz: **borba kaže na šta se runda svodi**. Ispod krugova zone borbe stoje dva zbira: napad protivnika umanjen za pogotke i armor („4 attack − 2 hits − 1 armor · 1 wound”) i šteta družine naspram njegovog zdravlja („3 of 3 · falls”). Računa ih motor pravila na kopiji stanja, pa se uvijek slažu s onim što dugme uradi. Scena više ne ponavlja jedan red, nego kaže ko je na redu i šta se desilo. Dugmad za rane pokazuju zdravlje prije i poslije i upozoravaju na ranu koja obara lika, a niz rana ide brže (dvije rane 3,6 s umjesto 6,3 s). PvP pokazuje obje zone borbe odjednom, dugmad za armor kažu šta poništavaju („Alliance armor: cancel 1 melee + 1 attrition”), a frakcija koja nema šta birati ne klikće. Kraj borbe ima sažetak: ko je pao, šta je koštalo i koji je quest završen. Pravila su ponovo upoređena s pravilnikom i slažu se, pa motor pravila nije mijenjan. Detalji: [COMBAT-ROUND-2026-11-18.md](docs/COMBAT-ROUND-2026-11-18.md).
+
+Prethodni prolaz: **kockice izgledaju kao D8**. Kockica je bila pravi oktaedar, ali okrenuta ukoso: vidio se iskošen klin s tri bijela broja iste težine. Sada leži kako D8 leži na stolu, sa stranom rezultata vodoravno i jednom ivicom prema igraču, pa je to dijamant koji svi znaju: uspravan trokut s rezultatom nad tamnijim trokutom okrenutim naniže. Rezultat je jedini bijeli broj. Brojevi na ostalim stranama su tamna gravura, a pripremljena kockica nema nijedan bijeli. Pogodak stoji u sjaju svoje boje, promašaj se zagasi kad kockica stane, a ispod kockice piše samo „HIT” ili „MISS”. Sličica kockice u tekstu karata je ista kockica. Detalji: [DICE-2026-11-17.md](docs/DICE-2026-11-17.md).
 
 Prethodni prolaz: **na mapi se vidi čiji je grad i čiji je let**. Grad, let i groblje bili su jedan znak od 16 × 6 px ispod imena polja, u jednoj blijedoj boji, a legenda ih nije spominjala. Sada je grad štit s kulom, let disk s krilima, a groblje nadgrobni kamen. Crvena je Horda, plava Alijansa, a oznaka koju koriste obje frakcije je pola crvena i pola plava. Legenda ima ključ kao na štampanoj tabli, red ispod mape i **Region details** imenuju frakciju i kažu kuda let vodi i da li je otvoren liku na potezu, a pokazivanje na oznaku otvara isti opis. Kad se odabere polje s letom, lukovi u boji frakcije pokazuju sve letove te frakcije. Žetoni oznakama ostavljaju mjesta. Detalji: [MAP-OWNERSHIP-2026-11-17.md](docs/MAP-OWNERSHIP-2026-11-17.md).
 
@@ -151,6 +153,7 @@ Granice mape ručno su precrtane iz dvije fotografije originala, uz dijagrame iz
 - [Popravke iz pregleda svih ekrana i završni sloj dizajna](docs/PREMIUM-FINISH-2026-11-14.md)
 - [Čiji je grad i čiji je let na mapi](docs/MAP-OWNERSHIP-2026-11-17.md)
 - [Kockice koje izgledaju kao D8](docs/DICE-2026-11-17.md)
+- [Borba: obračun runde, rane, PvP i ishod](docs/COMBAT-ROUND-2026-11-18.md)
 
 ## Autorska prava
 

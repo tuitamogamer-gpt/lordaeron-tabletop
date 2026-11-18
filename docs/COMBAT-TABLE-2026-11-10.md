@@ -17,6 +17,8 @@ U igri je to sada isto:
 
 **Raspored:** na računaru polje stoji desno od kocki, kao na stolu: kocke se bacaju lijevo, a hitovi idu u krugove. Ranije je bilo ispod kocki, na 1366×768 odsječeno ispod ivice ekrana. U PvP-u su dva manja polja, jedno za svaku frakciju. Na telefonu je polje ispod kocki, a legenda boja je ispod krugova.
 
+> Naknadno, 18. 11. 2026.: ispod krugova sada stoje dva zbira na koja se runda svodi (napad protivnika i šteta družine), a broj rana je u prvom od njih. U PvP-u su dva polja na 1366×768 stajala jedno ispod drugog i drugo je bilo ispod ruba; na telefonu, tabletu i ekranu nižem od 900 px svako polje je sada red od tri pločice, pa se vide oba. Stupac s poljem zauzima svu preostalu visinu prozora. Detalji: [COMBAT-ROUND-2026-11-18.md](COMBAT-ROUND-2026-11-18.md).
+
 ## Protivnik na prelazak mišem
 
 Portret i ime protivnika u zaglavlju borbe, kao i protivnik u sceni borbe, otvaraju karticu na prelazak mišem ili fokus tastaturom:
