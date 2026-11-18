@@ -2,6 +2,7 @@ import type { CSSProperties, ReactNode } from 'react';
 import { Icon } from '../components';
 import type { Battle, Faction } from '../rules/model';
 import { FactionCrest } from './Art';
+import type { ForecastLine } from './combat-forecast';
 import { AnimatedValue } from './feedback';
 import { factionLabel } from './parts';
 import { SCANS } from './scan-assets';
@@ -35,8 +36,10 @@ function Count({ count, label, kind }: { count: number; label: string; kind: str
 /**
  * The Combat Area printed on the board: three overlapping circles. Ranged hits (blue dice) go to Damage; melee hits (red dice) and armor
  * (green dice) to Defense; ability hits to Attrition. Each circle holds the tokens themselves, with the exact count on a badge.
+ * Under the circles stands what the tokens come to (combat-forecast.ts): the opponents' attack less hits and armor, and the
+ * party's damage against their Health. A player used to add this up himself from four badges.
  */
-export default function CombatArea({ battle, side, deadlyPvp = false }: { battle: Battle; side: Faction; deadlyPvp?: boolean }) {
+export default function CombatArea({ battle, side, deadlyPvp = false, forecast }: { battle: Battle; side: Faction; deadlyPvp?: boolean; forecast?: { lines: ForecastLine[]; note: string } }) {
  const box = battle.boxes[side], name = factionLabel(side), pve = battle.kind === 'pve';
  const resolving = battle.stage === 'resolution';
  const note = battle.stage === 'over' ? 'Combat is complete. These tokens no longer affect the battle.'
@@ -72,7 +75,12 @@ export default function CombatArea({ battle, side, deadlyPvp = false }: { battle
     <div className="attrition"><dt><span className="combat-die-chip hit" />Attrition</dt><dd>Hits from abilities</dd></div>
    </dl>
   </div>
+  {forecast && <div className="combat-forecast" role="group" aria-label="The round as it stands">
+   <dl>{forecast.lines.map(line => <div key={line.key} className={`${line.key} ${line.tone}`}><dt>{line.label}</dt><dd><span>{line.sum}</span><b>{line.result}</b></dd></div>)}</dl>
+   {forecast.note && <p>{forecast.note}</p>}
+  </div>}
   <p className="combat-token-flow"><Icon name={resolving ? 'arrow' : 'help'} size={14} /><span>{note}</span></p>
-  {battle.wounds[side] > 0 && <div className="combat-wound-count"><Icon name="heart" /><strong>{battle.wounds[side]}</strong> {battle.wounds[side] === 1 ? 'wound' : 'wounds'} to assign</div>}
+  {/* The forecast's own line counts the wounds; without a forecast (a fight between the factions) they stand here. */}
+  {battle.wounds[side] > 0 && !forecast && <div className="combat-wound-count"><Icon name="heart" /><strong>{battle.wounds[side]}</strong> {battle.wounds[side] === 1 ? 'wound' : 'wounds'} to assign</div>}
  </section>;
 }
