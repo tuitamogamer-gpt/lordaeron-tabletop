@@ -1,13 +1,16 @@
 // The words of the combat window that are read off the state: what the scene says while it waits for the player, who can
-// take a wound and what it leaves him with, and what a faction's armor cancels.
+// take a wound and what it leaves him with, what a faction's armor cancels, and what a finished fight came to.
 import { capacity, card, character, faction, other } from '../rules/common';
+import { activeEvent } from '../rules/world';
 import type { Battle, Command, ContentPack, Faction } from '../rules/model';
 import type { GameView } from '../rules/view';
 import { effectWords, forecastSentence, type RoundForecast } from './combat-forecast';
+import { rewardText } from './event-text';
 
 const first = (p: ContentPack, id: string) => character(p, id).name.split(' ')[0];
 const side = (f: Faction) => f === 'horde' ? 'Horde' : 'Alliance';
 const count = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
+const listed = (names: string[]) => names.length < 2 ? names.join('') : `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`;
 
 export type WoundChoice = {
  command: Extract<Command, { type: 'wound' }>; hero: string; side: Faction;
@@ -40,6 +43,47 @@ export function armorWords(b: Battle, c: Armor): string {
  if (!own.armor) return `${side(c.faction)}: no armor to use`;
  const hits = [c.damage ? `${c.damage} ranged` : '', c.defense ? `${c.defense} melee` : '', attrition ? `${attrition} attrition` : ''].filter(Boolean);
  return hits.length ? `${side(c.faction)} armor: cancel ${hits.join(' + ')}` : `${side(c.faction)} armor: nothing to cancel`;
+}
+
+/** The quest this fight completes, if the faction has no creature of it left on the board (rules/game.ts, nextQuestReward). */
+function questWon(p: ContentPack, view: GameView) {
+ const b = view.battle;
+ if (!b || b.kind !== 'pve' || b.winner !== b.first) return;
+ return p.quests.find(q => view.quests.includes(q.id) && (q.faction === b.first || !!activeEvent(p, view, 'subterfuge')) && !view.enemies.some(e => e.quest === q.id));
+}
+
+export type Outcome = { title: string; lines: string[] };
+/** What a finished fight came to: who fell, what it cost each character, and what follows. */
+export function outcome(p: ContentPack, view: GameView): Outcome | undefined {
+ const b = view.battle;
+ if (view.phase !== 'combat' || !b || b.stage !== 'over') return;
+ const rounds = count(b.round, 'round'), lines: string[] = [];
+ const title = b.winner === 'draw' ? 'Draw' : b.kind === 'pve' ? b.winner === b.first ? 'Victory' : 'Defeat' : `${side(b.winner ?? b.first)} victory`;
+ if (b.kind === 'pve') {
+  const boss = p.overlords.find(o => o.id === b.boss)?.name ?? p.events.find(e => e.id === b.boss)?.name;
+  const names = new Map<string, number>();
+  for (const e of b.killed ?? []) { const name = p.creatures.find(c => c.id === e.creature)?.name ?? 'creature'; names.set(name, (names.get(name) ?? 0) + 1); }
+  const fallen = boss && b.winner === b.first ? [boss] : [...names].map(([name, n]) => n > 1 ? `${n} × ${name}` : name);
+  if (b.winner === b.first) lines.push(`${fallen.length ? `${listed(fallen)} defeated` : 'The fight is won'} in ${rounds}`);
+  else lines.push(`The party falls in round ${b.round}${fallen.length ? ` · ${listed(fallen)} defeated before that` : ''}`);
+ } else lines.push(b.winner === 'draw' ? `Neither side prevails after ${rounds}` : `${side(b.winner ?? b.first)} holds the field after ${rounds}`);
+ const cost = b.participants.map(id => {
+  const lost = b.damageTaken?.[id] ?? 0;
+  return b.defeated.includes(id) ? `${first(p, id)} fell` : lost ? `${first(p, id)} −${lost} health` : '';
+ }).filter(Boolean);
+ lines.push(cost.length ? cost.join(' · ') : 'Nobody lost Health');
+ const quest = questWon(p, view);
+ if (quest) lines.push(`Quest complete: ${quest.name} · reward ${rewardText(quest.reward)}`);
+ return { title, lines };
+}
+/** What the button of a finished fight leads to. */
+export function outcomeNext(p: ContentPack, view: GameView): string {
+ const b = view.battle;
+ if (!b || b.stage !== 'over') return '';
+ if (b.winner === 'draw') return 'Neither side prevails. Finish combat to continue.';
+ if (b.kind !== 'pve') return 'The battle is settled. Finish combat to continue.';
+ if (b.winner !== b.first) return 'The party is defeated. Fallen characters return to a graveyard or their starting region.';
+ return questWon(p, view) ? 'The battle is won. Finish combat to collect the quest reward.' : 'The battle is won. Finish combat to continue.';
 }
 
 /**

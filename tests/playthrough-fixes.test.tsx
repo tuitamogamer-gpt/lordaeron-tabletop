@@ -70,15 +70,23 @@ describe('combat wording', () => {
   rerender(<CombatArea battle={structuredClone(s.battle!)} side="horde" />);
   expect(screen.getByText('wounds to assign')).toBeTruthy();
  });
- it('promises rewards only after a won battle', () => {
+ it('promises rewards only after a won battle that completes a quest', () => {
   const lost = fight(); lost.battle!.stage = 'over'; lost.battle!.winner = 'alliance';
   const { unmount } = render(<CombatScene state={view(lost)} busy={false} />);
   expect(screen.getByText('The party is defeated. Fallen characters return to a graveyard or their starting region.')).toBeTruthy();
-  expect(screen.queryByText(/Collect your rewards/)).toBeNull();
+  expect(screen.queryByText(/collect/i)).toBeNull();
   unmount();
+  // The faction has no creature of its quests left on the board: this fight completed one.
   const won = fight(); won.battle!.stage = 'over'; won.battle!.winner = 'horde';
-  render(<CombatScene state={view(won)} busy={false} />);
-  expect(screen.getByText('The battle is won. Collect your rewards below.')).toBeTruthy();
+  const quest = render(<CombatScene state={view(won)} busy={false} />);
+  expect(screen.getByText('The battle is won. Finish combat to collect the quest reward.')).toBeTruthy();
+  quest.unmount();
+  // Creatures of every quest are still out there (an independent creature fell): nothing to collect, and nothing is promised.
+  const plain = fight(); plain.battle!.stage = 'over'; plain.battle!.winner = 'horde';
+  plain.enemies.push(...plain.quests.map((id, i) => ({ id: `quest-${i}`, creature: 'gnoll', color: 'green' as const, region: 'brill', quest: id })));
+  render(<CombatScene state={view(plain)} busy={false} />);
+  expect(screen.getByText('The battle is won. Finish combat to continue.')).toBeTruthy();
+  expect(screen.queryByText(/collect/i)).toBeNull();
  });
 });
 

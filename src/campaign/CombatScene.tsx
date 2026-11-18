@@ -7,7 +7,7 @@ import { BossPortrait, CreatureGlyph } from './design-system';
 import { factionLabel, HeroPortrait } from './parts';
 import type { CombatPresentation } from './combat-flow';
 import { roundForecast } from './combat-forecast';
-import { sceneWords } from './combat-report';
+import { outcomeNext, sceneWords } from './combat-report';
 
 export default function CombatScene({ state, busy, presentation }: { state: GameView; busy: boolean; presentation?: CombatPresentation }) {
  const b = state.battle!, cue = presentation?.cue, phase = presentation?.phase ?? 'idle';
@@ -18,10 +18,8 @@ export default function CombatScene({ state, busy, presentation }: { state: Game
  const opponent = b.kind !== 'pve' ? b.participants.find(id => faction(p, id) !== faction(p, heroId)) : undefined;
  const over = b.stage === 'over', won = b.winner === b.first;
  const result = b.winner === 'draw' ? 'Draw' : b.kind === 'pve' ? won ? 'Victory' : 'Defeat' : `${factionLabel(b.winner ?? '')} victory`;
- // Only a won fight has rewards to collect; a lost one sends the fallen to a graveyard or their starting region.
- const settled = b.winner === 'draw' ? 'Neither side prevails. Finish combat to continue.' : b.kind !== 'pve' ? 'The battle is settled. Finish combat to continue.' : won ? 'The battle is won. Collect your rewards below.' : 'The party is defeated. Fallen characters return to a graveyard or their starting region.';
- // While the table waits for the player the scene says where the round stands.
- const idle = over ? { heading: result, detail: settled } : sceneWords(p, state, roundForecast(p, state));
+ // While the table waits for the player the scene says where the round stands; a finished fight says what follows it.
+ const idle = over ? { heading: result, detail: outcomeNext(p, state) } : sceneWords(p, state, roundForecast(p, state));
  const revealed = phase === 'impact' || phase === 'recovery';
  const heading = busy ? 'The dice are in motion…' : cue ? phase === 'anticipation' ? cue.anticipation : over && revealed ? result : cue.title : idle.heading;
  const detail = cue ? revealed ? cue.detail : 'A moment before the clash' : idle.detail;

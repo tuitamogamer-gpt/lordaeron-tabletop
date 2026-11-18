@@ -2,7 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import Combat from '../src/campaign/Combat';
-import { armorWords, sceneWords, woundChoices, woundWords } from '../src/campaign/combat-report';
+import { armorWords, outcome, outcomeNext, sceneWords, woundChoices, woundWords } from '../src/campaign/combat-report';
 import { roundForecast } from '../src/campaign/combat-forecast';
 import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
 import { beginBattle } from '../src/rules/combat';
@@ -205,5 +205,39 @@ describe('the Armor step of a fight between the factions', () => {
   ui.rerender(<Combat {...props(fresh)} />);
   expect(document.querySelector('.combat-versus')).toBeNull();
   expect(document.querySelector('.combat-standing')).toBeNull();
+ });
+});
+
+describe('what a finished fight came to', () => {
+ const won = () => {
+  const s = at(fight(), 0, 2, 1, 1);
+  s.enemies = s.enemies.filter(e => e.id === 'enemy');
+  return apply(p, apply(p, apply(p, s, { type: 'advance' }), { type: 'wound', hero: WARRIOR }), { type: 'advance' });
+ };
+ it('names who fell, what it cost and the quest it completed', () => {
+  const s = won(), quest = p.quests.find(q => s.quests.includes(q.id) && q.faction === 'horde')!;
+  expect(s.battle).toMatchObject({ stage: 'over', winner: 'horde' });
+  const result = outcome(p, view(s))!;
+  expect(result.title).toBe('Victory');
+  expect(result.lines.slice(0, 2)).toEqual(['Crusader defeated in 1 round', 'Grumbaz −1 health']);
+  expect(result.lines[2]).toContain(`Quest complete: ${quest.name} · reward `);
+  expect(outcomeNext(p, view(s))).toBe('The battle is won. Finish combat to collect the quest reward.');
+  render(<Combat {...props(s)} />);
+  const card = screen.getByRole('status', { name: 'Combat outcome' });
+  expect(within(card).getByText('Crusader defeated in 1 round')).toBeTruthy();
+  expect(within(card).getByText('Grumbaz −1 health')).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Finish combat & continue' })).toBeTruthy();
+ });
+ it('promises nothing after a fight that completes no quest, and says so plainly after a lost one', () => {
+  const s = at(fight(), 0, 2, 1, 1), plain = apply(p, apply(p, apply(p, s, { type: 'advance' }), { type: 'wound', hero: WARRIOR }), { type: 'advance' });
+  expect(outcome(p, view(plain))!.lines).toEqual(['Crusader defeated in 1 round', 'Grumbaz −1 health']);
+  expect(outcomeNext(p, view(plain))).toBe('The battle is won. Finish combat to continue.');
+  const lost = fight(); lost.battle!.stage = 'over'; lost.battle!.winner = 'alliance'; lost.battle!.defeated = [WARRIOR, MAGE]; lost.battle!.round = 2;
+  expect(outcome(p, view(lost))).toEqual({ title: 'Defeat', lines: ['The party falls in round 2', 'Grumbaz fell · Sofeea fell'] });
+  expect(outcomeNext(p, view(lost))).toBe('The party is defeated. Fallen characters return to a graveyard or their starting region.');
+ });
+ it('has no outcome while the fight goes on', () => {
+  expect(outcome(p, view(fight()))).toBeUndefined();
+  expect(outcomeNext(p, view(fight()))).toBe('');
  });
 });
