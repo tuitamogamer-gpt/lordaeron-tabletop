@@ -1,7 +1,7 @@
 // The words of the combat window that are read off the state: what the scene says while it waits for the player, who can
-// take a wound and what it leaves him with.
+// take a wound and what it leaves him with, and what a faction's armor cancels.
 import { capacity, card, character, faction, other } from '../rules/common';
-import type { Command, ContentPack, Faction } from '../rules/model';
+import type { Battle, Command, ContentPack, Faction } from '../rules/model';
 import type { GameView } from '../rules/view';
 import { effectWords, forecastSentence, type RoundForecast } from './combat-forecast';
 
@@ -31,6 +31,15 @@ export function woundChoices(p: ContentPack, view: GameView, legal: Command[]): 
 export function woundWords(p: ContentPack, w: WoundChoice): string {
  if (w.pet) return `${w.pet} takes it · ${w.petLeft ? `${w.petLeft} more after this` : 'its last'}`;
  return w.falls ? `Last Health: ${first(p, w.hero)} falls` : `Health ${w.health} → ${w.after}`;
+}
+
+type Armor = Extract<Command, { type: 'armor' }>;
+/** What an armor assignment of the PvP Armor step does, in the words of the table: "Horde armor: cancel 1 ranged + 1 melee hit". */
+export function armorWords(b: Battle, c: Armor): string {
+ const own = b.boxes[c.faction], enemy = b.boxes[other(c.faction)], attrition = Math.min(own.armor, enemy.attrition);
+ if (!own.armor) return `${side(c.faction)}: no armor to use`;
+ const hits = [c.damage ? `${c.damage} ranged` : '', c.defense ? `${c.defense} melee` : '', attrition ? `${attrition} attrition` : ''].filter(Boolean);
+ return hits.length ? `${side(c.faction)} armor: cancel ${hits.join(' + ')}` : `${side(c.faction)} armor: nothing to cancel`;
 }
 
 /**

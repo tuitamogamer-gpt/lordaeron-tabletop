@@ -2,7 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import Combat from '../src/campaign/Combat';
-import { sceneWords, woundChoices, woundWords } from '../src/campaign/combat-report';
+import { armorWords, sceneWords, woundChoices, woundWords } from '../src/campaign/combat-report';
 import { roundForecast } from '../src/campaign/combat-forecast';
 import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
 import { beginBattle } from '../src/rules/combat';
@@ -167,5 +167,43 @@ describe('the step after the rerolls', () => {
   expect(screen.queryByText(/creature/i)).toBeNull();
   next = apply(p, next, { type: 'monster' });
   expect(next.battle!.stage).toBe('tokens');
+ });
+});
+
+describe('the Armor step of a fight between the factions', () => {
+ const armored = () => {
+  const { s } = duel();
+  s.battle!.stage = 'defense'; delete s.battle!.active; s.battle!.acted = [...s.battle!.participants];
+  s.battle!.boxes = { horde: { damage: 1, defense: 2, armor: 0, attrition: 1 }, alliance: { damage: 0, defense: 1, armor: 1, attrition: 0 } };
+  return s;
+ };
+ it('says in words what each faction’s armor cancels', () => {
+  const s = armored(), pr = props(s);
+  render(<Combat {...pr} />);
+  expect(screen.getByRole('button', { name: 'Horde: no armor to use' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: 'Alliance armor: cancel 1 ranged + 1 attrition' })).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: 'Alliance armor: cancel 1 melee + 1 attrition' }));
+  expect(pr.send).toHaveBeenCalledExactlyOnceWith({ type: 'armor', faction: 'alliance', damage: 0, defense: 1 });
+  expect(screen.queryByText(/armor \(/)).toBeNull();
+  const b = s.battle!;
+  expect(armorWords(b, { type: 'armor', faction: 'alliance', damage: 1, defense: 0 })).toBe('Alliance armor: cancel 1 ranged + 1 attrition');
+  b.boxes.horde = { damage: 0, defense: 0, armor: 0, attrition: 0 };
+  expect(armorWords(b, { type: 'armor', faction: 'alliance', damage: 0, defense: 0 })).toBe('Alliance armor: nothing to cancel');
+ });
+ it('shows both Combat Areas and does not name a loser before the armor is used', () => {
+  const s = armored();
+  const ui = render(<Combat {...props(s)} />);
+  expect(screen.getByRole('region', { name: 'Horde totals' })).toBeTruthy();
+  expect(screen.getByRole('region', { name: 'Alliance totals' })).toBeTruthy();
+  expect(document.querySelector('.combat-board-row')!.classList.contains('versus')).toBe(true);
+  expect(document.querySelector('.combat-versus')!.textContent).toBe('Melee + attrition: Horde 3 · Alliance 1before armor: Alliance 1');
+  const used = apply(p, apply(p, s, { type: 'armor', faction: 'horde', damage: 0, defense: 0 }), { type: 'armor', faction: 'alliance', damage: 0, defense: 1 });
+  ui.rerender(<Combat {...props(used)} />);
+  expect(document.querySelector('.combat-versus')!.textContent).toBe('Melee + attrition: Horde 1 · Alliance 1level: no wounds');
+  // Nothing to compare while both areas are empty.
+  const { s: fresh } = duel();
+  ui.rerender(<Combat {...props(fresh)} />);
+  expect(document.querySelector('.combat-versus')).toBeNull();
+  expect(document.querySelector('.combat-standing')).toBeNull();
  });
 });

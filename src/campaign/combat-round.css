@@ -1,6 +1,6 @@
 /* ---------- The round as it stands (18. 11. 2026.) ----------
-   What the tokens come to, under the Combat Area, and who takes a wound and what it leaves him. Loaded after the other
-   combat layers. */
+   What the tokens come to, under the Combat Area; who takes a wound and what it leaves him; a fight between the factions with
+   both Combat Areas in sight. Loaded after the other combat layers. */
 
 /* What the tokens come to: two sums under the circles, each with its result at the right. */
 .combat-forecast{margin:7px 0 0;padding:6px 9px 7px;border:1px solid #6d5a3a;border-radius:5px;background:linear-gradient(#17120bcc,#0f0c08cc);box-shadow:inset 0 0 0 1px #0007}
@@ -53,6 +53,34 @@
  .combat-room .combat-ledger .combat-token-boxes{max-width:214px}
  .combat-room .combat-ledger .combat-token-area{padding-block:6px 7px}
  .combat-room .combat-ledger .combat-token-area>h4{margin-bottom:3px}
+}
+
+/* A fight between the factions has two Combat Areas. Where the screen has no room for two sets of circles (every phone, and
+   a computer screen under 900 pixels high) each area is one row of three plates with its counts, so that both are in sight
+   at once: the second used to lie below the fold at 1366 by 768, and under the docked sheet on a phone. */
+/* The heading of an area stays on one line: "ALLIANCE · COMBAT AREA · ROUND 2" broke before the number. */
+.combat-room .combat-board-row.versus .combat-token-area>h4>span{white-space:nowrap;letter-spacing:.6px}
+.combat-versus{display:flex;flex-wrap:wrap;align-items:baseline;gap:3px 8px;margin:0;padding:6px 9px;border:1px solid #6d5a3a;border-radius:5px;background:#120e09b8;font:10.5px/1.35 var(--sans);color:#ddd1b3}
+.combat-versus>svg{align-self:center;flex:none;color:#c9b27a}
+.combat-versus b{font-weight:600;color:#f2dfaf;font-variant-numeric:tabular-nums}
+.combat-versus>em{margin-left:auto;font-style:normal;font-weight:600;color:#eda68a}
+@media(max-width:999px),(max-height:899px){
+ .combat-room .combat-ledger .combat-board-row.versus>.combat-token-area{padding:6px 9px 8px}
+ .combat-room .combat-ledger .combat-board-row.versus .combat-board{grid-template-columns:1fr;gap:0}
+ .combat-room .combat-ledger .combat-board-row.versus .combat-board-key,.combat-room .combat-ledger .combat-board-row.versus .combat-token-flow{display:none}
+ .combat-room .combat-ledger .combat-board-row.versus .combat-token-area>h4{margin-bottom:5px}
+ .combat-room .combat-ledger .combat-board-row.versus .combat-token-boxes{display:grid;grid-template-columns:1fr 1.5fr 1fr;gap:6px;max-width:none!important;aspect-ratio:auto;margin:0}
+ .combat-room .combat-board-row.versus .combat-token-box{position:relative;inset:auto;display:flex;align-items:center;justify-content:center;gap:5px;width:auto;height:50px;padding:17px 3px 0;aspect-ratio:auto;border-radius:6px;background:radial-gradient(ellipse at 50% 0,#8a6a3c,#5a4224 60%,#3b2a16);box-shadow:0 0 0 1px #2e2213,0 0 0 2px #b58f55,0 2px 6px #000b,inset 0 0 12px #2a1a0b99}
+ .combat-room .combat-board-row.versus .combat-token-box>h5{top:4px;padding:0 6px 1px;font-size:8.5px}
+ .combat-room .combat-board-row.versus .combat-token-pile{display:none}
+ .combat-room .combat-board-row.versus .combat-token-box>.combat-die-chip{position:static;width:9px;height:9px;margin-right:1px}
+ .combat-room .combat-board-row.versus .combat-token-box>output.combat-token-count{position:static;transform:none;min-width:22px;height:20px;font-size:12px;line-height:16px}
+ .combat-room .combat-board-row.versus .combat-token-box.defense>.combat-die-chip.red{order:1}
+ .combat-room .combat-board-row.versus .combat-token-box.defense>output.combat-token-count.hit{order:2;margin-right:6px}
+ .combat-room .combat-board-row.versus .combat-token-box.defense>.combat-die-chip.green{order:3}
+ .combat-room .combat-board-row.versus .combat-token-box.defense>output.combat-token-count.armor{order:4}
+ .combat-room .combat-board-row.versus .combat-wound-count{margin-top:6px;padding:4px 8px}
+ .combat-room .combat-board-row.versus .combat-wound-count strong{font-size:16px}
 }
 
 /* Said once: the wound choices carry their own count. */

@@ -13,8 +13,8 @@ import { type AbilityCommand } from './CombatAbilities';
 import CombatCharacterSheet, { type TakeBack } from './CombatCharacterSheet';
 import CombatLoadout from './CombatLoadout';
 import { combatPool } from './combat-pool';
-import { carryWords, effectWords, forecastLines, forecastNote, forecastSentence, roundForecast } from './combat-forecast';
-import { woundChoices, woundWords } from './combat-report';
+import { carryWords, effectWords, forecastLines, forecastNote, forecastSentence, roundForecast, versus } from './combat-forecast';
+import { armorWords, woundChoices, woundWords } from './combat-report';
 import { attackPreview, diceWords } from './combat-readiness';
 import D8 from './D8';
 import RulesText from './RulesText';
@@ -113,7 +113,7 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
  const skills = legal.filter((c): c is AbilityCommand => c.type === 'ability');
  const choices = legal.filter(c => !['ability', 'reroll', 'penalty', 'roll', 'wound'].includes(c.type));
  // The round as it stands, from the rules engine, and who may take the next wound.
- const forecast = roundForecast(p, state), effect = effectWords(p, forecast?.effect), wounds = anticipating ? [] : woundChoices(p, state, legal);
+ const forecast = roundForecast(p, state), effect = effectWords(p, forecast?.effect), wounds = anticipating ? [] : woundChoices(p, state, legal), duel = versus(state);
  const usable = (type: Command['type']) => legal.some(c => c.type === type);
  const roll = legal.find(c => c.type === 'roll');
  const enemy = state.enemies.find(e => b.enemies.includes(e.id)) ?? b.killed?.[0];
@@ -146,9 +146,12 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
  const onlyStep=choices.length===1&&!roll&&!usable('reroll')&&!usable('penalty');
  // Choosing an attacker starts that character's Dice Pool step: say what he brings to it before the choice is made.
  const attackerBrings=(id:string)=>{const v=attackPreview(p,state,id);return v?<small>{diceWords(v.dice)} dice · {v.energy} energy{v.powers.length?` · ${v.powers.map(power=>card(p,power).name).join(', ')} ready`:''}</small>:null;};
- const actionLabel = (c: Command) => c.type === 'closeBattle' ? 'Finish combat & continue' : c.type === 'advance' ? advanceLabels[b.stage] ?? 'Continue' : c.type === 'tokens' ? 'Bank successful hits' : c.type === 'monster' ? effect ? `Resolve ${b.boss ? 'boss' : 'creature'} effect` : 'Continue to hits'
+ const actionLabel = (c: Command) => c.type === 'closeBattle' ? 'Finish combat & continue' : c.type === 'advance' ? advanceLabels[b.stage] ?? 'Continue' : c.type === 'tokens' ? 'Bank successful hits' : c.type === 'monster' ? effect ? `Resolve ${b.boss ? 'boss' : 'creature'} effect` : 'Continue to hits' : c.type === 'armor' ? armorWords(liveState.battle ?? b, c)
   : c.type === 'wound' ? `${character(p, c.hero).name.split(' ')[0]} takes a wound${c.pet ? ' on the pet' : ''}`
   : c.type === 'respawn' ? `Revive ${character(p, c.hero).name.split(' ')[0]} at ${regionName(c.region)}` : commandLabel(p, c);
+ // A fight between the factions: who is ahead in the Resolution step, once the armor is used. Nothing to compare while both areas are empty.
+ const duelTokens = !!duel && duel.strike.horde + duel.strike.alliance + duel.armor.horde + duel.armor.alliance > 0;
+ const duelStands = !duel ? '' : duel.armor.horde + duel.armor.alliance > 0 ? `before armor: ${(['horde', 'alliance'] as const).filter(f => duel.armor[f]).map(f => `${factionLabel(f)} ${duel.armor[f]}`).join(', ')}` : state.variants?.deadlyPvp ? 'each side takes the other’s hits' : duel.loser ? `${factionLabel(duel.loser)} takes ${duel.wounds} ${duel.wounds === 1 ? 'wound' : 'wounds'}` : 'level: no wounds';
  // After the rerolls the opponent's rule looks at the dice: say what it takes from them, or that it takes nothing.
  const afterRerolls = b.kind !== 'pve' ? 'Use Spot and other abilities, then place the hits.' : effect ? `${forecast!.foe}: ${effect}. Spot and other abilities can still change the dice.` : 'These dice give the opponent’s rule nothing to take. Use Spot and other abilities, then place the hits.';
  const phaseGuidance = b.stage === 'after-reroll' ? afterRerolls : b.kind === 'pve' ? guidance[b.stage]
@@ -176,9 +179,10 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
     </section>
     {state.respawns.length > 0 && <p className="combat-warning">A character has no health. Use any available healing or choose a starting region or graveyard.</p>}
    <aside className="combat-ledger" aria-label="Battle totals">
-    <div className="combat-board-row" ref={board}>{(['horde', 'alliance'] as const).filter(f => b.kind !== 'pve' || f === b.first).map(f => {
+    <div className={`combat-board-row ${duel ? 'versus' : ''}`} ref={board}>{(['horde', 'alliance'] as const).filter(f => b.kind !== 'pve' || f === b.first).map(f => {
      return <CombatArea key={f} battle={b} side={f} deadlyPvp={state.variants?.deadlyPvp} forecast={forecast && f === forecast.side ? { lines: forecastLines(forecast), note: forecastNote(p, forecast) || carryWords(forecast) } : undefined} />;
     })}</div>
+    {duelTokens && duel && <p className="combat-versus" role="status"><Icon name="swords" size={13} /><span>Melee + attrition: <b>Horde {duel.strike.horde}</b> · <b>Alliance {duel.strike.alliance}</b></span><em>{duelStands}</em></p>}
     <div className="combat-party"><h4>In this battle</h4>{b.participants.map(id => {
      const h = state.heroes.find(h => h.id === id)!, max = capacity(p, h);
      return <div key={id} className={`${a?.heroId === id ? 'active' : ''} ${b.defeated.includes(id) ? 'defeated' : ''}`}><HeroPortrait id={id} small /><span><strong>{character(p, id).name.split(' ')[0]}</strong><small>{factionLabel(faction(p, id))} · {bots.includes(id) ? 'BOT' : 'PLAYER'}{b.defeated.includes(id) ? ' · defeated' : b.acted.includes(id) ? ' · rolled' : ''}</small><span className="combat-hero-vitals"><i><Icon name="heart" size={11} /><AnimatedValue value={h.health} />/{max.health}</i><i><Icon name="bolt" size={11} /><AnimatedValue value={h.energy} /></i>{h.curse > 0 && <i><ConditionToken kind="curse" />Curse {h.curse}</i>}{h.stun > 0 && <i><ConditionToken kind="stun" />Stun {h.stun}</i>}</span></span>{a?.heroId === id && <i className="combat-turn-dot" />}</div>;
@@ -193,7 +197,7 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
      <div className="combat-decision-heading"><h4>Character sheet</h4><span>{botResponsePending?'Your reaction':actingBot?'Bot turn':b.stage==='over'?'Review the outcome':'Your decision'}{powerCount?` · ${powerCount} ${powerCount===1?'power':'powers'} to use`:''}</span></div>
      <CombatCharacterSheet state={state} skills={skills} dice={selectedIds} send={send} busy={locked} bots={bots} takeBack={takeBack}>
      {a&&pool&&b.stage==='pool'&&roll&&poolShown&&<fieldset className="combat-pool-builder" disabled={locked}><legend>Choose your dice pool</legend><div>{channels.map(({color})=><label className={color} key={color}><span>{color}</span><input aria-label={`Roll ${color} dice`} type="number" min={0} max={pool.maximum[color]} value={pool.kept[color]} onChange={e=>setOmit(v=>({...v,[color]:pool.available[color]-Math.max(0,Math.min(pool.maximum[color],Math.floor(Number(e.target.value)||0)))}))}/><small>of {pool.available[color]}</small></label>)}</div><p><strong>{pool.total} D8 selected</strong> · Rerolls {Math.max(0,a.reroll)} · Attrition {Math.max(0,a.attrition)}</p>{!!pool.penalties.length&&<p>{pool.penalties.length} dice removed by equipment before this pool.</p>}{activeHero&&(activeHero.stun||activeHero.curse)>0&&(pool.total<activeHero.stun*2?<p className="combat-pool-danger" role="status">Stun requires {activeHero.stun*2} dice. Confirming this pool defeats {character(p,activeHero.id).name.split(' ')[0]} immediately.</p>:<p>Stun / Curse: choose {Math.min(pool.total,activeHero.stun*2+activeHero.curse)} dice to remove before rolling.</p>)}</fieldset>}
-     {forecast && <p className="combat-standing" aria-hidden="true"><Icon name="target" size={13} /><span>{forecastSentence(forecast)}</span></p>}
+     {(forecast || duelTokens) && <p className="combat-standing" aria-hidden="true"><Icon name={duel ? 'swords' : 'target'} size={13} /><span>{forecast ? forecastSentence(forecast) : `Melee + attrition: Horde ${duel!.strike.horde} · Alliance ${duel!.strike.alliance} · ${duelStands}`}</span></p>}
      {wounds.length > 0 && <div className="combat-wound-choices" role="group" aria-label="Who takes the wound">{(['horde', 'alliance'] as const).filter(f => wounds.some(w => w.side === f)).map(f => <section key={f}>
       <h5><Icon name="heart" size={13} /><b>{b.wounds[f]}</b> {b.wounds[f] === 1 ? 'wound' : 'wounds'} to assign{b.kind !== 'pve' ? ` · ${factionLabel(f)}` : ''}</h5>
       <div>{wounds.filter(w => w.side === f).map(w => <button key={`${w.hero}:${w.command.pet ?? ''}`} type="button" className={`quiet-button combat-wound-choice ${w.falls ? 'falls' : ''}`} disabled={locked} aria-label={actionLabel(w.command)} aria-description={woundWords(p, w)} onClick={() => send(w.command)}>
