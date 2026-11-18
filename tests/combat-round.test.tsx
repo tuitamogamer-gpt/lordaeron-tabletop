@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import Combat from '../src/campaign/Combat';
-import { sceneWords } from '../src/campaign/combat-report';
+import { sceneWords, woundChoices, woundWords } from '../src/campaign/combat-report';
 import { roundForecast } from '../src/campaign/combat-forecast';
 import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
 import { beginBattle } from '../src/rules/combat';
@@ -43,6 +43,57 @@ const rolled = (creature: string, values: number[]) => {
  return s;
 };
 
+describe('who takes the wound', () => {
+ it('offers every character with the Health the wound leaves him', () => {
+  const s = apply(p, at(fight(), 0, 1, 0, 0), { type: 'advance' }), pr = props(s);
+  render(<Combat {...pr} />);
+  const group = screen.getByRole('group', { name: 'Who takes the wound' });
+  expect(group.textContent).toContain('3 wounds to assign');
+  const warrior = within(group).getByRole('button', { name: 'Grumbaz takes a wound' }), mage = within(group).getByRole('button', { name: 'Sofeea takes a wound' });
+  expect(warrior.getAttribute('aria-description')).toBe(`Health ${hero(s, WARRIOR).health} → ${hero(s, WARRIOR).health - 1}`);
+  expect(mage.getAttribute('aria-description')).toBe(`Health ${hero(s, MAGE).health} → ${hero(s, MAGE).health - 1}`);
+  expect(warrior.querySelectorAll('.combat-wound-pips>.held')).toHaveLength(hero(s, WARRIOR).health - 1);
+  expect(warrior.querySelectorAll('.combat-wound-pips>.lost')).toHaveLength(1);
+  fireEvent.click(mage);
+  expect(pr.send).toHaveBeenCalledExactlyOnceWith({ type: 'wound', hero: MAGE });
+ });
+ it('warns on the wound that takes a character’s last Health', () => {
+  const s = apply(p, at(fight('crusader', state => { hero(state, MAGE).health = 1; }), 0, 1, 0, 0), { type: 'advance' });
+  render(<Combat {...props(s)} />);
+  const mage = screen.getByRole('button', { name: 'Sofeea takes a wound' });
+  expect(mage.getAttribute('aria-description')).toBe('Last Health: Sofeea falls');
+  expect(mage.classList.contains('falls')).toBe(true);
+  expect(screen.getByRole('button', { name: 'Grumbaz takes a wound' }).classList.contains('falls')).toBe(false);
+  const choice = woundChoices(p, view(s), legalActions(p, s)).find(w => w.hero === MAGE)!;
+  expect(choice).toMatchObject({ health: 1, after: 0, falls: true, side: 'horde' });
+  expect(woundWords(p, choice)).toBe('Last Health: Sofeea falls');
+ });
+ it('lets a pet take the wound for its owner, and says how many more it can take', () => {
+  const pet = p.cards.find(c => c.petHealth)!;
+  const s = apply(p, at(fight('crusader', state => { hero(state, WARRIOR).pets = { [pet.id]: 2 }; }), 0, 1, 0, 0), { type: 'advance' });
+  const choice = woundChoices(p, view(s), legalActions(p, s)).find(w => w.pet)!;
+  expect(choice).toMatchObject({ hero: WARRIOR, pet: pet.name, petLeft: 1, falls: false, after: hero(s, WARRIOR).health });
+  expect(woundWords(p, choice)).toBe(`${pet.name} takes it · 1 more after this`);
+  const pr = props(s);
+  render(<Combat {...pr} />);
+  const button = screen.getByRole('button', { name: 'Grumbaz takes a wound on the pet' });
+  expect(button.getAttribute('aria-description')).toBe(`${pet.name} takes it · 1 more after this`);
+  // The owner keeps his Health: no token of his is marked as lost.
+  expect(button.querySelectorAll('.combat-wound-pips>.lost')).toHaveLength(0);
+  fireEvent.click(button);
+  expect(pr.send).toHaveBeenCalledExactlyOnceWith({ type: 'wound', hero: WARRIOR, pet: pet.id });
+ });
+ it('keeps each faction’s wounds with its own characters in a fight between the factions', () => {
+  const { s, alliance } = duel();
+  s.battle!.stage = 'wounds'; s.battle!.wounds = { horde: 2, alliance: 1 };
+  render(<Combat {...props(s)} />);
+  const sections = [...screen.getByRole('group', { name: 'Who takes the wound' }).querySelectorAll('section')];
+  expect(sections.map(section => section.querySelector('h5')!.textContent)).toEqual(['2 wounds to assign · Horde', '1 wound to assign · Alliance']);
+  expect(within(sections[0] as HTMLElement).getAllByRole('button').map(b => b.getAttribute('aria-label'))).toEqual(['Grumbaz takes a wound', 'Sofeea takes a wound']);
+  expect(within(sections[1] as HTMLElement).getAllByRole('button')).toHaveLength(alliance.length);
+ });
+});
+
 describe('the round under the Combat Area', () => {
  it('shows the two sums the tokens come to', () => {
   render(<Combat {...props(at(fight(), 0, 2, 1, 1))} />);
@@ -80,6 +131,12 @@ describe('the round under the Combat Area', () => {
  it('labels the count of a lane so that it fits its column', () => {
   render(<Combat {...props(at(fight(), 0, 0, 0, 0))} />);
   expect(screen.getByLabelText('Ranged: 0 rolled hits').querySelector('small')!.textContent).toBe('HITS');
+ });
+ it('puts every character’s Health and Energy on his tab', () => {
+  const s = at(fight(), 0, 0, 0, 0);
+  render(<Combat {...props(s)} />);
+  const tab = screen.getByRole('button', { name: `Show ${p.characters.find(c => c.id === MAGE)!.name} character sheet` });
+  expect(tab.querySelector('.combat-sheet-hero-vitals')!.textContent).toBe(`${hero(s, MAGE).health}/${hero(s, MAGE).health}${hero(s, MAGE).energy}`);
  });
 });
 

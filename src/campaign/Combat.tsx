@@ -14,6 +14,7 @@ import CombatCharacterSheet, { type TakeBack } from './CombatCharacterSheet';
 import CombatLoadout from './CombatLoadout';
 import { combatPool } from './combat-pool';
 import { carryWords, effectWords, forecastLines, forecastNote, forecastSentence, roundForecast } from './combat-forecast';
+import { woundChoices, woundWords } from './combat-report';
 import { attackPreview, diceWords } from './combat-readiness';
 import D8 from './D8';
 import RulesText from './RulesText';
@@ -110,9 +111,9 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
  </div></Modal>;
 
  const skills = legal.filter((c): c is AbilityCommand => c.type === 'ability');
- const choices = legal.filter(c => !['ability', 'reroll', 'penalty', 'roll'].includes(c.type));
- // The round as it stands, from the rules engine.
- const forecast = roundForecast(p, state), effect = effectWords(p, forecast?.effect);
+ const choices = legal.filter(c => !['ability', 'reroll', 'penalty', 'roll', 'wound'].includes(c.type));
+ // The round as it stands, from the rules engine, and who may take the next wound.
+ const forecast = roundForecast(p, state), effect = effectWords(p, forecast?.effect), wounds = anticipating ? [] : woundChoices(p, state, legal);
  const usable = (type: Command['type']) => legal.some(c => c.type === type);
  const roll = legal.find(c => c.type === 'roll');
  const enemy = state.enemies.find(e => b.enemies.includes(e.id)) ?? b.killed?.[0];
@@ -193,6 +194,13 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
      <CombatCharacterSheet state={state} skills={skills} dice={selectedIds} send={send} busy={locked} bots={bots} takeBack={takeBack}>
      {a&&pool&&b.stage==='pool'&&roll&&poolShown&&<fieldset className="combat-pool-builder" disabled={locked}><legend>Choose your dice pool</legend><div>{channels.map(({color})=><label className={color} key={color}><span>{color}</span><input aria-label={`Roll ${color} dice`} type="number" min={0} max={pool.maximum[color]} value={pool.kept[color]} onChange={e=>setOmit(v=>({...v,[color]:pool.available[color]-Math.max(0,Math.min(pool.maximum[color],Math.floor(Number(e.target.value)||0)))}))}/><small>of {pool.available[color]}</small></label>)}</div><p><strong>{pool.total} D8 selected</strong> · Rerolls {Math.max(0,a.reroll)} · Attrition {Math.max(0,a.attrition)}</p>{!!pool.penalties.length&&<p>{pool.penalties.length} dice removed by equipment before this pool.</p>}{activeHero&&(activeHero.stun||activeHero.curse)>0&&(pool.total<activeHero.stun*2?<p className="combat-pool-danger" role="status">Stun requires {activeHero.stun*2} dice. Confirming this pool defeats {character(p,activeHero.id).name.split(' ')[0]} immediately.</p>:<p>Stun / Curse: choose {Math.min(pool.total,activeHero.stun*2+activeHero.curse)} dice to remove before rolling.</p>)}</fieldset>}
      {forecast && <p className="combat-standing" aria-hidden="true"><Icon name="target" size={13} /><span>{forecastSentence(forecast)}</span></p>}
+     {wounds.length > 0 && <div className="combat-wound-choices" role="group" aria-label="Who takes the wound">{(['horde', 'alliance'] as const).filter(f => wounds.some(w => w.side === f)).map(f => <section key={f}>
+      <h5><Icon name="heart" size={13} /><b>{b.wounds[f]}</b> {b.wounds[f] === 1 ? 'wound' : 'wounds'} to assign{b.kind !== 'pve' ? ` · ${factionLabel(f)}` : ''}</h5>
+      <div>{wounds.filter(w => w.side === f).map(w => <button key={`${w.hero}:${w.command.pet ?? ''}`} type="button" className={`quiet-button combat-wound-choice ${w.falls ? 'falls' : ''}`} disabled={locked} aria-label={actionLabel(w.command)} aria-description={woundWords(p, w)} onClick={() => send(w.command)}>
+       <HeroPortrait id={w.hero} small /><span><strong>{character(p, w.hero).name.split(' ')[0]}</strong><small>{woundWords(p, w)}</small></span>
+       <i className="combat-wound-pips" aria-hidden="true">{Array.from({ length: Math.max(w.capacity, w.health) }, (_, i) => <i key={i} className={i < w.after ? 'held' : i < w.health ? 'lost' : 'spent'} />)}</i>
+      </button>)}</div>
+     </section>)}</div>}
      <div className="combat-action-row">
       {rollCommand && <button className="gold-button combat-roll-button" disabled={locked} onClick={() => send(rollCommand)}><Icon name="spark" />{activeHero&&(activeHero.stun||activeHero.curse)>0?'Confirm pool · ':'Roll '}{pool?.total} D8 <Icon name="arrow" size={16} /></button>}
       {rollCommand&&!poolShown&&<button type="button" className="quiet-button combat-pool-toggle" disabled={locked} onClick={()=>setPoolOpen(true)}>Roll fewer dice</button>}

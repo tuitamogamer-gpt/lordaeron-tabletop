@@ -1,12 +1,37 @@
-// The words of the combat window that are read off the state: what the scene says while it waits for the player.
-import { character, faction, other } from '../rules/common';
-import type { ContentPack, Faction } from '../rules/model';
+// The words of the combat window that are read off the state: what the scene says while it waits for the player, who can
+// take a wound and what it leaves him with.
+import { capacity, card, character, faction, other } from '../rules/common';
+import type { Command, ContentPack, Faction } from '../rules/model';
 import type { GameView } from '../rules/view';
 import { effectWords, forecastSentence, type RoundForecast } from './combat-forecast';
 
 const first = (p: ContentPack, id: string) => character(p, id).name.split(' ')[0];
 const side = (f: Faction) => f === 'horde' ? 'Horde' : 'Alliance';
 const count = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
+
+export type WoundChoice = {
+ command: Extract<Command, { type: 'wound' }>; hero: string; side: Faction;
+ /** The pet that takes the wound instead of its owner, and the wounds it can still take after this one. */
+ pet?: string; petLeft?: number;
+ health: number; after: number; capacity: number;
+ /** This wound takes the character's last Health: he is defeated unless he is healed at once. */
+ falls: boolean;
+};
+/** Every character (or pet) who may take the next wound, with the Health it leaves him. */
+export function woundChoices(p: ContentPack, view: GameView, legal: Command[]): WoundChoice[] {
+ return legal.flatMap(command => {
+  if (command.type !== 'wound') return [];
+  const h = view.heroes.find(h => h.id === command.hero);
+  if (!h) return [];
+  const pet = command.pet, after = pet ? h.health : Math.max(0, h.health - 1);
+  return [{ command, hero: h.id, side: faction(p, h.id), ...(pet ? { pet: card(p, pet).name, petLeft: (h.pets[pet] ?? 1) - 1 } : {}), health: h.health, after, capacity: capacity(p, h).health, falls: !pet && after === 0 }];
+ });
+}
+/** "Health 4 → 3", "Last Health: Grumbaz falls", "Wolf takes it · 1 more after this". */
+export function woundWords(p: ContentPack, w: WoundChoice): string {
+ if (w.pet) return `${w.pet} takes it · ${w.petLeft ? `${w.petLeft} more after this` : 'its last'}`;
+ return w.falls ? `Last Health: ${first(p, w.hero)} falls` : `Health ${w.health} → ${w.after}`;
+}
 
 /**
  * What the scene says while the table waits for the player: who is to act, and what the step in front of him comes to. (It
