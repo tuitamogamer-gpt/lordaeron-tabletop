@@ -1,4 +1,6 @@
 import { BASE_PACK } from '../data/base/index.js';
+import { counsel, type Counsel } from './council.js';
+import type { Orders } from './orders.js';
 import { decide, type Decision, type Difficulty, type PlanOptions } from './planner.js';
 import type { Command } from '../rules/model.js';
 import type { GameView } from '../rules/view.js';
@@ -10,7 +12,7 @@ export const AI_PLAN_TIMEOUT_MS=90_000;
 export class PlannerClient {
  private worker?: Worker;
  private sequence=0;
- private pending=new Map<number,{resolve:(d:Decision|undefined)=>void;reject:(error:Error)=>void;timer:ReturnType<typeof setTimeout>}>();
+ private pending=new Map<number,{resolve:(d:Decision|Counsel[]|undefined)=>void;reject:(error:Error)=>void;timer:ReturnType<typeof setTimeout>}>();
  constructor(private factory=()=>new Worker(new URL('./worker.ts',import.meta.url),{type:'module'})){}
  private fail(worker:Worker,error:Error){
   if(this.worker!==worker)return;
@@ -19,12 +21,20 @@ export class PlannerClient {
  }
  async plan(state:GameView,legal:Command[],difficulty:Difficulty,options:PlanOptions={}):Promise<Decision|undefined>{
   if(typeof Worker==='undefined')return Promise.resolve(decide(BASE_PACK,state,legal,difficulty,options));
+  return this.ask({state,legal,difficulty,options}) as Promise<Decision|undefined>;
+ }
+ /** What each of these bots would do under each agreement with the player: the council before a turn (ai/council.ts). */
+ async counsel(state:GameView,heroes:string[],difficulty:Difficulty,options:{independent?:string[];orders?:Orders}={}):Promise<Counsel[]>{
+  if(typeof Worker==='undefined')return Promise.resolve(counsel(BASE_PACK,state,heroes,difficulty,options));
+  return (await this.ask({kind:'counsel',state,heroes,difficulty,options}) as Counsel[]|undefined)??[];
+ }
+ private ask(message:object):Promise<Decision|Counsel[]|undefined>{
   if(!this.worker){
    const worker=this.factory();this.worker=worker;
-   worker.onmessage=({data}:{data:{id:number;decision?:Decision;error?:string}})=>{
+   worker.onmessage=({data}:{data:{id:number;decision?:Decision;counsel?:Counsel[];error?:string}})=>{
     if(this.worker!==worker)return;
     const request=this.pending.get(data.id);if(!request)return;this.pending.delete(data.id);clearTimeout(request.timer);
-    if(data.error)request.reject(new Error(data.error));else request.resolve(data.decision);
+    if(data.error)request.reject(new Error(data.error));else request.resolve(data.counsel??data.decision);
    };
    // A script error carries a message; a worker whose script could not be fetched (an outdated tab after a deployment) does not.
    worker.onerror=event=>this.fail(worker,new Error(event.message?'AI planning failed. Try Step bot again.':'The AI could not load. Reload the page to get the latest version of the game.'));
@@ -34,7 +44,7 @@ export class PlannerClient {
   return new Promise((resolve,reject)=>{
    const timer=setTimeout(()=>this.fail(worker,new Error('AI planning timed out. Try Step bot again.')),AI_PLAN_TIMEOUT_MS);
    this.pending.set(id,{resolve,reject,timer});
-   try{worker.postMessage({id,state,legal,difficulty,options});}
+   try{worker.postMessage({id,...message});}
    catch{this.fail(worker,new Error('AI planning could not start. Try Step bot again.'));}
   });
  }

@@ -8,10 +8,11 @@ import { apply } from '../rules/game.js';
 import { abilityCommands } from '../rules/legal.js';
 import { publicState } from './public-state.js';
 import { createStrategy, nefarianSteps, type Objective } from './strategy.js';
+import { partnerNames, type Orders } from './orders.js';
 import { abilityScore, healthValue, tacticalScore } from './tactics.js';
 export type Difficulty = 'cautious' | 'balanced' | 'aggressive';
 /** An objective in the words of the table: a quest by its name, a creature or a boss as it is called. */
-const named=(o:Objective)=>o.war?o.label:o.clue?'a clue to Kazzak':o.boss?o.label:o.quest?`the quest “${o.label}”`:`the ${o.label}`;
+export const named=(o:Objective)=>o.war||o.escort?o.label:o.clue?'a clue to Kazzak':o.boss?o.label:o.quest?`the quest “${o.label}”`:`the ${o.label}`;
 export interface Decision { command: Command; score: number; reason: string; alternatives: number; considered: { command: Command; score: number; reason: string }[]; }
 const equipmentCaches=new WeakMap<ContentPack,Map<string,number>>();
 /** Pure policy module: receives public information + legal moves, never the hidden server State. */
@@ -32,13 +33,21 @@ const itemValue=cardValue;
 const GOLD_RESERVE = 20, SHOP_WORTH = 4;
 /** The score of a move that is never worth making, such as a transfer that improves nobody's equipment. */
 const NEVER = -1000;
-/** What the caller knows beyond the table: `independent` are the characters played by someone else than these bots (see createStrategy). */
-export interface PlanOptions { independent?: string[] }
+/** The score of a fight a bot holds back from because of what the party agreed: below passing, so that it waits instead. */
+const HOLD = -60;
+/**
+ * What the caller knows beyond the table: `independent` are the characters played by someone else than these bots (see
+ * createStrategy), and `orders` what the bots and the player agreed for this turn (ai/orders.ts). `early` asks only for the
+ * moves an order calls for while the player's own characters still have actions: a leader setting off, a follower catching
+ * up, a leader's call to the fight. Everything else waits until the player has played.
+ */
+export interface PlanOptions { independent?: string[]; orders?: Orders; early?: boolean }
 export function decide(pack: ContentPack, s: GameView, legal: Command[], difficulty: Difficulty = 'balanced', options: PlanOptions = {}): Decision | undefined {
  // Distances are measured on the map this campaign is played on.
  const p = contentFor(pack, s);
  const risk = difficulty === 'cautious' ? 1.5 : difficulty === 'aggressive' ? .65 : 1;
- const strategy = createStrategy(p,s,risk,options.independent), training = new Map<string,number>();
+ const orders = options.orders ?? {}, first = (id: string) => p.characters.find(c => c.id === id)?.name.split(' ')[0] ?? id;
+ const strategy = createStrategy(p,s,risk,options.independent,orders), training = new Map<string,number>();
  let equipment=equipmentCaches.get(p);if(!equipment){equipment=new Map();equipmentCaches.set(p,equipment);}
  const bestEquipment = (h:Hero) => {
   const key=JSON.stringify([h.id,h.level,h.learned,h.bag,h.slots,h.energy,h.talents,h.auctionItems,h.pets]);
@@ -89,7 +98,7 @@ export function decide(pack: ContentPack, s: GameView, legal: Command[], difficu
  };
  const worn=(h:Hero)=>{const cap=capacity(p,h);return h.health<cap.health*.85||h.energy<cap.energy*.85;};
  const scored = legal.map((command, index) => {
-  let score = -10, reason = "Advancing to the next phase.";
+  let score = -10, reason = "Advancing to the next phase.", early = false;
   const h = 'hero' in command ? s.heroes.find(h => h.id === command.hero) : undefined;
   const f = h ? faction(p, h.id) : s.faction;
   switch (command.type) {
@@ -99,12 +108,12 @@ export function decide(pack: ContentPack, s: GameView, legal: Command[], difficu
     const plan=strategy.plan(h!);
     // Close to the Overlord, a worn member of a faction at its peak rests before anything else.
     if(plan&&plan.objective.boss===s.overlord.id&&worn(h!)&&strategy.lastStand(plan.objective,plan.party.map(id=>s.heroes.find(v=>v.id===id)!))&&strategy.distance(h!.location,plan.objective.region,f)<=2)score+=7;
-    if(plan&&!plan.objective.clue&&!plan.objective.war&&plan.objective.region===h!.location&&h!.actions>1){
+    if(plan&&!plan.objective.clue&&!plan.objective.war&&!plan.objective.escort&&plan.objective.region===h!.location&&h!.actions>1){
      const party=plan.party.map(id=>id===h!.id?next:s.heroes.find(v=>v.id===id)!);
      const ready=strategy.forecast(plan.objective,party);
      score+=Math.max(0,ready.win-plan.forecast.win)*8;
     }
-    {const gained=[[next.health-h!.health,'health'],[next.energy-h!.energy,'energy']].filter(([n])=>Number(n)>0).map(([n,what])=>`${n} ${what}`).join(' and ');reason=`Recovering ${gained||'nothing'}${plan?plan.objective.war?` while holding a region for ${plan.objective.label}`:` before ${named(plan.objective)}`:''}.`;}break;
+    {const gained=[[next.health-h!.health,'health'],[next.energy-h!.energy,'energy']].filter(([n])=>Number(n)>0).map(([n,what])=>`${n} ${what}`).join(' and ');reason=`Recovering ${gained||'nothing'}${plan?plan.objective.war?` while holding a region for ${plan.objective.label}`:plan.objective.escort?` beside ${plan.objective.label}`:` before ${named(plan.objective)}`:''}.`;}break;
    }
    case 'travel': {
     if (!command.path.length) { score = -40; reason='Waiting for the party or the next management phase.'; break; }
@@ -117,7 +126,13 @@ export function decide(pack: ContentPack, s: GameView, legal: Command[], difficu
       if(after===0&&h!.actions>1&&plan.forecast.win>.75)score+=2;
      }
      {const more=Math.ceil(after/2),allies=plan.party.length-1;const company=allies?`, to fight there with ${allies===1?'an ally':`${allies} allies`}`:'';reason=more?`Heading for ${named(plan.objective)} in ${p.regions.find(r=>r.id===plan.objective.region)?.name??plan.objective.region}${company}; ${more} more Travel ${more===1?'action':'actions'} after this one.`:`This move reaches ${named(plan.objective)}${company}.`;}
-     if(plan.objective.war){const place=(id:string)=>p.regions.find(r=>r.id===id)?.name??id,more=Math.ceil(after/2);reason=`Going to hold ${place(plan.objective.region)} for ${plan.objective.label}${more?` (${more} more Travel ${more===1?'action':'actions'})`:''}: with ${p.characters.find(c=>c.id===plan.objective.war!.partner)?.name.split(' ')[0]} in ${place(plan.objective.war.other)} when the enemy’s turn ends, the whole faction is rewarded.`;}
+     // What the party agreed: a follower goes where the player's character is, a leader says where it expects him.
+     const place=(id:string)=>p.regions.find(r=>r.id===id)?.name??id,order=orders[h!.id];
+     if(plan.following){const more=Math.ceil(after/2),fight=plan.objective.escort?'':`: ${named(plan.objective)} is fought at ${first(plan.following)}’s side`;reason=more?`Following ${first(plan.following)} to ${place(plan.objective.region)}${fight}; ${more} more Travel ${more===1?'action':'actions'} after this one.`:`Joining ${first(plan.following)} in ${place(plan.objective.region)}${fight}.`;}
+     if(plan.leading?.length){const more=Math.ceil(after/2),who=plan.leading.map(first).join(' and ');reason=more?`Leading the way to ${named(plan.objective)} in ${place(plan.objective.region)}, for ${who} to come along; ${more} more Travel ${more===1?'action':'actions'} after this one.`:`Leading the way: this move reaches ${named(plan.objective)}, and waits there for ${who}.`;}
+     // While the player still has actions, a leader sets off at once, and a follower moves once his partner has, or at once when there is something to fight where the partner stands.
+     if(after<before&&plan.score>-.5&&order){const partner=s.heroes.find(v=>v.id===plan.following);early=order.mode==='lead'&&!!plan.leading?.length||order.mode==='follow'&&!!partner&&(partner.actions<2||!plan.objective.escort);}
+     if(plan.objective.war){const more=Math.ceil(after/2);reason=`Going to hold ${place(plan.objective.region)} for ${plan.objective.label}${more?` (${more} more Travel ${more===1?'action':'actions'})`:''}: with ${p.characters.find(c=>c.id===plan.objective.war!.partner)?.name.split(' ')[0]} in ${place(plan.objective.war.other)} when the enemy’s turn ends, the whole faction is rewarded.`;}
     }
     if(s.enemies.some(e=>e.region===at&&e.color==='blue'))score-=4*risk;
     if(command.power){const power=card(p,command.power);score-=power.actionPower==='teleport'?command.path.length*.55:power.travelPower?.unequip?1:0;}
@@ -137,11 +152,19 @@ export function decide(pack: ContentPack, s: GameView, legal: Command[], difficu
     if(command.target==='pvp')objective={id:'pvp',region:at,label:'opposing party',enemies:[],pvp:s.heroes.filter(v=>faction(p,v.id)!==f&&v.location===at).map(v=>v.id)} satisfies Objective;
     if(!objective){score=-30;reason='This opponent is not among this faction’s objectives: the fight brings no reward.';break;}
     if(objective.clue){score=-30;reason='Investigate the clue before committing a Challenge.';break;}
+    // What the party agreed decides whom a bot fights beside. Blue creatures leave no choice: that Challenge is the only legal action.
+    const order=orders[h!.id],beside=party.some(a=>a.id!==h!.id&&order?.partners.includes(a.id)),forced=s.enemies.some(e=>e.region===at&&e.color==='blue');
+    if(order&&!forced&&command.target!=='pvp'){
+     if(order.mode==='alone'&&beside){score=HOLD;reason=`Going its own way this turn: ${first(h!.id)} does not ask ${partnerNames(p,s,order)} along.`;break;}
+     if(order.mode!=='alone'&&!beside){score=HOLD;reason=order.mode==='follow'?`Waiting for ${partnerNames(p,s,order)}: this turn ${first(h!.id)} fights only at ${partnerNames(p,s,order)}’s side.`:`Waiting for ${partnerNames(p,s,order)} to arrive: this fight was agreed together.`;break;}
+    }
     const forecast=strategy.forecast(objective,party);
     score=strategy.value(objective,party,forecast);
     // A faction at its peak fights the Overlord rested: it waits until every member has most of his health and energy.
     if(strategy.lastStand(objective,party)&&party.some(worn)){score=-6;reason='Resting first: the party is not at full strength for the Overlord.';break;}
     if(objective.enemies[0]?.color==='blue')score+=5;
+    // A leader calls the fight as soon as the party stands together.
+    early=order?.mode==='lead'&&beside&&score>0;
     reason=`Fighting ${objective.quest?'for ':''}${named(objective)} ${party.length>1?`with ${party.length} characters`:'alone'}: about ${forecast.rounds} ${forecast.rounds===1?'round':'rounds'} and ${forecast.wounds.toFixed(1)} wounds expected; ${forecast.win>.8?'low':forecast.win>.5?'moderate':'high'} risk.`;break;
    }
    case 'ability': {
@@ -234,8 +257,8 @@ export function decide(pack: ContentPack, s: GameView, legal: Command[], difficu
    default: score = 0;
   }
   const tactical=tacticalScore(p,s,command,risk);if(tactical){score=tactical.score;reason=tactical.reason;}
-  return { command, score, reason, index };
- });
+  return { command, score, reason, index, early };
+ }).filter(v=>!options.early||v.early);
  if(s.battle&&s.battle.stage!=='over'){
   // Compare optional gains with the best mandatory continuation, including wounds.
   const forced=scored.filter(v=>!['ability','reroll'].includes(v.command.type));

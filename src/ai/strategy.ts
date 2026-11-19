@@ -8,15 +8,22 @@ import type { Boxes, ContentPack, DiceFilter, Die, Effect, Enemy, Faction, Hero,
 import type { GameView } from '../rules/view.js';
 import { abilityScore, chance, dieHazard, projectedBoxes } from './tactics.js';
 import { factionView, publicState } from './public-state.js';
+import { committed, leaderOf, type Orders } from './orders.js';
 
 export interface Objective {
  id: string; region: string; label: string; enemies: Enemy[]; boss?: string;
  reward?: Reward; quest?: string; clue?: boolean; pvp?: string[];
  /** A place to hold in a War: this character stands in `region`, `partner` in `other`. Nothing is fought for it. */
  war?: { partner: string; other: string };
+ /** The player's character a bot keeps company with ("come with me") where nothing stands to be fought. Nothing is fought for it. */
+ escort?: string;
 }
 export interface Forecast { win: number; wounds: number; rounds: number; damage: number; health: number; }
-export interface Plan { objective: Objective; party: string[]; score: number; travelActions: number; forecast: Forecast; }
+export interface Plan { objective: Objective; party: string[]; score: number; travelActions: number; forecast: Forecast;
+ /** The player's character this plan follows ("come with me"), or the ones it expects to come along ("I go with you"). */
+ following?: string; leading?: string[]; }
+/** What staying beside the player's character is worth to a bot told to come with him: more than a rest, less than a good fight. */
+export const ESCORT_WORTH = 6;
 interface WarPost { id: string; label: string; value: number; wait: number; cost: number; holders: { hero: string; region: string; travel: number }[] }
 const sum = (n: number[]) => n.reduce((a, b) => a + b, 0);
 
@@ -261,8 +268,9 @@ function oRule(p: ContentPack, s: State) { return p.creatures.find(c => c.id ===
 /**
  * `independent` names the characters this planner does not steer (a player's own, when it plans for the bots beside them). A party
  * may count on such a character only where he already stands: he can be invited to a challenge there, but nobody can make him travel.
+ * `orders` is what the bots and the player agreed for this turn (ai/orders.ts): a bot with an order plans by it instead.
  */
-export function createStrategy(pack: ContentPack, s: GameView, risk: number, independent: string[] = []) {
+export function createStrategy(pack: ContentPack, s: GameView, risk: number, independent: string[] = [], orders: Orders = {}) {
  const p = contentFor(pack, s);
  const nefarian = nefarianSteps(p, s);
  const distances = new Map<string, number>(), forecasts = new Map<string, Forecast>(), plans = new Map<string, Plan | undefined>();
@@ -358,7 +366,7 @@ export function createStrategy(pack: ContentPack, s: GameView, risk: number, ind
    const value = (5 + xp * 2.8 + r.gold * each * team.length * .45 + levelUp) * (peak(team) ? PEAK_QUESTS : 1) - 1.6;
    let chosen: WarPost | undefined;
    for (const a of team) for (const b of team) {
-    if (a.id === b.id) continue;
+    if (a.id === b.id || committed(orders, a.id) || committed(orders, b.id)) continue;
     // A character these bots do not steer holds a region only if he already stands in it.
     if (independent.includes(a.id) && a.location !== war.regions[0] || independent.includes(b.id) && b.location !== war.regions[1]) continue;
     const ta = Math.ceil(distance(a.location, war.regions[0], side) / 2), tb = Math.ceil(distance(b.location, war.regions[1], side) / 2);
@@ -374,29 +382,61 @@ export function createStrategy(pack: ContentPack, s: GameView, risk: number, ind
   const best = result.sort((a, b) => worth(b) - worth(a) || a.id.localeCompare(b.id)).slice(0, 1);
   assignments.set(side, best); return best;
  };
+ /**
+  * "Come with me": the bot's place is beside the player's character. What stands where he stands is fought at his side; where
+  * nothing stands, keeping him company is the plan, so that the two are together when he finds something to fight.
+  */
+ const escort = (h: Hero): Plan | undefined => {
+  const side = faction(p, h.id), leader = leaderOf(s, h, orders[h.id], (from, to) => distance(from, to, side));
+  if (!leader) return undefined;
+  const travel = Math.ceil(distance(h.location, leader.location, side) / 2);
+  const beside = s.heroes.filter(a => faction(p, a.id) === side && a.id !== h.id && a.id !== leader.id && a.health > 0 && a.location === leader.location);
+  let best: Plan | undefined;
+  for (const o of targets(side).filter(o => o.region === leader.location && !o.clue)) {
+   for (let mask = 0; mask < 1 << beside.length; mask++) {
+    const party = [h, leader, ...beside.filter((_, i) => mask & (1 << i))];
+    const f = forecast(o, party), score = value(o, party, f) / (1 + travel * .65);
+    if (!best || score > best.score) best = { objective: o, party: party.map(a => a.id), score, travelActions: travel, forecast: f, following: leader.id };
+   }
+  }
+  // A fight too hard for the two of them is no reason to leave his side.
+  if (best && best.score >= ESCORT_WORTH) return best;
+  return { objective: { id: `escort:${leader.id}`, region: leader.location, label: p.characters.find(c => c.id === leader.id)?.name.split(' ')[0] ?? leader.id, enemies: [], escort: leader.id },
+   party: [h.id, leader.id], score: ESCORT_WORTH, travelActions: travel, forecast: { win: 1, wounds: 0, rounds: 0, damage: 0, health: 0 }, following: leader.id };
+ };
  const plan = (h: Hero): Plan | undefined => {
   const key = JSON.stringify([h.id, h.location, h.health, h.energy, h.actions]);
   if (plans.has(key)) return plans.get(key);
-  const side = faction(p, h.id), friends = s.heroes.filter(a => faction(p, a.id) === side && a.id !== h.id && a.health > 0);
+  const side = faction(p, h.id), allies = s.heroes.filter(a => faction(p, a.id) === side && a.id !== h.id && a.health > 0);
+  const order = orders[h.id], partner = (id: string) => !!order?.partners.includes(id);
+  if (order?.mode === 'follow') { const kept = escort(h); plans.set(key, kept); return kept; }
+  // "I go with you": the player's characters come along, so the bot plans for them as for its own, and never without one of them.
+  const leading = order?.mode === 'lead' && allies.some(a => partner(a.id));
+  // Whom a plan may count on. A bot going its own way counts on no player's character, and no bot counts on one that is spoken for.
+  const friends = leading ? allies.filter(a => partner(a.id)) : allies.filter(a => !committed(orders, a.id) && !(order && independent.includes(a.id)));
+  // Going its own way, a bot leaves alone what stands where a player's character is: that fight is his.
+  const taken = order && !leading ? new Set(allies.filter(a => independent.includes(a.id)).map(a => a.location)) : undefined;
   let best: Plan | undefined;
   const eligible=targets(side).filter(o=>{
    if (o.boss && !o.reward && h.level < 3) return false;
+   if (taken?.has(o.region) && o.region !== h.location) return false;
    return o.enemies[0]?.color !== 'blue' || o.region === h.location || s.enemies.some(e => e.region === o.region && e.faction === side);
   }).sort((a,b)=>distance(h.location,a.region,side)-distance(h.location,b.region,side));
   for (const o of candidateObjectives(eligible, s.overlord.id)) {
    const d = distance(h.location, o.region, side);
-   for (let mask = 0; mask < 1 << friends.length; mask++) {
+   for (let mask = leading ? 1 : 0; mask < 1 << friends.length; mask++) {
     const party = [h, ...friends.filter((_, i) => mask & (1 << i))];
     if (o.clue && party.length > 1) continue;
-    if (party.some(a => a.id !== h.id && independent.includes(a.id) && a.location !== o.region)) continue;
+    if (!leading && party.some(a => a.id !== h.id && independent.includes(a.id) && a.location !== o.region)) continue;
     const travels = party.map(a => Math.ceil(distance(a.location, o.region, side) / 2));
     if (travels.some((t,i) => t > 6 || (!s.variants?.overlordOnly && t+1>party[i].actions+2*Math.floor((30-s.turn)/2)))) continue;
     const wait = Math.max(...travels.map((t, i) => Math.max(0, t + 1 - party[i].actions)));
     const f = o.clue ? { win: 1, wounds: 0, rounds: 0, damage: 0, health: 0 } : forecast(o, party);
     const score = (value(o, party, f) - wait * .9) / (1 + sum(travels) * .65) - Math.max(0, d - 8) * .2;
-    if (!best || score > best.score) best = { objective: o, party: party.map(h => h.id), score, travelActions: Math.ceil(d / 2), forecast: f };
+    if (!best || score > best.score) best = { objective: o, party: party.map(h => h.id), score, travelActions: Math.ceil(d / 2), forecast: f, ...(leading ? { leading: party.slice(1).map(a => a.id) } : {}) };
    }
   }
+  if (leading) { plans.set(key, best); return best; }
   // A War asks for no fight: two characters standing in its two regions when the enemy's turn ends win its reward for every
   // character of the faction. Each War has one pair told off for it, so that both walk to the same War and to different regions.
   for (const post of posts(side)) {
