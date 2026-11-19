@@ -7,6 +7,14 @@ export interface TokenHelp {
  summary: string;
  details?: string[];
  hint?: string;
+ /**
+  * The region the thing stands in. While its help is shown the whole region is lit on the map, and `where` says it in words
+  * right under the title: a counter near a border must not be taken for one of the region next door.
+  */
+ region?: string;
+ where?: string;
+ /** Said in passing (a region pointed at): shown smaller, and nothing is added to it. */
+ brief?: boolean;
 }
 export type ShowTokenHelp = (help: TokenHelp | null, target?: SVGElement) => void;
 
@@ -34,6 +42,7 @@ export function MapPortraitToken({ x, y, scale, src, name, label, kind, color, c
    :<><image href={src} x={-r+2} y={-r+2} width={(r-2)*2} height={(r-2)*2} clipPath={`url(#${clip})`} preserveAspectRatio="xMidYMid slice"/><circle className="portrait-token-ring" r={r}/></>}
   {kind==='overlord'&&!bare&&<path className="boss-token-crown" d="M-13-23 -16-35 -7-29 0-39 7-29 16-35 13-23Z"/>}
   {kind==='hero'&&<text className="portrait-token-name" textAnchor="middle" y={-r-7}>{name.split(' ')[0]}</text>}
-  {(count!==undefined||level!==undefined)&&<g className="portrait-token-count" transform={`translate(${r-2},${r-2})`}><circle r={count!==undefined?10:8}/><text textAnchor="middle" y="4">{count??level}</text></g>}
+  {/* One creature needs no number; its badge only hid the border it stands beside. */}
+  {(count!==undefined&&count>1||level!==undefined)&&<g className="portrait-token-count" transform={`translate(${r-2},${r-2})`}><circle r={count!==undefined?10:8}/><text textAnchor="middle" y="4">{count??level}</text></g>}
  </g>;
 }

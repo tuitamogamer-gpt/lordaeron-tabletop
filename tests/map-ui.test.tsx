@@ -104,7 +104,10 @@ describe('table overview and map interaction',()=>{
   canvas.getBoundingClientRect=()=>({x:0,y:0,top:0,left:0,right:900,bottom:343,width:900,height:343,toJSON:()=>({})});
   token.getBoundingClientRect=()=>({x:880,y:140,top:140,left:880,right:920,bottom:165,width:40,height:25,toJSON:()=>({})});
   fireEvent.pointerEnter(token);const tooltip=screen.getByRole('tooltip');
-  expect(tooltip.style.top).toBe('85px');expect(tooltip.style.left).toBe('748px');
+  // There is no room for it under the token (166 px for 250): it stands beside the token, on the side that has room, and
+  // inside the viewport. (It used to be pushed up over the token it described: top 85px, left 748px.)
+  expect(tooltip.style.left).toBe('724px');expect(tooltip.style.top).toBe('27.5px');
+  expect(724+144).toBeLessThanOrEqual(880-12);expect(27.5+250).toBeLessThanOrEqual(343-8);
  });
  it('keeps region units in an optional drawer instead of increasing the board’s height',()=>{
   render(<Table/>);expect(screen.queryByRole('button',{name:/^Region details/})).toBeNull();

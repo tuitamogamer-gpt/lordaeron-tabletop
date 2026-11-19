@@ -241,3 +241,30 @@
  .map-legend .legend-key>.legend-faction.horde{order:1}.map-legend .legend-key>span:last-child{order:2}
  .map-legend .legend-key>.legend-faction.alliance{order:3}.map-legend .legend-key>.legend-faction.both{order:4}
 }
+
+/* ---------- Where a thing stands (19. 11. 2026.) ----------
+   A counter near a border was taken for one of the region next door. Whatever is pointed at now lights its whole region, with
+   the region's name on a plate over it and a ring round every creature that stands there; pointing at a region itself does the
+   same and says what stands in it. A quest's marker is a tag on its creature's counter (token-layout.ts > TAG). */
+.map-pointed .pointed-field{fill:#ffe9a8;fill-opacity:.2;stroke:#fff3c9;stroke-width:3;stroke-linejoin:round;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 5px #ffe9a8aa)}
+.map-pointed-pieces>circle{fill:none;stroke:#fff3c9;stroke-width:2;stroke-dasharray:4 3;vector-effect:non-scaling-stroke}
+.pointed-name>rect{fill:#14110bee;stroke:#e7c67b;stroke-width:1.2;vector-effect:non-scaling-stroke}
+.pointed-name>text{fill:#fff0c4;font:700 13px var(--serif);letter-spacing:.4px;text-transform:uppercase}
+@media(prefers-reduced-motion:no-preference){.map-pointed .pointed-field{animation:pointed-in .14s ease-out}@keyframes pointed-in{from{fill-opacity:0}}}
+/* In the help: where it stands, in the largest words after its name. */
+.map-token-tooltip>.token-where{display:flex;align-items:center;gap:5px;margin-top:5px;padding:4px 8px;border:1px solid #e7c67b88;border-radius:4px;background:#3a301c;color:#fff0c4;font:700 13px/1.3 var(--sans)}
+.map-token-tooltip>.token-where>svg{flex:none;color:#e7c67b}
+/* The quest's tag on its creature: smaller than the token it used to be, the same words. */
+.quest-map-token text{font-size:9.5px}
+/* What stands at the journey's end, beside the button that makes the journey. */
+.stands-chip{display:inline-flex;align-items:center;gap:6px;padding:2px 8px 2px 6px;border:1px solid #b69c6059;border-radius:999px;background:#0d1412b3;color:#eadcb8;white-space:nowrap;line-height:1.35}
+.stands-chip.green{border-color:#6fbf6a99;background:#1d3a1e80;color:#dcf5d6}.stands-chip.red{border-color:#d9584a99;background:#5a1e1970;color:#ffd9cf}.stands-chip.blue{border-color:#4c88d699;background:#1a335670;color:#d5e7ff}
+.stands-chip.nothing{border-style:dashed;color:#c9bf9f}
+.map-travel-detail>.route-arrival{margin-left:auto;padding:1px 9px;border:1px solid #6fbf6a88;border-radius:999px;background:#1d3a1e99;color:#e3f6dc;font-weight:700}
+.map-travel-detail>.route-arrival.nothing{border:1px dashed #b69c6088;background:#0d1412b3;color:#d9cfae;font-weight:600}
+/* What a region says of itself when the pointer crosses it: smaller than the help of a counter, so that it covers little. */
+.map-token-tooltip.brief{width:236px;padding:9px 12px}
+.map-token-tooltip.brief>strong{margin-top:2px;font-size:15px}
+.map-token-tooltip.brief>p{margin-top:5px}
+.map-token-tooltip.brief ul{margin-top:4px}
+.map-token-tooltip.brief>em{margin-top:7px;padding-top:6px}

@@ -114,7 +114,8 @@ describe('where the marks stand', () => {
      const id = key === 'overlord' ? v.overlord.region : key.startsWith('h:') ? v.heroes.find(h => `h:${h.id}` === key)!.location : key.split(':')[1], r = region(id);
      if (!servicesOf(r).length) continue;
      tokens++;
-     const radius = key === 'overlord' ? 26 : key.startsWith('h:') ? 21 : key.startsWith('c:') ? 17 : 19;
+     // A quest's marker is a tag on its creature's counter since 19. 11. 2026 (token-layout.ts > TAG), 15 units across its half-width.
+     const radius = key === 'overlord' ? 26 : key.startsWith('h:') ? 21 : key.startsWith('c:') ? 17 : key.startsWith('q:') ? 15 : 19;
      // A token's centre is never on a mark, and its edge reaches into the room of a mark by a few units at most.
      for (const mark of takenByServices(BOARD.byId[id], r.name, servicesOf(r))) {
       const gap = Math.hypot(point[0] - mark.x, point[1] - mark.y);

@@ -15,6 +15,13 @@ export interface TokenSpec {
  r: number;
  /** Its usual place, relative to the region's centre: used when there is room, and as the tie-breaker otherwise. */
  prefer: MapPoint;
+ /**
+  * How much more than a plain mark it costs this token to reach over its region's border. A figure says where something
+  * is: a creature or a character that stands across a border reads as standing in the region next door.
+  */
+ hold?: number;
+ /** How far inside the border its edge keeps, beyond its radius. */
+ margin?: number;
 }
 /** The region's name and the marks under it around its centre, which tokens avoid covering when they can. */
 export interface LabelBox { halfWidth: number; top: number; bottom: number }
@@ -55,7 +62,18 @@ function candidates(shape: BoardShape) {
  * What a spot costs, per map unit: reaching over the region's border, standing so close to it that most of the token is outside,
  * overlapping a token already placed, covering the region's name, and distance from the token's usual place.
  */
-export const WEIGHTS = { border: 2, deep: 6, overlap: 8, label: 5, distance: 0.04 };
+export const WEIGHTS = { border: 2, margin: 3.5, deep: 6, overlap: 18, mark: 12, label: 4, distance: 0.04 };
+/**
+ * A figure keeps inside its region before it keeps off the region's name. Until 19. 11. 2026 it was the other way round, and
+ * a quarter of the creatures stood across a border: every region has room for a creature (the narrowest is 23 map units deep,
+ * a creature 17 across its radius), but the name lies in the middle of that room, and the name won.
+ */
+export const HOLD = { figure: 8, mark: 2.5 };
+/**
+ * How far inside the border a figure's edge keeps (map units). The borders are drawn at a fixed width on the screen, which on
+ * the overview of the whole board is some eight units: a counter that only just clears the border's line still stands on its ink.
+ */
+export const FIGURE_MARGIN = 7;
 
 /**
  * Places the tokens in order (the first ones get the best spots), each on the cheapest spot by WEIGHTS. A region too small for its
@@ -63,14 +81,16 @@ export const WEIGHTS = { border: 2, deep: 6, overlap: 8, label: 5, distance: 0.0
  * already: a token keeps off it as it keeps off another token, which is more than it keeps off the region's name.
  */
 export function layoutTokens(shape: BoardShape, tokens: TokenSpec[], label?: LabelBox, taken: Taken[] = []): Record<string, MapPoint> {
- const [cx, cy] = shape.center, placed: Taken[] = [...taken], result: Record<string, MapPoint> = {};
+ // A mark of the board (a town, a flight path) says what the region offers: a figure keeps off it before it keeps its margin from the border.
+ const [cx, cy] = shape.center, placed: (Taken & { mark?: boolean })[] = taken.map(t => ({ ...t, mark: true })), result: Record<string, MapPoint> = {};
  for (const token of tokens) {
-  const wantX = cx + token.prefer[0], wantY = cy + token.prefer[1];
+  const wantX = cx + token.prefer[0], wantY = cy + token.prefer[1], pull = WEIGHTS.distance;
   let best: Spot | undefined, bestCost = Infinity;
   for (const spot of candidates(shape)) {
-   let cost = WEIGHTS.border * Math.max(0, token.r + 1 - spot.clear) + WEIGHTS.deep * Math.max(0, token.r * 0.45 - spot.clear) + WEIGHTS.distance * Math.hypot(spot.x - wantX, spot.y - wantY);
+   // Reaching over the border costs a figure most; standing closer to it than its margin costs it little, less than covering the name.
+   let cost = WEIGHTS.border * (token.hold ?? 1) * Math.max(0, token.r + (token.margin ? 0 : 1) - spot.clear) + WEIGHTS.margin * Math.max(0, token.r + (token.margin ?? 0) - spot.clear) + WEIGHTS.deep * Math.max(0, token.r * 0.45 - spot.clear) + pull * Math.hypot(spot.x - wantX, spot.y - wantY);
    if (cost >= bestCost) continue;
-   for (const other of placed) cost += WEIGHTS.overlap * Math.max(0, token.r + other.r + 3 - Math.hypot(spot.x - other.x, spot.y - other.y));
+   for (const other of placed) cost += (other.mark ? WEIGHTS.mark : WEIGHTS.overlap) * Math.max(0, token.r + other.r + 3 - Math.hypot(spot.x - other.x, spot.y - other.y));
    if (label && cost < bestCost) cost += WEIGHTS.label * labelCover(label, cx, cy, spot.x, spot.y, token.r);
    if (cost < bestCost) { bestCost = cost; best = spot; }
   }
@@ -142,6 +162,13 @@ export function labelLines(name: string) {
  return lines;
 }
 
+/**
+ * A quest's marker as it is drawn on the map: a tag on the counter of the creatures it is about, at one of three corners (the
+ * fourth holds the count). Until 19. 11. 2026 it was a token of its own, as large as a character's counter, and five times in
+ * six it stood across a border: a marker between Stillwater Pond and Deathknell said nothing about where the quest was.
+ */
+export const TAG = { w: 30, h: 24 } as const;
+const TAG_CORNERS: MapPoint[] = [[-19, -17], [19, -17], [-19, 17]], TAG_CLOSE: MapPoint[] = [[0, -16], [-12, -10], [12, -10], [0, 14], [0, 0]];
 /** Radii used for spacing, a little larger than the drawn tokens so that names and count badges stay clear. */
 export const TOKEN_RADIUS = { hero: 23, overlord: 27, creature: 20, quest: 21, world: 13 } as const;
 
@@ -156,16 +183,33 @@ export function boardTokenPositions(p: ContentPack, state: Pick<GameView, 'heroe
   if (!shape) continue;
   const people = state.heroes.filter(h => h.location === r.id), stacks = creatureStacks(state.enemies.filter(e => e.region === r.id)), quests = markers.filter(m => m.region === r.id);
   const world = (state.world ?? []).filter(w => !w.cleared).filter(w => { const e = p.events.find(e => e.id === w.id); return e?.boss ? e.boss.region === r.id : e?.script === 'plague' && w.tokens.includes(r.id); });
+  /** The creatures of this region that a quest's marker is about: the counter that carries it. */
+  const carrier = (m: QuestMarker) => stacks.find(stack => stack.color !== 'blue' && state.enemies.some(e => e.region === r.id && e.quest === m.quest.id && e.creature === stack.creature && e.color === stack.color));
   const specs: TokenSpec[] = [
-   ...people.map((h, i) => ({ key: `h:${h.id}`, r: TOKEN_RADIUS.hero, prefer: [(i - (people.length - 1) / 2) * 49, -38] as const })),
-   ...(state.overlord.region === r.id ? [{ key: 'overlord', r: TOKEN_RADIUS.overlord, prefer: [people.length ? 52 : 0, -38] as const }] : []),
-   ...stacks.map((stack, i) => ({ key: `c:${r.id}:${stack.creature}:${stack.color}`, r: TOKEN_RADIUS.creature, prefer: [(i % 4 - (Math.min(stacks.length, 4) - 1) / 2) * 42, 36 + Math.floor(i / 4) * 40] as const })),
-   ...quests.map((m, i) => ({ key: `q:${r.id}:${m.quest.id}`, r: TOKEN_RADIUS.quest, prefer: [44, -14 + i * 26] as const })),
-   ...world.map(w => ({ key: `w:${r.id}:${w.id}`, r: TOKEN_RADIUS.world, prefer: [-34, 22] as const })),
+   ...people.map((h, i) => ({ key: `h:${h.id}`, r: TOKEN_RADIUS.hero, prefer: [(i - (people.length - 1) / 2) * 49, -38] as const, hold: HOLD.figure, margin: FIGURE_MARGIN })),
+   ...(state.overlord.region === r.id ? [{ key: 'overlord', r: TOKEN_RADIUS.overlord, prefer: [people.length ? 52 : 0, -38] as const, hold: HOLD.figure, margin: FIGURE_MARGIN }] : []),
+   ...stacks.map((stack, i) => ({ key: `c:${r.id}:${stack.creature}:${stack.color}`, r: TOKEN_RADIUS.creature, prefer: [(i % 4 - (Math.min(stacks.length, 4) - 1) / 2) * 42, 36 + Math.floor(i / 4) * 40] as const, hold: HOLD.figure, margin: FIGURE_MARGIN })),
+   // A quest's marker is a tag on the creatures it is about (below); one whose creatures are not in sight is laid out by itself.
+   ...quests.filter(m => !carrier(m)).map((m, i) => ({ key: `q:${r.id}:${m.quest.id}`, r: TOKEN_RADIUS.quest, prefer: [44, -14 + i * 26] as const, hold: HOLD.mark })),
+   ...world.map(w => ({ key: `w:${r.id}:${w.id}`, r: TOKEN_RADIUS.world, prefer: [-34, 22] as const, hold: HOLD.mark })),
   ];
-  if (!specs.length) continue;
-  const services = servicesOf(r);
-  Object.assign(at, layoutTokens(shape, specs, labelBox(r.name), takenByServices(shape, r.name, services)));
+  if (!specs.length && !quests.length) continue;
+  const services = servicesOf(r), label = labelBox(r.name), marks = takenByServices(shape, r.name, services);
+  Object.assign(at, layoutTokens(shape, specs, label, marks));
+  // The tags: each at the corner of its creature's counter where it is deepest inside the region and covers least.
+  const tagged = new Map<string, number>(), others = Object.entries(at).filter(([key]) => specs.some(v => v.key === key));
+  for (const m of quests) {
+   const own = carrier(m); if (!own) continue;
+   const key = `c:${r.id}:${own.creature}:${own.color}`, base = at[key]; if (!base) continue;
+   const nth = tagged.get(key) ?? 0; tagged.set(key, nth + 1);
+   // The fourth corner holds the count of a stack of two or more; a single creature leaves it free. Where no corner is inside
+   // the region (a creature in a region barely larger than itself), the tag sits closer on the counter.
+   const places = [...TAG_CORNERS, ...(own.count > 1 ? [] : [[19, 17] as MapPoint]), ...TAG_CLOSE].map(([dx, dy]): MapPoint => [base[0] + dx, base[1] + dy + Math.sign(dy) * nth * TAG.h]);
+   const worth = ([x, y]: MapPoint, i: number) => { const clear = clearance(shape, [x, y]); return Math.min(clear, 8) - (clear < 0 ? 100 : 0) - (i >= places.length - TAG_CLOSE.length ? 14 : 0)
+    - 5 * labelCover(label, shape.center[0], shape.center[1], x, y, TAG.w / 2) - marks.reduce((n, mark) => n + 2 * Math.max(0, TAG.h / 2 + mark.r - Math.hypot(x - mark.x, y - mark.y)), 0)
+    - others.reduce((n, [other, [ox, oy]]) => n + (other === key ? 0 : Math.max(0, TAG.w / 2 + 17 - Math.hypot(x - ox, y - oy))), 0); };
+   at[`q:${r.id}:${m.quest.id}`] = places.map((place, i) => ({ place, worth: worth(place, i) })).reduce((best, next) => next.worth > best.worth + .5 ? next : best).place;
+  }
  }
  return at;
 }
