@@ -28,6 +28,11 @@ export type RoundForecast = {
  attack: number; blocked: number; absorbed: number; wounds: number;
  /** The Damage step is already resolved: `left` of its wounds are still to be assigned. */
  defended: boolean; left: number;
+ /**
+  * The wounds still to fall take the last Health of everyone left in the fight: who then falls ("Grumbaz", "the party").
+  * The fight is lost before the Resolution step unless someone is healed, so the party's damage is never struck.
+  */
+ wipe?: string;
  /** The Resolution step: the hit tokens that strike (ranged hits left, melee hits, attrition), the Health they strike against, and what falls. */
  strike: { ranged: number; melee: number; attrition: number }; damage: number; health: number; kills: number; won: boolean;
  /** Tokens the opponent's rule takes at the end of the round, and the damage that stays for the next one. */
@@ -96,6 +101,13 @@ function forecast(p: ContentPack, view: GameView): RoundForecast | undefined {
   if (b.winner) return { ...result, damage: result.boxes.damage, kills: result.ranged.kills, won: true };
   result.attack = attackOf(); result.blocked = box().defense; result.absorbed = box().armor; result.wounds = b.wounds[side];
  }
+ // Wounds that take the last Health of everyone left end the fight before the party strikes back: say so, instead of a win
+ // that is never reached. (A lone character with 2 Health was told "2 wounds incoming · 3 of 3 damage: Crusader falls".)
+ const standing = live.participants.filter(id => !b.defeated.includes(id)), pending = result.defended ? result.left : result.wounds;
+ const stamina = standing.reduce((n, id) => { const h = s.heroes.find(h => h.id === id)!; return n + Math.max(0, h.health) + Object.values(h.pets ?? {}).reduce((a, v) => a + v, 0); }, 0);
+ // While someone has still to roll, the wounds are not final: his hits and armor may yet stop them.
+ // And when everyone left stands without Health (the choice where to return is open), the fight is lost unless a heal comes.
+ if (standing.length && (pending > 0 && pending >= stamina && !waiting.length || !stamina)) result.wipe = standing.length === 1 ? first(p, standing[0]) : 'the party';
  // The Resolution step, as if every wound were assigned.
  const strike = { ranged: box().damage, melee: box().defense, attrition: eventBoss(p, s)?.combat === 'spilskin' ? 0 : box().attrition };
  const strikes = strike.ranged + strike.melee + strike.attrition, health = healthOf(), before = fallen();
@@ -152,13 +164,14 @@ export function forecastLines(f: RoundForecast): ForecastLine[] {
  const stopped = [f.blocked ? count(f.blocked, 'hit') : '', f.absorbed ? `${f.absorbed} armor` : ''].filter(Boolean);
  lines.push({
   key: 'incoming', label: 'Enemy attack', sum: [`${f.attack} attack`, ...stopped].join(' − '),
-  result: !f.wounds ? 'No wounds' : !f.defended ? count(f.wounds, 'wound') : f.left ? `${count(f.left, 'wound')} to assign` : `${count(f.wounds, 'wound')} taken`,
+  result: (!f.wounds ? 'No wounds' : !f.defended ? count(f.wounds, 'wound') : f.left ? `${count(f.left, 'wound')} to assign` : `${count(f.wounds, 'wound')} taken`) + (f.wipe ? ` · ${f.wipe} falls` : ''),
   tone: f.wounds ? 'bad' : 'good',
  });
  lines.push({
   key: 'outgoing', label: 'Party damage', sum: `${f.strike.ranged} ranged + ${f.strike.melee} melee + ${f.strike.attrition} attrition`,
-  result: `${f.damage} of ${f.health}${f.won ? ` · ${standing > 1 ? 'all fall' : 'falls'}` : f.kills ? ` · ${f.kills} of ${standing} ${f.kills === 1 ? 'falls' : 'fall'}` : ''}`,
-  tone: f.won ? 'good' : 'plain',
+  // A party that falls to the wounds first never strikes: its damage is no promise.
+  result: f.wipe ? `${f.damage} of ${f.health} · not struck` : `${f.damage} of ${f.health}${f.won ? ` · ${standing > 1 ? 'all fall' : 'falls'}` : f.kills ? ` · ${f.kills} of ${standing} ${f.kills === 1 ? 'falls' : 'fall'}` : ''}`,
+  tone: f.wipe ? 'bad' : f.won ? 'good' : 'plain',
  });
  return lines;
 }
@@ -169,12 +182,14 @@ export function forecastSentence(f: RoundForecast): string {
  if (f.ranged.won) return `Ranged strike: ${f.boxes.damage} damage, ${falls(f, f.opponents)}`;
  const standing = f.opponents - f.ranged.kills;
  const incoming = !f.wounds ? f.defended ? 'No wounds taken' : 'No wounds incoming' : !f.defended ? `${count(f.wounds, 'wound')} incoming` : f.left ? `${count(f.left, 'wound')} to assign` : `${count(f.wounds, 'wound')} taken`;
+ if (f.wipe) return `${incoming}: ${f.wipe} falls unless healed · the fight is lost before the party strikes`;
  const outgoing = `${f.damage} of ${f.health} damage${f.won ? `: ${falls(f, standing)}` : f.kills ? `: ${f.kills} of ${standing} ${f.kills === 1 ? 'falls' : 'fall'}` : ''}`;
  return `${incoming} · ${outgoing}`;
 }
 
 /** What is left when the round ends without a win: "3 damage tokens stay for the next round", and what the opponent's rule takes of it. */
 export function carryWords(f: RoundForecast): string {
+ if (f.wipe) return `Unless ${f.wipe === 'the party' ? 'someone' : f.wipe} is healed, the wounds fall first and the fight is lost.`;
  if (f.resolved || f.ranged.won || f.won) return '';
  if (!f.lost) return f.carried ? stays(f.carried) : '';
  if (!f.carried) return `${f.foe}’s rule removes the last ${f.lost === 1 ? 'damage token' : `${f.lost} damage tokens`}`;
@@ -183,6 +198,8 @@ export function carryWords(f: RoundForecast): string {
 
 /** Whose dice are counted and who has still to roll: "with Sofeea’s dice as they lie · Grumbaz still to attack". */
 export function forecastNote(p: ContentPack, f: RoundForecast): string {
+ // What ends the fight is said before whose dice are counted.
+ if (f.wipe) return '';
  if (f.resolved || f.defended) return '';
  const names = f.waiting.map(id => first(p, id));
  return [f.rolling && `with ${first(p, f.rolling)}’s dice as they lie`, names.length && `${names.length > 1 ? `${names.slice(0, -1).join(', ')} and ${names.at(-1)}` : names[0]} still to attack`].filter(Boolean).join(' · ');

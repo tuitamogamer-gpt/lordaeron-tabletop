@@ -45,15 +45,19 @@ export const playerDecides = (state: Pick<GameView, 'phase'>, legal: Command[]) 
  */
 export const UNDO_GRACE_MS = 2500;
 
+/** The pause between one bot's move and the next bot's look at the board (ms, at the normal pace). */
+export const BOT_PAUSE_MS = 600;
+
 /** How long the result of a fight the bots fought stays up before the bots close it (ms, at the normal pace). */
 export const RESULT_HOLD_MS = 3000;
 /**
  * How long the bots wait before their next step in a combat. Closing a fight they fought is the one step that takes longer:
  * its result is what the people watching want to read. Step by step it is not closed for them at all (`undefined`).
  */
-export function botCombatDelay(candidates: Command[], stepMs: number, tempo: number, stepByStep: boolean): number | undefined {
+export function botCombatDelay(candidates: Command[], stepMs: number, tempo: number, stepByStep: boolean, read?: number): number | undefined {
  const closing = candidates.length > 0 && candidates.every(c => c.type === 'closeBattle');
- return closing ? stepByStep ? undefined : RESULT_HOLD_MS * tempo : stepMs * tempo;
+ // `read` is the time the table gives this step to be read (table-time.ts > readMs): it takes the place of the flat step.
+ return closing ? stepByStep ? undefined : (read ?? RESULT_HOLD_MS) * tempo : (read ?? stepMs) * tempo;
 }
 
 /** How long the bots may take over a decision of their own before its dialog is shown after all (ms). */

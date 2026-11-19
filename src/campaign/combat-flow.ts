@@ -8,6 +8,8 @@ import type { BattleStage, Command, ContentPack } from '../rules/model';
 import type { GameView } from '../rules/view';
 import { apply } from '../rules/game';
 import { roundForecast } from './combat-forecast';
+import { regionName } from './event-text';
+import { LIVE_BANK_BEATS, LIVE_BEATS, LIVE_LIGHT_BEATS } from './table-time';
 
 export const DICE_SETTLE_MS = 1350;
 export const COMBAT_STEP_MS = 750;
@@ -50,6 +52,9 @@ export function combatCue(before: GameView, after: GameView): CombatCue | undefi
  const kills = Math.max(0, (battle.killed?.length ?? 0) - (old.killed?.length ?? 0));
  const make = (kind: CombatCue['kind'], title: string, anticipation: string, detail: string, hero = heroId): CombatCue => ({ key: after.revision, kind, title, anticipation, detail, heroId: hero, ...(kills ? { kills } : {}), before });
  const defeated = kills ? `${kills} ${kills === 1 ? 'enemy falls' : 'enemies fall'}` : '';
+ // A character who leaves the fight is a loss, whatever Health he returns with. (It was announced as "Restoring strength · +1 health".)
+ const fell = battle.defeated.filter(id => !old.defeated.includes(id));
+ if (fell.length) return make('hurt', `${fell.map(name).join(' and ')} ${fell.length > 1 ? 'fall' : 'falls'}`, 'The last Health is gone', fell.map(id => `${name(id)} leaves the fight and returns to ${regionName(after.heroes.find(h => h.id === id)?.location ?? '')}`).join(' · '), fell[0]);
  const health = battle.participants.map(id => ({ id, delta: (after.heroes.find(h => h.id === id)?.health ?? 0) - (before.heroes.find(h => h.id === id)?.health ?? 0) })).filter(h => h.delta);
  if (health.length) {
   const hurt = health.find(h => h.delta < 0), target = hurt ?? health[0];
@@ -63,7 +68,11 @@ export function combatCue(before: GameView, after: GameView): CombatCue | undefi
   // What the opponents struck with and how much of it was stopped, from the same forecast the Combat Area shows.
   const f = old.kind === 'pve' && battle.stage !== 'over' ? roundForecast(BASE_PACK, before) : undefined;
   const struck = f && !f.ranged.won ? `${f.foe} attacks for ${f.attack}${f.blocked + f.absorbed ? ` · ${f.blocked + f.absorbed} stopped` : ''}` : '';
-  return make(ranged ? 'ranged' : 'defend', ranged ? 'Ranged volley' : 'Hold the line', ranged ? 'Taking aim' : 'Shields at the ready', [defeated, struck, wounds > 0 ? `${wounds} ${wounds === 1 ? 'wound' : 'wounds'} to assign` : battle.stage === 'over' ? 'The encounter is decided' : 'The party holds its ground'].filter(Boolean).join(' · '));
+  const detail = [defeated, struck, wounds > 0 ? `${wounds} ${wounds === 1 ? 'wound' : 'wounds'} to assign` : battle.stage === 'over' ? 'The encounter is decided' : 'The party holds its ground'].filter(Boolean).join(' · ');
+  // The exchange is named by what it is: the opponents' attack when they are left to attack, the ranged strike when it ends the
+  // fight. (An attack that was all blocked used to be called "Ranged volley" because a damage token lay in the Combat Area.)
+  if (struck) return make(kills ? 'ranged' : 'defend', `${f!.foe} ${f!.opponents - f!.ranged.kills > 1 ? 'attack' : 'attacks'}`, kills ? 'The ranged strike lands first' : 'Shields at the ready', detail);
+  return make(ranged ? 'ranged' : 'defend', ranged ? old.kind === 'pve' ? 'Ranged strike' : 'Ranged volley' : 'Hold the line', ranged ? 'Taking aim' : 'Shields at the ready', detail);
  }
  if (old.stage === 'resolution' && battle.stage !== 'resolution') {
   const wounds = (['horde', 'alliance'] as const).filter(f => battle.wounds[f] > 0).map(f => `${f === 'horde' ? 'Horde' : 'Alliance'}: ${battle.wounds[f]} ${battle.wounds[f] === 1 ? 'wound' : 'wounds'} to assign`).join(' · ');
@@ -74,17 +83,21 @@ export function combatCue(before: GameView, after: GameView): CombatCue | undefi
  if (kills) return make('ranged', 'A decisive strike', 'Finding an opening', defeated);
  const total = battle.boxes[side], previous = old.boxes[side];
  const gained = total.damage + total.defense + total.armor + total.attrition - previous.damage - previous.defense - previous.armor - previous.attrition;
- if (gained > 0) return make('bank', 'Hits secured', 'Gathering your successes', `+${gained} to the shared battle pool`);
+ // A power is named as a power, also when it lays a token: "Crimson Robe · +1 armor". (It was announced as "Hits secured", the
+ // same words as the hits of the roll, and held the table as long.)
  if (battle.active && old.active?.heroId === battle.active.heroId && battle.active.used.length > old.active.used.length) {
   // Name the card: `used` records "<card>:<ability>" for each power of this attack.
   const key = battle.active.used.at(-1)!, played = BASE_PACK.cards.find(c => c.id === key.slice(0, key.lastIndexOf(':')))?.name;
-  return make('power', played ?? 'Power unleashed', `${name(battle.active.heroId)} uses ${played ?? 'a power'}`, 'Its effect is on the table');
+  const laid = ([['damage', 'damage'], ['defense', 'defense'], ['armor', 'armor'], ['attrition', 'attrition']] as const).filter(([box]) => total[box] > previous[box]).map(([box, word]) => `+${total[box] - previous[box]} ${word}`).join(' · ');
+  return make('power', played ?? 'Power unleashed', `${name(battle.active.heroId)} uses ${played ?? 'a power'}`, laid || 'Its effect is on the table');
  }
+ if (gained > 0) return make('bank', 'Hits placed', 'Counting the hits', `+${gained} ${gained === 1 ? 'token' : 'tokens'} in the Combat Area`);
  if (battle.active && battle.active.heroId !== old.active?.heroId) return make('prepare', `${name(battle.active.heroId)} steps forward`, 'A new attacker takes position', 'Choose your powers, then roll');
 }
 
-/** Shared with automation so no decision can overtake a visible combat beat. */
-export function useCombatPresentation(state: GameView): CombatPresentation {
+/** Shared with automation so no decision can overtake a visible combat beat.
+ * `live` is the table's pace (0 when it is off): with it an exchange takes the time of a real one, held long enough to be read. */
+export function useCombatPresentation(state: GameView, live = 0): CombatPresentation {
  const previous = useRef(state);
  const [cue, setCue] = useState<CombatCue>();
  const [phase, setPhase] = useState<CombatPresentation['phase']>('idle');
@@ -113,8 +126,8 @@ export function useCombatPresentation(state: GameView): CombatPresentation {
    return () => clearTimeout(timer);
   }
   setPhase('anticipation');
-  const beats = lightCue(cue) ? LIGHT_BEATS : COMBAT_BEATS;
-  const timers = [setTimeout(() => setPhase('action'), beats.action), setTimeout(() => setPhase('impact'), beats.impact), setTimeout(() => setPhase('recovery'), beats.recovery), setTimeout(finish, beats.complete)];
+  const beats = lightCue(cue) ? live ? LIVE_LIGHT_BEATS : LIGHT_BEATS : live ? cue.kind === 'bank' ? LIVE_BANK_BEATS : LIVE_BEATS : COMBAT_BEATS, pace = live || 1;
+  const timers = [setTimeout(() => setPhase('action'), beats.action * pace), setTimeout(() => setPhase('impact'), beats.impact * pace), setTimeout(() => setPhase('recovery'), beats.recovery * pace), setTimeout(finish, beats.complete * pace)];
   return () => timers.forEach(clearTimeout);
  }, [cue, reducedMotion]);
  return { cue, phase, busy: !!cue };

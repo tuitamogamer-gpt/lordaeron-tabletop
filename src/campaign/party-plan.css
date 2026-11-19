@@ -1,0 +1,55 @@
+/* ---------- The party plan (19. 11. 2026.) ----------
+   The council before the player's faction turn (PartyPlan.tsx): each bot beside him says what it would do alone, with him, and
+   leading him, and he chooses. On a wide screen the panel stands at the right edge and the backdrop is clear over the board,
+   so that the region an option is about can be seen glowing on the map while the option is read. */
+.campaign-app .modal.party-plan-modal{width:min(520px,calc(100vw - 24px));max-height:calc(100dvh - 24px);border-color:#b18d52;background:linear-gradient(160deg,#242016f8,#131510fb)}
+.campaign-app .party-plan-modal>.modal-head{padding:8px 18px;min-height:0}
+.campaign-app .party-plan-modal>.modal-head h2{font-size:19px}
+.campaign-app .party-plan-modal>.modal-head .eyebrow{display:none}
+.campaign-app .modal .dialog-content.party-plan{display:grid;gap:10px;padding:12px 18px 14px}
+.party-plan-intro h3{margin:1px 0 2px;font:600 19px/1.2 var(--serif);color:#f3e1b2}
+.party-plan-intro p{margin:0;font:12.5px/1.4 var(--sans);color:#cfc5ab}
+.party-plan-intro p b{color:#f0dca8;font-weight:600}
+.party-plan-presets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.campaign-app .party-plan-presets>button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:30px;padding:3px 8px;font-size:12px;white-space:nowrap}
+.campaign-app .party-plan-presets>button[aria-pressed=true]{border-color:#e7c67b;color:#f6e4b3;background:#3a301c}
+.party-plan-allies{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.party-plan-allies>li{display:grid;gap:6px;padding:8px 10px 10px;border:1px solid #5d5338;border-radius:8px;background:#161b17cc}
+.party-plan-ally{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px}
+.party-plan-ally .portrait{width:34px;height:34px;border-radius:50%}
+.party-plan-ally strong{display:block;font:600 15px/1.2 var(--serif);color:#f2e2b9}
+.party-plan-ally small{display:block;font:11px/1.35 var(--sans);color:#a99c80;text-transform:capitalize}
+.party-plan-vitals{display:inline-flex;gap:9px;font:600 12px var(--sans);color:#d9cdb0}
+.party-plan-vitals>i{display:inline-flex;align-items:center;gap:3px;font-style:normal}
+.party-plan-options{display:grid;gap:5px}
+.campaign-app .party-plan-option{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;gap:9px;width:100%;min-height:46px;padding:6px 10px;border:1px solid #4a4433;border-radius:7px;background:#1d211cd9;color:#d8cfb6;text-align:left;cursor:pointer;transition:border-color .15s,background .15s}
+.campaign-app .party-plan-option:hover,.campaign-app .party-plan-option:focus-visible{border-color:#c9a35f;background:#262a20}
+.campaign-app .party-plan-option.chosen{border-color:#e7c67b;background:linear-gradient(120deg,#3b311c,#262a1f);box-shadow:inset 0 0 0 1px #e7c67b55}
+.party-plan-mark{display:grid;place-items:center;width:26px;height:26px;margin-top:1px;border:1px solid #6b5f40;border-radius:50%;color:#b9aa84;background:#12150f}
+.party-plan-option.chosen .party-plan-mark{border-color:#e7c67b;color:#1b1608;background:#e7c67b}
+.party-plan-words{display:grid;gap:2px;min-width:0}
+.party-plan-words>strong{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;font:600 13.5px/1.25 var(--sans);color:#f1e4c2}
+.party-plan-words>strong>em{font:600 10.5px/1.2 var(--sans);font-style:normal;letter-spacing:.3px;padding:1px 7px;border-radius:9px;color:#1f1a0c;background:#cdb06f}
+.party-plan-words>small{font:12px/1.4 var(--sans);color:#bdb298;overflow-wrap:anywhere}
+.party-plan-option.chosen .party-plan-words>small{color:#e2d7ba}
+/* The way on stays in sight however many allies the plan lists. */
+.party-plan-foot{position:sticky;bottom:0;z-index:2;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 14px;margin:0 -18px -14px;padding:10px 18px 12px;border-top:1px solid #5d533880;background:linear-gradient(#171811f2,#12130ef8)}
+.party-plan-ask{display:inline-flex;align-items:center;gap:7px;font:12px var(--sans);color:#bdb298;cursor:pointer}
+.party-plan-ask>input{width:16px;height:16px;accent-color:#d9b867}
+.party-plan-actions{display:inline-flex;gap:8px;margin-left:auto}
+/* The table's own button for it stands beside the bots' switch. */
+.campaign-app .table-action-footer>.party-plan-button{flex:none}
+@media(min-width:1000px){
+ .campaign-app .modal.party-plan-modal{margin:auto 22px auto auto;width:min(470px,calc(100vw - 44px))}
+ .campaign-app .modal.party-plan-modal::backdrop{background:linear-gradient(90deg,#02050626,#02050659 52%,#020506d9);backdrop-filter:none}
+}
+/* Below a wide screen there is room for one button beside the actions: "Allies first" is in the plan itself. */
+@media(max-width:1199px){.campaign-app .table-action-footer>.party-plan-button~.bot-status.waiting{display:none}}
+@media(max-width:700px){
+ .campaign-app .modal .dialog-content.party-plan{padding:12px 14px 14px;gap:11px}
+ .party-plan-foot{margin:0 -14px -14px;padding:9px 14px 11px}
+ .party-plan-ally{grid-template-columns:auto minmax(0,1fr)}
+ .party-plan-vitals{grid-column:1/-1}
+ .party-plan-actions{width:100%}
+ .party-plan-actions>button{flex:1}
+}

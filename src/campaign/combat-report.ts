@@ -112,7 +112,7 @@ export function sceneWords(p: ContentPack, view: GameView, f?: RoundForecast): {
   }
   case 'tokens': case 'after-tokens': return { heading: `${name} places the hits`, detail: standing };
   case 'defense': return { heading: `${round} · ${f?.foe ?? 'the enemy'} strikes`, detail: standing };
-  case 'wounds': return { heading: f ? `${f.foe} hits for ${f.attack}${f.blocked + f.absorbed ? ` · ${f.blocked + f.absorbed} stopped` : ''}` : `${round} · wounds`, detail: f?.left ? `${count(f.left, 'wound')} to assign` : standing };
+  case 'wounds': return { heading: f ? `${f.foe} hits for ${f.attack}${f.blocked + f.absorbed ? ` · ${f.blocked + f.absorbed} stopped` : ''}` : `${round} · wounds`, detail: f?.left ? `${count(f.left, 'wound')} to assign${f.wipe ? ` · ${f.wipe} falls unless healed` : ''}` : standing };
   case 'resolution': return { heading: `${round} · strike back`, detail: f ? `${f.damage} damage against ${f.health} health${f.won ? `: ${f.foe} ${f.opponents - f.ranged.kills > 1 ? 'fall' : 'falls'}` : ''}` : '' };
   case 'round-end': return { heading: `${round} is over`, detail: standing };
   default: return { heading: `${round} · the battlefield`, detail: standing };

@@ -37,6 +37,19 @@
 .stage-banner>.stage-timer{position:absolute;left:0;right:0;bottom:0;height:3px;border-radius:0}
 .stage-skip{display:inline-flex;align-items:center;gap:4px;font:10.5px var(--sans);color:#a99c80;white-space:nowrap}
 /* Each side hands the turn over in its own colour, and what the Overlord or an Event does comes in darker. */
+/* A banner leaves before the next one arrives: the last moments of its time are a fade, so that two steps never swap in one frame. */
+.stage-banner.passing{animation:stage-drop .4s cubic-bezier(.2,.85,.3,1.15) both,stage-leave .32s ease-in calc(var(--stage-hold,3000ms) - 320ms) forwards}
+@keyframes stage-leave{to{opacity:0;transform:translateY(-10px)}}
+/* The moment before a bot's move: a smaller notice with the character about to act, and three dots that say nothing is decided yet. */
+.kind-think .stage-banner{width:auto;max-width:min(420px,100%);padding:7px 16px 7px 8px;gap:11px;border-color:#c9a35f88;background:linear-gradient(120deg,#231e15ee,#12100bf0);box-shadow:0 8px 22px #000b,inset 0 0 0 1px #0008}
+.kind-think .stage-banner .stage-art>.portrait{width:38px;height:38px;border-radius:50%}
+.kind-think .stage-banner .stage-eyebrow{font-size:9.5px;letter-spacing:1.2px;color:#a99c80}
+.kind-think .stage-banner .stage-title{font:600 15px/1.2 var(--sans);letter-spacing:0;color:#eadcb8}
+.stage-thought{display:inline-flex;gap:4px;align-items:center;padding-left:2px}
+.stage-thought>i{width:6px;height:6px;border-radius:50%;background:#e7c67b;opacity:.25;animation:stage-thought 1.1s ease-in-out infinite}
+.stage-thought>i:nth-child(2){animation-delay:.18s}
+.stage-thought>i:nth-child(3){animation-delay:.36s}
+@keyframes stage-thought{0%,100%{opacity:.25;transform:none}40%{opacity:1;transform:translateY(-3px)}}
 .kind-turn .stage-banner{width:min(520px,100%);padding-block:14px 16px}
 .kind-turn .stage-title{font-size:24px;letter-spacing:.5px}
 .kind-event .stage-card,.kind-war .stage-card{border-color:#b89ad6;background:linear-gradient(140deg,#2a2233f7,#120f17f9)}
@@ -53,7 +66,8 @@
 @keyframes stage-line{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @keyframes stage-timer{from{transform:scaleX(1)}to{transform:scaleX(0)}}
 @media(prefers-reduced-motion:reduce){
- .stage-card,.stage-banner,.stage-card .stage-face,.stage-card .stage-art>*,.table-stage.card{animation:stage-scrim .2s both}
+ .stage-card,.stage-banner,.stage-banner.passing,.stage-card .stage-face,.stage-card .stage-art>*,.table-stage.card{animation:stage-scrim .2s both}
+ .stage-thought>i{animation:none;opacity:.7}
  .stage-text>p{animation:stage-scrim .2s both;animation-delay:0s}
 }
 @media(max-width:700px){
@@ -73,7 +87,7 @@
 .map-spotlight .spotlight-field{fill:#f3d68a;fill-opacity:.16;stroke:#f7e2a4;stroke-width:3;vector-effect:non-scaling-stroke;stroke-linejoin:round;animation:spotlight-field 1.4s ease-in-out infinite alternate}
 .map-spotlight .spotlight-ring{fill:none;stroke:#f7e2a4;stroke-width:2.5;vector-effect:non-scaling-stroke;transform-box:fill-box;transform-origin:center;animation:spotlight-ring 1.4s ease-out infinite}
 .map-spotlight .spotlight-route{fill:none;stroke:#f7e2a4;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:3 12;vector-effect:non-scaling-stroke;filter:drop-shadow(0 1px 2px #000c);animation:spotlight-march 1s linear infinite}
-.portrait-map-token.hero,.portrait-map-token.overlord{transition:transform .9s cubic-bezier(.3,.05,.2,1)}
+.portrait-map-token.hero,.portrait-map-token.overlord{transition:transform var(--walk-step,.9s) cubic-bezier(.3,.05,.2,1)}
 @keyframes spotlight-field{from{fill-opacity:.08}to{fill-opacity:.26}}
 @keyframes spotlight-ring{from{transform:scale(.5);opacity:1}to{transform:scale(2.1);opacity:0}}
 @keyframes spotlight-march{to{stroke-dashoffset:-15}}

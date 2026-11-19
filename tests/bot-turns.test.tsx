@@ -278,7 +278,11 @@ describe('a quest reward', () => {
   seat(WARRIOR, commands, { pace: 'normal' }); planner.plan.mockImplementation(passing);
   await open();
   expect(dialog()).toBeNull();
-  await wait(700);
+  // First the table shows who is about to choose (stage.ts > thinking): nothing is taken yet.
+  await wait(900);
+  expect(stage()!.textContent).toMatch(/looks over the rewards/);
+  expect(saved()).toHaveLength(commands.length);
+  await wait(2000);
   const taken = saved().at(-1) as Extract<Command, { type: 'reward' }>, left = offered.find(c => c.id !== taken.card)!;
   expect(saved()).toHaveLength(commands.length + 1);
   expect(taken).toMatchObject({ type: 'reward' }); expect([MAGE, SHAMAN]).toContain(taken.hero);
@@ -290,7 +294,7 @@ describe('a quest reward', () => {
   expect(screen.getByRole('img', { name: new RegExp(`takes ${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')} card$`) })).toBeTruthy();
   expect(dialog()).toBeNull();
   // It moves on by itself, and the bots go on to what follows the reward.
-  await wait(6000);
+  await wait(9000);
   expect(saved().length).toBeGreaterThan(commands.length + 1);
   expect(dialog()).toBeNull();
  });

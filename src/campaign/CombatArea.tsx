@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react';
+import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
 import { Icon } from '../components';
 import type { Battle, Faction } from '../rules/model';
 import { FactionCrest } from './Art';
@@ -13,10 +13,13 @@ const ROOM = { damage: 12, defense: 6, armor: 6, attrition: 5 } as const;
 /** Tokens laid in a circle as on the printed board: a red hit token per hit, a green armor token per armor. */
 function TokenPile({ count, kind, room }: { count: number; kind: 'hit' | 'armor'; room: number }) {
  const printed = SCANS.tokens[kind], shown = Math.min(count, room);
+ // Tokens are counted out one after another: each new one is laid down a moment after the one before it (--token-step, Combat.tsx).
+ const lying = useRef(count), from = Math.min(lying.current, count);
+ useEffect(() => { lying.current = count; }, [count]);
  return <span className={`combat-token-pile ${kind}`} aria-hidden="true">
   {Array.from({ length: shown }, (_, i) => printed
-   ? <img key={i} src={printed} alt="" width={40} height={40} draggable={false} style={{ '--i': i } as CSSProperties} />
-   : <i key={i} className="combat-token-dot" style={{ '--i': i } as CSSProperties} />)}
+   ? <img key={i} src={printed} alt="" width={40} height={40} draggable={false} style={{ '--i': Math.max(0, i - from) } as CSSProperties} />
+   : <i key={i} className="combat-token-dot" style={{ '--i': Math.max(0, i - from) } as CSSProperties} />)}
   {count > room && <b className="combat-token-more">+{count - room}</b>}
  </span>;
 }

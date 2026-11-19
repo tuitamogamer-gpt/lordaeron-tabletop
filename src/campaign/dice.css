@@ -17,7 +17,7 @@
 .physical-d8 .d8-face .d8-resin{fill:var(--facet);stroke:#05090ccc;stroke-width:.9;stroke-linejoin:round}
 /* A die that missed is dull. It is thrown in its own colour and loses it when it has come to rest, with its result. */
 .physical-d8.miss .d8-face .d8-resin,.physical-d8.removed .d8-face .d8-resin{fill:var(--facet-dull)}
-.physical-d8.miss .d8-tumble.rolling .d8-resin{animation:d8-dull 1150ms both;animation-delay:var(--die-delay)}
+.physical-d8.miss .d8-tumble.rolling .d8-resin{animation:d8-dull calc(var(--die-toss,1050ms) + 100ms) both;animation-delay:var(--die-delay)}
 @keyframes d8-dull{0%,85%{fill:var(--facet)}}
 .physical-d8 .d8-face .d8-lustre{stroke:none}
 .physical-d8 .d8-face .d8-bevel{fill:none;stroke:#ffffff30;stroke-width:1.1;stroke-linecap:round;stroke-linejoin:round}
@@ -41,7 +41,7 @@
 .physical-d8.hit .d8-result{color:var(--channel)}
 .physical-d8 .d8-result.d8-source{white-space:normal}
 
-.physical-d8 .d8-tumble.rolling{animation-name:physical-d8-toss;animation-duration:1050ms;animation-timing-function:cubic-bezier(.2,.65,.3,1);animation-fill-mode:both}
+.physical-d8 .d8-tumble.rolling{animation-name:physical-d8-toss;animation-duration:var(--die-toss,1050ms);animation-timing-function:cubic-bezier(.2,.65,.3,1);animation-fill-mode:both}
 @keyframes physical-d8-toss{
  0%{transform:translate3d(-9px,-23px,30px) rotateX(-270deg) rotateY(190deg) rotateZ(-100deg)}
  38%{transform:translate3d(5px,-30px,16px) rotateX(-135deg) rotateY(310deg) rotateZ(-36deg)}
@@ -50,6 +50,6 @@
  100%{transform:translate3d(0,0,0) rotateX(0) rotateY(360deg) rotateZ(0)}
 }
 /* The glow arrives with the result, when the die has come to rest. */
-.physical-d8.hit:has(.d8-tumble.rolling)::before{animation:d8-glow 1150ms both;animation-delay:var(--die-delay)}
+.physical-d8.hit:has(.d8-tumble.rolling)::before{animation:d8-glow calc(var(--die-toss,1050ms) + 100ms) both;animation-delay:var(--die-delay)}
 @keyframes d8-glow{0%,85%{opacity:0}}
 @media(prefers-reduced-motion:reduce){.physical-d8 .d8-tumble.rolling,.physical-d8 .d8-tumble.rolling~.d8-result,.physical-d8.hit:has(.d8-tumble.rolling)::before,.physical-d8.miss .d8-tumble.rolling .d8-resin{animation:none}}

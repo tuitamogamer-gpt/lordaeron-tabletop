@@ -56,7 +56,7 @@
 .combat-d8.hit .d8-result{color:var(--channel)}.combat-d8.removed{opacity:.3!important}.combat-d8.removed .d8-result{text-decoration:line-through}
 .d8-selection-order{position:absolute;left:2px;top:2px;display:grid;place-items:center;min-width:15px;height:15px;padding:0 3px;border-radius:50%;background:#efdb9d;color:#172526;font:700 9px var(--sans)}
 .d8-mark{position:absolute;right:1px;top:2px;font-size:11px;color:#eddaa9}.d8-tumble.rolling{animation:d8-toss 1050ms cubic-bezier(.17,.67,.26,1) both;animation-delay:var(--die-delay)}
-.d8-tumble.rolling~.d8-result{animation:d8-reveal 1150ms both;animation-delay:var(--die-delay)}
+.d8-tumble.rolling~.d8-result{animation:d8-reveal calc(var(--die-toss,1050ms) + 100ms) both;animation-delay:var(--die-delay)}
 @keyframes d8-toss{0%{transform:translate3d(-12px,-26px,22px) rotateX(-330deg) rotateY(210deg) rotateZ(-130deg)}35%{transform:translate3d(8px,-35px,36px) rotateX(-170deg) rotateY(380deg) rotateZ(-55deg)}68%{transform:translate3d(0,2px,0) rotateX(30deg) rotateY(330deg) rotateZ(12deg)}83%{transform:translate3d(-2px,-7px,3px) rotateX(-12deg) rotateY(365deg) rotateZ(-4deg)}100%{transform:translate3d(0,0,0) rotateX(0) rotateY(360deg) rotateZ(0)}}
 @keyframes d8-reveal{0%,85%{opacity:0}100%{opacity:1}}@keyframes combat-pulse{from{opacity:.45}to{opacity:1}}
 .combat-decisions{margin-top:22px}.combat-decision-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.combat-decision-heading h4{font:600 14px var(--serif);color:#e6ddc7;margin:0}.combat-decision-heading>span{font-size:9px;color:#829996}

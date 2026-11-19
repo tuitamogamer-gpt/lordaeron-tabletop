@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Icon, Modal } from '../components';
 import { BASE_PACK as p } from '../data/base';
 import { capacity, card, character, faction } from '../rules/common';
@@ -21,6 +21,7 @@ import RulesText from './RulesText';
 import CombatScene from './CombatScene';
 import { AnimatedValue, ThreatLevel } from './feedback';
 import { combatStep, combatSteps, lightCue, type CombatPresentation } from './combat-flow';
+import { DICE_STAGGER_MS, DICE_TOSS_MS, TOKEN_STEP_MS } from './table-time';
 import { BossPortrait, CreatureGlyph, creatureRules } from './design-system';
 import { bossRuleText, regionName } from './event-text';
 import { ConditionToken, factionLabel, HeroPortrait, phaseLabel, pretty } from './parts';
@@ -61,9 +62,11 @@ type CombatProps = {
  autoContinue?: boolean; toggleAutoContinue?: () => void; autoStep?: Command;
  /** The power a player just used, while it can still be taken back. */
  takeBack?: TakeBack;
+ /** The table's pace (0 when it is off): with it the dice land one after another, at the pace's speed (table-time.ts). */
+ live?: number;
 };
 
-export default function CampaignCombat({ state: liveState, legal, send, busy, botStep, botReady, open = true, onClose, bots = [], resolve = true, toggleResolve, automationPending = false, presentation, botResponsePending=false, onPassHumanWindow, autoContinue = false, toggleAutoContinue, autoStep, takeBack }: CombatProps) {
+export default function CampaignCombat({ state: liveState, legal, send, busy, botStep, botReady, open = true, onClose, bots = [], resolve = true, toggleResolve, automationPending = false, presentation, botResponsePending=false, onPassHumanWindow, autoContinue = false, toggleAutoContinue, autoStep, takeBack, live = 0 }: CombatProps) {
  // An exchange holds its outcome back until the blow lands. A power or a new attacker has nothing to hold back: it shows at once.
  const anticipating = presentation?.cue && !lightCue(presentation.cue) && ['anticipation', 'action'].includes(presentation.phase);
  const state = anticipating ? presentation.cue!.before : liveState;
@@ -75,6 +78,8 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
  const [poolOpen,setPoolOpen]=useState(false);
  const [history, setHistory] = useState<RollRecord[]>([]);
  const tray=useRef<HTMLElement>(null),board=useRef<HTMLDivElement>(null),arena=useRef<HTMLDivElement>(null);
+ // What the round came to before the dice now in the air were thrown: shown until they have landed.
+ const settled=useRef<ReturnType<typeof roundForecast>>(undefined);
  const attackKey = a ? `${b!.round}:${JSON.stringify(a)}` : '';
  const availableDiceKey = a?.dice.filter(d => !d.removed).map(d => d.id).join(',') ?? '';
  const selectedIds = selected.filter(id => a?.dice.some(d => d.id === id && !d.removed));
@@ -113,7 +118,13 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
  const skills = legal.filter((c): c is AbilityCommand => c.type === 'ability');
  const choices = legal.filter(c => !['ability', 'reroll', 'penalty', 'roll', 'wound'].includes(c.type));
  // The round as it stands, from the rules engine; who may take the next wound; what a finished fight came to.
- const forecast = roundForecast(p, state), effect = effectWords(p, forecast?.effect), wounds = anticipating ? [] : woundChoices(p, state, legal), duel = versus(state), result = outcome(p, state);
+ // While the dice tumble nothing is read off them: the summary keeps what stood before the throw. (It used to show the
+ // outcome of a roll that was still in the air.)
+ const standing = roundForecast(p, state);
+ if (!busy) settled.current = standing;
+ const forecast = busy ? settled.current : standing, effect = effectWords(p, forecast?.effect), wounds = anticipating ? [] : woundChoices(p, state, legal), duel = versus(state), result = outcome(p, state);
+ // A character without Health: the fight waits for a heal or for the choice where that character returns.
+ const fallen = state.respawns.filter(id => b.participants.includes(id)), fallenNames = fallen.map(id => character(p, id).name.split(' ')[0]), waiting = b.wounds.horde + b.wounds.alliance;
  const usable = (type: Command['type']) => legal.some(c => c.type === type);
  const roll = legal.find(c => c.type === 'roll');
  const enemy = state.enemies.find(e => b.enemies.includes(e.id)) ?? b.killed?.[0];
@@ -131,6 +142,9 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
  const rerollsBlocked = creature?.rule === 'ghoul';
  const hit = (d: Die) => !d.removed && d.value >= (shown?.threat ?? 9) && !(d.color === 'green' && greenEightOnly && d.value !== 8);
  const selectedDice = a?.dice.filter(d => selectedIds.includes(d.id)) ?? [];
+ // The order in which the dice of this throw come to rest: all of them on a roll, only the dice rolled again on a reroll.
+ const thrown = (() => { const dice = shown?.dice.filter(d => !d.removed && d.value > 0) ?? [], again = dice.filter(d => d.rerolled); return (again.length ? again : dice).map(d => d.id); })();
+ const landing = (d: Die) => live ? Math.max(0, thrown.indexOf(d.id)) * DICE_STAGGER_MS * live : undefined;
  const rerollable = (d: Die) => legal.some(c => c.type === 'reroll' && c.dice.includes(d.id));
  const selectable = (d: Die) => !d.removed && (usable('penalty') || rerollable(d) || skills.some(c => c.args?.dice !== undefined || c.args?.removeDice !== undefined));
  const canReroll = selectedDice.length > 0 && selectedDice.length <= (a?.reroll ?? 0) && selectedDice.every(rerollable);
@@ -144,17 +158,23 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
  const sourceName=(d:Die)=>d.source?p.cards.find(c=>c.id===d.source)?.name:undefined;
  // A step with one way forward and nothing else to decide shows that way as the main action.
  const onlyStep=choices.length===1&&!roll&&!usable('reroll')&&!usable('penalty');
+ // The misses that can still be rolled again. With none left, keeping the results is the way on.
+ const misses=a&&usable('reroll')?a.dice.filter(d=>!hit(d)&&rerollable(d)):[],keepOnly=usable('reroll')&&!misses.length,respawnChoices=choices.filter(c=>c.type==='respawn').length;
+ // Where the scene is hidden (a low screen, a phone) the line above the buttons says what the exchange came to.
+ const spoken=presentation?.cue&&!lightCue(presentation.cue)&&['impact','recovery'].includes(presentation.phase)?presentation.cue.detail:'';
  // Choosing an attacker starts that character's Dice Pool step: say what he brings to it before the choice is made.
  const attackerBrings=(id:string)=>{const v=attackPreview(p,state,id);return v?<small>{diceWords(v.dice)} dice · {v.energy} energy{v.powers.length?` · ${v.powers.map(power=>card(p,power).name).join(', ')} ready`:''}</small>:null;};
  const actionLabel = (c: Command) => c.type === 'closeBattle' ? 'Finish combat & continue' : c.type === 'advance' ? advanceLabels[b.stage] ?? 'Continue' : c.type === 'tokens' ? 'Bank successful hits' : c.type === 'monster' ? effect ? `Resolve ${b.boss ? 'boss' : 'creature'} effect` : 'Continue to hits' : c.type === 'armor' ? armorWords(liveState.battle ?? b, c)
   : c.type === 'wound' ? `${character(p, c.hero).name.split(' ')[0]} takes a wound${c.pet ? ' on the pet' : ''}`
-  : c.type === 'respawn' ? `Revive ${character(p, c.hero).name.split(' ')[0]} at ${regionName(c.region)}` : commandLabel(p, c);
+  : c.type === 'respawn' ? `${character(p, c.hero).name.split(' ')[0]} returns to ${regionName(c.region)}` : commandLabel(p, c);
  // A fight between the factions: who is ahead in the Resolution step, once the armor is used. Nothing to compare while both areas are empty.
  const duelTokens = !!duel && duel.strike.horde + duel.strike.alliance + duel.armor.horde + duel.armor.alliance > 0;
  const duelStands = !duel ? '' : duel.armor.horde + duel.armor.alliance > 0 ? `before armor: ${(['horde', 'alliance'] as const).filter(f => duel.armor[f]).map(f => `${factionLabel(f)} ${duel.armor[f]}`).join(', ')}` : state.variants?.deadlyPvp ? 'each side takes the other’s hits' : duel.loser ? `${factionLabel(duel.loser)} takes ${duel.wounds} ${duel.wounds === 1 ? 'wound' : 'wounds'}` : 'level: no wounds';
  // After the rerolls the opponent's rule looks at the dice: say what it takes from them, or that it takes nothing.
  const afterRerolls = b.kind !== 'pve' ? 'Use Spot and other abilities, then place the hits.' : effect ? `${forecast!.foe}: ${effect}. Spot and other abilities can still change the dice.` : 'These dice give the opponent’s rule nothing to take. Use Spot and other abilities, then place the hits.';
- const phaseGuidance = b.stage === 'after-reroll' ? afterRerolls : b.kind === 'pve' ? guidance[b.stage]
+ const phaseGuidance = busy ? 'The dice are in the air. They count once they lie still.'
+  : fallen.length ? `${fallenNames.join(' and ')} ${fallen.length > 1 ? 'have' : 'has'} no Health left. A healing power can still keep ${fallen.length > 1 ? 'them' : fallenNames[0]} in the fight; otherwise choose where ${fallen.length > 1 ? 'each returns' : `${fallenNames[0]} returns`}.${waiting ? ` ${waiting} more ${waiting === 1 ? 'wound waits' : 'wounds wait'}.` : ''}`
+  : b.stage === 'after-reroll' ? afterRerolls : b.kind === 'pve' ? guidance[b.stage]
   : b.stage === 'attacker' ? 'Factions alternate attackers until every participant has contributed to their own Combat Area.'
   : b.stage === 'defense' ? 'Assign armor to opposing hits, then apply the remaining ranged damage.'
   : b.stage === 'resolution' ? state.variants?.deadlyPvp ? 'Each faction takes wounds equal to the opposing melee and attrition hits.' : 'Compare both factions’ melee and attrition hits. The difference becomes wounds for the weaker side.'
@@ -162,22 +182,21 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
 
  return <Modal title="Combat" wide className="combat-room player-driven-combat" onClose={close}>
   <div className="combat-toolbar"><button className="combat-menu-toggle" aria-pressed="true" onClick={close}><Icon name="swords" />Combat <Icon name="x" size={14} /></button><span>{regionName(b.region)}<i />ROUND {String(b.round).padStart(2, '0')}</span><button className="quiet-button" onClick={close}><Icon name="map" size={15} />Back to map</button></div>
-  <div className="combat-workbench">
+  <div className="combat-workbench" style={live ? { '--die-toss': `${Math.round(DICE_TOSS_MS * live)}ms`, '--token-step': `${Math.round(TOKEN_STEP_MS * live)}ms` } as CSSProperties : undefined}>
    <div className="combat-arena">
     <div className="combat-arena-scroll" ref={arena}>
     <header className="combat-encounter"><EnemyInfo state={state}>{boss || event?.boss ? <BossPortrait id={b.boss!} /> : creature ? <CreatureGlyph type={creature.rule} name={creature.name} /> : <Icon name="swords" size={38} />}<div><span className="sheet-eyebrow">{b.kind === 'pve' ? b.boss ? 'BOSS ENCOUNTER' : `${b.enemies.length} ENEMIES REMAIN` : 'FACTION BATTLE'}</span><h3>{title}</h3><p>{b.stage === 'over' ? b.winner === 'draw' ? 'The battle ends in a draw.' : `${factionLabel(b.winner ?? '')} wins the battle.` : 'Prepare your hand. Let the dice decide.'}</p></div></EnemyInfo>{b.kind === 'pve' && <dl><div><dt>ATTACK</dt><dd><AnimatedValue value={attack} /></dd></div><div><dt>HEALTH</dt><dd><AnimatedValue value={health} /></dd></div></dl>}</header>
     <ol className="combat-timeline" aria-label="Combat sequence">{combatSteps.map((label, i) => <li key={label} className={`${i === step ? 'current' : ''} ${i < step ? 'complete' : ''}`} aria-current={i === step ? 'step' : undefined}><span>{i < step ? <Icon name="check" size={13} /> : `0${i + 1}`}</span><b>{b.kind !== 'pve' && i === 2 ? 'Armor & ranged' : label}</b></li>)}</ol>
-    <div className="combat-phase-note"><div key={`${b.round}:${b.stage}`} className="phase-copy"><span className="sheet-eyebrow">{b.stage === 'over' ? 'BATTLE COMPLETE' : actingBot ? 'BOT TURN' : 'CURRENT STEP'}</span><h4>{b.stage==='over'?(b.winner==='draw'?'Draw':b.kind==='pve'?(b.winner===b.first?'Victory':'Defeat'):`${factionLabel(b.winner??'')} victory`):b.stage==='after-reroll'&&(b.kind!=='pve'||!effect)?'After rerolls':phaseLabel[b.stage]}</h4><p>{phaseGuidance}</p></div><span className={`combat-live-status ${automationPending || locked ? 'running' : ''}`} role="status"><i />{stateText}</span></div>
+    <div className="combat-phase-note"><div key={`${b.round}:${b.stage}`} className="phase-copy"><span className="sheet-eyebrow">{b.stage === 'over' ? 'BATTLE COMPLETE' : actingBot ? 'BOT TURN' : 'CURRENT STEP'}</span><h4>{b.stage==='over'?(b.winner==='draw'?'Draw':b.kind==='pve'?(b.winner===b.first?'Victory':'Defeat'):`${factionLabel(b.winner??'')} victory`):busy?'Rolling':fallen.length?`${fallenNames.join(' and ')} ${fallen.length>1?'have':'has'} fallen`:b.stage==='after-reroll'&&(b.kind!=='pve'||!effect)?'After rerolls':phaseLabel[b.stage]}</h4><p>{phaseGuidance}</p></div><span className={`combat-live-status ${automationPending || locked ? 'running' : ''}`} role="status"><i />{stateText}</span></div>
     <CombatScene state={state} busy={busy} presentation={presentation} />
     <section className="combat-dice-table" aria-label="Dice tray" aria-busy={locked} ref={tray}>
      <div className="combat-tray-heading"><span>{shown ? <><HeroPortrait id={shown.heroId} small /><strong>{character(p, shown.heroId).name.split(' ')[0]}</strong><small>{a ? bots.includes(a.heroId) ? 'BOT ROLL' : 'PLAYER ROLL' : 'LAST ROLL'}</small></> : <><Icon name="spark" /><strong>Ready for the next attacker</strong></>}</span><span className="combat-tray-meta">{threat !== undefined && <ThreatLevel value={threat} compact greenEightOnly={!!greenEightOnly} />}<em>{a&&pool&&b.stage==='pool'?`${pool.total} SELECTED · ${Object.values(pool.available).reduce((sum,n)=>sum+n,0)} AVAILABLE`:shown ? `${shown.dice.filter(d => !d.removed).length} D8 ${a ? 'IN PLAY' : 'ROLLED'}` : 'D8 DICE'}</em></span></div>
      {channels.map(channel => {
       const dice = shown?.dice.filter(d => d.color === channel.color) ?? [], hits = dice.filter(hit).length;
-      return <div key={channel.color} className={`combat-dice-lane ${channel.color}`}><div className="dice-lane-label"><Icon name={channel.icon} size={19} /><strong>{channel.title}</strong><small>{b.kind === 'pve' ? channel.brief : channel.pvpBrief}</small></div><div className="dice-lane-roll">{dice.length ? dice.map((d, i) => <D8 key={`${shown!.heroId}:${b.round}:${d.id}`} die={d} hit={hit(d)} index={i} selected={!!a && selectedIds.includes(d.id)} selectionOrder={selectedIds.indexOf(d.id) + 1 || undefined} source={sourceName(d)} disabled={locked || !a || !selectable(d)} animate={!!a && busy} onSelect={() => setSelected(ids => ids.includes(d.id) ? ids.filter(id => id !== d.id) : [...ids, d.id])} />) : <span className="dice-lane-empty">{a ? `No ${channel.color} dice prepared` : 'Awaiting dice'}</span>}</div><div className="dice-lane-count" aria-label={`${channel.title}: ${busy ? 'rolling' : hits} rolled hits`}><b>{busy ? '…' : <AnimatedValue value={hits} />}</b><small>HITS</small></div></div>;
+      return <div key={channel.color} className={`combat-dice-lane ${channel.color}`}><div className="dice-lane-label"><Icon name={channel.icon} size={19} /><strong>{channel.title}</strong><small>{b.kind === 'pve' ? channel.brief : channel.pvpBrief}</small></div><div className="dice-lane-roll">{dice.length ? dice.map((d, i) => <D8 key={`${shown!.heroId}:${b.round}:${d.id}`} die={d} hit={hit(d)} index={i} delay={landing(d)} selected={!!a && selectedIds.includes(d.id)} selectionOrder={selectedIds.indexOf(d.id) + 1 || undefined} source={sourceName(d)} disabled={locked || !a || !selectable(d)} animate={!!a && busy} onSelect={() => setSelected(ids => ids.includes(d.id) ? ids.filter(id => id !== d.id) : [...ids, d.id])} />) : <span className="dice-lane-empty">{a ? `No ${channel.color} dice prepared` : 'Awaiting dice'}</span>}</div><div className="dice-lane-count" aria-label={`${channel.title}: ${busy ? 'rolling' : hits} rolled hits`}><b>{busy ? '…' : <AnimatedValue value={hits} />}</b><small>HITS</small></div></div>;
      })}
      <div className="combat-tray-note"><span><Icon name="target" size={13} />{shown ? `${shown.threat}+ scores a hit${greenEightOnly ? ' · green needs 8' : ''}` : 'One success = one hit'}</span><span>{a ? `${rerollsBlocked?'Normal rerolls blocked by Ghoul':`Rerolls ${Math.max(0, a.reroll)}`} · Attrition ${Math.max(0, a.attrition)}${activeHero?.curse ? ` · Curse −${activeHero.curse} on both` : ''}` : 'Hits are counted automatically'}</span></div>
     </section>
-    {state.respawns.length > 0 && <p className="combat-warning">A character has no health. Use any available healing or choose a starting region or graveyard.</p>}
    <aside className="combat-ledger" aria-label="Battle totals">
     <div className={`combat-board-row ${duel ? 'versus' : ''}`} ref={board}>{(['horde', 'alliance'] as const).filter(f => b.kind !== 'pve' || f === b.first).map(f => {
      return <CombatArea key={f} battle={b} side={f} deadlyPvp={state.variants?.deadlyPvp} forecast={forecast && f === forecast.side ? { lines: forecastLines(forecast), note: forecastNote(p, forecast) || carryWords(forecast) } : undefined} />;
@@ -194,10 +213,11 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
     </div>
    </div>
     <section className="combat-decisions" aria-label="Combat decisions" aria-busy={locked}>
-     <div className="combat-decision-heading"><h4>Character sheet</h4><span>{botResponsePending?'Your reaction':actingBot?'Bot turn':b.stage==='over'?'Review the outcome':'Your decision'}{powerCount?` · ${powerCount} ${powerCount===1?'power':'powers'} to use`:''}</span></div>
+     <div className="combat-decision-heading"><h4>Character sheet</h4><span>{botResponsePending?'Your reaction':b.stage==='over'?'Review the outcome':actingBot?'Bot turn':busy?'Rolling':presentation?.busy?'Battle in motion':autoStep?'Continues by itself':!legal.length?'Watching':'Your decision'}{powerCount?` · ${powerCount} ${powerCount===1?'power':'powers'} to use`:''}</span></div>
      <CombatCharacterSheet state={state} skills={skills} dice={selectedIds} send={send} busy={locked} bots={bots} takeBack={takeBack}>
      {a&&pool&&b.stage==='pool'&&roll&&poolShown&&<fieldset className="combat-pool-builder" disabled={locked}><legend>Choose your dice pool</legend><div>{channels.map(({color})=><label className={color} key={color}><span>{color}</span><input aria-label={`Roll ${color} dice`} type="number" min={0} max={pool.maximum[color]} value={pool.kept[color]} onChange={e=>setOmit(v=>({...v,[color]:pool.available[color]-Math.max(0,Math.min(pool.maximum[color],Math.floor(Number(e.target.value)||0)))}))}/><small>of {pool.available[color]}</small></label>)}</div><p><strong>{pool.total} D8 selected</strong> · Rerolls {Math.max(0,a.reroll)} · Attrition {Math.max(0,a.attrition)}</p>{!!pool.penalties.length&&<p>{pool.penalties.length} dice removed by equipment before this pool.</p>}{activeHero&&(activeHero.stun||activeHero.curse)>0&&(pool.total<activeHero.stun*2?<p className="combat-pool-danger" role="status">Stun requires {activeHero.stun*2} dice. Confirming this pool defeats {character(p,activeHero.id).name.split(' ')[0]} immediately.</p>:<p>Stun / Curse: choose {Math.min(pool.total,activeHero.stun*2+activeHero.curse)} dice to remove before rolling.</p>)}</fieldset>}
-     {(forecast || duelTokens) && <p className="combat-standing" aria-hidden="true"><Icon name={duel ? 'swords' : 'target'} size={13} /><span>{forecast ? forecastSentence(forecast) : `Melee + attrition: Horde ${duel!.strike.horde} · Alliance ${duel!.strike.alliance} · ${duelStands}`}</span></p>}
+     {(forecast || duelTokens || spoken) && <p className={`combat-standing ${spoken ? 'spoken' : ''}`} aria-hidden="true"><Icon name={duel ? 'swords' : 'target'} size={13} /><span>{spoken || (forecast ? forecastSentence(forecast) : `Melee + attrition: Horde ${duel!.strike.horde} · Alliance ${duel!.strike.alliance} · ${duelStands}`)}</span></p>}
+     {fallen.length > 0 && <p className="combat-warning" role="alert"><Icon name="heart" size={14} /><span><b>{fallenNames.join(' and ')} {fallen.length > 1 ? 'have' : 'has'} fallen.</b> Heal now with a power, or choose where {fallen.length > 1 ? 'each returns' : `${fallenNames[0]} returns`}: a fallen character leaves this fight.{waiting ? ` ${waiting} more ${waiting === 1 ? 'wound waits' : 'wounds wait'} to be assigned.` : ''}</span></p>}
      {result && <div className="combat-outcome" role="status" aria-label="Combat outcome"><strong>{result.title}</strong><ul>{result.lines.map(line => <li key={line}>{line}</li>)}</ul><p>{outcomeNext(p, state)}</p></div>}
      {wounds.length > 0 && <div className="combat-wound-choices" role="group" aria-label="Who takes the wound">{(['horde', 'alliance'] as const).filter(f => wounds.some(w => w.side === f)).map(f => <section key={f}>
       <h5><Icon name="heart" size={13} /><b>{b.wounds[f]}</b> {b.wounds[f] === 1 ? 'wound' : 'wounds'} to assign{b.kind !== 'pve' ? ` · ${factionLabel(f)}` : ''}</h5>
@@ -210,13 +230,13 @@ export default function CampaignCombat({ state: liveState, legal, send, busy, bo
       {rollCommand && <button className="gold-button combat-roll-button" disabled={locked} onClick={() => send(rollCommand)}><Icon name="spark" />{activeHero&&(activeHero.stun||activeHero.curse)>0?'Confirm pool · ':'Roll '}{pool?.total} D8 <Icon name="arrow" size={16} /></button>}
       {rollCommand&&!poolShown&&<button type="button" className="quiet-button combat-pool-toggle" disabled={locked} onClick={()=>setPoolOpen(true)}>Roll fewer dice</button>}
       {botResponsePending&&<button className="gold-button" disabled={locked||!onPassHumanWindow} onClick={onPassHumanWindow}>Pass · continue bot turn</button>}
-      {usable('reroll') && <><button className="gold-button" disabled={!canReroll || locked} onClick={() => { send({ type: 'reroll', dice: selectedIds }); setSelected([]); }}><Icon name="reset" />Reroll selected ({selectedIds.length})</button><button className="quiet-button" disabled={locked} onClick={() => setSelected(a!.dice.filter(d => !hit(d) && rerollable(d)).slice(0, Math.max(0, a!.reroll)).map(d => d.id))}>Select misses</button></>}
-      {usable('penalty') && <button className="gold-button" disabled={selectedDice.length !== penaltyCount || locked} onClick={() => send({ type: 'penalty', dice: selectedIds })}>Remove {selectedIds.length} / {penaltyCount} dice</button>}
+      {usable('reroll') && <><button className="gold-button" disabled={!canReroll || locked} onClick={() => { send({ type: 'reroll', dice: selectedIds }); setSelected([]); }}><Icon name="reset" />Reroll selected ({selectedIds.length})</button><button className="quiet-button" disabled={locked || !misses.length} title={misses.length ? undefined : 'No miss is left that can be rolled again'} onClick={() => setSelected(misses.slice(0, Math.max(0, a!.reroll)).map(d => d.id))}>Select misses</button></>}
+      {usable('penalty') && <button className="gold-button" disabled={selectedDice.length !== penaltyCount || locked} onClick={() => send({ type: 'penalty', dice: selectedIds })}>Remove {selectedIds.length} / {penaltyCount} dice & roll</button>}
       {!!selectedIds.length && <button className="quiet-button" disabled={locked} onClick={() => setSelected([])}>Clear selection</button>}
-      {choices.map(c => <button key={JSON.stringify([state.turn, b.round, b.stage, c])} className={c.type === 'attacker' ? 'gold-button combat-attacker-choice' : c.type === 'closeBattle' || onlyStep ? 'gold-button' : 'quiet-button'} disabled={locked} onClick={() => send(c)}>{actionLabel(c)}{c.type === 'attacker' && attackerBrings(c.hero)}{c.type === 'tokens' && c.toAttrition && <small>To attrition: {c.toAttrition.map(id => `#${id}`).join(', ')}</small>}{c.type === 'advance' && c.targets && <small>{state.enemies.find(e => e.id === c.targets?.[0])?.color} enemies first</small>}{c.type === 'loot' && c.discard && <small>Discard {pretty(card(p, c.discard).name)}</small>}{c.type === 'monster' && !!c.unequip?.length && <small>{c.unequip.map(id => card(p, id).name).join(', ')}</small>}</button>)}
+      {choices.map(c => <button key={JSON.stringify([state.turn, b.round, b.stage, c])} className={c.type === 'attacker' ? 'gold-button combat-attacker-choice' : c.type === 'closeBattle' || onlyStep || keepOnly && c.type === 'advance' || c.type === 'respawn' && respawnChoices === 1 ? 'gold-button' : c.type === 'respawn' ? 'quiet-button combat-return-choice' : 'quiet-button'} disabled={locked} onClick={() => send(c)}>{actionLabel(c)}{c.type === 'respawn' && <small>{p.regions.find(r => r.id === c.region)?.graveyard ? 'Graveyard' : 'Starting region'} · with 1 health and 1 energy</small>}{c.type === 'attacker' && attackerBrings(c.hero)}{c.type === 'tokens' && c.toAttrition && <small>To attrition: {c.toAttrition.map(id => `#${id}`).join(', ')}</small>}{c.type === 'advance' && c.targets && <small>{state.enemies.find(e => e.id === c.targets?.[0])?.color} enemies first</small>}{c.type === 'loot' && c.discard && <small>Discard {pretty(card(p, c.discard).name)}</small>}{c.type === 'monster' && !!c.unequip?.length && <small>{c.unequip.map(id => card(p, id).name).join(', ')}</small>}</button>)}
       {!legal.length && <p className="muted">{automationPending ? 'The bot is making its move.' : 'Waiting for the player or bot making this decision.'}</p>}
      </div>
-     {usable('reroll') && !locked && <p className="dice-selection-help" role="status">{selectedIds.length > (a?.reroll ?? 0) ? `Choose at most ${a?.reroll ?? 0} dice. Deselect ${selectedIds.length - (a?.reroll ?? 0)} to reroll.` : selectedIds.length ? `${selectedIds.length} selected · up to ${Math.max(0, a?.reroll ?? 0)} rerolls available` : 'Click a die to select it, or use Select misses.'}</p>}
+     {usable('reroll') && !locked && <p className="dice-selection-help" role="status">{selectedIds.length > (a?.reroll ?? 0) ? `Choose at most ${a?.reroll ?? 0} dice. Deselect ${selectedIds.length - (a?.reroll ?? 0)} to reroll.` : selectedIds.length ? `${selectedIds.length} selected · up to ${Math.max(0, a?.reroll ?? 0)} rerolls available` : keepOnly ? 'No miss is left to roll again: keep the results.' : 'Click a die to select it, or use Select misses.'}</p>}
      {usable('penalty') && !locked && <p className="dice-selection-help" role="status">{selectedIds.length === penaltyCount ? `${diceCount(penaltyCount)} selected. Confirm removal to roll the remaining dice.` : selectedIds.length > penaltyCount ? `Deselect ${diceCount(selectedIds.length - penaltyCount)} to confirm Stun / Curse losses.` : `Select ${diceCount(penaltyCount - selectedIds.length)} to complete your Stun / Curse losses.`}</p>}
      </CombatCharacterSheet>
     </section>

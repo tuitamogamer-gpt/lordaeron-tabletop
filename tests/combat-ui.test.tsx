@@ -249,10 +249,10 @@ describe('combat room controls and dice', () => {
   fireEvent.click(screen.getByRole('button', { name: 'blue D8 prepared, ready' }));
   fireEvent.click(screen.getByRole('button', { name: 'green D8 prepared, ready' }));
   expect(screen.getByText('Deselect 1 die to confirm Stun / Curse losses.')).toBeTruthy();
-  expect((screen.getByRole('button', { name: 'Remove 3 / 2 dice' }) as HTMLButtonElement).disabled).toBe(true);
+  expect((screen.getByRole('button', { name: 'Remove 3 / 2 dice & roll' }) as HTMLButtonElement).disabled).toBe(true);
   fireEvent.click(screen.getByRole('button', { name: 'green D8 prepared, ready' }));
   expect(screen.getByText('2 dice selected. Confirm removal to roll the remaining dice.')).toBeTruthy();
-  fireEvent.click(screen.getByRole('button', { name: 'Remove 2 / 2 dice' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Remove 2 / 2 dice & roll' }));
   expect(pr.send).toHaveBeenCalledExactlyOnceWith({ type: 'penalty', dice: [0, 1] });
   expect(apply(p, s, pr.send.mock.calls[0][0]).battle!.stage).toBe('after-pool');
  });

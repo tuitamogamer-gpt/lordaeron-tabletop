@@ -108,6 +108,8 @@ describe('a bot beside the player’s character', () => {
   const { commands } = sideBySide();
   localStorage.setItem('lordaeron-base-save-v7', JSON.stringify({ ...newSession(p, DEFAULT_SETUP), commands }));
   localStorage.setItem('lordaeron-base-bots-v3', JSON.stringify(BOTS));
+  // The party agreed that the ally leads: only a leader calls the player to its fight (ai/orders.ts).
+  localStorage.setItem('lordaeron-party-plan-v1', JSON.stringify({ modes: { [ALLY]: 'lead' }, ask: false }));
   render(<Campaign />);
   return commands.length;
  };
@@ -122,8 +124,8 @@ describe('a bot beside the player’s character', () => {
   expect(saved()).toHaveLength(before);
   expect(dialog.textContent).toContain(`${first(ALLY)} is about to challenge`);
   expect(dialog.textContent).toContain('Together: low risk.');
-  // The planner was told whom it does not steer.
-  expect(plan.mock.calls[0][3]).toEqual({ independent: [PLAYER] });
+  // The planner was told whom it does not steer, and what the party agreed.
+  expect(plan.mock.calls[0][3]).toMatchObject({ independent: [PLAYER], orders: { [ALLY]: { mode: 'lead', partners: [PLAYER] }, [THIRD]: { mode: 'alone', partners: [PLAYER] } } });
   fireEvent.click(within(dialog).getByRole('button', { name: 'Join the fight' }));
   await waitFor(() => expect(saved()).toHaveLength(before + 1));
   expect(saved().at(-1)).toMatchObject({ type: 'challenge', hero: ALLY, allies: [PLAYER] });

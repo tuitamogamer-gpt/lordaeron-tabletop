@@ -80,11 +80,11 @@ export default function Stage({ queue, pace, next, clear }: { queue: Beat[]; pac
     {beat.art && <div className="stage-art"><Art art={beat.art} title={beat.title} /></div>}
     <div className="stage-body">{text}{foot}</div>
    </article>
-   : <article key={beat.id} className="stage-banner">
+   : <article key={beat.id} className={`stage-banner ${manual || held ? '' : 'passing'}`} style={timing}>
     {beat.art && <div className="stage-art"><Art art={beat.art} title={beat.title} /></div>}
     {text}
-    {!manual && <i className="stage-timer" style={timing} aria-hidden="true" />}
-    <span className="stage-skip"><Icon name="right" size={14} />{manual ? `Click for the next step${more > 0 ? ` · ${more} more` : ''}` : more > 0 ? `${more} more` : 'Space'}</span>
+    {!manual && beat.kind !== 'think' && <i className="stage-timer" style={timing} aria-hidden="true" />}
+    {beat.kind === 'think' ? <span className="stage-thought" aria-hidden="true"><i /><i /><i /></span> : <span className="stage-skip"><Icon name="right" size={14} />{manual ? `Click for the next step${more > 0 ? ` · ${more} more` : ''}` : more > 0 ? `${more} more` : 'Space'}</span>}
    </article>}
  </div>;
 }

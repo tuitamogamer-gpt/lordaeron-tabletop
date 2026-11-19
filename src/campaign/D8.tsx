@@ -12,8 +12,10 @@ const sourceLines = (name: string) => { const [first, ...rest] = name.split(' ')
  * numbers are engraving. Under a rolled die stands whether it hit: its number is on the die. A die that missed is dull, one
  * that hit keeps its full colour and stands in a glow (dice.css).
  */
-export default function D8({ die, hit = false, selected = false, selectionOrder, disabled = true, animate = true, index = 0, source, onSelect }: {
+export default function D8({ die, hit = false, selected = false, selectionOrder, disabled = true, animate = true, index = 0, delay, source, onSelect }: {
  die: Die; hit?: boolean; selected?: boolean; selectionOrder?: number; disabled?: boolean; animate?: boolean; index?: number; onSelect?: () => void;
+ /** When this die comes to rest after the first of its throw (ms): dice dropped on a table do not land together. */
+ delay?: number;
  /** The card this die was taken for: named under the die until it is rolled, as each die on the table lies by its card. */
  source?: string;
 }) {
@@ -22,7 +24,7 @@ export default function D8({ die, hit = false, selected = false, selectionOrder,
  const face = faces.find(f => f.value === (die.value || [8, 5, 3][index % 3])) ?? faces[0];
  const label = `${die.color} D8 ${die.value || 'prepared'}, ${result}${die.rerolled ? ', rerolled' : ''}${die.spotted ? ', spotted' : ''}`;
  const spin = spinOf(index), roll = rollOf(index), named = !die.removed && !die.value && !!source;
- const style = { '--die-delay': `${index % 7 * 20}ms` } as CSSProperties;
+ const style = { '--die-delay': `${delay ?? index % 7 * 20}ms` } as CSSProperties;
  return <button type="button" className={`combat-d8 physical-d8 ${die.color} ${result} ${named ? 'named' : ''} ${selected ? 'selected' : ''}`} style={style}
   aria-label={label} aria-description={`Die #${die.id}${source ? ` · from ${source}` : ''}${selected && selectionOrder ? ` · selection ${selectionOrder}` : ''}`} aria-pressed={selected} disabled={disabled || die.removed} onClick={onSelect} title={`${label} · #${die.id}${source ? ` · from ${source}` : ''}`}>
   <span className="d8-ground" aria-hidden="true" />
