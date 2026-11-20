@@ -113,7 +113,9 @@ describe('bots plan class progression',()=>{
  it('does not walk away from a quest just to join allies in an empty home region',()=>{
   const s=createGame(p,DEFAULT_SETUP),h=s.heroes[0];h.location='brightwater';s.enemies=[{id:'target',creature:'crusader',color:'green',faction:'horde',region:'brightwater'}];
   const choices=legalActions(p,s).filter(c=>('hero' in c&&c.hero===h.id)&&(c.type==='travel'||c.type==='challenge'));
-  expect(decide(p,view(s),choices)?.command.type).toBe('challenge');
+  // It fights there or waits there for a better moment (a pass is a Travel that goes nowhere): it does not leave.
+  const choice=decide(p,view(s),choices)!.command;
+  expect(choice.type==='challenge'||choice.type==='travel'&&!choice.path.length).toBe(true);
  });
  it('offers multi-power training and equips a full loadout in one management decision',()=>{
   const {s,h,id}=player('mage');expect(legalActions(p,s)).toContainEqual({type:'train',hero:id,cards:['mage-fireball','mage-frostbolt']});h.learned=['mage-fireball','mage-frostbolt','mage-arcane-intellect'];h.energy=3;s.phase='management';

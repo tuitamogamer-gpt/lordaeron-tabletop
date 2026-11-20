@@ -7,7 +7,7 @@ import { bagSize, equipped } from '../rules/inventory.js';
 import { apply } from '../rules/game.js';
 import { abilityCommands } from '../rules/legal.js';
 import { publicState } from './public-state.js';
-import { createStrategy, nefarianSteps, type Objective } from './strategy.js';
+import { createStrategy, nefarianSteps, WORTH_WALKING, type Objective } from './strategy.js';
 import { partnerNames, type Orders } from './orders.js';
 import { abilityScore, healthValue, tacticalScore } from './tactics.js';
 export type Difficulty = 'cautious' | 'balanced' | 'aggressive';
@@ -33,6 +33,10 @@ const itemValue=cardValue;
 const GOLD_RESERVE = 20, SHOP_WORTH = 4;
 /** The score of a move that is never worth making, such as a transfer that improves nobody's equipment. */
 const NEVER = -1000;
+/** The score of passing: the floor under every action. What is worth less than doing nothing is not done. */
+const PASS = -1.3;
+/** The score of an action that would change nothing (a rest with nothing to recover, a town visit that buys nothing): below passing. */
+const IDLE = -45;
 /** The score of a fight a bot holds back from because of what the party agreed: below passing, so that it waits instead. */
 const HOLD = -60;
 /**
@@ -104,6 +108,8 @@ export function decide(pack: ContentPack, s: GameView, legal: Command[], difficu
   switch (command.type) {
    case 'rest': {
     const next=apply(p,publicState(s),command).heroes.find(v=>v.id===h!.id)!;
+    // A rest that recovers nothing is no action: passing says so, a rest pretended to do something.
+    if(next.health===h!.health&&next.energy===h!.energy&&next.curse===h!.curse){score=IDLE;reason='Nothing to recover.';break;}
     score=recovery(h!,next)-1.3-(command.food?.length?.15:0);
     const plan=strategy.plan(h!);
     // Close to the Overlord, a worn member of a faction at its peak rests before anything else.
@@ -116,22 +122,28 @@ export function decide(pack: ContentPack, s: GameView, legal: Command[], difficu
     {const gained=[[next.health-h!.health,'health'],[next.energy-h!.energy,'energy']].filter(([n])=>Number(n)>0).map(([n,what])=>`${n} ${what}`).join(' and ');reason=`Recovering ${gained||'nothing'}${plan?plan.objective.war?` while holding a region for ${plan.objective.label}`:plan.objective.escort?` beside ${plan.objective.label}`:` before ${named(plan.objective)}`:''}.`;}break;
    }
    case 'travel': {
-    if (!command.path.length) { score = -40; reason='Waiting for the party or the next management phase.'; break; }
+    if (!command.path.length) {
+     // Passing is the honest way to do nothing: it says what the character waits for. It is worth what a rest that recovered
+     // nothing used to be worth, so that a fight likely lost or a purchase not worth its gold is still declined for it.
+     const waiting=strategy.plan(h!);score=PASS;
+     reason=!waiting?'Nothing within reach is worth a fight: waiting for the next turn.':waiting.following?`Staying beside ${first(waiting.following)}: nothing to fight here until ${first(waiting.following)} moves on.`:waiting.leading?.length?`Waiting for ${waiting.leading.map(first).join(' and ')} to come along to ${named(waiting.objective)}.`:waiting.objective.war?`Holding this region for ${waiting.objective.label}.`:`Not strong enough yet for ${named(waiting.objective)}: waiting for the party or the next turn.`;
+     break;
+    }
     const at = command.path.at(-1)!;
     const plan=strategy.plan(h!);score=-50;
     if(plan){
      const before=strategy.distance(h!.location,plan.objective.region,f),after=strategy.distance(at,plan.objective.region,f);
-     if(after<before&&plan.score>-.5){
+     if(after<before&&plan.score>WORTH_WALKING){
       score=2+Math.min(3,plan.score*.7)+Math.min(2,before-after)*1.2+(after===0?1.5:0);
       if(after===0&&h!.actions>1&&plan.forecast.win>.75)score+=2;
      }
      {const more=Math.ceil(after/2),allies=plan.party.length-1;const company=allies?`, to fight there with ${allies===1?'an ally':`${allies} allies`}`:'';reason=more?`Heading for ${named(plan.objective)} in ${p.regions.find(r=>r.id===plan.objective.region)?.name??plan.objective.region}${company}; ${more} more Travel ${more===1?'action':'actions'} after this one.`:`This move reaches ${named(plan.objective)}${company}.`;}
      // What the party agreed: a follower goes where the player's character is, a leader says where it expects him.
      const place=(id:string)=>p.regions.find(r=>r.id===id)?.name??id,order=orders[h!.id];
-     if(plan.following){const more=Math.ceil(after/2),fight=plan.objective.escort?'':`: ${named(plan.objective)} is fought at ${first(plan.following)}’s side`;reason=more?`Following ${first(plan.following)} to ${place(plan.objective.region)}${fight}; ${more} more Travel ${more===1?'action':'actions'} after this one.`:`Joining ${first(plan.following)} in ${place(plan.objective.region)}${fight}.`;}
+     if(plan.following){const more=Math.ceil(after/2),why=plan.joined?' (nothing to win alone yet)':'',fight=plan.objective.escort?'':`: ${named(plan.objective)} is fought at ${first(plan.following)}’s side`;reason=more?`Following ${first(plan.following)} to ${place(plan.objective.region)}${why}${fight}; ${more} more Travel ${more===1?'action':'actions'} after this one.`:`Joining ${first(plan.following)} in ${place(plan.objective.region)}${why}${fight}.`;}
      if(plan.leading?.length){const more=Math.ceil(after/2),who=plan.leading.map(first).join(' and ');reason=more?`Leading the way to ${named(plan.objective)} in ${place(plan.objective.region)}, for ${who} to come along; ${more} more Travel ${more===1?'action':'actions'} after this one.`:`Leading the way: this move reaches ${named(plan.objective)}, and waits there for ${who}.`;}
      // While the player still has actions, a leader sets off at once, and a follower moves once his partner has, or at once when there is something to fight where the partner stands.
-     if(after<before&&plan.score>-.5&&order){const partner=s.heroes.find(v=>v.id===plan.following);early=order.mode==='lead'&&!!plan.leading?.length||order.mode==='follow'&&!!partner&&(partner.actions<2||!plan.objective.escort);}
+     if(after<before&&plan.score>WORTH_WALKING&&order){const partner=s.heroes.find(v=>v.id===plan.following);early=order.mode==='lead'&&!!plan.leading?.length||!!plan.following&&!!partner&&(partner.actions<2||!plan.objective.escort);}
      if(plan.objective.war){const more=Math.ceil(after/2);reason=`Going to hold ${place(plan.objective.region)} for ${plan.objective.label}${more?` (${more} more Travel ${more===1?'action':'actions'})`:''}: with ${p.characters.find(c=>c.id===plan.objective.war!.partner)?.name.split(' ')[0]} in ${place(plan.objective.war.other)} when the enemy’s turn ends, the whole faction is rewarded.`;}
     }
     if(s.enemies.some(e=>e.region===at&&e.color==='blue'))score-=4*risk;
@@ -154,8 +166,10 @@ export function decide(pack: ContentPack, s: GameView, legal: Command[], difficu
     if(objective.clue){score=-30;reason='Investigate the clue before committing a Challenge.';break;}
     // What the party agreed decides whom a bot fights beside. Blue creatures leave no choice: that Challenge is the only legal action.
     const order=orders[h!.id],beside=party.some(a=>a.id!==h!.id&&order?.partners.includes(a.id)),forced=s.enemies.some(e=>e.region===at&&e.color==='blue');
+    // A bot that joined the player because it can win nothing alone fights at his side like one told to come with him.
+    const together=!!order&&(order.mode!=='alone'||!!strategy.plan(h!)?.following);
     if(order&&!forced&&command.target!=='pvp'){
-     if(order.mode==='alone'&&beside){score=HOLD;reason=`Going its own way this turn: ${first(h!.id)} does not ask ${partnerNames(p,s,order)} along.`;break;}
+     if(!together&&beside){score=HOLD;reason=`Going its own way this turn: ${first(h!.id)} does not ask ${partnerNames(p,s,order)} along.`;break;}
      if(order.mode!=='alone'&&!beside){score=HOLD;reason=order.mode==='follow'?`Waiting for ${partnerNames(p,s,order)}: this turn ${first(h!.id)} fights only at ${partnerNames(p,s,order)}’s side.`:`Waiting for ${partnerNames(p,s,order)} to arrive: this fight was agreed together.`;break;}
     }
     const forecast=strategy.forecast(objective,party);
@@ -187,6 +201,8 @@ export function decide(pack: ContentPack, s: GameView, legal: Command[], difficu
     else if(op?.op==='train')score=trainValue(h!,command.operations.filter(o=>o.op==='train').map(o=>o.card))+.1;
     else score = -1;
     const next=apply(p,publicState(s),command).heroes.find(v=>v.id===h!.id)!;
+    // A visit to town that buys, sells, learns and recovers nothing is no action: the character passes instead.
+    if(!op&&next.health===h!.health&&next.energy===h!.energy&&next.curse===h!.curse){score=IDLE;reason='Nothing to do in town.';break;}
     score+=recovery(h!,next);reason = "The best mix of recovery, purchases and training this Town action allows."; break;
    }
    case 'reward': score=itemGain(h!,command.card,command.discard);reason="Assigning the reward by its improvement to each hero’s complete equipment.";break;

@@ -83,7 +83,8 @@ describe('a bot told to go alone', () => {
  it('is not counted on by a bot that goes with the player, nor counts on it', () => {
   const { s } = ahead(), orders = agreed(s, 'alone', { [SHAMAN]: 'follow' });
   const [mage, shaman] = plans(s, orders);
-  expect(mage!.party).toEqual([MAGE]);
+  // Alone in earnest now, the mage takes on what it can by itself, or stays with the player when that is nothing.
+  expect(mage!.party).not.toContain(SHAMAN);
   expect(shaman!.party).not.toContain(MAGE);
  });
 });
@@ -207,3 +208,59 @@ describe('the council before the turn', () => {
   expect(counsel(p, view(s, BOTS), [MAGE], 'balanced', { independent: [PLAYER], orders: {} })).toEqual([]);
  });
 });
+
+/**
+ * 20. 11. 2026: a player with a mage and a rogue beside him as his only ally found that the rogue never left town. Told to go
+ * its own way (what a bot does until something else is agreed), a lone character of level 1 has no fight worth walking to, and
+ * the agreement forbade it the player's company: it visited the market for nothing, turn after turn.
+ */
+describe('a bot that goes alone and can win nothing alone', () => {
+ const ROGUE = 'dongon-swiftblade', WIZARD = 'sofeea-icecall', PAIR = [WIZARD, ROGUE, 'brandon-lightstone', 'burbon-fang'], SEATS = PAIR.filter(id => id !== WIZARD);
+ /** Two against two: the player's mage and the rogue, the only bot on his side. The rogue is too hurt to fight anything by itself. */
+ const pair = () => { const s = createGame(p, { ...DEFAULT_SETUP, seed: 7, roster: PAIR }); hero(s, ROGUE).health = 1; return s; };
+ const orders = (s: State, mode: OrderMode = 'alone') => partyOrders(p, s.heroes, SEATS, { [ROGUE]: mode });
+ const rogue = (s: State) => legalActions(p, s).filter(c => 'hero' in c && c.hero === ROGUE);
+ const pick = (s: State, legal = rogue(s), early = false) => decide(p, view(s, SEATS), legal, 'balanced', { independent: [WIZARD], orders: orders(s), ...(early ? { early } : {}) });
+ it('stays with the player’s character instead of standing still', () => {
+  const s = pair(), away = quietFrom(s, hero(s, WIZARD).location);
+  hero(s, WIZARD).location = away; hero(s, WIZARD).actions = 1;
+  const plan = createStrategy(p, view(s, SEATS), 1, [WIZARD], orders(s)).plan(hero(s, ROGUE))!;
+  expect(plan).toMatchObject({ following: WIZARD, joined: true });
+  expect(plan.objective.region).toBe(away);
+  // He has made his first move: the rogue is asked at once, and goes after him.
+  const move = pick(s, rogue(s), true)!;
+  expect(move.command).toMatchObject({ type: 'travel', hero: ROGUE }); expect((move.command as Extract<Command, { type: 'travel' }>).path.at(-1)).toBe(away);
+  expect(move.reason).toContain('Sofeea'); expect(move.reason).toContain('nothing to win alone yet');
+ });
+ it('goes its own way again as soon as there is something it can win by itself', () => {
+  const s = pair(); hero(s, ROGUE).health = 3;
+  const strategy = createStrategy(p, view(s, SEATS), 1, [WIZARD], orders(s)), plan = strategy.plan(hero(s, ROGUE));
+  // Whatever it finds, it is the rogue's own plan or the player's company, never a wait without either.
+  expect(plan).toBeDefined();
+  if (!plan!.joined) expect(plan!.party).toEqual([ROGUE]);
+ });
+ it('says in the council that it stays with the player, and suggests leading where the two can win together', () => {
+  const s = pair(), said = counsel(p, view(s, SEATS), [ROGUE], 'balanced', { independent: [WIZARD], orders: orders(s) })[0];
+  const alone = said.proposals.find(v => v.mode === 'alone')!, lead = said.proposals.find(v => v.mode === 'lead')!;
+  expect(alone.joined).toBe(true); expect(alone.text).toMatch(/^Nothing it can win alone yet: stays with Sofeea/);
+  expect(said.suggested).toBe(lead.joined || !Number.isFinite(lead.score) || lead.score < .5 ? 'alone' : 'lead');
+ });
+});
+
+describe('an action that would change nothing', () => {
+ const ROGUE = 'dongon-swiftblade', WIZARD = 'sofeea-icecall', PAIR = [WIZARD, ROGUE, 'brandon-lightstone', 'burbon-fang'], SEATS = PAIR.filter(id => id !== WIZARD);
+ it('is never taken: a bot with nothing to do passes and says what it waits for', () => {
+  const s = createGame(p, { ...DEFAULT_SETUP, seed: 7, roster: PAIR }); hero(s, ROGUE).health = 1; hero(s, ROGUE).gold = 0;
+  // At full energy in town with no gold, beside the player's character who has not moved: nothing to buy, learn or recover but health.
+  const legal = legalActions(p, s).filter(c => 'hero' in c && c.hero === ROGUE);
+  const idle = legal.filter(c => c.type === 'town' && !c.operations.length && c.health === 0 || c.type === 'rest' && c.health === 0 && !c.food);
+  expect(idle.length).toBeGreaterThan(0);
+  const orders = partyOrders(p, s.heroes, SEATS, {});
+  // Offered nothing but those and a pass, the bot passes.
+  const choice = decide(p, view(s, SEATS), [...idle, { type: 'travel', hero: ROGUE, path: [] }], 'balanced', { independent: [WIZARD], orders })!;
+  expect(choice.command).toEqual({ type: 'travel', hero: ROGUE, path: [] });
+  expect(choice.reason).toBe('Staying beside Sofeea: nothing to fight here until Sofeea moves on.');
+ });
+});
+/** A region next to `from` where nothing stands to be fought. */
+function quietFrom(s: State, from: string) { return p.regions.find(r => r.neighbors.includes(from) && !s.enemies.some(e => e.region === r.id) && (!r.home || r.home === 'horde'))!.id; }

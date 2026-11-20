@@ -20,7 +20,7 @@ export function savePartyPlan(plan: PartyPlanChoice) { try { localStorage.setIte
 
 /** The three agreements in the words of the table. `short` completes "Sofeea …" on the table's button and in a notice. */
 export const ORDER_WORDS: Record<OrderMode, { label: string; short: string; note: string; icon: string }> = {
- alone: { label: 'Go your own way', short: 'goes alone', icon: 'compass', note: 'Picks its own objective, never counts on your characters and leaves alone what stands where they are.' },
+ alone: { label: 'Go your own way', short: 'goes alone', icon: 'compass', note: 'Picks its own objective, never counts on your characters and leaves alone what stands where they are. While it can win nothing alone, it stays with you.' },
  follow: { label: 'Come with me', short: 'comes with you', icon: 'users', note: 'Walks to your character once you have moved, keeps its actions for your Challenge and fights only at your side.' },
  lead: { label: 'Lead, I follow', short: 'leads the way', icon: 'flag', note: 'Chooses an objective for both of you, sets off first so that you see where, and waits for you there.' },
 };

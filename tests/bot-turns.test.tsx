@@ -152,9 +152,12 @@ describe('the bots at the table', () => {
   expect(planner.plan).not.toHaveBeenCalled();
   fireEvent.click(screen.getByRole('button', { name: /^Undo pass/ }));
   expect(saved()).toHaveLength(1);
-  // He has an action again: his allies wait for him as before.
+  // He has an action again: his allies wait for him as before. Once he has made his first move they are asked only for a
+  // move their agreement calls for meanwhile (an ally that goes with him catches up), and a bot with none makes no move.
+  planner.plan.mockImplementation(async (view: unknown, candidates: Command[], _difficulty: unknown, options?: { early?: boolean }) => options?.early ? undefined : passing(view, candidates));
   await wait(6000);
-  expect(planner.plan).not.toHaveBeenCalled();
+  for (const call of planner.plan.mock.calls) expect(call[3]).toMatchObject({ early: true });
+  expect(saved()).toHaveLength(1);
   expect(screen.getByRole('button', { name: 'Allies first' })).toBeTruthy();
  });
  it('go first when the player says so, for that turn', async () => {

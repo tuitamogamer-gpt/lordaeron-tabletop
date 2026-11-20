@@ -10,7 +10,9 @@ import type { GameView } from '../rules/view.js';
  * Now the party agrees first, and the bot keeps to it:
  *
  * - `alone`: the bot goes its own way. It never counts on a player's character, never asks one to join, and leaves alone
- *   what stands in the region where a player's character is.
+ *   what stands in the region where a player's character is. While it can win nothing alone (a lone character of level 1
+ *   or 2 often cannot), it joins the player's character like a bot told to come with him: until 20. 11. 2026 it stood in
+ *   town instead, visiting the market for nothing, turn after turn.
  * - `follow` ("come with me"): the bot stays with the player's character. It walks to him once he has moved, keeps its
  *   actions while he still has his (so that he can take it along on a Challenge), and fights only at his side.
  * - `lead` ("I go with you"): the bot chooses an objective for itself and the player's characters together, sets off

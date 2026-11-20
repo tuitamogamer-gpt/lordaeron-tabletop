@@ -21,7 +21,11 @@ export interface Objective {
 export interface Forecast { win: number; wounds: number; rounds: number; damage: number; health: number; }
 export interface Plan { objective: Objective; party: string[]; score: number; travelActions: number; forecast: Forecast;
  /** The player's character this plan follows ("come with me"), or the ones it expects to come along ("I go with you"). */
- following?: string; leading?: string[]; }
+ following?: string; leading?: string[];
+ /** The bot was told to go its own way (or to lead) and found nothing it can win so: it joins the player's character instead of standing still. */
+ joined?: boolean; }
+/** The least a plan must be worth for a character to walk toward it. Below it nothing is undertaken: the fight is too likely lost. */
+export const WORTH_WALKING = -.5;
 /** What staying beside the player's character is worth to a bot told to come with him: more than a rest, less than a good fight. */
 export const ESCORT_WORTH = 6;
 interface WarPost { id: string; label: string; value: number; wait: number; cost: number; holders: { hero: string; region: string; travel: number }[] }
@@ -436,7 +440,8 @@ export function createStrategy(pack: ContentPack, s: GameView, risk: number, ind
     if (!best || score > best.score) best = { objective: o, party: party.map(h => h.id), score, travelActions: Math.ceil(d / 2), forecast: f, ...(leading ? { leading: party.slice(1).map(a => a.id) } : {}) };
    }
   }
-  if (leading) { plans.set(key, best); return best; }
+  // Nothing worth leading the party to: the bot stays with the player's character instead of waiting where it stands.
+  if (leading) { if (!(best && best.score > WORTH_WALKING)) { const kept = escort(h); if (kept) best = { ...kept, joined: true }; } plans.set(key, best); return best; }
   // A War asks for no fight: two characters standing in its two regions when the enemy's turn ends win its reward for every
   // character of the faction. Each War has one pair told off for it, so that both walk to the same War and to different regions.
   for (const post of posts(side)) {
@@ -445,6 +450,10 @@ export function createStrategy(pack: ContentPack, s: GameView, risk: number, ind
    const other = post.holders.find(v => v.hero !== h.id)!, score = (post.value - post.wait * .9) / (1 + (mine.travel + other.travel) * .65);
    if (!best || score > best.score) best = { objective: { id: post.id, region: mine.region, label: post.label, enemies: [], war: { partner: other.hero, other: other.region } }, party: [h.id, other.hero], score, travelActions: mine.travel, forecast: { win: 1, wounds: 0, rounds: 0, damage: 0, health: 0 } };
   }
+  // Going its own way, a bot that can win nothing alone used to stand in town for the rest of the campaign: a lone character of
+  // level 1 or 2 has no fight worth walking to, and "alone" forbade it the player's company. It now joins the player's
+  // character until there is something it can take on by itself.
+  if (order?.mode === 'alone' && !(best && best.score > WORTH_WALKING)) { const kept = escort(h); if (kept) best = { ...kept, joined: true }; }
   plans.set(key, best); return best;
  };
  return { distance, targets, forecast, rewardValue, value, plan, lastStand };

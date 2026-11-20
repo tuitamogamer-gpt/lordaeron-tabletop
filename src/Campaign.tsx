@@ -105,8 +105,9 @@ export default function Campaign(){
  // The bots play on their own (campaign/bot-turns.ts). In his own faction's turn the player's characters act first, unless he
  // lets his allies go ahead; and while a decision dialog is open for a choice of his own, the bots wait behind it.
  const[ahead,setAhead]=useState(''),holding=playerToAct(p,state,legal,controlled)&&ahead!==turnKey(state),contested=playerDecides(state,legal),holdingNow=useRef(holding);holdingNow.current=holding;
- // The party plan can call for a move while the player still has actions: a leader sets off, a follower catches up.
- const early=holding&&allies.some(v=>orders[v.id].mode!=='alone');
+ // The party plan can call for a move while the player still has actions: a leader sets off, a follower catches up. An ally going
+ // its own way is asked too once the player has made his first move: one that can win nothing alone goes with him (ai/strategy.ts).
+ const early=holding&&(allies.some(v=>orders[v.id].mode!=='alone')||allies.length>0&&state.heroes.some(v=>controlled.includes(v.id)&&faction(p,v.id)===state.faction&&v.actions<2));
  // Run AI from the table means now: the bots go ahead in this turn. Switched on in Settings, they keep to the player's turn.
  const playBots=(on:boolean,now=on)=>{setAuto(on);saveAuto(on);if(now)setAhead(turnKey(state));},toggleBots=()=>playBots(!auto);
  const can=(type:Command['type'])=>legal.some(c=>c.type===type&&(!('hero'in c)||c.hero===h.id));
@@ -114,7 +115,7 @@ export default function Campaign(){
  const availableBotMoves=state.phase==='combat'?combatCandidates(p,state,allLegal,bots,{resolve:true,campaignAuto:auto,difficulty}):allLegal.filter(c=>botOwns(p,game.state,c,bots));
  const botReady=availableBotMoves.length>0;
  // What the bots may do on the table: their own moves, and challenges that ask a player's character along.
- const tableMoves=(s:typeof game.state,legalNow:Command[])=>[...legalNow.filter(c=>botOwns(p,s,c,currentBots.current)),...jointChallenges(s,legalNow,currentBots.current,declined.current).filter(c=>currentOrders.current[c.hero]?.mode!=='alone')];
+ const tableMoves=(s:typeof game.state,legalNow:Command[])=>[...legalNow.filter(c=>botOwns(p,s,c,currentBots.current)),...jointChallenges(s,legalNow,currentBots.current,declined.current)];
  const afterHumanResponse=state.phase==='combat'?combatCandidates(p,state,allLegal,bots,{resolve:true,campaignAuto:auto,difficulty,humanResponsePassed:true}):[];
  const botResponsePending=!availableBotMoves.length&&afterHumanResponse.length>0;
  useEffect(()=>{

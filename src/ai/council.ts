@@ -6,7 +6,9 @@ import type { Difficulty } from './planner.js';
 import { createStrategy, type Objective, type Plan } from './strategy.js';
 
 /** What a bot would do under one agreement, in a line the council can show, and where on the map that is. */
-export interface Proposal { mode: OrderMode; text: string; region?: string; risk?: 'low' | 'moderate' | 'high'; party: string[]; score: number }
+export interface Proposal { mode: OrderMode; text: string; region?: string; risk?: 'low' | 'moderate' | 'high'; party: string[]; score: number;
+ /** Under this agreement the bot found nothing to do by it and stays with the player's character instead. */
+ joined?: boolean }
 /** One bot's side of the council: its plan under each agreement, and the one it would choose itself. */
 export interface Counsel { hero: string; proposals: Proposal[]; suggested: OrderMode }
 
@@ -34,25 +36,30 @@ export function counsel(pack: ContentPack, s: GameView, heroes: string[], diffic
   const proposals = ORDER_MODES.map((mode): Proposal => {
    const strategy = createStrategy(p, s, risk, options.independent, { ...agreed, [id]: { ...order, mode } }), plan = strategy.plan(h);
    const others = plan ? plan.party.filter(v => v !== id) : [], trip = (who: string) => Math.ceil(strategy.distance(s.heroes.find(v => v.id === who)!.location, plan!.objective.region, side) / 2);
-   const odds = plan && fought(plan) ? riskOf(plan.forecast.win) : undefined, base = { mode, party: plan?.party ?? [id], score: plan?.score ?? -Infinity, region: plan?.objective.region, ...(odds ? { risk: odds } : {}) } satisfies Omit<Proposal, 'text'>;
+   const odds = plan && fought(plan) ? riskOf(plan.forecast.win) : undefined, base = { mode, party: plan?.party ?? [id], score: plan?.score ?? -Infinity, region: plan?.objective.region, ...(odds ? { risk: odds } : {}), ...(plan?.joined ? { joined: true } : {}) } satisfies Omit<Proposal, 'text'>;
+   // Beside the player's character: what the bot does when told to come with him, and when it finds nothing it can win otherwise.
+   const joins = () => { const there = plan!.objective.escort ? `fights where ${first(p, plan!.following!)} fights` : `there: ${titled(plan!.objective).replace(/^Quest/, 'quest')}, ${odds} risk together`; return `${plan!.joined ? 'stays with' : 'Joins'} ${first(p, plan!.following!)} in ${place(plan!.objective.region)} (${away(plan!.travelActions)}) · ${there}`; };
    if (mode === 'follow') {
     if (!plan?.following) return { ...base, text: `${partners} cannot be reached this turn.` };
-    const there = plan.objective.escort ? `fights where ${first(p, plan.following)} fights` : `there: ${titled(plan.objective).replace(/^Quest/, 'quest')}, ${odds} risk together`;
-    return { ...base, text: `Joins ${first(p, plan.following)} in ${place(plan.objective.region)} (${away(plan.travelActions)}) · ${there}` };
+    return { ...base, text: joins() };
    }
    if (mode === 'lead') {
+    if (plan?.joined && plan.following) return { ...base, text: `Sees nothing worth leading the party to: ${joins()}` };
     if (!plan?.leading?.length) return { ...base, text: 'Sees nothing worth leading the party to this turn.' };
     // How far each of the party is: said once when it is the same for all.
     const trips = [id, ...plan.leading].map(v => ({ who: first(p, v), n: trip(v) })), same = trips.every(v => v.n === trips[0].n);
     const far = same ? `${away(trips[0].n)}${trips[0].n ? ` for ${trips.length === 2 ? 'both' : 'all'}` : ''}` : trips.map(v => `${v.who} ${v.n ? v.n : 'there'}`).join(', ') + ' Travel away';
     return { ...base, text: `${titled(plan.objective)} in ${place(plan.objective.region)} with ${listed(plan.leading.map(v => first(p, v)))} · ${far} · ${odds} risk together` };
    }
+   if (plan?.joined && plan.following) return { ...base, text: `Nothing it can win alone yet: ${joins()}` };
    if (!plan) return { ...base, text: 'Nothing worth a fight within reach alone: rests, trains or shops.' };
    if (plan.objective.war) return { ...base, text: `Holds ${place(plan.objective.region)} for ${plan.objective.label} (${away(plan.travelActions)}), with ${first(p, plan.objective.war.partner)} in ${place(plan.objective.war.other)}` };
    return { ...base, text: `${titled(plan.objective)} in ${place(plan.objective.region)} · ${others.length ? `with ${listed(others.map(v => first(p, v)))}` : 'alone'} · ${away(plan.travelActions)}${odds ? ` · ${odds} risk` : ''}` };
   });
   // What the bot itself would rather do: go together when that is clearly worth more than going alone.
   const alone = proposals.find(v => v.mode === 'alone')!, lead = proposals.find(v => v.mode === 'lead')!;
-  return [{ hero: id, proposals, suggested: Number.isFinite(lead.score) && lead.score >= Math.max(0, alone.score) * 1.25 + .5 ? 'lead' : 'alone' }];
+  // Staying with the player for want of anything to win alone is no plan of the bot's own: against it, any fight worth leading to is the better one.
+  const solo = alone.joined ? 0 : alone.score;
+  return [{ hero: id, proposals, suggested: !lead.joined && Number.isFinite(lead.score) && lead.score >= Math.max(0, solo) * 1.25 + .5 ? 'lead' : 'alone' }];
  });
 }
