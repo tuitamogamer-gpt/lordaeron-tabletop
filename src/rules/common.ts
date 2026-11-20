@@ -21,7 +21,7 @@ export const capacity = (p: ContentPack, h: Hero) => {
  return base;
 };
 /** The rules revision new campaigns begin with; see Variants.rules. */
-export const RULES_REVISION = 4;
+export const RULES_REVISION = 5;
 const maps = new WeakMap<ContentPack, Map<number, ContentPack>>();
 /**
  * The content a campaign is played with: the pack itself, or the pack with the map of the rules revision the campaign

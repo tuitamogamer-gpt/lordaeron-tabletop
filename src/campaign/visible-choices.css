@@ -176,3 +176,17 @@
 .profession-gain>b+.game-icon{margin-left:8px}
 .profession-option strong{font:600 13px/1.3 var(--serif);color:#f0dcb3}
 .profession-option small{font:11.5px/1.3 var(--sans);color:#bfae8c}
+
+/* ---------- Event deck · that it is shuffled, and what it is made of ---------- */
+.encounter-shuffle-note{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:10px 0 0;font:12px/1.45 var(--sans);color:#cbbf9f}
+.encounter-shuffle-note>svg{flex:none;color:#cfb174}
+.campaign-app .encounter-shuffle-note>.quiet-button{min-height:28px;padding:3px 10px;font-size:11px}
+.encounter-deck-contents{display:flex;flex-direction:column;gap:12px}
+.encounter-deck-contents h3{margin:4px 0 6px;font:600 20px/1.2 var(--serif);color:#f3d493}
+.encounter-deck-contents p{margin:0;max-width:78ch;font:13px/1.5 var(--sans);color:#cbbf9f}
+.encounter-deck-contents>ul{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px;margin:0;padding:0;list-style:none}
+.campaign-app .encounter-deck-contents li>.quiet-button{display:grid;grid-template-columns:38px minmax(0,1fr) auto;align-items:center;gap:8px;width:100%;min-height:36px;padding:5px 10px;text-align:left;font-size:12.5px}
+.encounter-deck-contents li b{font:600 14px/1 var(--sans);color:#ffe7a8}
+.encounter-deck-contents li span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#f0dcb3}
+.encounter-deck-contents li small{font:11px/1.2 var(--sans);color:#8f8672}
+.encounter-deck-contents li.drawn small{color:#bfe3b8}

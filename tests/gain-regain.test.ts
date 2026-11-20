@@ -123,8 +123,8 @@ describe('losing it again', () => {
   expect(hero(s, MAGE).stun).toBe(1);
   expect(over(finish(s), MAGE)).toEqual({ health: 1, energy: 1 });
  });
- it('begins new campaigns with rules revision 4', () => {
-  expect(RULES_REVISION).toBe(4);
-  expect(createGame(p, DEFAULT_SETUP).variants?.rules).toBe(4);
+ it('begins new campaigns with rules revision 4 or later', () => {
+  expect(RULES_REVISION).toBeGreaterThanOrEqual(4);
+  expect(createGame(p, DEFAULT_SETUP).variants?.rules).toBe(RULES_REVISION);
  });
 });

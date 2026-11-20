@@ -9,8 +9,13 @@ import { activeEvent, distances, plagued } from '../src/rules/world';
 import { decisionOwners } from '../src/multiplayer/ownership';
 import type { Command, State } from '../src/rules/model';
 
+/**
+ * Each card is audited by itself, as the only card of its deck. From rules revision 5 an empty deck is made anew from the
+ * discard pile (tests/event-deck.test.tsx), which would turn up further cards after the one audited; these campaigns are
+ * therefore begun under revision 4, which differs from the present rules in that alone.
+ */
 function fresh(count = 6) {
- return createGame(p, { ...DEFAULT_SETUP, roster: count === 6 ? DEFAULT_SETUP.roster : DEFAULT_SETUP.roster.filter((_, i) => i !== 2 && i !== 5) });
+ return createGame(p, { ...DEFAULT_SETUP, variants: { ...DEFAULT_SETUP.variants, rules: 4 }, roster: count === 6 ? DEFAULT_SETUP.roster : DEFAULT_SETUP.roster.filter((_, i) => i !== 2 && i !== 5) });
 }
 function endTurn(s: State) {
  s = apply(p, s, { type: 'endActions' });

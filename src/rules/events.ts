@@ -1,4 +1,4 @@
-import { assert, card, character, faction, factionName, hero, integer, note, other, random, revised, shuffle } from './common.js';
+import { assert, card, character, contentFor, faction, factionName, hero, integer, note, other, random, revised, shuffle } from './common.js';
 import { beginBattle } from './combat.js';
 import { drawQuest, finalAttacker, rewards, stronger } from './rewards.js';
 import { activeEvent, nefarianDestinations } from './world.js';
@@ -32,6 +32,22 @@ export function nextNefarianBattle(p:ContentPack,s:State){
  if(s.nefarianFinal.length===2){s.winner='draw';s.phase='finished';note(s,"Both factions are defeated. Nefarian ends the game in a draw.");}
  else startNefarian(p,s,other(s.nefarianFinal[0]));return true;
 }
+/**
+ * The Event deck has run out: the discard pile is shuffled into a new deck, as any deck of cards is at a table. With the deck
+ * empty every card is in the discard pile or in play, so the new deck is every card of this campaign's deck that is not in play:
+ * not an encounter or a lasting effect still on the board, not a War still being fought, not the card whose step is being
+ * resolved, and not an Auction House whose item a character holds (drawn again, it would put a second copy of that item up).
+ * Campaigns begun before rules revision 5 play on without Events once the deck is empty, as they were played.
+ */
+export function reshuffleEvents(p:ContentPack,s:State):boolean{
+ if(!revised(s,5))return false;
+ const held=new Set(s.heroes.flatMap(h=>h.auctionItems));
+ const inPlay=new Set([...(s.world??[]).map(e=>e.id),...s.wars.map(w=>w.id),...(s.eventFlow?[s.eventFlow.event]:[]),...(s.auction?[s.auction.event]:[])]);
+ const pile=contentFor(p,s).events.filter(e=>(!e.overlord||e.overlord===s.overlord.id)&&!inPlay.has(e.id)&&!e.effects.some(f=>f.op==='auction'&&held.has(f.item))).map(e=>e.id);
+ if(!pile.length)return false;
+ s.eventDeck=shuffle(s,pile);s.eventRecycled=s.eventDiscard.length;s.eventShuffles=(s.eventShuffles??0)+1;
+ note(s,`The Event deck has run out: the discard pile of ${pile.length} cards is shuffled into a new deck.`);return true;
+}
 /** Resume an interrupted choice without repeating Fate or losing the bonus chain. */
 export function drawEvents(p:ContentPack,s:State){
  s.phase='event';
@@ -43,7 +59,7 @@ export function drawEvents(p:ContentPack,s:State){
    if(s.eventFlow.steps.length||s.auction||s.respawns.length)return;
    delete s.eventFlow;if(!e.bonus){endFactionTurn(p,s);return;}
   }
-  if(!s.eventDeck.length){endFactionTurn(p,s);return;}
+  if(!s.eventDeck.length&&!reshuffleEvents(p,s)){endFactionTurn(p,s);return;}
   const id=s.eventDeck.shift()!,e=p.events.find(e=>e.id===id)!;
   const ears=activeEvent(p,s,'ears');if(ears)removeWorld(s,ears.id);
   s.eventDiscard.push(id);note(s,`Event: ${e.name}.`);
