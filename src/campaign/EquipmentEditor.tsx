@@ -3,6 +3,7 @@ import { Icon } from '../components';
 import { BASE_PACK as p } from '../data/base';
 import { capacity, card, character } from '../rules/common';
 import { bagSize, equipped, fitsSlot, heroSlots, manage, petCapacity } from '../rules/inventory';
+import { loadouts } from '../ai/loadout';
 import type { Command, Equipped, Hero } from '../rules/model';
 import CardPortrait from './CardPortrait';
 import { CardRules, slotLabel } from './CharacterSheet';
@@ -12,7 +13,14 @@ import { byTouch } from './pointer';
 import { effectText } from './rules-text';
 import RulesText from './RulesText';
 
-export default function EquipmentEditor({ hero, send, busy }: { hero: Hero; send: (c: Command) => void; busy: boolean }) {
+/**
+ * Equipment at the end of a turn. The slots are on the left, the cards for the slot in hand on the right. What is owned and
+ * lies in no slot stands in a row of its own above them, each card with one button that puts it where it fits, so that a
+ * power learned this turn is not found only by opening every slot; "Suggest a loadout" fills the slots with the loadout the
+ * AI characters would choose, for the player to review. `pending` are the player's characters still to be equipped after
+ * this one: confirming goes on to the next.
+ */
+export default function EquipmentEditor({ hero, send, busy, pending = [] }: { hero: Hero; send: (c: Command) => void; busy: boolean; pending?: string[] }) {
  const [slots, setSlots] = useState(() => structuredClone(hero.slots));
  const [selected, setSelected] = useState(0), [discard, setDiscard] = useState<string[]>([]), [reEquip, setReEquip] = useState<string[]>([]);
  const [choicePage, setChoicePage] = useState(0);
@@ -55,32 +63,51 @@ export default function EquipmentEditor({ hero, send, busy }: { hero: Hero; send
   setReEquip(ids => ids.filter(id => value.some(slot => slot.card === id || slot.addons.includes(id))));
   setAnnouncement(message);
  };
- const equip = (id?: string) => {
+ const equip = (id?: string, at = selected) => {
   if (busy) return;
-  const value = slots.map((slot, i) => i === selected ? { ...slot, card: id } : id && slot.card === id ? { ...slot, card: undefined } : slot);
-  update(value, `${id ? card(p, id).name : areas[selected].printed ? card(p, areas[selected].printed!).name : 'Empty slot'} selected for slot ${selected + 1}. Confirm to save.`);
+  const value = slots.map((slot, i) => i === at ? { ...slot, card: id } : id && slot.card === id ? { ...slot, card: undefined } : slot);
+  update(value, `${id ? card(p, id).name : areas[at].printed ? card(p, areas[at].printed!).name : 'Empty slot'} selected for slot ${at + 1}. Confirm to save.`);
  };
- const attachment = (id: string) => {
+ const attachment = (id: string, at = selected) => {
   if (busy) return;
-  const remove = slots[selected].addons.includes(id), fn = card(p, id).functionTrait;
+  const remove = slots[at].addons.includes(id), fn = card(p, id).functionTrait;
   // Moving an attachment cannot duplicate it. Replacing its function returns the old item to the bag.
-  update(slots.map((slot, i) => ({ ...slot, addons: i === selected
+  update(slots.map((slot, i) => ({ ...slot, addons: i === at
    ? [...slot.addons.filter(a => a !== id && (remove || card(p, a).functionTrait !== fn)), ...remove ? [] : [id]]
-   : slot.addons.filter(a => a !== id) })), `${card(p, id).name} ${remove ? 'removed from' : 'attached to'} slot ${selected + 1}. Confirm to save.`);
+   : slot.addons.filter(a => a !== id) })), `${card(p, id).name} ${remove ? 'removed from' : 'attached to'} slot ${at + 1}. Confirm to save.`);
+ };
+ // What is owned, lies in no slot and fits one: a power learned this turn, an item from the bag. Each names the slot it would go to:
+ // the slot in hand when it fits there, else the first slot it fits that holds nothing of the player's own, else the first it fits.
+ const fits = (id: string) => areas.map((area, i) => fitsSlot(p, hero, card(p, id), area) ? i : -1).filter(i => i >= 0);
+ const placeFor = (id: string) => { const at = fits(id); return at.includes(selected) ? selected : at.find(i => !slots[i].card) ?? at[0]; };
+ const idle = owned.filter(id => !next.includes(id) && fits(id).length > 0);
+ const place = (id: string) => {
+  const at = placeFor(id); if (at === undefined || busy) return;
+  if (card(p, id).addon) attachment(id, at); else equip(id, at);
+  setSelected(at); setSlotPage(Math.floor(at / 8)); setChoicePage(0); setAttachmentPage(0); setFocus(undefined);
+ };
+ // The loadout an AI character would choose with these cards and this Energy: a start to review, never confirmed for the player.
+ const suggest = () => {
+  if (busy) return;
+  const best = loadouts(p, hero)[0];
+  if (!best || JSON.stringify(best.slots) === JSON.stringify(slots)) { setAnnouncement('This is already the strongest loadout these cards and this Energy allow.'); return; }
+  setSlots(structuredClone(best.slots)); setDiscard([...best.discard]); setReEquip([...best.reEquip ?? []]);
+  setAnnouncement('Suggested loadout laid out. Review the slots, change what you like, then confirm.');
  };
  const reset = () => { setSlots(structuredClone(hero.slots)); setDiscard([]); setReEquip([]); setAnnouncement('Changes reset. Your current equipment is restored.'); };
 
  return <div className="loadout-editor equipment-flow">
-  <header className="loadout-heading"><HeroPortrait id={hero.id} small /><div><span className="sheet-eyebrow">PREPARE FOR THE NEXT ENCOUNTER</span><h3>{def.name.split(' ')[0]}’s loadout</h3><p>Choose a slot → equip a card → confirm your loadout.</p></div><span className="loadout-draft">{draftSummary || 'Current loadout'}</span></header>
+  <header className="loadout-heading"><HeroPortrait id={hero.id} small /><div><span className="sheet-eyebrow">PREPARE FOR THE NEXT ENCOUNTER</span><h3>{def.name.split(' ')[0]}’s loadout</h3><p>Choose a slot → equip a card → confirm your loadout.</p></div><span className="loadout-head-tools">{pending.length > 0 && <span className="loadout-queue" title={`Still to equip after ${def.name.split(' ')[0]}: ${pending.map(id => character(p, id).name.split(' ')[0]).join(', ')}`}>Then {pending.map(id => character(p, id).name.split(' ')[0]).join(', ')}</span>}<button type="button" className="quiet-button loadout-suggest" disabled={busy} title="Fill the slots with the strongest loadout these cards and this Energy allow. Nothing is saved until you confirm." onClick={suggest}><Icon name="spark" size={14} />Suggest a loadout</button><span className="loadout-draft">{draftSummary || 'Current loadout'}</span></span></header>
+  {idle.length > 0 && <section className="loadout-idle" aria-label="Cards not equipped"><h4>Not equipped <span>{idle.length}</span></h4><div className="loadout-idle-cards">{idle.map(id => { const c = card(p, id), at = placeFor(id)!; return <button type="button" key={id} className="loadout-idle-card" disabled={busy} aria-label={`${c.name}: put in slot ${at + 1}`} title={`${c.name} · ${energyLabel(c)} · fits slot ${fits(id).map(i => i + 1).join(', ')}`} onClick={() => place(id)} onPointerEnter={() => setFocus(id)} onFocus={() => setFocus(id)}><CardPortrait card={c} /><span><strong>{c.name}</strong><small>{c.kind === 'item' ? 'In the bag' : 'Learned'} · {energyLabel(c)}</small></span><b>Slot {String(at + 1).padStart(2, '0')}<Icon name="arrow" size={12} /></b></button>; })}</div></section>}
   <div className="loadout-layout">
    <section className="loadout-slot-shelf" aria-label="Equipment slots"><div className="loadout-slots">{slots.slice(visibleSlotPage * 8, visibleSlotPage * 8 + 8).map((slot, pageIndex) => {
     const i = visibleSlotPage * 8 + pageIndex;
     const id = slot.card ?? areas[i].printed, c = id ? card(p, id) : undefined;
     const edited = JSON.stringify(slot) !== JSON.stringify(hero.slots[i]);
     return <button type="button" key={i} className={`loadout-slot ${c ? 'occupied' : 'vacant'} ${edited ? 'changed' : ''}`} aria-label={`Slot ${i + 1}: ${slotLabel(areas[i])}, ${c?.name ?? 'empty'}`} aria-pressed={selected === i} disabled={busy} onClick={() => {setSelected(i);setChoicePage(0);setAttachmentPage(0);setFocus(undefined);}}>
-     <span className="loadout-slot-number">{String(i + 1).padStart(2, '0')}</span><span className="loadout-slot-type">{slotLabel(areas[i])}</span>
+     <span className="loadout-slot-number">{String(i + 1).padStart(2, '0')}</span><span className="loadout-slot-type" title={slotLabel(areas[i])}>{slotLabel(areas[i]).replace(/ \/ /g, '/')}</span>
      <span className="loadout-slot-card" key={`${id}:${slot.addons.join(',')}`}>{c ? <CardPortrait card={c} /> : <span className="loadout-empty-icon"><Icon name="plus" size={24} /></span>}<strong>{c?.name ?? 'Open slot'}</strong><small>{c ? slot.card ? `${energyLabel(c)}${areas[i].printed ? ` · covers ${card(p, areas[i].printed!).name}` : ''}` : 'Starting equipment' : 'Choose a compatible card'}</small></span>
-     <span className="loadout-slot-bottom"><span>{slot.addons.length ? `${slot.addons.length} attachment${slot.addons.length === 1 ? '' : 's'}` : areas[i].traits.includes('all') ? 'All traits' : areas[i].traits.join(' / ')}</span>{edited && <span><Icon name="check" size={12} />Changed</span>}</span>
+     <span className="loadout-slot-bottom"><span>{slot.addons.length ? `${slot.addons.length} attachment${slot.addons.length === 1 ? '' : 's'}` : areas[i].traits.includes('all') ? 'All traits' : areas[i].traits.join(' / ')}</span>{edited ? <span><Icon name="check" size={12} />Changed</span> : (() => { const more = idle.filter(v => fits(v).includes(i)).length; return more ? <span className="loadout-slot-options" title={`${more} card${more === 1 ? '' : 's'} not equipped ${more === 1 ? 'fits' : 'fit'} this slot`}>+{more} to equip</span> : null; })()}</span>
     </button>;
    })}</div>{slotPages > 1 && <nav className="loadout-pagination" aria-label="Equipment slot pages"><button className="quiet-button" disabled={busy || !visibleSlotPage} onClick={() => {setSlotPage(visibleSlotPage - 1);setSelected((visibleSlotPage - 1) * 8);setChoicePage(0);setAttachmentPage(0);}}>Previous</button><span>{visibleSlotPage + 1} / {slotPages}</span><button className="quiet-button" disabled={busy || visibleSlotPage + 1 >= slotPages} onClick={() => {setSlotPage(visibleSlotPage + 1);setSelected((visibleSlotPage + 1) * 8);setChoicePage(0);setAttachmentPage(0);}}>Next</button></nav>}</section>
    <aside className="loadout-picker" aria-label={`Cards for slot ${selected + 1}`}>
@@ -107,7 +134,7 @@ export default function EquipmentEditor({ hero, send, busy }: { hero: Hero; send
   <footer className="loadout-footer">
    <div className="loadout-receipt" aria-live="polite"><span><Icon name="bolt" size={15} />{error ? `Energy available: ${hero.energy}` : `Energy: ${hero.energy} → ${preview.energy}`}<small>{error ? 'Resolve the selection below' : `After equipping · capacity ${capacity(p, preview).energy}`}</small></span><span><Icon name="layers" size={15} />Bag: {bagSize(p, bagAfter)} / 3<small>{bagAfter.length ? bagAfter.map(id => card(p, id).name).join(', ') : 'No stored items'}</small></span></div>
    {error && <p role="alert" className="loadout-error"><Icon name="help" size={15} />{error}</p>}
-   <div className="loadout-confirm"><button type="button" className="quiet-button" disabled={!dirty || busy} onClick={reset}><Icon name="reset" size={14} />Reset changes</button><button type="button" className="gold-button" disabled={!!error || busy} onClick={() => send({ type: 'manage', hero: hero.id, slots, discard, reEquip })}><Icon name="check" size={16} />Confirm equipment</button></div>
+   <div className="loadout-confirm"><button type="button" className="quiet-button" disabled={!dirty || busy} onClick={reset}><Icon name="reset" size={14} />Reset changes</button><button type="button" className="gold-button" disabled={!!error || busy} onClick={() => send({ type: 'manage', hero: hero.id, slots, discard, reEquip })}><Icon name="check" size={16} />Confirm equipment</button>{pending.length > 0 && <small className="loadout-next">Next: {character(p, pending[0]).name.split(' ')[0]}</small>}</div>
   </footer>
  </div>;
 }

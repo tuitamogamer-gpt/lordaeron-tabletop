@@ -1,0 +1,81 @@
+/* ==========================================================================
+   Clean lines · 20. 11. 2026.
+   Loaded last. Two things: how text breaks everywhere, and the equipment
+   window at the end of a turn.
+   ========================================================================== */
+
+/* ---------- How text breaks ----------
+   Running text never leaves one word alone on its last line; a heading, a label or a button that needs two lines breaks into
+   lines of even length instead of a full line and a stub. Both are inherited, so they are set once. */
+body{text-wrap:pretty}
+.campaign-app :is(h1,h2,h3,h4,h5,h6,summary,figcaption,dt,th,legend,label,button,.gold-button,.quiet-button,.eyebrow,.sheet-eyebrow,.stage-title,.stage-eyebrow,[role=tab],[role=radio]),
+dialog :is(h1,h2,h3,h4,h5,h6,summary,dt,th,legend,label,button,.eyebrow,.sheet-eyebrow,[role=tab],[role=radio]){text-wrap:balance}
+/* A number and its unit, a count and its noun stay on one line. */
+.campaign-app :is(.gold-amount,.compact-stat b,.action-pips,.quest-reference,kbd,.combat-token-count,.event-purse-gold),dialog :is(.gold-amount,.quest-reference,kbd){white-space:nowrap}
+
+/* ---------- Equipment at the end of a turn ---------- */
+.loadout-head-tools{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px;margin-left:auto;justify-self:end}
+.loadout-queue{padding:3px 10px;border:1px dashed #8b734799;border-radius:999px;font:11.5px/1.3 var(--sans);color:#cbbf9f;white-space:nowrap}
+.campaign-app .loadout-suggest{min-height:32px;padding:5px 12px;gap:6px;font-size:11.5px;white-space:nowrap}
+.loadout-next{align-self:center;font:11px/1.2 var(--sans);color:#bfae8c;white-space:nowrap}
+.loadout-idle{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:10px;margin:0 0 8px;padding:6px 10px;border:1px solid #cfb17466;border-left:3px solid #ffe2a2;border-radius:3px;background:#1d2118c4}
+.loadout-idle>h4{display:flex;align-items:center;gap:7px;margin:0;font:600 12px/1.2 var(--serif);color:#f3d493;white-space:nowrap}
+.loadout-idle>h4>span{display:grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:#f0cf82;color:#2a1d08;font:700 11px/1 var(--sans)}
+.loadout-idle-cards{display:flex;gap:6px;min-width:0;overflow-x:auto;padding:2px;scrollbar-width:thin;scrollbar-color:#b3945c #17211b}
+.loadout-idle-card{flex:none;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px;max-width:270px;padding:4px 8px 4px 4px;border:1px solid #8b734799;border-radius:3px;background:#141b17;color:inherit;text-align:left;cursor:pointer}
+.loadout-idle-card:hover:not(:disabled),.loadout-idle-card:focus-visible{border-color:#ffe2a2;background:#3a3120}
+.loadout-idle-card>img{display:block;height:46px;width:auto;border-radius:2px}
+.loadout-idle-card>span{display:flex;flex-direction:column;gap:1px;min-width:0}
+.loadout-idle-card strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:600 12px/1.25 var(--serif);color:#f0dcb3}
+.loadout-idle-card small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:10.5px/1.3 var(--sans);color:#ab9f86}
+.loadout-idle-card>b{display:inline-flex;align-items:center;gap:4px;padding:3px 7px;border:1px solid #cfb17499;border-radius:999px;font:600 10.5px/1.2 var(--sans);color:#ffe7a8;white-space:nowrap}
+.campaign-app .equipment-flow .loadout-slot-bottom>.loadout-slot-options{padding:1px 7px;border-radius:9px;background:#f0cf82;color:#2a1d08;font:700 10px/1.5 var(--sans);white-space:nowrap}
+/* A slot's kind is one line: "Instant / Active / constant" broke into two and pushed its card down. */
+.campaign-app .equipment-flow .loadout-slot-type{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:0}
+.campaign-app .equipment-flow .loadout-slot-card>small{padding-inline:4px;text-wrap:balance}
+@media(min-width:1000px){
+ /* The cards for the slot in hand are full rows; the large card beside them is no wider than it needs, and when no card is shown
+    the rows take the whole panel instead of a narrow column beside an empty one. */
+ .campaign-app .equipment-modal .equipment-flow .loadout-picker{grid-template-columns:minmax(250px,1fr) clamp(170px,calc((100dvh - 470px) * .62),270px)}
+ .campaign-app .equipment-modal .equipment-flow .loadout-picker:not(:has(.loadout-card-preview))>.loadout-choices,
+ .campaign-app .equipment-modal .equipment-flow .loadout-picker:not(:has(.loadout-card-preview))>.loadout-pagination{grid-column:1/-1}
+ .campaign-app .equipment-modal .equipment-flow .loadout-choice{padding:6px 34px 6px 8px}
+ .campaign-app .equipment-modal .equipment-flow .loadout-choice.empty-choice{min-height:44px}
+ .campaign-app .equipment-modal .equipment-flow .loadout-choice.card-choice>.card-portrait-face{height:60px}
+ .campaign-app .equipment-modal .equipment-flow .loadout-choice strong{font-size:12.5px;line-height:1.25}
+ .campaign-app .equipment-modal .equipment-flow .loadout-choice small{font-size:11px;line-height:1.35}
+ /* The large card takes the height the panel has left, whatever stands above it, and its caption stays in sight under it. */
+ .campaign-app .equipment-modal .equipment-flow .loadout-card-preview{display:flex;flex-direction:column;align-self:stretch;min-height:0}
+ .campaign-app .equipment-modal .equipment-flow .loadout-card-preview>.card-thumbnail{flex:1 1 0;min-height:0;height:auto;max-height:none;aspect-ratio:auto}
+ .campaign-app .equipment-modal .equipment-flow .loadout-card-preview>p{flex:none;text-wrap:balance}
+}
+
+/* ---------- Single places where a label broke or ran out of its box ---------- */
+/* Combat: the lane's name and what it does each stand on one line ("Melee / Defense" and "Blocks, then strikes" each took two). */
+.campaign-app .combat-dice-lane{grid-template-columns:minmax(128px,max-content) minmax(0,1fr) auto}
+.campaign-app .combat-dice-lane .dice-lane-label :is(strong,small){white-space:nowrap}
+/* "COMBAT AREA · ROUND 1" left its number alone on a second line: the note goes under the faction's name as a whole. */
+.campaign-app .combat-token-area>h4{flex-wrap:wrap;row-gap:1px}
+.campaign-app .combat-token-area>h4>span{white-space:nowrap}
+/* The character's summary on the table: "Actions" ran out of its column. */
+.campaign-app .active-character-summary .summary-actions{min-width:max-content}
+/* The dossier's buttons keep their words together. */
+.campaign-app .sheet-controls>button{white-space:nowrap}
+/* Short notes of two or three lines break evenly: "pretty" only keeps a single word off the last line, and these ended in a two-word stub. */
+.campaign-app :is(.combat-phase-note p,.setup-rule-note p,.first-turn-guide p,.rules-grid article p,.workspace-intro p,.combat-token-flow,.loadout-heading p,.quest-reveal-intro),dialog :is(.setup-rule-note p,.first-turn-guide p,.loadout-heading p,.party-plan-intro p){text-wrap:balance}
+/* A fight between the factions on a low screen shows the three fields as a row of plates: each takes its tray's colour. */
+@media(max-width:999px),(max-height:899px){
+ .combat-room .combat-ledger .combat-board-row.versus .combat-token-boxes{background:none;box-shadow:none}
+ .combat-room .combat-board-row.versus .combat-token-box{filter:none;box-shadow:0 0 0 1px #1c140b,0 0 0 2px #b58f55,0 2px 6px #000b,inset 0 0 12px #0008}
+ .combat-room .combat-board-row.versus .combat-token-box.damage{background:radial-gradient(ellipse at 50% 0,#3d6a9d,#1f3c61 60%,#13243c)}
+ .combat-room .combat-board-row.versus .combat-token-box.defense{background:radial-gradient(ellipse at 50% 0,#9a3b34,#641f1d 60%,#3c1213)}
+ .combat-room .combat-board-row.versus .combat-token-box.attrition{background:radial-gradient(ellipse at 50% 0,#8a5a2a,#4f3015 60%,#2b190b)}
+}
+/* On a narrow screen the equipment window's tools stand in a row of their own under the name, and the row of cards not equipped under its heading. */
+@media(max-width:999px){
+ .equipment-flow>.loadout-heading{flex-wrap:wrap}
+ .loadout-head-tools{flex:1 1 100%;grid-column:1/-1;justify-content:flex-start;justify-self:stretch;margin-left:0}
+ .loadout-queue{white-space:normal}
+ .loadout-idle{grid-template-columns:minmax(0,1fr);gap:6px}
+ .loadout-idle-card{max-width:240px}
+}
