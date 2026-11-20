@@ -32,7 +32,8 @@ describe('campaign summary', () => {
  });
 
  it('tells the final battle and the Nefarian draw apart', () => {
-  expect(endingText(view(finished({ kind: 'final' }, 'horde')))).toMatch(/^The Horde wins the final battle in /);
+  // The final battle has no region of its own: the sentence used to end "in final".
+  expect(endingText(view(finished({ kind: 'final' }, 'horde')))).toBe('The Horde wins the final battle after turn 30.');
   const draw = finished({}, 'draw'); draw.nefarianFinal = ['horde', 'alliance'];
   expect(endingText(view(draw))).toMatch(/defeats both factions\. The campaign ends in a draw\.$/);
  });

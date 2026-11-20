@@ -4,7 +4,7 @@ The map is now the main workspace. Characters, Quests, Merchant, Encounter deck 
 
 ## Setup
 
-1. Six characters are selected by default: three per faction. Choose four for a smaller table, and local AI or shared-device control. The campaign objective is always Defeat the Overlord; Deadly PvP is a separate optional combat checkbox.
+1. Six characters are selected by default: three per faction. Choose four for a smaller table, and local AI or shared-device control. The first step also asks how the campaign ends: the final battle after turn 30 (standard rules, selected by default) or Defeat the Overlord (variant, page 37). Deadly PvP is a separate optional combat checkbox.
 2. Choose equal faction sizes with globally unique classes. Shaman is Horde; Paladin is Alliance. Choose the human-controlled character when using AI.
 3. Choose an Overlord; show the profile for the selected character count.
 4. Review starting resources, regions, quests, merchant composition and the event deck, then explicitly begin.
@@ -13,7 +13,7 @@ A fresh browser opens the guide and does not autosave an unconfirmed default set
 
 The guide derives its event count and starting quest cards from an actual engine-created preview. Four characters receive three grey and one green quest per faction; six receive four grey and one green. The Ready step shows the actual drawn quest names, regions, creatures and faction markers. Starting health/energy, five gold, level one, starting towns, six merchant cards and the Horde first turn remain engine-owned. The content fingerprint and save format are unchanged.
 
-New campaigns use the rulebook's Defeat the Overlord continuation from page 37: after turn 30 the track begins a new lap, and every later item space adds a purple circle item. The original rulebook also describes final PvP in its standard rules (pages 2 and 35); that legacy behavior remains supported when an imported setup explicitly disables or omits the Overlord continuation. Deadly PvP affects PvP damage resolution and never changes the selected campaign objective.
+Since 20 November 2026 the player chooses the ending ([CAMPAIGN-ENDING-2026-11-20.md](CAMPAIGN-ENDING-2026-11-20.md)). The standard rules (pages 2 and 35) end with one final PvP battle when turn 30 is over and the Overlord still stands. The Defeat the Overlord continuation from page 37 has no final battle: after turn 30 the track begins a new lap, and every later item space adds a purple circle item. Before that date every new campaign used the continuation. Deadly PvP affects PvP damage resolution and never changes the selected campaign objective.
 
 All six default seats are playable: Grumbaz, Sofeea and Zowka for Horde; Brandon, Burbon and Artumnis for Alliance. Each has its complete character sheet, printed and racial powers, twelve purchasable class powers, twelve talents, equipment, combat, reward progression and AI support. The player selector includes all six, while shared-device control lets the user play every hero. There is no four-character limit in the rules or AI.
 

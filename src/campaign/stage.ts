@@ -225,6 +225,9 @@ export function beats(p: ContentPack, prev: StageView | undefined, next: StageVi
    lines: [q.spawns.map(s => `${s.count} × ${p.creatures.find(c => c.id === s.creature)?.name ?? s.creature} (${s.color})`).join(' · '), `Creatures appear in ${listed(where)}.`, `Reward: ${rewardText(q.reward)}.`] });
  }
 
+ // Turn 30 has ended with the Overlord standing (standard rules): the campaign is decided by one last battle between the factions.
+ if (next.phase === 'final-management' && prev.phase !== 'final-management') out.push({ kind: 'turn', size: 'banner', eyebrow: 'Turn 30 is over', title: 'The final battle', art: { kind: 'faction', id: next.faction }, cue: { stinger: 'wardrums' }, hold: 5600,
+  lines: ['The Overlord still stands. Every character is restored to full health and energy.', `${side(next.faction)} prepares first, then attacks.`] });
  if (next.phase === 'actions' && !next.winner && (next.faction !== prev.faction || next.turn !== prev.turn)) {
   const lap = (next.lap ?? 1) > (prev.lap ?? 1);
   out.push({ kind: 'turn', size: 'banner', eyebrow: lap ? `Campaign lap ${next.lap}` : 'Faction turn', title: `${side(next.faction)} · turn ${next.turn}${next.variants?.overlordOnly ? '' : ' of 30'}`, lines: ['Each character takes two actions.'], art: { kind: 'faction', id: next.faction }, cue: { voice: lap ? 'lap' : `turn-${next.faction}` as Voice, stinger: 'horn' }, hold: 3200 });

@@ -14,7 +14,7 @@ const names = (ids: string[]) => { const n = ids.map(id => character(p, id).name
 export function endingText(state: GameView) {
  const b = state.battle, boss = p.overlords.find(o => o.id === state.overlord.id)?.name ?? 'The Overlord';
  if (state.winner === 'draw' && state.nefarianFinal?.length === 2) return `${boss} defeats both factions. The campaign ends in a draw.`;
- if (b?.kind === 'final') return state.winner === 'draw' ? 'The final battle leaves no faction standing.' : `The ${factionLabel(state.winner ?? '')} wins the final battle in ${regionName(b.region)}.`;
+ if (b?.kind === 'final') return state.winner === 'draw' ? 'The final battle leaves no faction standing.' : `The ${factionLabel(state.winner ?? '')} wins the final battle after turn 30.`;
  if (b?.boss) { const victors = b.participants.filter(id => !b.defeated.includes(id)); return `${boss} falls in ${regionName(b.region)}${victors.length ? ` to ${names(victors)}` : ''}.`; }
  return state.winner === 'draw' ? 'The campaign ends in a draw.' : `The ${factionLabel(state.winner ?? '')} claims Lordaeron.`;
 }

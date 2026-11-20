@@ -23,10 +23,17 @@ export function setupErrors(setup: Setup, count: number): string[] {
 }
 
 const reviewTabs = ['Overview', 'Starting quests', 'Shuffle'] as const;
+/** The two ways a campaign ends: the rulebook's standard ending, and its variant without the final battle (page 37). */
+const ENDINGS = [
+ { overlordOnly: false, icon: 'users', title: 'Final battle after turn 30', tag: 'Standard rules', copy: 'The first faction to defeat the Overlord wins at once. If he still stands when turn 30 ends, both factions meet in one final PvP battle.' },
+ { overlordOnly: true, icon: 'crown', title: 'Defeat the Overlord', tag: 'Variant · page 37', copy: 'No final battle. After turn 30 the track begins another lap, and the campaign goes on until the Overlord falls.' },
+] as const;
 
 export default function CampaignSetup({ onStart, onCancel, existing = false }: { onStart: (setup: Setup, human: string, bots: boolean) => void; onCancel: () => void; existing?: boolean }) {
  const [step, setStep] = useState(0), [count, setCount] = useState<4 | 6>(6), [roster, setRoster] = useState(DEFAULT_SETUP.roster), [boss, setBoss] = useState(DEFAULT_SETUP.overlord), [seed, setSeed] = useState(() => String(globalThis.crypto.getRandomValues(new Uint32Array(1))[0] || 1)), [bots, setBots] = useState(true), [human, setHuman] = useState(DEFAULT_SETUP.roster[0]);
- const [variants, setVariants] = useState<Variants>({ overlordOnly: true, rules: RULES_REVISION });
+ // How the campaign ends is the player's choice. The rulebook's own ending comes first: one final PvP battle when turn 30 ends
+ // with the Overlord still standing. Until 20. 11. 2026 every new campaign silently used the variant from page 37 instead.
+ const [variants, setVariants] = useState<Variants>({ overlordOnly: false, rules: RULES_REVISION });
  const [reviewTab, setReviewTab] = useState(0);
  const heading = useRef<HTMLHeadingElement>(null), reviewButtons = useRef<(HTMLButtonElement | null)[]>([]);
  const reviewId = useId();
@@ -57,7 +64,7 @@ export default function CampaignSetup({ onStart, onCancel, existing = false }: {
  const introductions = [
   'Choose your table size and who controls the heroes. Both factions begin with distinct classes.',
   `Choose ${count / 2} per faction. A selected class is reserved for the whole game. Shaman belongs to Horde; Paladin belongs to Alliance.`,
-  `The first faction to defeat this Overlord wins. The ${count}-character profile is applied automatically.`,
+  `The first faction to defeat this Overlord wins${variants.overlordOnly ? '' : '; if he outlasts turn 30, the final battle decides'}. The ${count}-character profile is applied automatically.`,
   'Your first turn belongs to Horde. Review your table, then begin when you’re ready.',
  ];
  return <div className="setup-wizard setup-flow">
@@ -72,7 +79,7 @@ export default function CampaignSetup({ onStart, onCancel, existing = false }: {
       <div className="setup-rule-note"><Icon name="book"/><p>In a two-player game each player controls two characters. With three players, one player controls both characters of a faction. With five players, one player controls two characters. Local AI can fill those roles.</p></div>
      </section>
      <section className="setup-table-rules" aria-label="Campaign rules">
-      <div className="setup-rule-note setup-objective"><Icon name="crown"/><div><strong>Campaign objective · Defeat the Overlord</strong><p>The first faction to defeat the Overlord wins. After turn 30, the track begins another lap; the campaign continues until the Overlord falls.</p></div></div>
+      <div className="setup-ending" role="radiogroup" aria-label="How the campaign ends"><span className="setup-ending-label">How the campaign ends</span>{ENDINGS.map(e => <button key={e.title} type="button" role="radio" aria-checked={!!variants.overlordOnly === e.overlordOnly} className={!!variants.overlordOnly === e.overlordOnly ? 'selected' : ''} onClick={() => setVariants(v => ({ ...v, overlordOnly: e.overlordOnly }))}><Icon name={e.icon} size={20}/><span><strong>{e.title}</strong><em>{e.tag}</em><small>{e.copy}</small></span></button>)}</div>
       <fieldset className="setup-variants"><legend>Optional combat rule · page 37</legend><label><input type="checkbox" checked={!!variants.deadlyPvp} onChange={e => setVariants(v => ({ ...v, deadlyPvp: e.target.checked }))}/><span><strong>Deadly PvP</strong><small>Both factions suffer the opposing hits. Fewer unabsorbed wounds breaks a simultaneous defeat. The campaign objective stays the same.</small></span></label></fieldset>
       <p className="setup-table-footnote"><Icon name="users" size={15}/>The base game splits the party evenly. Each class appears once across both factions.</p>
      </section>
@@ -100,11 +107,11 @@ export default function CampaignSetup({ onStart, onCancel, existing = false }: {
         ['scroll', 'Quest decks', `${count / 2 + 1} grey + 1 green quest per faction. Creatures and markers are placed automatically; unused grey quests are removed.`],
         ['coins', 'Merchant ready', '3 white triangle + 2 blue square + 1 purple circle items, face up. Other items stay in their separate shuffled decks.'],
         ['layers', 'Event deck', `${preview.eventDeck.length} shuffled events${boss === 'kelthuzad' ? ', including the five Kel’Thuzad events' : '; the five Kel’Thuzad events are excluded'}. Draw events as instructed by the turn track.`],
-        ['crown', 'Campaign objective', 'Defeat the Overlord. The campaign continues across turn-track laps. Later laps add purple circle items at every item space.'],
+        ['crown', 'Campaign objective', variants.overlordOnly ? 'Defeat the Overlord. The campaign continues across turn-track laps. Later laps add purple circle items at every item space.' : 'Defeat the Overlord before turn 30 ends. If he still stands, one final PvP battle between the factions decides the campaign.'],
         ['crown', 'Overlord placed', `${p.overlords.find(o => o.id === boss)!.name} · ${count}-character profile.${boss === 'kazzak' ? ' Five hidden clue tokens are placed on the map.' : ''}`],
        ].map(([icon, title, copy]) => <article key={title}><Icon name={icon} size={17}/><div><h4>{title}</h4><p>{copy}</p></div><Icon name="check" size={14}/></article>)}</div>
        <div className="first-turn-guide"><b>Your first move</b><p>Choose your hero under <strong>Characters</strong>, then use <strong>Travel</strong>, <strong>Rest</strong>, <strong>Train</strong>, <strong>Town</strong> or <strong>Challenge</strong>. After every ally has used both actions, continue to <strong>Management</strong> to equip learned powers and items.</p></div>
-       <p className="setup-variant-summary">{bots ? `You play ${character(p, humanId).name}; AI controls the other ${count - 1} heroes.` : `You control all ${count} heroes.`} · PvP: {variants.deadlyPvp ? 'Deadly PvP enabled' : 'standard'}</p></> : <p className="setup-validation" role="alert">{errors.join(' ')}</p>}
+       <p className="setup-variant-summary">{bots ? `You play ${character(p, humanId).name}; AI controls the other ${count - 1} heroes.` : `You control all ${count} heroes.`} · Ends: {variants.overlordOnly ? 'when the Overlord falls' : 'final battle after turn 30'} · PvP: {variants.deadlyPvp ? 'Deadly PvP enabled' : 'standard'}</p></> : <p className="setup-validation" role="alert">{errors.join(' ')}</p>}
       </section>
       <section className="setup-review-panel" role="tabpanel" id={`${reviewId}-panel-1`} aria-labelledby={`${reviewId}-tab-1`} tabIndex={0} hidden={reviewTab !== 1}>{preview ? <QuestSetupPreview state={preview}/> : <p className="setup-validation">Complete the setup to preview your starting quests.</p>}</section>
       <section className="setup-review-panel setup-shuffle-panel" role="tabpanel" id={`${reviewId}-panel-2`} aria-labelledby={`${reviewId}-tab-2`} tabIndex={0} hidden={reviewTab !== 2}>

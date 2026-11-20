@@ -193,3 +193,15 @@
  .setup-flow .setup-stage-content { animation: none; }
  .setup-flow button { transition: none; }
 }
+
+/* How the campaign ends: the standard final battle or the variant without it, chosen like the table size. */
+.setup-flow .setup-ending { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.setup-flow .setup-ending-label { grid-column: 1 / -1; font: 600 10px/1.3 var(--sans); letter-spacing: 1.4px; text-transform: uppercase; color: #cfb174; }
+.setup-flow .setup-ending > button { display: grid; grid-template-columns: 22px minmax(0, 1fr); align-items: start; gap: 10px; padding: 12px 13px; border: 1px solid #7c683e75; border-radius: 5px; background: #202820; color: inherit; text-align: left; cursor: pointer; }
+.setup-flow .setup-ending > button > svg { margin-top: 2px; color: #c6a46a; }
+.setup-flow .setup-ending > button:hover:not(.selected) { border-color: #b39a62; }
+.setup-flow .setup-ending > button.selected { border-color: #e8bf77; background: #3a3120; box-shadow: inset 3px 0 0 #e8bf77; }
+.setup-flow .setup-ending strong { display: block; color: #edcea0; font: 600 15px/1.25 var(--serif); }
+.setup-flow .setup-ending em { display: block; margin: 3px 0 6px; font: 600 9.5px/1.3 var(--sans); font-style: normal; letter-spacing: 1px; text-transform: uppercase; color: #b9c7a6; }
+.setup-flow .setup-ending small { display: block; font: 11px/1.5 var(--sans); color: #c5bca6; }
+@media (max-width: 700px) { .setup-flow .setup-ending { grid-template-columns: 1fr; } }
