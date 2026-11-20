@@ -126,7 +126,12 @@ function action(p: ContentPack, prev: StageView, next: StageView, c: Command): O
    const what = a.mode === 'skip' ? 'declines' : a.mode === 'gold' ? 'takes the gold' : a.mode === 'recover' ? 'recovers' : a.mode === 'talents' ? 'replaces talents'
     : quest ? `replaces ${quest.name} with a ${a.tier} quest` : creature && a.region ? `moves the ${creature.name} to ${regionName(a.region)}` : a.card ? `chooses ${card(p, a.card).name}` : a.region ? `chooses ${regionName(a.region)}` : 'decides';
    const gains = [[after.gold - before.gold, 'gold'], [after.health - before.health, 'health'], [after.energy - before.energy, 'energy']] as const;
-   return { kind: 'choice', size: 'banner', eyebrow: `${side(faction(p, c.hero))} · ${p.events.find(e => e.id === prev.eventFlow?.event)?.name ?? 'Event'}`, title: `${name} ${what}`, art, region: after.location, cue: {}, hold: 2400,
+   // A choice about a place is shown at that place: the group that was moved with the way it went, the flight with its arc.
+   // The character who chose may stand far from it.
+   const origin = prev.enemies.find(e => e.id === a.enemy)?.region;
+   const place = creature && a.region ? { region: a.region, ...(origin && origin !== a.region ? { from: origin, path: [a.region] } : {}) }
+    : a.region && before.location !== after.location ? { region: after.location, from: before.location, path: [after.location] } : { region: a.region ?? after.location };
+   return { kind: 'choice', size: 'banner', eyebrow: `${side(faction(p, c.hero))} · ${p.events.find(e => e.id === prev.eventFlow?.event)?.name ?? 'Event'}`, title: `${name} ${what}`, art, ...place, cue: {}, hold: creature ? 3400 : 2400,
     lines: [gains.filter(([n]) => n).map(([n, word]) => `${n > 0 ? '+' : '−'}${Math.abs(n)} ${word}`).join(' · ')].filter(Boolean) };
   }
   case 'loot': return { kind: 'loot', size: 'card', eyebrow: `${side(faction(p, c.hero))} · Spoils of the battle`, title: `${name} takes ${card(p, c.card).name} from ${first(p, c.from)}`, art: { kind: 'card', id: c.card }, cue: { stinger: 'equip' }, hold: 4600,

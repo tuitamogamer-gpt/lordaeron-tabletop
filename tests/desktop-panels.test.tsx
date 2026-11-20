@@ -66,8 +66,8 @@ describe('Town thumbnail transactions',()=>{
   h.bag=inventoryItems.slice(0,3).map(c=>c.id);
   const purchased=inventoryItems[3],sold=h.bag[0],discarded=h.bag[1],original=structuredClone(h),send=vi.fn();
   render(<TownEditor hero={h} merchant={[purchased.id]} send={send} busy={false}/>);
-  fireEvent.change(screen.getByRole('combobox',{name:`Discard to buy ${purchased.name}`}),{target:{value:discarded}});
-  fireEvent.click(screen.getByRole('button',{name:'Add purchase'}));
+  fireEvent.click(within(screen.getByRole('group',{name:`Discard to buy ${purchased.name}`})).getByRole('button',{name:`Discard ${card(p,discarded).name}`}));
+  fireEvent.click(screen.getByRole('button',{name:`Add purchase · ${purchased.price} gold`}));
   fireEvent.click(screen.getByRole('button',{name:'Sell items'}));
   fireEvent.click(screen.getByRole('button',{name:`Sell ${card(p,sold).name}`}));
   fireEvent.click(screen.getByRole('button',{name:'Learn powers'}));
@@ -90,7 +90,7 @@ describe('Town thumbnail transactions',()=>{
   fireEvent.click(within(screen.getByRole('navigation',{name:'Town card pages'})).getByRole('button',{name:'Next'}));
   expect(r.container.querySelectorAll('.town-card-entry')).toHaveLength(1);
   expect(screen.getByRole('button',{name:`Preview ${card(p,merchant[12]).name}`})).toBeTruthy();
-  fireEvent.click(screen.getByRole('button',{name:'Add purchase'}));
+  fireEvent.click(screen.getByRole('button',{name:`Add purchase · ${card(p,merchant[12]).price} gold`}));
   expect(within(screen.getByRole('navigation',{name:'Town card pages'})).getByRole('button',{name:'Next'}).hasAttribute('disabled')).toBe(true);
   expect(r.container.querySelectorAll('.town-card-entry')).toHaveLength(6);
   fireEvent.click(screen.getByRole('button',{name:'Confirm · 1 transaction · 1 action'}));

@@ -1,0 +1,178 @@
+/* ==========================================================================
+   Choices that are seen, not read.
+   A decision about places is made on the board (map-decision.ts, Map.tsx); a
+   decision about cards is made on the cards, each with what it costs or brings
+   (EventChoices.tsx). Nothing here is chosen by its name alone.
+   ========================================================================== */
+
+/* ---------- The board while a decision is made on it ---------- */
+.territorial-map.deciding .map-field.decision-out{cursor:default}
+.territorial-map.deciding .map-field.decision-out:hover{fill:#fff0b61c;stroke:#fff0b666}
+.map-decision-layer .decision-dim{fill:#050a08;fill-opacity:.56}
+.map-decision-layer .decision-source,.map-decision-layer .decision-target{stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.map-decision-layer .decision-source{fill:#7fc4ff;fill-opacity:.2;stroke:#bfe6ff;stroke-width:3.5}
+.map-decision-layer .decision-source.held{fill-opacity:.3;stroke:#fff;stroke-width:4.5}
+.map-decision-layer .decision-source.idle{fill-opacity:.07;stroke-opacity:.55;stroke-width:2;stroke-dasharray:6 5}
+.map-decision-layer .decision-target{fill:#ffd45c;fill-opacity:.3;stroke:#fff0b6;stroke-width:3.5;stroke-dasharray:9 5}
+.map-decision-layer .decision-target.chosen{fill:#8ee07f;fill-opacity:.42;stroke:#f1ffe9;stroke-width:5;stroke-dasharray:none;filter:drop-shadow(0 0 6px #b9ffa8cc)}
+.map-decision-layer .decision-route path{fill:none;stroke:#fff;stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:3 11;vector-effect:non-scaling-stroke;filter:drop-shadow(0 1px 2px #000e)}
+.map-decision-layer .decision-route.preview path{stroke:#fff3c9;opacity:.85}
+.map-decision-pieces>circle{fill:none;stroke:#bfe6ff;stroke-width:3.5;vector-effect:non-scaling-stroke;filter:drop-shadow(0 0 4px #7fc4ff)}
+.map-decision-pieces>circle.held{stroke:#fff;stroke-width:4.5}
+.map-decision-pieces>circle.idle{opacity:.5;stroke-dasharray:5 4;filter:none}
+.map-decision-pieces .decision-landing circle{fill:#2f7d3a;stroke:#f1ffe9;stroke-width:2}
+.map-decision-pieces .decision-landing path{fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+@media(prefers-reduced-motion:no-preference){
+ .map-decision-layer .decision-source:not(.held):not(.idle),.map-decision-layer .decision-target:not(.chosen){animation:decision-lit 1.2s ease-in-out infinite alternate}
+ .map-decision-pieces>circle:not(.held):not(.idle){animation:decision-ring 1.2s ease-in-out infinite alternate}
+ .map-decision-layer .decision-route path{animation:decision-march 1s linear infinite}
+ @keyframes decision-lit{from{fill-opacity:.14}to{fill-opacity:.38}}
+ @keyframes decision-ring{from{stroke-opacity:.45}to{stroke-opacity:1}}
+ @keyframes decision-march{to{stroke-dashoffset:-14}}
+}
+
+/* ---------- The foot of the map: the Event card, the question, the piece in hand, the button ---------- */
+.map-decision-bar{position:relative;z-index:3;flex-shrink:0;display:grid;grid-template-columns:auto minmax(200px,1fr) minmax(300px,1.45fr) minmax(180px,auto);align-items:center;gap:8px 20px;padding:10px 16px 12px;border-top:2px solid #cfb174;background:linear-gradient(180deg,#22302a,#111a15);box-shadow:0 -8px 22px #0009}
+.map-decision-bar .map-decision-card{display:block;height:124px;width:auto;border-radius:6px;box-shadow:0 4px 14px #000c;transform-origin:left bottom;transition:transform .16s ease-out;cursor:zoom-in;outline:none}
+.map-decision-bar .map-decision-card:hover,.map-decision-bar .map-decision-card:focus-visible{position:relative;z-index:6;transform:scale(3.1);box-shadow:0 6px 30px #000}
+.map-decision-text{min-width:0}
+.campaign-app .map-decision-text .eyebrow{font:600 10.5px/1.3 var(--sans);letter-spacing:1.4px;text-transform:uppercase;color:#cfb174}
+.map-decision-text h3{margin:2px 0 5px;font:600 21px/1.15 var(--serif);color:#f3d493}
+.map-decision-text p{margin:0;max-height:6em;overflow:auto;font:12px/1.5 var(--sans);color:#cbbf9f;scrollbar-width:thin}
+.map-decision-choice{min-width:0;padding:8px 12px;border:1px solid #8b734766;border-left:3px solid #ffe2a2;border-radius:3px;background:#0d1412b8}
+.map-decision-steps{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 7px;padding:0;list-style:none}
+.map-decision-steps li{display:flex;align-items:center;gap:6px;padding:2px 10px 2px 3px;border:1px solid #8b734766;border-radius:999px;font:600 11px/1.4 var(--sans);color:#a99f86}
+.map-decision-steps li b{display:grid;place-items:center;width:18px;height:18px;border-radius:50%;background:#3a3a2c;color:#d9c79f;font-size:10px}
+.map-decision-steps li.current{border-color:#ffe2a2;background:#3a3120;color:#fff0cf}
+.map-decision-steps li.current b{background:#f0cf82;color:#2a1d08}
+.map-decision-steps li.done{border-color:#6fbf6a88;color:#bfe3b8}
+.map-decision-steps li.done b{background:#2f7d3a;color:#fff}
+.map-decision-bar .map-decision-prompt{margin:0 0 7px;font:600 13.5px/1.4 var(--sans);color:#fff0cf}
+.map-decision-move{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font:13px/1.3 var(--sans);color:#e9dbba}
+.decision-piece{display:inline-flex;align-items:center;gap:7px;margin-right:2px}
+.decision-piece>img,.decision-piece>.portrait,.decision-piece>.boss-portrait{display:block;flex:none;width:36px;height:36px;border-radius:50%}
+.decision-piece.creature>img{box-shadow:0 0 0 2px #7fc4ff,0 2px 6px #000b}
+.decision-place{padding:3px 9px;border:1px solid #8b734799;border-radius:3px;background:#0d1412}
+.decision-place.picked{border-color:#b9ffa8;background:#1d3a1e;color:#eaffdf;font-weight:600}
+.decision-place.open{border-style:dashed;color:#a99f86;font-style:italic}
+.decision-arrow{color:#cfb174;font-size:16px}
+.campaign-app .map-decision-bar .decision-beside{min-height:30px;padding:3px 10px 3px 4px;gap:6px;font-size:11px}
+.decision-beside>img{width:24px;height:24px;border-radius:50%}
+.map-decision-bar .map-decision-arrival{margin:7px 0 0;font:12px/1.4 var(--sans);color:#cbbf9f}
+.map-decision-actions{display:flex;flex-direction:column;align-items:stretch;gap:6px}
+.campaign-app .map-decision-actions>button{min-height:36px;padding:7px 14px;font-size:12px;white-space:nowrap}
+.campaign-app .map-decision-actions>.gold-button{min-height:44px;font-size:13px}
+.campaign-app .map-decision-actions>.gold-button:disabled{opacity:.45}
+.campaign-app .map-decision-actions>.decision-extra{justify-content:flex-start;white-space:normal;text-align:left}
+.decision-extra-card{display:block;flex:none;height:44px}
+.decision-extra-card>img{display:block;height:100%;width:auto;border-radius:3px}
+@media(max-width:1099px){
+ .map-decision-bar{grid-template-columns:auto minmax(0,1fr) auto;gap:8px 14px}
+ .map-decision-bar .map-decision-card{height:96px;grid-row:1}
+ .map-decision-text{grid-row:1}
+ .map-decision-actions{grid-row:1}
+ .map-decision-choice{grid-column:1/-1}
+ .map-decision-text p{max-height:4.5em}
+}
+@media(max-width:699px){
+ .map-decision-bar{grid-template-columns:auto minmax(0,1fr);padding:8px 10px;max-height:52dvh;overflow-y:auto}
+ .map-decision-bar .map-decision-card{height:74px}
+ .map-decision-text h3{font-size:17px}
+ .map-decision-text p{max-height:3em;font-size:11px}
+ .map-decision-actions{grid-row:auto;grid-column:1/-1;flex-direction:row;flex-wrap:wrap}
+ .campaign-app .map-decision-actions>button{flex:1 1 140px;white-space:normal}
+}
+@media(max-height:760px) and (min-width:700px){
+ .map-decision-bar{padding-block:6px 8px}
+ .map-decision-bar .map-decision-card{height:92px}
+ .map-decision-text p{max-height:4.5em}
+}
+.campaign-app .decision-docked{border-color:#ffe2a2;background:#3a3120}
+
+/* ---------- Items of an Event: cards with their prices ---------- */
+.world-decision.laid-out>.decision-event-card{height:112px}
+.gold-amount{display:inline-flex;align-items:center;gap:5px;font:600 15px/1 var(--sans);color:#ffe7a8;vertical-align:middle}
+.gold-amount>s{font-weight:500;font-size:12.5px;color:#b39f86;text-decoration-thickness:1.5px}
+.gold-amount>.game-icon{flex:none}
+.profession-options,.retrain-cards,.event-item-grid,.event-overflow{clear:both}
+.event-purse{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin:6px 0 10px;padding:7px 12px;border:1px solid #8b734766;border-left:3px solid #cfb174;border-radius:2px;background:#121815c4}
+.event-purse>.portrait{flex:none;width:40px;height:40px}
+.event-purse>span:not([class]){display:flex;flex-direction:column;gap:1px;min-width:0}
+.event-purse strong{font:600 14px/1.25 var(--serif);color:#f2dfb7}
+.event-purse small{font:11.5px/1.3 var(--sans);color:#bfae8c}
+.event-purse-gold{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border:1px solid #cfb17466;border-radius:999px;background:#0d1312;font:13px/1 var(--sans);color:#e9dbba}
+.event-purse-gold>b{font-size:17px;color:#ffe7a8}
+.event-purse-gold>.game-icon:not(:first-child){margin-left:8px}
+.event-purse>em{margin-left:auto;font:11.5px/1.3 var(--sans);font-style:normal;color:#a99f86}
+.event-item-grid{display:grid;grid-template-columns:repeat(var(--event-items,6),minmax(0,180px));justify-content:center;gap:10px}
+.event-item{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0;padding:6px 6px 6px;border:1px solid #8b734745;border-radius:4px;background:#0f1614a8}
+.compact-decision .event-item>.card-thumbnail{flex:none;width:auto;max-width:100%;height:clamp(132px,calc((100dvh - 590px) / 2),215px);aspect-ratio:2/3;padding:0}
+.compact-decision .event-item-grid:not(:has(.event-item:nth-child(7)))>.event-item>.card-thumbnail{height:clamp(170px,calc(100dvh - 520px),270px)}
+.event-item-name{display:flex;align-items:center;min-height:2.5em;margin-top:2px;font:600 12.5px/1.25 var(--serif);color:#f2dfb7;text-align:center;overflow-wrap:anywhere}
+.campaign-app .event-item>.gold-button{width:100%;min-height:32px;margin-top:auto;padding:5px 8px;font-size:11.5px;line-height:1.25}
+.event-item.unavailable>.card-thumbnail{filter:grayscale(.75) brightness(.68)}
+.event-item.unavailable>.event-item-name,.event-item.unavailable>.gold-amount{opacity:.6}
+.campaign-app .event-item.unavailable>.gold-button:disabled{background:#1b1f1b;border-color:#5b5140;color:#b7a98a;opacity:1;box-shadow:none;text-shadow:none}
+.event-items-empty{grid-column:1/-1;margin:12px 0;text-align:center}
+.campaign-app .event-items-skip{margin-top:10px}
+.event-overflow{display:grid;grid-template-columns:minmax(150px,210px) minmax(0,1fr);align-items:start;gap:22px}
+.event-overflow-card{display:block;width:100%}
+.event-overflow-card>img{display:block;width:100%;height:auto}
+.event-overflow-choice h3{margin:0 0 4px;font:600 18px/1.2 var(--serif);color:#f3d493}
+.event-overflow-choice>p{margin:0 0 10px}
+.event-overflow-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px;margin-top:14px}
+@media(max-width:999px){
+ .event-item-grid{grid-template-columns:repeat(auto-fill,minmax(118px,1fr))}
+ .compact-decision .event-item>.card-thumbnail,.compact-decision .event-item-grid:not(:has(.event-item:nth-child(7)))>.event-item>.card-thumbnail{height:170px}
+ .event-overflow{grid-template-columns:1fr}
+ .event-overflow-card{width:150px}
+ .event-purse>em{margin-left:0;flex-basis:100%}
+}
+
+/* ---------- Which card leaves a full bag: the cards themselves ---------- */
+.discard-picker{display:flex;flex-direction:column;gap:5px;min-width:0}
+.discard-picker-label{font:600 10px/1.3 var(--sans);letter-spacing:1.3px;text-transform:uppercase;color:#cfb174}
+.discard-picker-cards{display:flex;flex-wrap:wrap;align-items:flex-start;gap:8px}
+.discard-option{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;width:var(--discard-width,84px);min-width:0}
+.campaign-app .discard-option>.card-thumbnail{width:100%;height:auto;aspect-ratio:2/3;padding:2px;border:2px solid transparent;border-radius:5px}
+.campaign-app .discard-option.selected>.card-thumbnail{border-color:#ff9d7a;background:#4a1f1780;box-shadow:0 0 0 2px #ff9d7a44}
+.discard-option.selected::after{content:'DISCARD';position:absolute;left:2px;right:2px;top:calc(var(--discard-width,84px) * .62);padding:2px 0;background:#8f2f1ee6;color:#fff;font:700 9px/1.3 var(--sans);letter-spacing:1px;text-align:center;pointer-events:none}
+.discard-option>small{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font:10.5px/1.2 var(--sans);color:#cbbf9f;text-align:center}
+.discard-option.selected>small{color:#ffc4ae;font-weight:600}
+.campaign-app .discard-none{align-self:stretch;min-height:44px;padding:6px 10px;border:2px solid #8b734766;border-radius:5px;background:#1a211c;color:#e9dbba;font:600 11px/1.3 var(--sans);cursor:pointer}
+.campaign-app .discard-none.selected{border-color:#b9ffa8;background:#1d3a1e;color:#eaffdf}
+/* In the Town market the picker sits under one card of six: small faces, no names (the hover shows the card). */
+.town-card-entry>.discard-picker{--discard-width:40px;flex:none;gap:2px}
+.town-card-entry>.discard-picker .discard-picker-label{font-size:8.5px;letter-spacing:.6px}
+.town-card-entry>.discard-picker .discard-picker-cards{gap:3px;flex-wrap:nowrap}
+.town-card-entry>.discard-picker .discard-option>small{display:none}
+.town-card-entry>.discard-picker .discard-option.selected::after{content:'✕';top:auto;bottom:3px;left:auto;right:3px;width:14px;padding:0;border-radius:50%;font-size:9px;line-height:14px;letter-spacing:0}
+.reward-claim-form>.discard-picker{grid-column:1/-1;--discard-width:66px}
+
+/* ---------- Another Path to Power: the talents as cards ---------- */
+.retrain-cards{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.retrain-slots{display:flex;flex-wrap:wrap;gap:8px}
+.retrain-slot{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:10px;flex:1 1 220px;padding:6px 10px;border:1px solid #8b734766;border-radius:3px;background:#1a211c;color:inherit;text-align:left;cursor:pointer}
+.retrain-slot.selected{border-color:#d7b878;background:#3a3120;box-shadow:inset 0 -3px 0 #d7b878}
+.retrain-slot-card{display:block;height:74px}
+.retrain-slot-card>img{display:block;height:100%;width:auto;border-radius:3px}
+.retrain-slot small{display:block;font:600 9.5px/1.3 var(--sans);letter-spacing:.8px;text-transform:uppercase;color:#ab9f86}
+.retrain-slot strong{display:block;font:600 14px/1.25 var(--serif);color:#f0dcb3}
+.retrain-slot em{display:block;font:11px/1.3 var(--sans);font-style:normal;color:#bfe3b8}
+.retrain-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,170px));justify-content:center;gap:10px}
+.retrain-option{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}
+.compact-decision .retrain-option>.card-thumbnail{flex:none;width:auto;max-width:100%;height:clamp(140px,calc(100dvh - 600px),240px);aspect-ratio:2/3;padding:0;border:2px solid transparent;border-radius:6px}
+.compact-decision .retrain-option.selected>.card-thumbnail{border-color:#d7b878;box-shadow:0 0 14px #d7b87866}
+.retrain-option.unavailable>.card-thumbnail{filter:grayscale(.7) brightness(.7)}
+.campaign-app .retrain-option>.quiet-button{width:100%;min-height:30px;padding:4px 8px;font-size:11px}
+.campaign-app .retrain-option.selected>.quiet-button{border-color:#d7b878;background:#3a3120;color:#fff0cf}
+.retrain-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:8px;padding-top:8px;border-top:1px solid #8b734740}
+
+/* ---------- Professions and Crafts: what each choice leaves the character with ---------- */
+.profession-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.profession-option{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 10px;border:1px solid #8b734799;border-radius:3px;background:linear-gradient(120deg,#1d211c,#121815);color:inherit;cursor:pointer}
+.profession-option:hover,.profession-option:focus-visible{border-color:#ffe2a2;background:#3a3120}
+.profession-gain{display:flex;align-items:center;gap:5px;font:600 22px/1 var(--serif);color:#fff0cf}
+.profession-gain>b+.game-icon{margin-left:8px}
+.profession-option strong{font:600 13px/1.3 var(--serif);color:#f0dcb3}
+.profession-option small{font:11.5px/1.3 var(--sans);color:#bfae8c}

@@ -8,6 +8,7 @@ import { CardArt } from './Art';
 import { CardRules } from './CharacterSheet';
 import { CardThumbnail, HeroPortrait, pretty } from './parts';
 import { byTouch } from './pointer';
+import { DiscardPicker } from './EventChoices';
 
 type Submit = (c: Command) => void;
 
@@ -30,7 +31,7 @@ export function TownEditor({hero,merchant,send,busy}:{hero:Hero;merchant:string[
   </div>
   <div className="town-shelf-heading"><nav className="town-shelves" aria-label="Town services">{(['buy','sell','train'] as const).map(id=><button key={id} className="quiet-button" aria-pressed={shelf===id} onClick={()=>{setShelf(id);setPage(0);setError('');}}>{id==='buy'?'Buy items':id==='sell'?'Sell items':'Learn powers'}</button>)}</nav><span className="town-results" aria-live="polite">{count} {shelf==='train'?'powers':'items'} available</span></div>
   <div className="town-card-grid">
-   {shelf==='buy'&&market.merchant.slice(visiblePage*6,(visiblePage+1)*6).map(id=>{const c=card(p,id),overflow=bagSize(p,[...preview.bag,id])>3,options=overflow?[...preview.bag,id].filter(v=>!card(p,v).bagExempt):[],discard=options.includes(discards[id])?discards[id]:options[0];return <div className="town-card-entry" key={id}><CardThumbnail card={c} footer={`${c.price} gold`}/>{overflow&&<select aria-label={`Discard to buy ${c.name}`} value={discard} onChange={e=>setDiscards(v=>({...v,[id]:e.target.value}))}>{options.map(d=><option key={d} value={d}>Discard {pretty(card(p,d).name)}</option>)}</select>}<button className="quiet-button" disabled={busy||preview.gold<c.price} onClick={()=>add({op:'buy',card:id,discard})}>Add purchase</button></div>;})}
+   {shelf==='buy'&&market.merchant.slice(visiblePage*6,(visiblePage+1)*6).map(id=>{const c=card(p,id),overflow=bagSize(p,[...preview.bag,id])>3,options=overflow?[...preview.bag,id].filter(v=>!card(p,v).bagExempt):[],discard=options.includes(discards[id])?discards[id]:options[0];return <div className="town-card-entry" key={id}><CardThumbnail card={c} footer={`${c.price} gold`}/>{overflow&&<DiscardPicker label={`Discard to buy ${c.name}`} caption="Bag full · discard" options={options} value={discard} incoming={id} disabled={busy} onChange={d=>d&&setDiscards(v=>({...v,[id]:d}))}/>}<button className="quiet-button" disabled={busy||preview.gold<c.price} onClick={()=>add({op:'buy',card:id,discard})}>Add purchase · {c.price} gold</button></div>;})}
    {shelf==='sell'&&(selling.length?selling.slice(visiblePage*6,(visiblePage+1)*6).map(id=><CardThumbnail key={id} card={card(p,id)} disabled={busy} actionLabel={`Sell ${pretty(card(p,id).name)}`} onClick={()=>add({op:'sell',card:id})} footer={`Sell · +${Math.ceil(card(p,id).price/2)} gold`}/>):<p className="town-empty-shelf"><Icon name="layers" size={25}/><strong>No items to sell.</strong><span>Soulbound equipment stays with your hero.</span></p>)}
    {shelf==='train'&&training.slice(visiblePage*6,(visiblePage+1)*6).map(c=><CardThumbnail key={c.id} card={c} disabled={busy||preview.gold<c.price} actionLabel={`Learn ${pretty(c.name)}`} onClick={()=>add({op:'train',card:c.id})} footer={`Add training · ${c.price} gold`}/>)}
    {shelf==='buy'&&!count&&<p className="town-empty-shelf"><Icon name="layers" size={25}/><strong>The merchant’s shelf is empty</strong><span>Sell an item or learn a new power.</span></p>}

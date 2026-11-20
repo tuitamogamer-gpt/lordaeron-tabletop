@@ -53,6 +53,7 @@ import './campaign/combat-round.css';
 import './campaign/challenge-dialog.css';
 import './campaign/stage.css';
 import './campaign/party-plan.css';
+import './campaign/visible-choices.css';
 import './campaign/responsive.css';
 import './campaign/finish.css';
 // After a deployment, an open tab can ask for code chunks the server no longer has; reload once and resume from the autosave.
