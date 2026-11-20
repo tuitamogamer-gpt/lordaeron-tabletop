@@ -46,7 +46,7 @@ describe('tabletop pieces and cards',()=>{
  });
  it('sends the exact legal item and recipient chosen in the reward UI',()=>{
   const s=createGame(p,DEFAULT_SETUP),ids=[s.heroes[0].id],send=vi.fn();s.phase='reward';startRewards(p,s,ids,ids,{xp:0,gold:0,items:[{deck:'triangle',draw:2}]});const selected=s.reward!.offered[1];
-  render(<RewardResolution state={view(s)} legal={legalActions(p,s)} send={send} inspect={()=>{}}/>);fireEvent.click(screen.getByRole('button',{name:new RegExp(p.cards.find(c=>c.id===selected)!.name)}));fireEvent.click(screen.getByRole('button',{name:`Claim ${p.cards.find(c=>c.id===selected)!.name}`}));
+  render(<RewardResolution state={view(s)} legal={legalActions(p,s)} send={send} inspect={()=>{}}/>);fireEvent.click(screen.getByRole('button',{name:new RegExp(p.cards.find(c=>c.id===selected)!.name)}));fireEvent.click(screen.getByRole('button',{name:`Give ${p.cards.find(c=>c.id===selected)!.name} to ${p.characters.find(c=>c.id===ids[0])!.name.split(' ')[0]}`}));
   expect(send).toHaveBeenCalledWith(expect.objectContaining({type:'reward',hero:ids[0],card:selected}));
  });
 });

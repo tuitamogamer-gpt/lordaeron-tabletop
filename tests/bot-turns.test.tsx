@@ -1,12 +1,12 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import Campaign from '../src/Campaign';
 import { decide } from '../src/ai/planner';
 import { audio } from '../src/campaign/audio';
 import { BOT_PATIENCE_MS, botCombatDelay, botsDecide, loadAuto, playerClaims, playerDecides, playerToAct, RESULT_HOLD_MS, saveAuto, turnKey, UNDO_GRACE_MS } from '../src/campaign/bot-turns';
 import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
-import { faction } from '../src/rules/common';
+import { character, faction } from '../src/rules/common';
 import { apply, createGame } from '../src/rules/game';
 import { legalActions } from '../src/rules/legal';
 import type { Command } from '../src/rules/model';
@@ -263,18 +263,21 @@ describe('a quest reward', () => {
  }
  const dialog = () => screen.queryByRole('dialog', { name: 'Party rewards' });
  const stage = () => screen.queryByRole('status', { name: 'What just happened at the table' });
- it('that the player’s character may claim waits for the player, and “Bot move” lets an ally take it', async () => {
+ it('that the player’s character came through is the player’s to hand out: to himself or to the AI ally beside him', async () => {
   const { commands, offered } = untilReward([WARRIOR, MAGE]);
   seat(WARRIOR, commands); planner.plan.mockImplementation(passing);
   await open();
-  expect(dialog()!.textContent).toContain('Your AI allies wait for your choice.');
-  expect(screen.getByRole('button', { name: `Claim ${offered[0].name}` })).toBeTruthy();
+  // Both who came through the fight can receive the item; the ally is named as the AI's.
+  const recipients = within(screen.getByRole('radiogroup', { name: 'Reward recipient' })).getAllByRole('radio');
+  expect(recipients.map(r => r.textContent)).toEqual([expect.stringContaining(character(p, WARRIOR).name), expect.stringContaining(`${character(p, MAGE).name}AI ally`)]);
+  // The bots never take it while the player stands in the party, however long he reads.
   await wait(BOT_PATIENCE_MS + 3000);
   expect(planner.plan).not.toHaveBeenCalled();
   expect(saved()).toHaveLength(commands.length);
-  fireEvent.click(screen.getByRole('button', { name: /^Bot move/ }));
+  fireEvent.click(recipients[1]);
+  fireEvent.click(screen.getByRole('button', { name: `Give ${offered[0].name} to ${character(p, MAGE).name.split(' ')[0]}` }));
   await wait(100);
-  expect(saved().at(-1)).toMatchObject({ type: 'reward', hero: MAGE });
+  expect(saved().at(-1)).toMatchObject({ type: 'reward', hero: MAGE, card: offered[0].id });
  });
  it('of the bots’ own party is taken without its dialog and shown as the card they took', async () => {
   const { commands, offered } = untilReward([MAGE, SHAMAN], [pass(WARRIOR), pass(WARRIOR)]);

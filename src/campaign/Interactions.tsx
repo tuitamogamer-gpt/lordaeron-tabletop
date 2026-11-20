@@ -4,11 +4,11 @@ import { BASE_PACK as p } from '../data/base';
 import { capacity, card, character, faction } from '../rules/common';
 import { bagSize, townOperations } from '../rules/inventory';
 import type { Command, Hero, TownOperation } from '../rules/model';
-import { CardArt } from './Art';
-import { CardRules } from './CharacterSheet';
 import { CardThumbnail, HeroPortrait, pretty } from './parts';
 import { byTouch } from './pointer';
 import { DiscardPicker } from './EventChoices';
+import { GameIcon } from './GameIcon';
+import { itemFit } from './trade';
 
 type Submit = (c: Command) => void;
 
@@ -46,23 +46,35 @@ export function TownEditor({hero,merchant,send,busy}:{hero:Hero;merchant:string[
 
 export { default as EquipmentEditor } from './EquipmentEditor';
 
-export function TradeEditor({hero,heroes,send,busy}:{hero:Hero;heroes:Hero[];send:Submit;busy:boolean}) {
+/**
+ * Trading between allies standing in the same region: free, after an action (rulebook p. 36). Each bag lies open as cards; a
+ * card is pressed to hand it over, and under it stands what it is worth to the one who would receive it. Nothing changes hands
+ * before the button at the bottom.
+ */
+export function TradeEditor({hero,heroes,send,busy,bots=[]}:{hero:Hero;heroes:Hero[];send:Submit;busy:boolean;/** Characters played by the AI: named as such among the partners. */bots?:string[]}) {
  const others=heroes.filter(h=>h.id!==hero.id&&h.location===hero.location&&faction(p,h.id)===faction(p,hero.id));
  const [to,setTo]=useState(others[0]?.id??''),[items,setItems]=useState<string[]>([]),[receiveItems,setReceiveItems]=useState<string[]>([]),[gold,setGold]=useState(0),[receiveGold,setReceiveGold]=useState(0);
- const [pages,setPages]=useState<Record<string,number>>({});
  const partner=others.find(h=>h.id===to);
  if(!partner)return <p className="dialog-content">No allies in this region.</p>;
+ const first=(h:Hero)=>character(p,h.id).name.split(' ')[0];
  const fromBag=bagSize(p,[...hero.bag.filter(id=>!items.includes(id)),...receiveItems]),toBag=bagSize(p,[...partner.bag.filter(id=>!receiveItems.includes(id)),...items]);
- return <div className="dialog-content trade-flow"><div className="trade-intro"><p>Trading is free after an action, between allies in the same region.</p><label>Ally <select aria-label="Trade ally" disabled={busy} value={to} onChange={e=>{setTo(e.target.value);setReceiveItems([]);setReceiveGold(0);}}>{others.map(h=><option key={h.id} value={h.id}>{character(p,h.id).name}</option>)}</select></label></div>
-  <div className="transaction-columns">{[{h:hero,ids:items,set:setItems,g:gold,setG:setGold,label:'You give'},{h:partner,ids:receiveItems,set:setReceiveItems,g:receiveGold,setG:setReceiveGold,label:'Ally gives'}].map(side=>{
-   const available=side.h.bag.filter(id=>!card(p,id).soulbound),pageCount=Math.max(1,Math.ceil(available.length/4)),page=Math.min(pages[side.h.id]??0,pageCount-1);
-   return <section className="trade-side" key={side.label}><header><HeroPortrait id={side.h.id} small/><div><span className="sheet-eyebrow">{side.label}</span><h3>{character(p,side.h.id).name}</h3></div><span>{side.ids.length} selected</span></header>
-    <label className="trade-gold">Gold <span>{side.h.gold} available</span><input aria-label={`${side.label}: gold`} disabled={busy} type="number" min={0} max={side.h.gold} value={side.g} onChange={e=>side.setG(Math.max(0,Math.min(side.h.gold,Number(e.target.value)||0)))}/></label>
-    <div className="trade-items" aria-label={`${side.label}: items`}>{available.slice(page*4,page*4+4).map(id=><div className="trade-item" key={id}><label className="addon-choice"><input aria-label={`${side.label}: ${pretty(card(p,id).name)}`} disabled={busy} type="checkbox" checked={side.ids.includes(id)} onChange={e=>side.set(v=>e.target.checked?[...v,id]:v.filter(a=>a!==id))}/><CardArt card={card(p,id)}/><span>{pretty(card(p,id).name)}<small>{card(p,id).bagExempt?'Does not use bag space':'Uses one bag space'}</small></span></label><details className="trade-card-rules"><summary aria-label={`${side.label}: ${pretty(card(p,id).name)} rules`}>Rules</summary><CardRules value={card(p,id)}/></details></div>)}{!available.length&&<p className="trade-empty"><Icon name="layers" size={24}/><span>No transferable items in this bag.</span></p>}</div>
-    {pageCount>1&&<nav className="loadout-pagination" aria-label={`${side.label}: item pages`}><button className="quiet-button" disabled={!page} onClick={()=>setPages(v=>({...v,[side.h.id]:page-1}))}>Previous</button><span>{page+1} / {pageCount}</span><button className="quiet-button" disabled={page+1>=pageCount} onClick={()=>setPages(v=>({...v,[side.h.id]:page+1}))}>Next</button></nav>}
+ const sides=[{h:hero,receiver:partner,ids:items,set:setItems,g:gold,setG:setGold,label:'You give',verb:'Give',done:'Giving',bag:fromBag},{h:partner,receiver:hero,ids:receiveItems,set:setReceiveItems,g:receiveGold,setG:setReceiveGold,label:'Ally gives',verb:'Take',done:'Taking',bag:toBag}];
+ const moving=items.length+receiveItems.length+gold+receiveGold,full=fromBag>3||toBag>3;
+ const summary=(ids:string[],g:number)=>[ids.length?`${ids.length} ${ids.length===1?'item':'items'}`:'',g?`${g} gold`:''].filter(Boolean).join(' and ');
+ return <div className="dialog-content trade-flow trade-table"><div className="trade-intro"><p>Trading is free after an action, between allies in the same region. Press a card to hand it over; items you wear change hands once they are back in the bag.</p>
+   <div className="trade-partners" role="radiogroup" aria-label="Trade ally">{others.map(h=><button key={h.id} type="button" role="radio" aria-checked={h.id===to} className={h.id===to?'selected':''} disabled={busy} onClick={()=>{if(h.id===to)return;setTo(h.id);setReceiveItems([]);setReceiveGold(0);}}><HeroPortrait id={h.id} small/><span><strong>{character(p,h.id).name}</strong><small>{bots.includes(h.id)?'AI ally':'Ally'} · bag {bagSize(p,h.bag)} / 3 · {h.gold} gold</small></span></button>)}</div></div>
+  <div className="transaction-columns">{sides.map(side=>{
+   const available=side.h.bag.filter(id=>!card(p,id).soulbound),kept=side.h.bag.length-available.length;
+   return <section className="trade-side" key={side.label} aria-label={`${side.label}: ${character(p,side.h.id).name}`}><header><HeroPortrait id={side.h.id} small/><div><span className="sheet-eyebrow">{side.label}</span><h3>{character(p,side.h.id).name}</h3></div><span className={`trade-bag ${side.bag>3?'over':''}`}>Bag after <b>{side.bag}</b> / 3</span></header>
+    <div className="trade-cards" role="group" aria-label={`${side.label}: items`}>{available.map(id=>{const c=card(p,id),on=side.ids.includes(id),fit=itemFit(p,side.receiver,id);return <div className={`trade-card ${on?'offered':''}`} key={id}>
+      <CardThumbnail card={c} selected={on} pressed={on} disabled={busy} actionLabel={`${side.label}: ${pretty(c.name)}`} onClick={()=>side.set(v=>on?v.filter(a=>a!==id):[...v,id])} footer={on?side.done:`${side.verb} this item`}/>
+      <strong>{pretty(c.name)}</strong><small className={`item-fit ${fit.fit}`}>{first(side.receiver)}: {fit.text}</small>{c.bagExempt&&<small>Takes no bag space</small>}
+     </div>;})}{!available.length&&<p className="trade-empty"><Icon name="layers" size={24}/><span>No item in this bag can change hands.</span></p>}</div>
+    {kept>0&&<p className="trade-kept">{kept} soulbound {kept===1?'item stays':'items stay'} with {first(side.h)}.</p>}
+    <div className="trade-gold"><GameIcon name="gold" size={22}/><span>Gold<small>{side.h.gold} available</small></span><span className="auction-stepper"><button type="button" aria-label={`${side.label}: less gold`} disabled={busy||side.g<=0} onClick={()=>side.setG(side.g-1)}>−</button><input aria-label={`${side.label}: gold`} disabled={busy} type="number" min={0} max={side.h.gold} value={side.g} onChange={e=>side.setG(Math.max(0,Math.min(side.h.gold,Math.round(Number(e.target.value))||0)))}/><button type="button" aria-label={`${side.label}: more gold`} disabled={busy||side.g>=side.h.gold} onClick={()=>side.setG(side.g+1)}>+</button></span></div>
    </section>;
   })}</div>
-  <footer className="trade-footer"><div className="trade-outcome" aria-live="polite"><span><strong>Your bag {fromBag} / 3</strong><small>{hero.gold} → {hero.gold-gold+receiveGold} gold</small></span><Icon name="arrow" size={18}/><span><strong>Ally’s bag {toBag} / 3</strong><small>{partner.gold} → {partner.gold-receiveGold+gold} gold</small></span></div>{(fromBag>3||toBag>3)&&<p className="trade-warning" role="status">Both bags must have room before you propose this trade.</p>}<button className="gold-button" disabled={busy||fromBag>3||toBag>3||!(items.length+receiveItems.length+gold+receiveGold)} onClick={()=>send({type:'trade',hero:hero.id,to,items,receiveItems,gold,receiveGold})}>Propose trade</button></footer>
+  <footer className="trade-footer"><div className="trade-outcome" aria-live="polite"><span><strong>{first(hero)} gives {summary(items,gold)||'nothing'}</strong><small>Bag {fromBag} / 3 · {hero.gold} → {hero.gold-gold+receiveGold} gold</small></span><Icon name="arrow" size={18}/><span><strong>{first(partner)} gives {summary(receiveItems,receiveGold)||'nothing'}</strong><small>Bag {toBag} / 3 · {partner.gold} → {partner.gold-receiveGold+gold} gold</small></span></div>{full&&<p className="trade-warning" role="status">A bag holds three items: {fromBag>3?first(hero):first(partner)} must hand one over or take one less.</p>}<button className="gold-button" disabled={busy||full||!moving} onClick={()=>send({type:'trade',hero:hero.id,to,items,receiveItems,gold,receiveGold})}>{moving?`Trade with ${first(partner)}`:'Choose what changes hands'}</button></footer>
  </div>;
 }
 

@@ -22,7 +22,7 @@ export function authenticate(room:Room,token:string):Member {
  if(!member)throw new RoomError("This session does not belong to this room.",401);return member;
 }
 export const ownersFor=(s:State,c:Command)=>decisionOwners(pack,s,c);
-function requiredFor(c:Command):string[]{if(c.type==='challenge')return[c.hero,...c.allies];if(c.type==='trade')return[c.hero,c.to];return[];}
+function requiredFor(c:Command):string[]{if(c.type==='challenge')return[c.hero,...c.allies];if(c.type==='trade')return[c.hero,c.to];if(c.type==='reward'||c.type==='claim-relic')return[c.hero];return[];}
 function botCan(room:Room,c:Command){const owners=ownersFor(room.state,c);return owners.length>0&&owners.every(id=>room.bots.includes(id))&&requiredFor(c).every(id=>room.bots.includes(id));}
 function memberCan(room:Room,m:Member,c:Command){return ownersFor(room.state,c).some(id=>m.heroes.includes(id));}
 export function snapshot(room:Room,member:Member){

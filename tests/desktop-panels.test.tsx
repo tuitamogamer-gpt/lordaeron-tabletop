@@ -41,11 +41,11 @@ describe('compact talent decisions',()=>{
   const r=render(decision(s,legalActions(p,s)));
   expect(screen.getByRole('dialog',{name:'New talent'})).toBeTruthy();
   expect(screen.queryByRole('region',{name:'Reward resolution'})).toBeNull();
-  expect(screen.queryByRole('button',{name:/^Claim /})).toBeNull();
+  expect(screen.queryByRole('button',{name:/^Give /})).toBeNull();
   h.talentChoices=[];s.revision++;
   r.rerender(decision(s,legalActions(p,s)));
   expect(screen.getByRole('region',{name:'Reward resolution'})).toBeTruthy();
-  expect(screen.getByRole('button',{name:/^Claim /})).toBeTruthy();
+  expect(screen.getByRole('button',{name:/^Give /})).toBeTruthy();
  });
  it('clears a previous search when a new decision replaces the open dialog',()=>{
   const s=createGame(p,DEFAULT_SETUP),h=s.heroes[0];h.level=5;h.talentChoices=[5];

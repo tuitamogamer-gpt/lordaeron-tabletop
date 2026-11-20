@@ -1,0 +1,105 @@
+/*
+ * Items changing hands inside a party (20. 11. 2026): the free Trade beside the five actions, the trade table with both bags
+ * laid open as cards, and what an item is worth to the character who would receive it (trade.ts > itemFit), which also stands
+ * beside every recipient of a quest reward. Loaded after finish.css; clean-layout.css stays last.
+ */
+
+/* What an item is worth to a character: wearable now, later, only carried, or not at all. */
+.item-fit{display:inline-flex;align-items:center;gap:5px;font:600 11px/1.3 var(--sans);color:#ab9f86}
+.item-fit::before{content:'';flex:none;width:7px;height:7px;border-radius:50%;background:currentColor}
+/* Named with the app's root so that the colour holds wherever the line stands (a card's caption, a recipient's row). */
+.campaign-app .item-fit.equip{color:#a9d48b}
+.campaign-app .item-fit.level{color:#e3c078}
+.campaign-app .item-fit.carry{color:#9fc3d6}
+.campaign-app .item-fit.none{color:#c79a8c}
+
+/* The free Trade button: beside the action dock whenever an ally stands in the same region. */
+.campaign-app .table-action-footer>.trade-dock{position:relative;flex:none;display:flex;align-items:center;gap:8px;min-height:48px;padding:4px 22px 4px 8px;border:1px solid #7f9a6a;border-radius:var(--f-r-m,4px);background:linear-gradient(#34422f,#1c2620);color:#e9dcb4;text-align:left;cursor:pointer;white-space:nowrap;transition:border-color .18s,box-shadow .2s,transform .14s}
+.campaign-app .table-action-footer>.trade-dock:hover:not(:disabled){border-color:#c9dba6;box-shadow:0 0 12px #a9d48b33;transform:translateY(-1px)}
+.campaign-app .table-action-footer>.trade-dock:disabled{border-color:#5b6453;background:#1a211d;color:#a79f8c;cursor:default;filter:saturate(.5)}
+.trade-dock-faces{display:flex;flex:none}
+.trade-dock-faces>.portrait{width:30px;height:30px;border-radius:50%}
+.trade-dock-faces>.portrait+.portrait{margin-left:-11px}
+.trade-dock strong{display:block;font:600 13px/1.2 var(--serif);color:inherit}
+.trade-dock small{display:block;font:10.5px/1.25 var(--sans);color:#b9c7a6}
+.trade-dock:disabled small{color:#9b947f}
+.trade-dock>kbd{position:absolute;right:5px;bottom:3px;font:500 10px/1 var(--sans);color:#b9c7a6}
+@media(max-width:1399px){.trade-dock small{max-width:118px;overflow:hidden;text-overflow:ellipsis}}
+@media(max-width:1199px){.campaign-app .table-action-footer>.trade-dock{padding-right:10px}.trade-dock>kbd,.trade-dock-faces>.portrait+.portrait{display:none}}
+.desktop-tabletop.map-focus .trade-dock{display:none}
+
+/* The trade table. */
+.trade-table .trade-intro{align-items:flex-start;gap:16px}
+.trade-table .trade-intro>p{max-width:46ch;font-size:11.5px;color:#b9c4a6}
+.trade-partners{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}
+.trade-partners>button{display:grid;grid-template-columns:38px minmax(0,1fr);align-items:center;gap:9px;min-width:190px;padding:6px 12px 6px 8px;border:1px solid #8b734766;border-radius:3px;background:#1a211c;color:inherit;text-align:left;cursor:pointer}
+.trade-partners>button>.portrait{width:38px;height:38px}
+.trade-partners>button strong{display:block;font:600 13px/1.25 var(--serif);color:#f0dcb3}
+.trade-partners>button small{font:11px/1.3 var(--sans);color:#ab9f86}
+.trade-partners>button.selected{border-color:#d7b878;background:#3a3120;box-shadow:inset 3px 0 0 #d7b878}
+.trade-partners>button:hover:not(.selected):not(:disabled){border-color:#b39a62}
+.trade-table .trade-side>header>.trade-bag{font:11px/1.3 var(--sans);color:#b5c6a5;white-space:nowrap}
+.trade-table .trade-bag>b{font:600 15px/1 var(--sans);color:#f0dcb3}
+.trade-table .trade-bag.over,.trade-table .trade-bag.over>b{color:#f0a48a}
+.trade-table .trade-cards{display:flex;flex-wrap:wrap;align-content:flex-start;gap:12px;flex:1;min-height:176px;margin:8px 0 0;overflow-y:auto;overscroll-behavior:contain;padding:8px 8px 2px 4px}
+.trade-table .trade-card{display:flex;flex-direction:column;gap:3px;width:138px;min-width:0}
+.trade-table .trade-card>.card-thumbnail{width:100%;height:auto;aspect-ratio:2/3}
+.trade-table .trade-card>strong{font:600 12px/1.25 var(--serif);color:#eddcb4;text-wrap:balance}
+.trade-table .trade-card>small{font:10.5px/1.3 var(--sans);color:#ab9f86}
+.trade-table .trade-card>small.item-fit{align-items:flex-start;font-weight:600}
+.trade-table .trade-card>small.item-fit::before{margin-top:4px}
+.trade-table .trade-card.offered>.card-thumbnail{outline:2px solid #d7b878;outline-offset:2px;box-shadow:0 0 16px #d7b87855}
+.trade-table .trade-card.offered{position:relative}
+.trade-table .trade-card.offered::after{content:'✓';position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;background:#d7b878;color:#1a1408;font:700 13px/22px var(--sans);text-align:center;box-shadow:0 2px 6px #000a;pointer-events:none}
+.trade-table .trade-empty{flex:1;min-height:150px}
+.trade-table .trade-kept{margin:8px 0 0;font:10.5px/1.4 var(--sans);color:#9fac91}
+.trade-table .trade-gold{display:flex;align-items:center;gap:10px;margin:12px 0 0;padding-top:10px;border-top:1px solid #a38e5533;font:600 13px/1.2 var(--serif);color:#e3ca91}
+.trade-table .trade-gold>span:not(.auction-stepper){margin:0;font:inherit;color:inherit}
+.trade-table .trade-gold>span>small{display:block;font:10.5px/1.3 var(--sans);color:#9fac91}
+.trade-table .trade-gold>.auction-stepper{margin-left:auto}
+.trade-table .trade-outcome strong{font:600 13px/1.3 var(--serif)}
+.trade-table .trade-outcome small{font-size:11px}
+.trade-table .trade-warning{font-size:11.5px;max-width:260px}
+@media(min-width:1000px){
+ .campaign-app .modal:has(.trade-table)[open]{width:min(1120px,calc(100vw - 48px));height:min(720px,calc(100dvh - 32px))}
+ .campaign-app .modal .trade-table .trade-side{overflow:hidden}
+}
+@media(max-height:760px) and (min-width:1000px){.trade-table .trade-card{width:112px}.trade-table .trade-cards{min-height:150px}}
+@media(max-width:999px){
+ .trade-table .trade-intro{flex-direction:column}
+ .trade-partners{justify-content:flex-start}
+ .trade-partners>button{min-width:0;flex:1 1 160px}
+ .trade-table .trade-card{width:calc(50% - 6px)}
+ .trade-table .trade-cards{min-height:0;overflow:visible;padding:8px 8px 2px}
+ /* On a narrow screen the bag count stands under the name instead of beside it. */
+ .trade-table .trade-side>header{flex-wrap:wrap}
+ .trade-table .trade-side>header>.trade-bag{flex-basis:100%}
+ /* The gold stepper takes its own line when the column is too narrow for it. */
+ .trade-table .trade-gold{flex-wrap:wrap}
+ .trade-table .trade-outcome{flex-wrap:wrap;gap:8px 14px}
+}
+
+/* A quest reward: who can use the item is written beside each name. */
+.reward-recipients>button strong>i{margin-left:7px;padding:1px 6px;border:1px solid #8b734799;border-radius:9px;font:600 9.5px/1.4 var(--sans);font-style:normal;letter-spacing:.5px;text-transform:uppercase;color:#cdbb92;vertical-align:1px}
+.reward-recipients>button{grid-template-columns:38px minmax(0,1fr) auto}
+.reward-recipients>button>span{display:flex;flex-direction:column;gap:2px;min-width:0}
+.reward-recipients>button small.item-fit{font-size:11.5px}
+.reward-recipients>button>.reward-recipient-state{align-items:flex-end;font:11px/1.35 var(--sans);color:#ab9f86;white-space:nowrap;text-align:right}
+.reward-recipients>button>.reward-recipient-state>b{font:600 12px/1.2 var(--sans);color:#e3d1a7}
+/* Short screens: two recipients and the buttons under them stay above the fold; three stand two to a row. */
+@media(max-height:760px){
+ .reward-recipients{gap:4px}
+ .reward-recipients>button{padding:3px 9px}
+ .reward-recipients>button>.portrait{width:32px;height:32px}
+ .compact-decision .reward-claim-layout>.reward-claim-form{padding:8px 12px;gap:6px 10px}
+ /* The party's XP and gold give up their air first: at 1280 x 720 this dialog used to scroll by 38 px with a single recipient. */
+ .compact-decision .reward-party-receipt{margin:0;padding-bottom:4px;gap:4px 8px}
+ .compact-decision .reward-party-receipt>div{padding:2px 6px}
+ .compact-decision .reward-steps{margin:2px 0;padding:6px 0}
+}
+@media(max-height:820px) and (min-width:1000px){
+ .reward-recipients:has(>button:nth-of-type(3)){display:grid;grid-template-columns:1fr 1fr}
+ .reward-recipients:has(>button:nth-of-type(3))>span{grid-column:1/-1}
+}
+/* A phone: the three steps of a reward share the width without pushing past it. */
+@media(max-width:600px){.reward-steps>li{min-width:0}.reward-steps>li>span{min-width:0;overflow-wrap:anywhere}}

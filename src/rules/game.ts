@@ -152,7 +152,9 @@ export function apply(pack: ContentPack, state: State, command: Command): State 
    assert(unique(c.items) && unique(c.receiveItems) && integer(c.gold, 0, h.gold) && integer(c.receiveGold, 0, to.gold), "Invalid trade.");
    for (const [from, ids] of [[h, c.items], [to, c.receiveItems]] as const) assert(ids.every(id => from.bag.includes(id) && !card(p, id).soulbound), "Only non-soulbound bag items can be traded.");
    h.bag = [...h.bag.filter(id => !c.items.includes(id)), ...c.receiveItems]; to.bag = [...to.bag.filter(id => !c.receiveItems.includes(id)), ...c.items];
-   assert(bagSize(p, h.bag) <= 3 && bagSize(p, to.bag) <= 3, "The trade exceeds bag capacity."); h.gold += c.receiveGold - c.gold; to.gold += c.gold - c.receiveGold; break;
+   assert(bagSize(p, h.bag) <= 3 && bagSize(p, to.bag) <= 3, "The trade exceeds bag capacity."); h.gold += c.receiveGold - c.gold; to.gold += c.gold - c.receiveGold;
+   {const moved=(ids:string[],gold:number)=>[...ids.map(id=>card(p,id).name),...(gold?[`${gold} gold`]:[])],given=moved(c.items,c.gold),taken=moved(c.receiveItems,c.receiveGold),from=character(p,h.id).name,ally=character(p,to.id).name;
+   if(given.length||taken.length)note(s,given.length?`${from} gives ${listed(given)} to ${ally}${taken.length?` and receives ${listed(taken)}`:''}.`:`${from} receives ${listed(taken)} from ${ally}.`);} break;
   }
   case 'challenge': {
    const h = actionable(p, s, c.hero, true), ids = [h.id, ...c.allies]; assert(unique(ids), "A hero may join only once.");

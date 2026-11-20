@@ -16,6 +16,9 @@ export function decisionOwners(p:ContentPack,s:DecisionState,c:Command):string[]
   const b=s.battle;if(s.phase!=='combat'||b?.stage!=='wounds'||!b.participants.includes(c.hero)||b.defeated.includes(c.hero))return [];
   return b.participants.filter(id=>!b.defeated.includes(id)&&faction(p,id)===faction(p,c.hero));
  }
+ // A reward is the party's to hand out: every surviving participant has a say, so a player can give an item to the ally beside him
+ // and a bot does not take one while a player stands in the same party. Who receives it is still asked (server/rooms.ts > requiredFor).
+ if((c.type==='reward'||c.type==='claim-relic')&&s.phase==='reward'&&s.reward?.eligible.includes(c.hero))return[...s.reward.eligible];
  if('hero'in c)return[c.hero];
  if(c.type==='armor')return team(c.faction);
  if(c.type==='quest')return s.reward?.replacementFaction?team(s.reward.replacementFaction):s.reward?.eligible??[];

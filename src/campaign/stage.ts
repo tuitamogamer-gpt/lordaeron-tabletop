@@ -136,6 +136,13 @@ function action(p: ContentPack, prev: StageView, next: StageView, c: Command): O
    return { kind: 'choice', size: 'banner', eyebrow: `${side(faction(p, c.hero))} · ${p.events.find(e => e.id === prev.eventFlow?.event)?.name ?? 'Event'}`, title: `${name} ${what}`, art, ...place, cue: {}, hold: creature ? 3400 : 2400,
     lines: [gains.filter(([n]) => n).map(([n, word]) => `${n > 0 ? '+' : '−'}${Math.abs(n)} ${word}`).join(' · ')].filter(Boolean) };
   }
+  // What two bots hand each other: the card itself, and who can now use it.
+  case 'trade': {
+   const moved = (ids: string[], gold: number) => [...ids.map(id => card(p, id).name), ...(gold ? [`${gold} gold`] : [])], given = moved(c.items, c.gold), taken = moved(c.receiveItems, c.receiveGold);
+   if (!given.length && !taken.length) return;
+   return { kind: 'loot', ...shown(c.items[0] ?? c.receiveItems[0], art), eyebrow: `${side(faction(p, c.hero))} · Trade`, title: `${name} trades with ${first(p, c.to)}`, region: after.location, cue: { sfx: 'coins' }, hold: 3800,
+    lines: [given.length ? `Gives ${listed(given)}.` : '', taken.length ? `Receives ${listed(taken)}.` : ''].filter(Boolean) };
+  }
   case 'loot': return { kind: 'loot', size: 'card', eyebrow: `${side(faction(p, c.hero))} · Spoils of the battle`, title: `${name} takes ${card(p, c.card).name} from ${first(p, c.from)}`, art: { kind: 'card', id: c.card }, cue: { stinger: 'equip' }, hold: 4600,
    lines: [`${cardKind(card(p, c.card))}.`, ...(c.discard ? [`${card(p, c.discard).name} is discarded to make room in the bag.`] : [])] };
  }

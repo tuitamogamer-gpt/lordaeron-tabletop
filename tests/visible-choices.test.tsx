@@ -228,7 +228,7 @@ describe('talents and recovery are shown as what they are', () => {
   fireEvent.click(screen.getByRole('button', { name: `Select reward ${card(p, offered).name}` }));
   const picker = screen.getByRole('group', { name: 'Discard for reward' });
   fireEvent.click(within(picker).getByRole('button', { name: `Discard ${card(p, h.bag[1]).name}` }));
-  fireEvent.click(screen.getByRole('button', { name: `Claim ${card(p, offered).name}` }));
+  fireEvent.click(screen.getByRole('button', { name: `Give ${card(p, offered).name} to ${character(p, h.id).name.split(' ')[0]}` }));
   expect(send).toHaveBeenCalledExactlyOnceWith({ type: 'reward', hero: h.id, card: offered, discard: h.bag[1] });
  });
 });
