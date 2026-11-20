@@ -190,3 +190,42 @@
 .encounter-deck-contents li span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#f0dcb3}
 .encounter-deck-contents li small{font:11px/1.2 var(--sans);color:#8f8672}
 .encounter-deck-contents li.drawn small{color:#bfe3b8}
+
+/* ---------- Wars and Bosses on the board ---------- */
+.map-wars polygon{fill:#d6452f;fill-opacity:.1;stroke:#ff9d7a;stroke-opacity:.75;stroke-width:2.2;stroke-dasharray:7 5;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.map-wars path{fill:none;stroke:#ffb199;stroke-opacity:.6;stroke-width:2.4;stroke-dasharray:2 8;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.map-wars .shown polygon{fill-opacity:.26;stroke:#fff0e6;stroke-opacity:1;stroke-width:3.5}
+.map-wars .shown path{stroke:#fff0e6;stroke-opacity:1;stroke-width:3.5}
+.world-map-marker .encounter-token-art{filter:drop-shadow(0 2px 2px #000c)}
+@media(prefers-reduced-motion:no-preference){
+ .map-wars polygon{animation:war-field 1.8s ease-in-out infinite alternate}
+ @keyframes war-field{from{fill-opacity:.06}to{fill-opacity:.18}}
+}
+
+/* ---------- The starting quests are laid out: figures set down from above, one region after another ---------- */
+.map-arrival polygon{fill:#ffd45c;fill-opacity:.22;stroke:#fff0b6;stroke-width:3;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.map-arrival.horde polygon{fill:#e2543d;stroke:#ffc4b4}
+.map-arrival.alliance polygon{fill:#4d9bd6;stroke:#cfe9ff}
+.quest-map-token.arriving{filter:drop-shadow(0 0 5px #fff0b6)}
+@media(prefers-reduced-motion:no-preference){
+ .map-arrival polygon{animation:arrival-field .9s ease-out both}
+ .token-arrival{transform-box:fill-box;transform-origin:center;animation:token-drop .62s cubic-bezier(.22,1.35,.42,1) both;animation-delay:calc(var(--i,0) * 260ms + 180ms)}
+ .quest-map-token.arriving{animation:tag-in .4s ease-out both;animation-delay:.7s}
+ @keyframes token-drop{0%{opacity:0;transform:translateY(-58px) scale(2.1)}55%{opacity:1}100%{opacity:1;transform:translateY(0) scale(1)}}
+ @keyframes arrival-field{0%{fill-opacity:.55}100%{fill-opacity:.22}}
+ @keyframes tag-in{from{opacity:0}to{opacity:1}}
+}
+
+/* ---------- The Combat Area: three painted trays instead of drawn circles ---------- */
+.combat-token-area .combat-token-box{background:center / 100% 100% no-repeat;box-shadow:none;filter:drop-shadow(0 5px 7px #000b)}
+.combat-token-area .combat-token-box.damage{background-image:url('/assets/combat/damage.webp')}
+.combat-token-area .combat-token-box.defense{background-image:url('/assets/combat/defense.webp')}
+.combat-token-area .combat-token-box.attrition{background-image:url('/assets/combat/attrition.webp')}
+.combat-token-area.resolving .combat-token-box.damage{box-shadow:none;filter:drop-shadow(0 0 9px #9fd0ff) drop-shadow(0 5px 7px #000b)}
+.encounter-token-halo{fill:#1b0f0c;stroke:#ffe2a2;stroke-width:2.5;vector-effect:non-scaling-stroke}
+.encounter-token-halo.war{stroke:#ffb199;filter:drop-shadow(0 0 5px #ff6b4a)}
+.encounter-token-halo.boss{stroke:#d9b3ff;filter:drop-shadow(0 0 5px #a45cff)}
+/* On the table overview the board is small: the War and Boss tokens are drawn larger there, as the town marks are. */
+.territorial-map.overview .world-map-marker>.encounter-token-art,.territorial-map.overview .world-map-marker>.encounter-token-halo{transform:scale(1.35);transform-box:fill-box;transform-origin:center}
+/* The mat the trays lie on: the war table's leather under the three circles. */
+.combat-token-area .combat-token-boxes{border-radius:5px;background:url('/assets/combat/mat.webp') center / 100% 100% no-repeat;box-shadow:0 3px 10px #000a,inset 0 0 0 1px #00000066}

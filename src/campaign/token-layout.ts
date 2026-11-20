@@ -170,13 +170,14 @@ export function labelLines(name: string) {
 export const TAG = { w: 30, h: 24 } as const;
 const TAG_CORNERS: MapPoint[] = [[-19, -17], [19, -17], [-19, 17]], TAG_CLOSE: MapPoint[] = [[0, -16], [-12, -10], [12, -10], [0, 14], [0, 0]];
 /** Radii used for spacing, a little larger than the drawn tokens so that names and count badges stay clear. */
-export const TOKEN_RADIUS = { hero: 23, overlord: 27, creature: 20, quest: 21, world: 13 } as const;
+export const TOKEN_RADIUS = { hero: 23, overlord: 27, creature: 20, quest: 21, world: 13, /** A Boss's token and a War's token: painted counters, larger than a plague mark. */ encounter: 19 } as const;
 
 /**
  * The place of every token on the board, by key: `h:<hero>`, `overlord`, `c:<region>:<creature>:<color>`, `q:<region>:<quest>` and
- * `w:<region>:<event>`. Heroes are placed first, then the Overlord, creatures, quest markers and world markers.
+ * `w:<region>:<event>` (a Boss, a plague mark, and each of the two regions of a War). Heroes are placed first, then the Overlord,
+ * creatures, quest markers and world markers.
  */
-export function boardTokenPositions(p: ContentPack, state: Pick<GameView, 'heroes' | 'enemies' | 'overlord' | 'world'>, markers: QuestMarker[], on: Board = BOARD): Record<string, MapPoint> {
+export function boardTokenPositions(p: ContentPack, state: Pick<GameView, 'heroes' | 'enemies' | 'overlord' | 'world'> & Partial<Pick<GameView, 'wars'>>, markers: QuestMarker[], on: Board = BOARD): Record<string, MapPoint> {
  const at: Record<string, MapPoint> = {};
  for (const r of p.regions) {
   const shape = on.byId[r.id];
@@ -191,7 +192,9 @@ export function boardTokenPositions(p: ContentPack, state: Pick<GameView, 'heroe
    ...stacks.map((stack, i) => ({ key: `c:${r.id}:${stack.creature}:${stack.color}`, r: TOKEN_RADIUS.creature, prefer: [(i % 4 - (Math.min(stacks.length, 4) - 1) / 2) * 42, 36 + Math.floor(i / 4) * 40] as const, hold: HOLD.figure, margin: FIGURE_MARGIN })),
    // A quest's marker is a tag on the creatures it is about (below); one whose creatures are not in sight is laid out by itself.
    ...quests.filter(m => !carrier(m)).map((m, i) => ({ key: `q:${r.id}:${m.quest.id}`, r: TOKEN_RADIUS.quest, prefer: [44, -14 + i * 26] as const, hold: HOLD.mark })),
-   ...world.map(w => ({ key: `w:${r.id}:${w.id}`, r: TOKEN_RADIUS.world, prefer: [-34, 22] as const, hold: HOLD.mark })),
+   ...world.map(w => ({ key: `w:${r.id}:${w.id}`, r: p.events.find(e => e.id === w.id)?.boss ? TOKEN_RADIUS.encounter : TOKEN_RADIUS.world, prefer: [-34, 22] as const, hold: HOLD.mark })),
+   // A War lays a token in each of its two regions.
+   ...(state.wars ?? []).filter(w => w.regions.includes(r.id)).map((w, i) => ({ key: `w:${r.id}:${w.id}`, r: TOKEN_RADIUS.encounter, prefer: [34, 24 + i * 30] as const, hold: HOLD.mark })),
   ];
   if (!specs.length && !quests.length) continue;
   const services = servicesOf(r), label = labelBox(r.name), marks = takenByServices(shape, r.name, services);

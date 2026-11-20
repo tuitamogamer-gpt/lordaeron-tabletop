@@ -11,9 +11,10 @@ type Section = 'overview' | 'active' | 'discard' | 'deck' | 'track';
 export default function EncounterPanel({ state }: { state: GameView }) {
  const [section,setSection] = useState<Section>('overview'), [page,setPage] = useState(0),[detail,setDetail]=useState<string>();
  const boss = p.overlords.find(o=>o.id===state.overlord.id)!;
- const active = (state.world??[]).map(w=>w.id);
+ // On the board now: an encounter or a lasting effect that has not been cleared, and every War still being fought.
+ const active = [...(state.world??[]).filter(w=>!w.cleared).map(w=>w.id),...state.wars.map(w=>w.id)];
  // The discard pile is what was turned up since the deck was last shuffled; everything turned up before went back into the deck.
- const pile = state.eventDiscard.slice(state.eventRecycled??0), shuffles = state.eventShuffles??0;
+ const pile = state.eventDiscard.slice(state.eventRecycled??0).filter(id=>!active.includes(id)), shuffles = state.eventShuffles??0;
  const ids = section==='active'?active:[...pile].reverse();
  // What the deck is made of: several cards have copies, so the same name comes up more than once in a campaign.
  const cards = p.events.filter(e=>!e.overlord||e.overlord===state.overlord.id), names = [...new Set(cards.map(e=>e.name))].map(name=>({name,copies:cards.filter(e=>e.name===name).length,drawn:state.eventDiscard.filter(id=>p.events.find(e=>e.id===id)?.name===name).length,sample:cards.find(e=>e.name===name)!.id})).sort((a,b)=>b.copies-a.copies||a.name.localeCompare(b.name));

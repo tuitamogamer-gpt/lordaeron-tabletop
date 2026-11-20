@@ -20,12 +20,14 @@ export type BeatArt = { kind: 'event' | 'quest' | 'hero' | 'overlord' | 'faction
  */
 export interface Beat {
  id: string;
- kind: 'event' | 'war' | 'new-quest' | 'quest-done' | 'level' | 'fallen' | 'overlord' | 'turn' | 'travel' | 'pass' | 'rest' | 'train' | 'town' | 'challenge' | 'power' | 'talent' | 'loot' | 'merchant' | 'choice' | 'think';
+ kind: 'deploy' | 'event' | 'war' | 'new-quest' | 'quest-done' | 'level' | 'fallen' | 'overlord' | 'turn' | 'travel' | 'pass' | 'rest' | 'train' | 'town' | 'challenge' | 'power' | 'talent' | 'loot' | 'merchant' | 'choice' | 'think';
  size: 'card' | 'banner';
  eyebrow: string; title: string; lines: string[];
  art?: BeatArt;
  /** Where on the map it happened, and for a journey the way there. */
  region?: string; from?: string; path?: string[];
+ /** The quest whose figures this beat lays on the board (setupBeats): until it is reached they are not shown there. */
+ quest?: string;
  cue: Cue;
  /** Milliseconds on screen at the normal pace. */
  hold: number;
@@ -192,7 +194,7 @@ export function beats(p: ContentPack, prev: StageView | undefined, next: StageVi
  drawn.forEach((id, i) => {
   const e = p.events.find(e => e.id === id); if (!e) return;
   const last = i === drawn.length - 1, waiting = last && (!!next.eventFlow?.steps.length || !!next.auction);
-  out.push({ kind: 'event', size: 'card', eyebrow: `Event card · end of the ${side(prev.faction)}’s turn`, title: e.name, art: { kind: 'event', id }, region: e.boss?.region, hold: 7200,
+  out.push({ kind: 'event', size: 'card', eyebrow: `Event card · end of the ${side(prev.faction)}’s turn`, title: e.name, art: { kind: 'event', id }, region: e.boss?.region ?? e.effects.flatMap(f => f.op === 'war' ? [f.regions[0]] : [])[0], hold: 7200,
    // The card is announced by the line of its kind, a War by its drums.
    cue: { sfx: 'card', voice: eventVoice(p, id, [...prev.eventDiscard, ...drawn.slice(0, i)]), stinger: e.script === 'war' ? 'wardrums' : 'drum' },
    lines: [eventText(e), ...(e.bonus && !last ? ['Bonus card: another Event follows.'] : []), ...(last && moved && boss ? [`${boss.name} moves to ${regionName(next.overlord.region)}.`] : []), ...(waiting ? ['A decision follows.'] : [])] });
@@ -221,6 +223,31 @@ export function beats(p: ContentPack, prev: StageView | undefined, next: StageVi
   out.push({ kind: 'turn', size: 'banner', eyebrow: lap ? `Campaign lap ${next.lap}` : 'Faction turn', title: `${side(next.faction)} · turn ${next.turn}${next.variants?.overlordOnly ? '' : ' of 30'}`, lines: ['Each character takes two actions.'], art: { kind: 'faction', id: next.faction }, cue: { voice: lap ? 'lap' : `turn-${next.faction}` as Voice, stinger: 'horn' }, hold: 3200 });
  }
  return out.map((beat, i) => ({ ...beat, id: `${next.revision}:${i}` }));
+}
+
+/**
+ * The start of a campaign, as it is done at the table: the starting quests are turned up one after another, first the
+ * Horde's, then the Alliance's, and for each its creatures are set down in their regions. While a quest waits its turn its
+ * figures are not on the board (Map.tsx > veiled), so that the players see each of them arrive and know where it stands.
+ */
+export function setupBeats(p: ContentPack, s: Pick<StageView, 'quests' | 'enemies' | 'faction' | 'turn' | 'variants'>): Beat[] {
+ const out: Omit<Beat, 'id'>[] = [];
+ for (const f of ['horde', 'alliance'] as const) {
+  const quests = s.quests.map(id => p.quests.find(q => q.id === id)).filter((q): q is NonNullable<typeof q> => !!q && q.faction === f);
+  if (!quests.length) continue;
+  out.push({ kind: 'deploy', size: 'banner', eyebrow: 'Setup · starting quests', title: `The ${side(f)}’s quests are laid out`, lines: [`${plural(quests.length, 'quest')}: their creatures take their places on the map, one quest after another.`], art: { kind: 'faction', id: f }, cue: { stinger: 'horn' }, hold: 2600 });
+  for (const q of quests) {
+   // What actually stands on the board for it, region by region: the supply can run short of a figure.
+   const placed = new Map<string, { n: number; creature: string; color: string; region: string }>();
+   for (const e of s.enemies.filter(e => e.quest === q.id || e.id.startsWith(`${q.id}:`))) { const key = `${e.region}:${e.creature}:${e.color}`, row = placed.get(key); if (row) row.n++; else placed.set(key, { n: 1, creature: e.creature, color: e.color, region: e.region }); }
+   const rows = [...placed.values()].sort((a, b) => Number(a.color === 'blue') - Number(b.color === 'blue'));
+   out.push({ kind: 'deploy', size: 'banner', quest: q.id, eyebrow: `${side(f)} quest · ${q.tier} · level ${q.level}`, title: q.name, art: { kind: 'quest', id: q.id }, region: rows.find(r => r.color !== 'blue')?.region ?? rows[0]?.region, cue: { sfx: 'card' }, hold: 3600,
+    lines: [rows.map(r => `${r.n} × ${p.creatures.find(c => c.id === r.creature)?.name ?? r.creature} (${r.color}) in ${regionName(r.region)}`).join(' · ') || 'No figure could be placed.', `Reward: ${rewardText(q.reward)}.`] });
+  }
+ }
+ if (!out.length) return [];
+ out.push({ kind: 'turn', size: 'banner', eyebrow: 'Faction turn', title: `${side(s.faction)} · turn ${s.turn}${s.variants?.overlordOnly ? '' : ' of 30'}`, lines: ['Each character takes two actions.'], art: { kind: 'faction', id: s.faction }, cue: { voice: `turn-${s.faction}` as Voice, stinger: 'horn' }, hold: 3200 });
+ return out.map((beat, i) => ({ ...beat, id: `setup:${i}` }));
 }
 
 /**
