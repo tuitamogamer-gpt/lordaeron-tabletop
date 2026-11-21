@@ -7,9 +7,14 @@ say how each was made):
                                      (map, map-road, map-blight, map-council, battle, battle-charge, boss)
   sfx-<name>.mp4                     5 s clips of the same model, one sound each
   voice-<name>.mp3                   Fish text-to-speech lines (drama-3); scripts/voice-lines.json says what each one says and who speaks it
+  lib-<clip>.mp3                     clips of Fish Audio's free sound effect library (21 Nov 2026); LIBRARY below says which
+                                     stretch of which clip becomes which effect, and docs/SOUND-2026-11-21.md lists their ids
 This writes public/assets/audio/{themes,sfx,voice}/*.mp3: the music as loops of 13.6 s (the last 1.5 s crossfaded into the first)
 with 0.2 s of the same music before and after, so that the game can loop inside continuous sound,
 each effect cut to its sound, the voices without leading or trailing silence, all at an even loudness.
+
+Only what has its raw file is made again: a machine without the older downloads leaves their prepared files as they are, so
+new sounds can be added without the clips of the earlier passes.
 
 It ends by decoding every file it wrote and fails if one of them does not sound through its length. From 10 to 12 Nov 2026 the
 voice lines went through a fade that silenced everything after their first hundredth of a second, and nothing noticed: the
@@ -31,11 +36,47 @@ EFFECTS = {'dice': (0.12, 2.3), 'sword': (1.45, 3.6), 'card': (2.45, 3.6), 'coin
 #   hurt   a mace on chain mail: the first of the clip's two blows
 #   roar   a beast's roar, shortened from 2.8 s
 #   slain  the beast's groan and the fall of its body, without the pause between them, a little faster
-#   spell  the second and brightest of the three surges of a bolt of arcane fire
+# (The spell of that day, one surge of a bolt of arcane fire, was replaced on 21 Nov 2026 by three recordings: LIBRARY below.)
 COMBAT = {
     'hit': ([(0.22, 1.05)], 0.3, 1.0), 'block': ([(0.54, 1.25)], 0.3, 1.0), 'hurt': ([(1.48, 2.42)], 0.3, 1.0),
-    'roar': ([(0.62, 2.45)], 0.55, 1.0), 'slain': ([(1.24, 2.36), (2.76, 3.95)], 0.4, 1.15), 'spell': ([(2.72, 3.50)], 0.25, 1.0),
+    'roar': ([(0.62, 2.45)], 0.55, 1.0), 'slain': ([(1.24, 2.36), (2.76, 3.95)], 0.4, 1.15),
 }
+# Effects cut from Fish Audio's free sound effect library (21 Nov 2026): the effect, its clip, the stretch used (seconds), how long
+# its end fades, and its loudness target. A name ending in -2 or -3 is another take of the same effect: the game plays the takes
+# of an effect in turn (audio.tsx > SFX_TAKES), so three blows in a row are three recordings and not one played three times.
+#   spell    "Mystical magic shield activation": three of its six surges replace the one deep recording of 12 Nov
+#   mend     "Magical activation, sparkling and bright": the first second of its bright burst, for healing
+#   slice    "Quick sword slice through the air": a fighter's power
+#   clash    "metal sword clashing sounds": three of its five clashes, for blades between characters
+#   hit      "Violent sword slashing into meat" and one blow of "Several quick and swift punches", beside the recording of 12 Nov
+#   hurt, block   two blows of "Sword clashing on metallic armor", beside the recordings of 12 Nov
+#   bell     "Church bell ringing": one stroke and its ring, for the town
+#   chime    "Elegant high-pitched bell strike": a finished quest's note
+#   steps    "Dry ground footsteps, Rural walk": four steps, for a journey on foot
+#   camp     "Fire crackling sounds, steady and warm": a moment by the fire, for a Rest
+#   omen     "Sharp thunderclaps with rumbling echoes": the first clap, when the Overlord moves
+#   fanfare  "Majestic orchestral brass fanfare": the final battle and a War won
+#   cheer    "Loud crowd cheering and applause": under the line of the campaign's winner
+#   click    "Simple button click": the table's buttons
+LIBRARY = {
+    'spell': ('magic-shield', (10.78, 11.96), 0.45, -19), 'spell-2': ('magic-shield', (0.62, 1.80), 0.45, -19), 'spell-3': ('magic-shield', (7.62, 8.80), 0.45, -19),
+    'mend': ('magic-sparkle', (2.12, 3.30), 0.6, -20),
+    'slice': ('sword-slice', (0.12, 0.66), 0.2, -18),
+    'clash': ('sword-clash', (0.08, 0.76), 0.25, -17), 'clash-2': ('sword-clash', (1.62, 2.10), 0.2, -17), 'clash-3': ('sword-clash', (2.12, 2.74), 0.25, -17),
+    'hit-2': ('sword-flesh', (0.02, 0.82), 0.3, -17), 'hit-3': ('punch', (2.38, 2.74), 0.14, -17),
+    'hurt-2': ('sword-armor', (21.02, 21.58), 0.22, -17), 'block-2': ('sword-armor', (26.60, 27.16), 0.22, -17),
+    'bell': ('bell-church', (0.86, 2.02), 0.5, -18),
+    'chime': ('bell-strike', (0.02, 0.70), 0.3, -19),
+    'steps': ('steps-dry', (7.46, 8.96), 0.2, -19),
+    'camp': ('fire', (2.0, 3.9), 0.7, -21),
+    'omen': ('thunder', (0.60, 2.70), 1.0, -18),
+    'fanfare': ('fanfare', (0.06, 3.30), 1.1, -17),
+    'cheer': ('cheer', (0.55, 4.75), 1.6, -20),
+    'click': ('click-simple', (0.02, 0.16), 0.08, -24),
+}
+# The map's ambience: countryside wind and forest birdsong from the same library, mixed into one bed that loops like the music.
+AMBIENCE = {'wind': ('wind', 3.0, 0.0), 'birds': ('birds', 1.0, 9.0)}  # clip, where it starts (s), gain over the wind (dB)
+
 # Music: seconds used of each clip, the crossfade of its end into its start, the period that results, and the extra kept at each end.
 LOOP, FADE = 15.1, 1.5
 PERIOD, LEAD = LOOP - FADE, 0.2
@@ -107,12 +148,16 @@ def main():
         ffmpeg('-i', src, '-filter_complex', graph, '-map', '[out]', '-ar', str(rate), '-ac', '2', '-c:a', 'libmp3lame', '-b:a', '112k', os.path.join(OUT, 'themes', f'{name}.mp3'))
     for name, (start, end) in EFFECTS.items():
         length = end - start
+        if not os.path.exists(os.path.join(RAW, f'sfx-{name}.mp4')):
+            continue
         ffmpeg('-i', os.path.join(RAW, f'sfx-{name}.mp4'), '-vn', '-af',
                f'atrim={start}:{end},asetpts=N/SR/TB,afade=t=in:d=0.02,afade=t=out:st={max(0, length - 0.4):.2f}:d=0.4,loudnorm=I=-17:TP=-1.5',
                '-ar', '32000', '-ac', '1', '-c:a', 'libmp3lame', '-b:a', '80k', os.path.join(OUT, 'sfx', f'{name}.mp3'))
     with tempfile.TemporaryDirectory() as tmp:
         for name, (stretches, fade, speed) in COMBAT.items():
             src, cut = os.path.join(RAW, f'sfx-{name}.mp4'), os.path.join(tmp, f'{name}.wav')
+            if not os.path.exists(src):
+                continue
             # 1. The stretches, joined with a short crossfade where there are two.
             parts = ''.join(f'[0:a]aresample=32000,atrim={a}:{b},asetpts=N/SR/TB[p{i}];' for i, (a, b) in enumerate(stretches))
             join = '[p0]anull[cut]' if len(stretches) == 1 else '[p0][p1]acrossfade=d=0.05:c1=tri:c2=tri[cut]'
@@ -122,6 +167,33 @@ def main():
             chain = (f'highpass=f=90,asetrate={round(32000 * speed)},aresample=32000,'
                      f'afade=t=in:d=0.012,afade=t=out:st={max(0, length - fade):.3f}:d={fade}')
             ffmpeg('-i', cut, '-af', levelled(cut, chain, -17), '-ar', '32000', '-ac', '1', '-c:a', 'libmp3lame', '-b:a', '80k', os.path.join(OUT, 'sfx', f'{name}.mp3'))
+    with tempfile.TemporaryDirectory() as tmp:
+        for name, (clip, (start, end), fade, target) in LIBRARY.items():
+            src, cut = os.path.join(RAW, f'lib-{clip}.mp3'), os.path.join(tmp, f'{name}.wav')
+            if not os.path.exists(src):
+                continue
+            # The stretch first, then one gain for the whole of it: a short sound has nothing for a riding normaliser to ride on.
+            ffmpeg('-i', src, '-vn', '-af', f'aresample=32000,atrim={start}:{end},asetpts=N/SR/TB', '-ar', '32000', '-ac', '1', cut)
+            length = end - start
+            chain = f'highpass=f=70,afade=t=in:d=0.008,afade=t=out:st={max(0, length - fade):.3f}:d={fade}'
+            ffmpeg('-i', cut, '-af', levelled(cut, chain, target), '-ar', '32000', '-ac', '1', '-c:a', 'libmp3lame', '-b:a', '80k', os.path.join(OUT, 'sfx', f'{name}.mp3'))
+        if all(os.path.exists(os.path.join(RAW, f'lib-{clip}.mp3')) for clip, _, _ in AMBIENCE.values()):
+            # One bed of wind and birdsong, made into a period that repeats without a seam exactly as the music is (see above),
+            # at a level far under the music: it is meant to be noticed when it stops, not while it plays.
+            rate, loop_s, fade_s = 32000, 24.0, 2.0
+            fade, body, loop, period, lead = (round(v * rate) for v in (fade_s, loop_s - fade_s, loop_s, loop_s - fade_s, LEAD))
+            ins, mix = [], ''
+            for i, (clip, begin, gain) in enumerate(AMBIENCE.values()):
+                ins += ['-i', os.path.join(RAW, f'lib-{clip}.mp3')]
+                mix += f'[{i}:a]aresample={rate},atrim=start={begin}:duration={loop_s + 0.5},asetpts=N/SR/TB,highpass=f=120,volume={gain}dB[a{i}];'
+            graph = (mix + f'[a0][a1]amix=inputs=2:normalize=0,asplit=3[h][b][t];'
+                     f'[h]atrim=end_sample={fade},asetpts=N/SR/TB,afade=t=in:ns={fade}:curve=qsin[head];'
+                     f'[b]atrim=start_sample={fade}:end_sample={body},asetpts=N/SR/TB[body];'
+                     f'[t]atrim=start_sample={body}:end_sample={loop},asetpts=N/SR/TB,afade=t=out:ns={fade}:curve=qsin[tail];'
+                     f'[tail][head]amix=inputs=2:normalize=0[join];[body][join]concat=n=2:v=0:a=1,asplit=3[p1][p2][p3];'
+                     f'[p1][p2][p3]concat=n=3:v=0:a=1,loudnorm=I=-30:TP=-6:LRA=7,aresample={rate},'
+                     f'atrim=start_sample={period - lead}:end_sample={2 * period + lead},asetpts=N/SR/TB[out]')
+            ffmpeg(*ins, '-filter_complex', graph, '-map', '[out]', '-ar', str(rate), '-ac', '2', '-c:a', 'libmp3lame', '-b:a', '96k', os.path.join(OUT, 'themes', 'ambience-map.mp3'))
     for src in sorted(glob.glob(os.path.join(RAW, 'voice-*.mp3'))):
         name = os.path.basename(src)[len('voice-'):-len('.mp3')]
         trim = 'silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.05'

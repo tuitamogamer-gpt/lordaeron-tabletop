@@ -58,8 +58,16 @@ Igriva kampanja koristi novu ilustraciju mape i portrete, ne referentnu fotograf
 
 Granice svih 67 polja ručno su precrtane u `src/data/board-geometry.ts`. Dvije fotografije originala i pravilnik služe provjeri; izvori i tumačenje su u [MAP.md](MAP.md). Ranija generirana ilustracija ostaje samo blaga tekstura unutar poligona. `screenshots/02-map-regions.png` je render stvarne SVG komponente, napravljen komandom `npm run render:map`; nije snimak cijelog preglednika.
 
-## Zvuk i muzika (10. do 12. 11. 2026.)
+## Zvuk i muzika (10. do 21. 11. 2026.)
 
-`public/assets/audio/` sadrži 98 MP3 datoteka (3,23 MB) napravljenih vlasnikovim Fish Audio računom: sedam muzičkih tema (`themes/`) i dvanaest efekata (`sfx/`) su zvučni zapis Fish video modela heygen-video-1, a 79 glasovnih linija (`voice/`) je Fish TTS (drama-3) sa pet zvaničnih Fish glasova: Adrian, Ethan, Margaret, Eoin i Thaddeus. Nijedan glas nije kloniran, a linije su nove, ne citati iz igara; `scripts/voice-lines.json` popisuje svaku liniju, njen glas i uputu. Kratki zvukovi stola i borbe (koraci, zvono, žetoni, rog i drugi, ukupno 19) nisu datoteke: pravi ih preglednik u `src/campaign/stingers.ts`.
+`public/assets/audio/` sadrži 148 MP3 datoteka (4,32 MB) napravljenih vlasnikovim Fish Audio računom:
 
-Promptovi, troškovi i obrada: [EQUIPMENT-AND-SOUND-2026-11-10.md](EQUIPMENT-AND-SOUND-2026-11-10.md) za prve dvije teme, prvih šest efekata i prvih 16 linija, [MUSIC-THEMES-2026-11-11.md](MUSIC-THEMES-2026-11-11.md) za pet novih tema i obradu petlji, [SOUND-2026-11-12.md](SOUND-2026-11-12.md) za 63 nove linije, šest efekata borbe i ispravku zbog koje se prvih 16 linija do tada nije čulo. Sirovi snimci ostaju u `.local-data/audio/raw`, a `python3 scripts/prepare-audio.py` pravi objavljene datoteke i provjerava da svaka zvuči cijelom dužinom.
+- **Muzika** (`themes/`, 7 tema): zvučni zapis Fish video modela heygen-video-1.
+- **Efekti** (`sfx/`, 31): jedanaest je zvučni zapis istog modela, a dvadeset je isječeno iz besplatne Fish Audio biblioteke efekata (21. 11. 2026.). Iz biblioteke je i podloga mape, `themes/ambience-map.mp3`.
+- **Glasovi** (`voice/`, 109 linija): Fish TTS (drama-3) sa pet zvaničnih Fish glasova: Adrian, Ethan, Margaret, Eoin i Thaddeus. Nijedan glas nije kloniran, a linije su nove, ne citati iz igara; `scripts/voice-lines.json` popisuje svaku liniju, njen glas i uputu.
+
+Dvanaest kratkih zvukova stola i borbe (rog, bubnjevi, krila, žetoni i drugi) nisu datoteke: pravi ih preglednik u `src/campaign/stingers.ts`.
+
+Uslovi korištenja biblioteke efekata nisu pročitani; alat je opisuje samo kao besplatne gotove isječke. Njihovi id-jevi su u [SOUND-2026-11-21.md](SOUND-2026-11-21.md), pa se svaki može ponovo naći ili zamijeniti.
+
+Promptovi, troškovi i obrada: [EQUIPMENT-AND-SOUND-2026-11-10.md](EQUIPMENT-AND-SOUND-2026-11-10.md) za prve dvije teme, prvih šest efekata i prvih 16 linija, [MUSIC-THEMES-2026-11-11.md](MUSIC-THEMES-2026-11-11.md) za pet novih tema i obradu petlji, [SOUND-2026-11-12.md](SOUND-2026-11-12.md) za 63 linije, šest efekata borbe i ispravku zbog koje se prvih 16 linija do tada nije čulo, [SOUND-2026-11-21.md](SOUND-2026-11-21.md) za efekte iz biblioteke, podlogu mape i 30 linija. Sirovi snimci ostaju u `.local-data/audio/raw`, a `python3 scripts/prepare-audio.py` pravi objavljene datoteke i provjerava da svaka zvuči cijelom dužinom.

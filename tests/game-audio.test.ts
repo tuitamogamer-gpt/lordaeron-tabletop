@@ -67,7 +67,7 @@ describe('the sound of the game state', () => {
 
  it('ends with the winner’s fanfare, or with the draw line when Nefarian outlasts both', () => {
   const a = start();
-  expect(pick(cues(p, a, step(a, n => { n.winner = 'alliance'; n.phase = 'finished'; })))).toEqual({ sfx: 'victory', voice: 'victory-alliance' });
+  expect(pick(cues(p, a, step(a, n => { n.winner = 'alliance'; n.phase = 'finished'; })))).toEqual({ sfx: ['victory', 'cheer'], voice: 'victory-alliance' });
   expect(pick(cues(p, a, step(a, n => { n.winner = 'draw'; n.phase = 'finished'; })))).toEqual({ sfx: 'victory', voice: 'draw' });
  });
 });
@@ -165,13 +165,13 @@ describe('the sound of a combat', () => {
  it('is the enemy first and the shields after when the enemy strikes', () => {
   expect(heard(exchange('defend'))).toEqual({ anticipation: [{ sfx: 'roar' }], impact: [{ sfx: 'block' }] });
   // Kel'Thuzad casts rather than roars, and another character's blade rings.
-  expect(heard(exchange('defend', WARRIOR, { boss: 'kelthuzad' })).anticipation).toEqual([{ sfx: 'spell', stinger: 'spark' }]);
+  expect(heard(exchange('defend', WARRIOR, { boss: 'kelthuzad' })).anticipation).toEqual([{ sfx: 'spell' }]);
   expect(heard(exchange('defend', WARRIOR, { boss: 'nefarian' })).anticipation).toEqual([{ sfx: 'roar' }]);
-  expect(heard(exchange('defend', WARRIOR, { pvp: true })).anticipation).toEqual([{ sfx: 'sword' }]);
+  expect(heard(exchange('defend', WARRIOR, { pvp: true })).anticipation).toEqual([{ sfx: 'clash' }]);
  });
  it('looses ranged damage and then lands it: a bowstring for a fighter, a spell for a caster', () => {
   expect(heard(exchange('ranged', HUNTER))).toEqual({ action: [{ stinger: 'volley' }], impact: [{ sfx: 'hit' }] });
-  expect(heard(exchange('ranged', MAGE))).toEqual({ action: [{ sfx: 'spell', stinger: 'spark' }], impact: [{ sfx: 'hit' }] });
+  expect(heard(exchange('ranged', MAGE))).toEqual({ action: [{ sfx: 'spell' }], impact: [{ sfx: 'hit' }] });
  });
  it('lets an enemy that falls be heard falling, a moment after the blow', () => {
   expect(heard(exchange('melee', WARRIOR, { kills: 1 }))).toEqual({ impact: [{ sfx: 'hit' }, { sfx: 'slain', delay: 0.28 }] });
@@ -179,10 +179,10 @@ describe('the sound of a combat', () => {
   expect(heard(exchange('melee'))).toEqual({ impact: [{ sfx: 'hit' }] });
  });
  it('sounds a power as it is played, a wound, a healing and hits put aside', () => {
-  expect(heard(exchange('power', WARRIOR))).toEqual({ anticipation: [{ stinger: 'power' }] });
-  expect(heard(exchange('power', MAGE))).toEqual({ anticipation: [{ sfx: 'spell', stinger: 'spark' }] });
+  expect(heard(exchange('power', WARRIOR))).toEqual({ anticipation: [{ sfx: 'slice' }] });
+  expect(heard(exchange('power', MAGE))).toEqual({ anticipation: [{ sfx: 'spell' }] });
   expect(heard(exchange('hurt'))).toEqual({ impact: [{ sfx: 'hurt' }] });
-  expect(heard(exchange('heal'))).toEqual({ impact: [{ stinger: 'heal' }] });
+  expect(heard(exchange('heal'))).toEqual({ impact: [{ sfx: 'mend' }] });
   expect(heard(exchange('bank'))).toEqual({ impact: [{ stinger: 'tokens' }] });
   expect(heard(exchange('prepare'))).toEqual({});
  });
@@ -212,17 +212,17 @@ describe('the sound of a character’s own action', () => {
   return actionCue(p, s, apply(p, s, c), c);
  };
  it('is steps on the road and wings on a flight path', () => {
-  expect(play(() => {}, c => c.type === 'travel' && c.hero === WARRIOR && c.path.length === 1)).toEqual({ stinger: 'steps' });
+  expect(play(() => {}, c => c.type === 'travel' && c.hero === WARRIOR && c.path.length === 1)).toEqual({ sfx: 'steps' });
   // Brill and Caer Darrow share no border: the Horde flies between them.
   expect(play(() => {}, c => c.type === 'travel' && c.hero === WARRIOR && c.path.at(-1) === 'caer')).toEqual({ stinger: 'wings' });
   expect(play(() => {}, c => c.type === 'travel' && c.hero === WARRIOR && !c.path.length)).toBeUndefined();
  });
  it('is rising notes for a rest, a page and the trainer for training, the bell and the merchant in town', () => {
-  expect(play(s => { s.heroes.find(h => h.id === WARRIOR)!.health = 1; }, c => c.type === 'rest' && c.hero === WARRIOR)).toEqual({ stinger: 'heal' });
+  expect(play(s => { s.heroes.find(h => h.id === WARRIOR)!.health = 1; }, c => c.type === 'rest' && c.hero === WARRIOR)).toEqual({ sfx: 'camp' });
   expect(play(() => {}, c => c.type === 'train' && c.hero === WARRIOR && c.cards.length === 1)).toEqual({ stinger: 'page', voice: 'train' });
-  expect(play(() => {}, c => c.type === 'town' && c.hero === WARRIOR && c.operations.length > 0)).toEqual({ stinger: 'bell', sfx: 'coins', voice: 'town' });
+  expect(play(() => {}, c => c.type === 'town' && c.hero === WARRIOR && c.operations.length > 0)).toEqual({ sfx: ['bell', 'coins'], voice: 'town' });
   // A visit that buys and sells nothing has no word from the merchant.
-  expect(play(s => { s.heroes.find(h => h.id === WARRIOR)!.health = 1; }, c => c.type === 'town' && c.hero === WARRIOR && !c.operations.length)).toEqual({ stinger: 'bell' });
+  expect(play(s => { s.heroes.find(h => h.id === WARRIOR)!.health = 1; }, c => c.type === 'town' && c.hero === WARRIOR && !c.operations.length)).toEqual({ sfx: 'bell' });
  });
  it('is a buckle when equipment changes and nothing when it does not', () => {
   const s = createGame(p, DEFAULT_SETUP), h = s.heroes.find(h => h.id === WARRIOR)!, same: Command = { type: 'manage', hero: WARRIOR, slots: h.slots, discard: [] };

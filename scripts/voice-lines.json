@@ -80,6 +80,132 @@
    "made": "2026-11-12"
   },
   {
+   "file": "boss-slain",
+   "voice": "Adrian",
+   "direction": "triumphant",
+   "text": "The terror is slain!",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "boss-slain-2",
+   "voice": "Adrian",
+   "direction": "solemn, relieved",
+   "text": "The beast will trouble the land no more.",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "class-druid-alliance",
+   "voice": "Ethan",
+   "direction": "rousing battle herald",
+   "text": "The druid wakes the wild!",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "class-druid-horde",
+   "voice": "Adrian",
+   "direction": "rousing battle herald",
+   "text": "The druid wakes the wild!",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "class-hunter-alliance",
+   "voice": "Ethan",
+   "direction": "rousing battle herald",
+   "text": "The hunter takes aim!",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "class-hunter-horde",
+   "voice": "Adrian",
+   "direction": "rousing battle herald",
+   "text": "The hunter takes aim!",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "class-mage-alliance",
+   "voice": "Ethan",
+   "direction": "rousing battle herald",
+   "text": "The mage calls the storm!",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "class-mage-horde",
+   "voice": "Adrian",
+   "direction": "rousing battle herald",
+   "text": "The mage calls the storm!",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "class-paladin-alliance",
+   "voice": "Ethan",
+   "direction": "rousing battle herald",
+   "text": "The paladin raises the hammer!",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "class-priest-alliance",
+   "voice": "Ethan",
+   "direction": "rousing battle herald",
+   "text": "The priest speaks the word!",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "class-priest-horde",
+   "voice": "Adrian",
+   "direction": "rousing battle herald",
+   "text": "The priest speaks the word!",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "class-rogue-alliance",
+   "voice": "Ethan",
+   "direction": "rousing battle herald",
+   "text": "The rogue strikes from the shadows!",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "class-rogue-horde",
+   "voice": "Adrian",
+   "direction": "rousing battle herald",
+   "text": "The rogue strikes from the shadows!",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "class-shaman-horde",
+   "voice": "Adrian",
+   "direction": "rousing battle herald",
+   "text": "The shaman calls the spirits!",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "class-warlock-alliance",
+   "voice": "Ethan",
+   "direction": "rousing battle herald",
+   "text": "The warlock binds the dark!",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "class-warlock-horde",
+   "voice": "Adrian",
+   "direction": "rousing battle herald",
+   "text": "The warlock binds the dark!",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "class-warrior-alliance",
+   "voice": "Ethan",
+   "direction": "rousing battle herald",
+   "text": "The warrior charges!",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "class-warrior-horde",
+   "voice": "Adrian",
+   "direction": "rousing battle herald",
+   "text": "The warrior charges!",
+   "made": "2026-11-21"
+  },
+  {
    "file": "draw",
    "voice": "Adrian",
    "direction": "grim, low",
@@ -241,6 +367,27 @@
    "made": "2026-11-12"
   },
   {
+   "file": "final-battle",
+   "voice": "Adrian",
+   "direction": "commanding battle cry",
+   "text": "To arms! The last battle begins!",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "final-battle-2",
+   "voice": "Adrian",
+   "direction": "commanding, grim",
+   "text": "Now the war is decided!",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "final-prep",
+   "voice": "Adrian",
+   "direction": "grave, measured",
+   "text": "Thirty turns have passed. One battle remains.",
+   "made": "2026-11-21"
+  },
+  {
    "file": "horde",
    "voice": "Adrian",
    "direction": "roaring war cry, rough and gravelly",
@@ -260,6 +407,20 @@
    "direction": "roaring war cry, rough and gravelly",
    "text": "Break their line!",
    "made": "2026-11-12"
+  },
+  {
+   "file": "invite",
+   "voice": "Adrian",
+   "direction": "urgent",
+   "text": "An ally calls for your blade.",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "invite-2",
+   "voice": "Adrian",
+   "direction": "urgent, low",
+   "text": "Your ally asks for aid.",
+   "made": "2026-11-21"
   },
   {
    "file": "kazzak-decoy",
@@ -374,6 +535,20 @@
    "made": "2026-11-10"
   },
   {
+   "file": "pvp",
+   "voice": "Adrian",
+   "direction": "announcing, tense",
+   "text": "Horde and Alliance meet in battle!",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "pvp-2",
+   "voice": "Adrian",
+   "direction": "grim",
+   "text": "Blades are drawn between the factions.",
+   "made": "2026-11-21"
+  },
+  {
    "file": "quest",
    "voice": "Adrian",
    "direction": "proud",
@@ -393,6 +568,27 @@
    "direction": "proud",
    "text": "Well fought. The quest is complete.",
    "made": "2026-11-12"
+  },
+  {
+   "file": "setup",
+   "voice": "Adrian",
+   "direction": "grand, announcing",
+   "text": "The board is set. Let the war begin.",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "spoils",
+   "voice": "Adrian",
+   "direction": "pleased, warm",
+   "text": "A prize well earned.",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "spoils-2",
+   "voice": "Adrian",
+   "direction": "pleased",
+   "text": "The spoils are shared.",
+   "made": "2026-11-21"
   },
   {
    "file": "taunt-kazzak",
@@ -477,6 +673,20 @@
    "direction": "warm, dry humour",
    "text": "Come back when your purse is heavier.",
    "made": "2026-11-12"
+  },
+  {
+   "file": "trade",
+   "voice": "Adrian",
+   "direction": "calm, approving",
+   "text": "A fair exchange.",
+   "made": "2026-11-21"
+  },
+  {
+   "file": "trade-2",
+   "voice": "Adrian",
+   "direction": "calm, warm",
+   "text": "Shared between allies.",
+   "made": "2026-11-21"
   },
   {
    "file": "train",

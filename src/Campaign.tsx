@@ -182,6 +182,7 @@ export default function Campaign(){
  };
  const botStep=()=>{if(state.phase==='combat'&&(diceRolling||presentation.busy))return;void planMove(state.phase==='combat'?availableBotMoves:tableMoves(game.state,allLegal),()=>true,false,true);};
  useEffect(()=>{setInvitation(v=>v&&v.source!==game.state?undefined:v);},[game.state]);
+ useEffect(()=>{if(invitation)audio.cue({voice:'invite'});},[invitation?.command]);
  const joinInvitation=()=>{const v=invitation;setInvitation(undefined);if(v&&v.source===current.current.state)send(v.command);};
  const declineInvitation=()=>{
   const v=invitation;setInvitation(undefined);if(!v)return;

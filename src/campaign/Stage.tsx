@@ -36,7 +36,7 @@ export default function Stage({ queue, pace, next, clear }: { queue: Beat[]; pac
   setHeld(false);
   const { sfx, voice, stinger } = beat.cue;
   if (stinger) audio.stinger(stinger);
-  if (sfx) void audio.play('sfx', sfx);
+  for (const name of sfx ? [sfx].flat() : []) void audio.play('sfx', name);
   if (voice) void audio.play('voice', voice);
  }, [beat?.id]);
  // A card is kept up only when the player asks for it with its Hold button; its time starts again when he lets it go.

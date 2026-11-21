@@ -93,7 +93,9 @@ describe('the combat’s effects', () => {
  it('are set a little under the rest and tuned from one blow to the next', async () => {
   const { d, ctx } = director();
   for (let i = 0; i < 4; i++) { await d.play('sfx', 'hit'); await pass(1); }
-  expect(ctx.sources.map(s => s.playbackRate.value)).toEqual([1, 0.93, 1.07, 1]);
+  // The three takes of a blow in turn; the second time round, each a little lower.
+  expect(ctx.sources.map(s => s.file)).toEqual(['sfx/hit', 'sfx/hit-2', 'sfx/hit-3', 'sfx/hit']);
+  expect(ctx.sources.map(s => s.playbackRate.value)).toEqual([1, 1, 1, 0.93]);
   expect(ctx.sources.map(s => (s.out as FakeGain).gain.value)).toEqual([0.9, 0.9, 0.9, 0.9]);
   await d.play('sfx', 'roar'); await d.play('sfx', 'dice');
   const [roar, dice] = ctx.sources.slice(-2);

@@ -10,8 +10,7 @@ import { foeName } from './hints';
 import { thinkMs, walkMs } from './table-time';
 
 /** Short sounds made in the browser for the steps that have no recording: see audio.tsx › stinger. */
-export type Stinger = 'steps' | 'horn' | 'drum' | 'chime' | 'page' | 'omen' | 'thud'
- | 'heal' | 'tokens' | 'volley' | 'power' | 'spark' | 'triumph' | 'defeat' | 'wings' | 'bell' | 'portal' | 'wardrums' | 'equip';
+export type Stinger = 'horn' | 'drum' | 'page' | 'thud' | 'tokens' | 'volley' | 'triumph' | 'defeat' | 'wings' | 'portal' | 'wardrums' | 'equip';
 export type BeatArt = { kind: 'event' | 'quest' | 'hero' | 'overlord' | 'faction' | 'card'; id: string };
 /**
  * One thing that happened at the table, shown by itself before the next one: an Event card turned over, a character's
@@ -60,7 +59,7 @@ const cardKind = (c: Card) => [c.trait, c.kind === 'item' ? ITEM_KINDS[c.type] ?
 /** Whether a journey used a flight path: one of its legs joins two regions that share no border. */
 const flew = (p: ContentPack, from: string, path: string[]) => [from, ...path].some((id, i, all) => i > 0 && !p.regions.find(r => r.id === all[i - 1])?.neighbors.includes(id));
 /**
- * What a character's own action sounds like, whoever took it: steps or wings for a journey, rising notes for a rest, a page and
+ * What a character's own action sounds like, whoever took it: steps or wings for a journey, a moment by the fire for a rest, a page and
  * the trainer's word for training, the town's bell (with coins and the merchant's word when something was bought or sold),
  * a portal, a buckle for changed equipment. A bot's action is heard with its announcement, a player's own at once.
  */
@@ -69,13 +68,15 @@ export function actionCue(p: ContentPack, prev: StageView, next: StageView, c: C
  const before = prev.heroes.find(h => h.id === c.hero), after = next.heroes.find(h => h.id === c.hero);
  if (!before || !after) return;
  switch (c.type) {
-  case 'travel': return c.path.length ? { stinger: flew(p, before.location, c.path) ? 'wings' : 'steps' } : undefined;
-  case 'rest': return { stinger: 'heal' };
+  case 'travel': return c.path.length ? flew(p, before.location, c.path) ? { stinger: 'wings' } : { sfx: 'steps' } : undefined;
+  case 'rest': return { sfx: 'camp' };
   case 'train': return { stinger: 'page', voice: 'train' };
-  case 'town': return c.operations.length ? { stinger: 'bell', sfx: 'coins', voice: 'town' } : { stinger: 'bell' };
-  case 'power-action': return { stinger: 'chime' };
+  case 'town': return c.operations.length ? { sfx: ['bell', 'coins'], voice: 'town' } : { sfx: 'bell' };
+  case 'power-action': return { sfx: 'chime' };
   case 'portal': case 'summon': return { stinger: 'portal' };
-  case 'talent': case 'reward': return { stinger: 'page' };
+  case 'talent': return { stinger: 'page' };
+  case 'reward': return { stinger: 'page', voice: 'spoils' };
+  case 'trade': return c.items.length || c.receiveItems.length || c.gold || c.receiveGold ? { sfx: 'coins', voice: 'trade' } : undefined;
   case 'manage': return JSON.stringify(before.slots) !== JSON.stringify(after.slots) ? { stinger: 'equip' } : undefined;
  }
 }
@@ -140,7 +141,7 @@ function action(p: ContentPack, prev: StageView, next: StageView, c: Command): O
   case 'trade': {
    const moved = (ids: string[], gold: number) => [...ids.map(id => card(p, id).name), ...(gold ? [`${gold} gold`] : [])], given = moved(c.items, c.gold), taken = moved(c.receiveItems, c.receiveGold);
    if (!given.length && !taken.length) return;
-   return { kind: 'loot', ...shown(c.items[0] ?? c.receiveItems[0], art), eyebrow: `${side(faction(p, c.hero))} · Trade`, title: `${name} trades with ${first(p, c.to)}`, region: after.location, cue: { sfx: 'coins' }, hold: 3800,
+   return { kind: 'loot', ...shown(c.items[0] ?? c.receiveItems[0], art), eyebrow: `${side(faction(p, c.hero))} · Trade`, title: `${name} trades with ${first(p, c.to)}`, region: after.location, cue, hold: 3800,
     lines: [given.length ? `Gives ${listed(given)}.` : '', taken.length ? `Receives ${listed(taken)}.` : ''].filter(Boolean) };
   }
   case 'loot': return { kind: 'loot', size: 'card', eyebrow: `${side(faction(p, c.hero))} · Spoils of the battle`, title: `${name} takes ${card(p, c.card).name} from ${first(p, c.from)}`, art: { kind: 'card', id: c.card }, cue: { stinger: 'equip' }, hold: 4600,
@@ -188,7 +189,7 @@ export function beats(p: ContentPack, prev: StageView | undefined, next: StageVi
  }
  for (const id of next.completed.filter(id => !prev.completed.includes(id))) {
   const q = p.quests.find(q => q.id === id); if (!q) continue;
-  out.push({ kind: 'quest-done', size: 'card', eyebrow: `${side(q.faction)} quest complete`, title: q.name, lines: [`Reward: ${rewardText(q.reward)}.`], art: { kind: 'quest', id }, cue: { voice: 'quest', stinger: 'chime' }, hold: 4200 });
+  out.push({ kind: 'quest-done', size: 'card', eyebrow: `${side(q.faction)} quest complete`, title: q.name, lines: [`Reward: ${rewardText(q.reward)}.`], art: { kind: 'quest', id }, cue: { voice: 'quest', sfx: 'chime' }, hold: 4200 });
  }
  for (const h of next.heroes) {
   const old = was(h.id); if (!old || h.level <= old.level) continue;
@@ -206,10 +207,10 @@ export function beats(p: ContentPack, prev: StageView | undefined, next: StageVi
    cue: { sfx: 'card', voice: eventVoice(p, id, [...prev.eventDiscard, ...drawn.slice(0, i)]), stinger: e.script === 'war' ? 'wardrums' : 'drum' },
    lines: [eventText(e), ...(e.bonus && !last ? ['Bonus card: another Event follows.'] : []), ...(last && moved && boss ? [`${boss.name} moves to ${regionName(next.overlord.region)}.`] : []), ...(waiting ? ['A decision follows.'] : [])] });
  });
- if (moved && boss && !drawn.length) out.push({ kind: 'overlord', size: 'banner', eyebrow: 'The Overlord', title: `${boss.name} moves to ${regionName(next.overlord.region)}`, lines: [], art: { kind: 'overlord', id: boss.id }, region: next.overlord.region, cue: { stinger: 'omen', voice: taunt(p, boss.id) }, hold: 3400 });
+ if (moved && boss && !drawn.length) out.push({ kind: 'overlord', size: 'banner', eyebrow: 'The Overlord', title: `${boss.name} moves to ${regionName(next.overlord.region)}`, lines: [], art: { kind: 'overlord', id: boss.id }, region: next.overlord.region, cue: { sfx: 'omen', voice: taunt(p, boss.id) }, hold: 3400 });
  for (const text of notes.filter(text => / wins (The|the) .*War/.test(text) || text.includes('wins the War'))) {
   const f = warWinner(text) ?? (text.startsWith('The Horde') ? 'horde' : 'alliance'), war = prev.wars.find(w => !next.wars.some(v => v.id === w.id));
-  out.push({ kind: 'war', size: 'card', eyebrow: `${side(f)} wins a War`, title: p.events.find(e => e.id === war?.id)?.name ?? 'The War', lines: [text.replace(/^.*?, holding /, 'Holding ')], art: war ? { kind: 'event', id: war.id } : { kind: 'faction', id: f }, region: war?.regions[0], cue: { stinger: 'horn', sfx: 'coins', voice: `war-won-${f}` }, hold: 5400 });
+  out.push({ kind: 'war', size: 'card', eyebrow: `${side(f)} wins a War`, title: p.events.find(e => e.id === war?.id)?.name ?? 'The War', lines: [text.replace(/^.*?, holding /, 'Holding ')], art: war ? { kind: 'event', id: war.id } : { kind: 'faction', id: f }, region: war?.regions[0], cue: { sfx: ['fanfare', 'coins'], voice: `war-won-${f}` }, hold: 5400 });
  }
 
  // The auction's end: the bids were sealed, so who won, and for how much, is news to everyone.
@@ -226,7 +227,7 @@ export function beats(p: ContentPack, prev: StageView | undefined, next: StageVi
  }
 
  // Turn 30 has ended with the Overlord standing (standard rules): the campaign is decided by one last battle between the factions.
- if (next.phase === 'final-management' && prev.phase !== 'final-management') out.push({ kind: 'turn', size: 'banner', eyebrow: 'Turn 30 is over', title: 'The final battle', art: { kind: 'faction', id: next.faction }, cue: { stinger: 'wardrums' }, hold: 5600,
+ if (next.phase === 'final-management' && prev.phase !== 'final-management') out.push({ kind: 'turn', size: 'banner', eyebrow: 'Turn 30 is over', title: 'The final battle', art: { kind: 'faction', id: next.faction }, cue: { sfx: 'fanfare', voice: 'final-prep' }, hold: 5600,
   lines: ['The Overlord still stands. Every character is restored to full health and energy.', `${side(next.faction)} prepares first, then attacks.`] });
  if (next.phase === 'actions' && !next.winner && (next.faction !== prev.faction || next.turn !== prev.turn)) {
   const lap = (next.lap ?? 1) > (prev.lap ?? 1);
@@ -245,7 +246,7 @@ export function setupBeats(p: ContentPack, s: Pick<StageView, 'quests' | 'enemie
  for (const f of ['horde', 'alliance'] as const) {
   const quests = s.quests.map(id => p.quests.find(q => q.id === id)).filter((q): q is NonNullable<typeof q> => !!q && q.faction === f);
   if (!quests.length) continue;
-  out.push({ kind: 'deploy', size: 'banner', eyebrow: 'Setup · starting quests', title: `The ${side(f)}’s quests are laid out`, lines: [`${plural(quests.length, 'quest')}: their creatures take their places on the map, one quest after another.`], art: { kind: 'faction', id: f }, cue: { stinger: 'horn' }, hold: 2600 });
+  out.push({ kind: 'deploy', size: 'banner', eyebrow: 'Setup · starting quests', title: `The ${side(f)}’s quests are laid out`, lines: [`${plural(quests.length, 'quest')}: their creatures take their places on the map, one quest after another.`], art: { kind: 'faction', id: f }, cue: out.length ? { stinger: 'horn' } : { stinger: 'horn', voice: 'setup' }, hold: 2600 });
   for (const q of quests) {
    // What actually stands on the board for it, region by region: the supply can run short of a figure.
    const placed = new Map<string, { n: number; creature: string; color: string; region: string }>();
@@ -266,4 +267,4 @@ export function setupBeats(p: ContentPack, s: Pick<StageView, 'quests' | 'enemie
  */
 export const STAGED_VOICES: Voice[] = ['event', 'auction', 'event-war', 'event-boss', 'event-bounty', 'event-hatreds', 'event-horizons', 'event-zeppelin', 'event-traders', 'event-beasts',
  'event-professions', 'event-retrain', 'event-subterfuge', 'event-ears', 'event-cleanse', 'event-winds', 'taunt-kelthuzad', 'taunt-nefarian', 'war-won-horde', 'war-won-alliance',
- 'merchant', 'lap', 'new-quest', 'quest', 'level', 'level-5', 'fallen', 'turn-horde', 'turn-alliance'];
+ 'merchant', 'lap', 'new-quest', 'quest', 'level', 'level-5', 'fallen', 'turn-horde', 'turn-alliance', 'final-prep'];

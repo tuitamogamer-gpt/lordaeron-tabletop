@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { recording, THEMES, VOICES, type Voice } from '../src/campaign/audio';
+import { AMBIENCE, recording, SFX_TAKES, THEMES, VOICES, type Sfx, type Voice } from '../src/campaign/audio';
 
 /**
  * The recordings the game plays, against the game's own lists and against their content.
@@ -12,7 +12,9 @@ import { recording, THEMES, VOICES, type Voice } from '../src/campaign/audio';
  */
 const ROOT = 'public/assets/audio';
 const files = (dir: string) => readdirSync(`${ROOT}/${dir}`).filter(name => name.endsWith('.mp3')).map(name => name.slice(0, -4)).sort();
-const SFX = ['block', 'card', 'coins', 'dice', 'hit', 'hurt', 'levelup', 'roar', 'slain', 'spell', 'sword', 'victory'];
+// Every effect the game can ask for, and each of its takes (hit, hit-2, hit-3).
+const EFFECTS: Sfx[] = ['bell', 'block', 'camp', 'card', 'cheer', 'chime', 'clash', 'click', 'coins', 'dice', 'fanfare', 'hit', 'hurt', 'levelup', 'mend', 'omen', 'roar', 'slain', 'slice', 'spell', 'steps', 'sword', 'victory'];
+const SFX = EFFECTS.flatMap(name => Array.from({ length: SFX_TAKES[name] ?? 1 }, (_, n) => n ? `${name}-${n + 1}` : name)).sort();
 const script = JSON.parse(readFileSync('scripts/voice-lines.json', 'utf8')) as { model: string; voices: Record<string, string>; lines: { file: string; voice: string; direction: string; text: string; made: string }[] };
 
 /**
@@ -49,7 +51,7 @@ describe('the voice recordings', () => {
  it('are exactly the recordings the game’s cues ask for', () => {
   const wanted = (Object.keys(VOICES) as Voice[]).flatMap(voice => Array.from({ length: VOICES[voice] }, (_, n) => recording(voice, n))).sort();
   expect(files('voice')).toEqual(wanted);
-  expect(wanted).toHaveLength(79);
+  expect(wanted).toHaveLength(109);
   expect(recording('horde', 0)).toBe('horde'); expect(recording('horde', 2)).toBe('horde-3');
  });
  it('are the lines written down in scripts/voice-lines.json, each spoken by an official Fish voice', () => {
@@ -63,8 +65,11 @@ describe('the voice recordings', () => {
    // The direction is given to the model in brackets and must not be part of the words.
    expect(line.text, line.file).not.toMatch(/[[\]]/);
   }
-  // No sentence is recorded twice.
-  expect(new Set(script.lines.map(line => line.text)).size).toBe(script.lines.length);
+  // No voice records a sentence twice. The herald's word for a class is the one sentence two voices share: Adrian says it
+  // for the Horde's character and Ethan for the Alliance's.
+  expect(new Set(script.lines.map(line => `${line.voice}: ${line.text}`)).size).toBe(script.lines.length);
+  const shared = script.lines.filter(line => script.lines.some(other => other !== line && other.text === line.text));
+  expect(shared.every(line => line.file.startsWith('class-'))).toBe(true);
  });
  it('give every cue with several recordings different words', () => {
   const words = (file: string) => script.lines.find(line => line.file === file)!.text;
@@ -78,7 +83,9 @@ describe('the voice recordings', () => {
 describe('the effects and the music', () => {
  it('are the files the game asks for', () => {
   expect(files('sfx')).toEqual(SFX);
-  expect(files('themes')).toEqual([...new Set(Object.values(THEMES).flat())].sort());
+  expect(SFX).toHaveLength(31);
+  // The themes, and the map's bed of wind and birdsong beside them.
+  expect(files('themes')).toEqual([...new Set([...Object.values(THEMES).flat(), AMBIENCE.file])].sort());
  });
 });
 
@@ -87,7 +94,8 @@ describe('every recording', () => {
   const quiet: string[] = [];
   for (const dir of ['voice', 'sfx', 'themes']) for (const name of files(dir)) {
    const { granules, share, until } = sounding(readFileSync(`${ROOT}/${dir}/${name}.mp3`));
-   expect(granules, `${dir}/${name}`).toBeGreaterThan(20);
+   // A button's click is a sixth of a second; everything else is longer than a third.
+   expect(granules, `${dir}/${name}`).toBeGreaterThan(name === 'click' ? 6 : 20);
    if (share < 0.8 || until < 0.9) quiet.push(`${dir}/${name}: sound in ${Math.round(share * 100)}% of it, the last at ${Math.round(until * 100)}%`);
   }
   // The silenced voice lines of 10 Nov 2026 measured 2% to 9% here; the lines as they are now measure 98% and more.

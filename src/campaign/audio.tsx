@@ -1,5 +1,5 @@
 // Music, sound effects and voice lines made with Fish Audio (docs/EQUIPMENT-AND-SOUND-2026-11-10.md, docs/MUSIC-THEMES-2026-11-11.md,
-// docs/SOUND-2026-11-12.md, scripts/prepare-audio.py), and short sounds made in the browser (stingers.ts).
+// docs/SOUND-2026-11-12.md, docs/SOUND-2026-11-21.md, scripts/prepare-audio.py), and short sounds made in the browser (stingers.ts).
 // Sounds follow the game state rather than the buttons: whatever changes the state (a player, the AI, an undo) is heard the same way.
 import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { Icon } from '../components';
@@ -10,7 +10,14 @@ import type { CombatCue, CombatPresentation } from './combat-flow';
 import { STAGED_VOICES, type Stinger } from './stage';
 import { STINGERS } from './stingers';
 
-export type Sfx = 'dice' | 'sword' | 'card' | 'coins' | 'levelup' | 'victory' | 'hit' | 'block' | 'hurt' | 'roar' | 'slain' | 'spell';
+export type Sfx = 'dice' | 'sword' | 'card' | 'coins' | 'levelup' | 'victory' | 'hit' | 'block' | 'hurt' | 'roar' | 'slain' | 'spell'
+ // From Fish Audio's sound effect library (21 Nov 2026): recordings where the browser used to make a sound up, and new moments.
+ | 'mend' | 'slice' | 'clash' | 'bell' | 'chime' | 'steps' | 'camp' | 'omen' | 'fanfare' | 'cheer' | 'click';
+/**
+ * How many recordings an effect has: <name>.mp3, <name>-2.mp3, <name>-3.mp3 in /assets/audio/sfx. The takes of an effect play in
+ * turn, so three blows in a row are three recordings (and each is tuned a little differently the next time round, SFX_TUNES).
+ */
+export const SFX_TAKES: Partial<Record<Sfx, number>> = { hit: 3, hurt: 2, block: 2, spell: 3, clash: 3 };
 /**
  * The voice cues and how many recordings each has: <cue>.mp3, <cue>-2.mp3, <cue>-3.mp3 in /assets/audio/voice. The recordings of
  * a cue take turns, so the same sentence is not heard twice running. scripts/voice-lines.json has every line's words and speaker.
@@ -22,13 +29,19 @@ export const VOICES = {
  'war-won-horde': 1, 'war-won-alliance': 1, 'battle-won': 3, 'battle-lost': 2, merchant: 2, lap: 1, town: 3, train: 2,
  'taunt-kelthuzad': 3, 'taunt-nefarian': 3, 'taunt-kazzak': 3, 'nefarian-arrives': 1, 'kazzak-found': 1, 'kazzak-decoy': 1,
  'victory-horde': 1, 'victory-alliance': 1, draw: 1, 'overlord-kelthuzad': 1, 'overlord-nefarian': 1, 'overlord-kazzak': 1,
+ // 21 Nov 2026: the final battle, a fight between the factions, a boss slain, a trade, an item handed out, the table laid, an ally's call,
+ // and the herald's word for a character who fights alone (Adrian for the Horde's, Ethan for the Alliance's).
+ 'final-prep': 1, 'final-battle': 2, pvp: 2, 'boss-slain': 2, trade: 2, spoils: 2, setup: 1, invite: 2,
+ 'class-warrior-horde': 1, 'class-mage-horde': 1, 'class-hunter-horde': 1, 'class-druid-horde': 1, 'class-priest-horde': 1, 'class-rogue-horde': 1, 'class-shaman-horde': 1, 'class-warlock-horde': 1,
+ 'class-warrior-alliance': 1, 'class-mage-alliance': 1, 'class-hunter-alliance': 1, 'class-druid-alliance': 1, 'class-paladin-alliance': 1, 'class-priest-alliance': 1, 'class-rogue-alliance': 1, 'class-warlock-alliance': 1,
 } as const;
 export type Voice = keyof typeof VOICES;
 /** The file of a cue's n-th recording, counted from 0. */
 export const recording = (voice: Voice, n: number) => n ? `${voice}-${n + 1}` : voice;
 /** The scene the music belongs to: the map, a battle, or a battle against the Overlord or another boss. */
 export type Track = 'map' | 'battle' | 'boss';
-export interface Cue { sfx?: Sfx; voice?: Voice; stinger?: Stinger }
+/** A moment's sounds: recorded effects (one, or several heard together), a voice line, and a sound made in the browser. */
+export interface Cue { sfx?: Sfx | Sfx[]; voice?: Voice; stinger?: Stinger }
 
 /** What is said over an Event card of each kind the first time a card of that name is drawn. */
 const EVENT_VOICES: Record<string, Voice> = {
@@ -60,7 +73,8 @@ export const warWinner = (text: string): 'horde' | 'alliance' | undefined => /^T
 export function cues(p: ContentPack, prev: GameView | undefined, next: GameView): Cue[] {
  if (!prev || prev === next || next.pack !== prev.pack || next.revision <= prev.revision || next.revision - prev.revision > 30) return [];
  const out: Cue[] = [], before = (id: string) => prev.heroes.find(h => h.id === id);
- if (next.winner && !prev.winner) out.push({ sfx: 'victory', voice: next.winner === 'draw' ? 'draw' : `victory-${next.winner}` });
+ if (next.winner && !prev.winner) out.push({ sfx: next.winner === 'draw' ? 'victory' : ['victory', 'cheer'], voice: next.winner === 'draw' ? 'draw' : `victory-${next.winner}` });
+ if (next.phase === 'final-management' && prev.phase !== 'final-management') out.push({ sfx: 'fanfare', voice: 'final-prep' });
  const risen = next.heroes.filter(h => h.level > (before(h.id)?.level ?? h.level));
  if (risen.length) out.push({ sfx: 'levelup', voice: risen.some(h => h.level === 5) ? 'level-5' : 'level' });
  if (next.completed.length > prev.completed.length) out.push({ voice: 'quest' });
@@ -70,7 +84,11 @@ export function cues(p: ContentPack, prev: GameView | undefined, next: GameView)
   // Nefarian speaks differently when he has reached the Bulwark, and Kazzak when his hiding place is found.
   const arrived = overlord?.id === 'nefarian' && b.region === 'bulwark' && !prev.nefarianFinal?.length;
   const found = overlord?.id === 'kazzak' && prev.kazzak?.some(t => t.region === b.region && !t.revealed);
-  out.push({ sfx: 'sword', voice: arrived ? 'nefarian-arrives' : found ? 'kazzak-found' : overlord ? `overlord-${overlord.id}` as Voice : first ? faction(p, first) : next.faction });
+  // The final battle has its own call. A fight between the factions and a character who fights alone are announced by the herald
+  // every other time; otherwise, and for a party, the side's battle cry is heard as before.
+  const herald = next.revision % 2 === 0, lone = first && b.kind === 'pve' && !b.boss && b.participants.length === 1 ? `class-${character(p, first).classId}-${faction(p, first)}` : '';
+  out.push({ sfx: 'sword', voice: arrived ? 'nefarian-arrives' : found ? 'kazzak-found' : overlord ? `overlord-${overlord.id}` as Voice : b.kind === 'final' ? 'final-battle'
+   : b.kind === 'pvp' && herald ? 'pvp' : lone in VOICES && herald ? lone as Voice : first ? faction(p, first) : next.faction });
  }
  const dice = (v: GameView) => v.battle?.active?.dice.map(d => `${d.id}:${d.value}:${d.rerolled ? 1 : 0}`).join(',') ?? '';
  if (dice(next) && dice(next) !== dice(prev) && (next.battle?.active?.dice.length ?? 0) >= (prev.battle?.active?.dice.length ?? 0)) out.push({ sfx: 'dice' });
@@ -109,15 +127,15 @@ const casts = (p: ContentPack, heroId?: string) => !!heroId && CASTERS.includes(
  * wound and a healing are heard when the Health changes; hits put aside are counters put down.
  */
 export function combatSounds(p: ContentPack, cue: Pick<CombatCue, 'kind' | 'heroId' | 'kills' | 'before'>, phase: CombatPresentation['phase']): Sound[] {
- const battle = cue.before.battle, magic: Sound = { sfx: 'spell', stinger: 'spark' }, fallen: Sound[] = cue.kills ? [{ sfx: 'slain', delay: 0.28 }] : [];
+ const battle = cue.before.battle, magic: Sound = { sfx: 'spell' }, fallen: Sound[] = cue.kills ? [{ sfx: 'slain', delay: 0.28 }] : [];
  switch (cue.kind) {
-  case 'power': return phase === 'anticipation' ? [casts(p, cue.heroId) ? magic : { stinger: 'power' }] : [];
+  case 'power': return phase === 'anticipation' ? [casts(p, cue.heroId) ? magic : { sfx: 'slice' }] : [];
   case 'bank': return phase === 'impact' ? [{ stinger: 'tokens' }] : [];
   case 'ranged': return phase === 'action' ? [casts(p, cue.heroId) ? magic : { stinger: 'volley' }] : phase === 'impact' ? [{ sfx: 'hit' }, ...fallen] : [];
   case 'melee': return phase === 'impact' ? [{ sfx: 'hit' }, ...fallen] : [];
-  case 'defend': return phase === 'anticipation' ? [battle?.kind !== 'pve' ? { sfx: 'sword' } : battle.boss === 'kelthuzad' ? magic : { sfx: 'roar' }] : phase === 'impact' ? [{ sfx: 'block' }] : [];
+  case 'defend': return phase === 'anticipation' ? [battle?.kind !== 'pve' ? { sfx: 'clash' } : battle.boss === 'kelthuzad' ? magic : { sfx: 'roar' }] : phase === 'impact' ? [{ sfx: 'block' }] : [];
   case 'hurt': return phase === 'impact' ? [{ sfx: 'hurt' }] : [];
-  case 'heal': return phase === 'impact' ? [{ stinger: 'heal' }] : [];
+  case 'heal': return phase === 'impact' ? [{ sfx: 'mend' }] : [];
   default: return [];
  }
 }
@@ -131,7 +149,8 @@ export function battleOutcome(p: ContentPack, state: Pick<GameView, 'battle' | '
  if (!b || b.stage !== 'over' || !b.winner || state.winner) return [];
  if (b.winner === 'draw') return [{ stinger: 'defeat' }];
  // Against creatures the challengers are `first`; between characters one faction has won.
- return b.kind !== 'pve' || b.winner === b.first ? [{ stinger: 'triumph', voice: 'battle-won' }] : [{ stinger: 'defeat', voice: (b.boss && taunt(p, b.boss)) || 'battle-lost' }];
+ const worldBoss = !!b.boss && p.events.some(e => e.id === b.boss && !!e.boss);
+ return b.kind !== 'pve' || b.winner === b.first ? [{ stinger: 'triumph', voice: worldBoss ? 'boss-slain' : 'battle-won' }] : [{ stinger: 'defeat', voice: (b.boss && taunt(p, b.boss)) || 'battle-lost' }];
 }
 
 /**
@@ -170,14 +189,19 @@ export function scene(state: Pick<GameView, 'phase' | 'battle'>): Track { return
 /** Seconds a phrase takes to fade in and to fade out; a theme pushed aside by another scene fades in CROSSFADE. */
 export const FADE_IN = 1.5, FADE_OUT = 4, CROSSFADE = 1.2;
 
-export interface SoundSettings { muted: boolean; music: number; effects: number; voices: boolean }
-const KEY = 'lordaeron-audio-v1', DEFAULTS: SoundSettings = { muted: false, music: 0.35, effects: 0.8, voices: true };
+export interface SoundSettings { muted: boolean; music: number; effects: number; voices: boolean; /** The map's wind and birdsong. */ ambience: boolean }
+const KEY = 'lordaeron-audio-v1', DEFAULTS: SoundSettings = { muted: false, music: 0.35, effects: 0.8, voices: true, ambience: true };
 function loadSettings(): SoundSettings {
  try { const saved = JSON.parse(localStorage.getItem(KEY) ?? 'null'); return saved && typeof saved === 'object' ? { ...DEFAULTS, ...saved } : DEFAULTS; } catch { return DEFAULTS; }
 }
 const src = (kind: 'themes' | 'sfx' | 'voice', name: string) => `/assets/audio/${kind}/${name}.mp3`;
 /** The effects heard many times in one fight are set a little under the rest. */
-const SFX_LEVEL: Partial<Record<Sfx, number>> = { hit: 0.9, block: 0.9, hurt: 0.9, roar: 0.6, slain: 0.75, spell: 0.7 };
+const SFX_LEVEL: Partial<Record<Sfx, number>> = { hit: 0.9, block: 0.9, hurt: 0.9, roar: 0.6, slain: 0.75, spell: 0.7, mend: 0.7, slice: 0.85, clash: 0.9, bell: 0.7, chime: 0.6, steps: 0.85, camp: 0.8, omen: 0.8, fanfare: 0.75, cheer: 0.55, click: 0.3 };
+/**
+ * The map's bed of wind and birdsong (prepare-audio.py > AMBIENCE): one period that repeats without a seam, as the music does,
+ * played far under everything else while the table shows the map.
+ */
+export const AMBIENCE = { file: 'ambience-map', lead: 0.2, period: 22, level: 0.5, fade: 2.5 };
 /** A voice line asked for while another is spoken waits for it up to this long (ms); a longer wait and it is left unsaid. */
 export const VOICE_WAIT = 2600;
 /** And they are played a little higher or lower from one time to the next, so that three blows are not one sound three times. */
@@ -190,6 +214,9 @@ export class AudioDirector {
  private buses?: Record<'music' | 'sfx' | 'voice', GainNode>;
  private buffers = new Map<string, Promise<AudioBuffer | undefined>>();
  private track?: { name: Track; source: AudioBufferSourceNode; gain: GainNode; rest: number };
+ /** The map's ambience while it plays, and whether the table wants it. */
+ private bed?: { source: AudioBufferSourceNode; gain: GainNode };
+ private bedWanted = false;
  private wanted?: Track;
  /** How many phrases each scene has begun, until when (performance.now) each one rests, and with which theme this session began. */
  private phrases: Record<Track, number> = { map: 0, battle: 0, boss: 0 };
@@ -232,6 +259,7 @@ export class AudioDirector {
   this.applyVolumes();
   // Whoever turns the music on or moves its volume hears it at once, not after the current rest.
   if (this.settings.muted || this.settings.music <= 0) this.stopMusic(); else if (this.wanted) void this.music(this.wanted, 'muted' in change || 'music' in change);
+  void this.ambience(this.bedWanted);
   this.listeners.forEach(l => l());
  }
 
@@ -251,7 +279,7 @@ export class AudioDirector {
  /** A hidden tab is silent, and the music's schedule waits with it. */
  suspend(hidden: boolean) { if (!this.ctx) return; void (hidden ? this.ctx.suspend() : this.ctx.resume().then(this.resumeMusic)).catch(() => {}); }
 
- private resumeMusic = () => { if (this.wanted && !this.track) void this.music(this.wanted); };
+ private resumeMusic = () => { if (this.wanted && !this.track) void this.music(this.wanted); void this.ambience(this.bedWanted); };
 
  private applyVolumes() {
   if (!this.buses || !this.ctx) return;
@@ -281,11 +309,14 @@ export class AudioDirector {
   if ((this.recent.get(key) ?? -1e9) > now - 350) return;
   this.recent.set(key, now);
   if (kind === 'voice') { this.speech = this.speech.then(() => this.say(name, delay)).catch(() => {}); return this.speech; }
-  const buffer = await this.load(src(kind, name));
+  // The next take of the effect, and for each round of its takes the next tuning.
+  const takes = SFX_TAKES[name as Sfx] ?? 1, n = this.tuned.get(name) ?? 0;
+  this.tuned.set(name, n + 1);
+  const buffer = await this.load(src(kind, n % takes ? `${name}-${n % takes + 1}` : name));
   if (!buffer || !this.ctx || !this.buses) return;
   const source = this.ctx.createBufferSource(), level = SFX_LEVEL[name as Sfx] ?? 1, tunes = SFX_TUNES[name as Sfx];
   source.buffer = buffer;
-  if (tunes) { const n = this.tuned.get(name) ?? 0; this.tuned.set(name, n + 1); source.playbackRate.value = tunes[n % tunes.length]; }
+  if (tunes) source.playbackRate.value = tunes[Math.floor(n / takes) % tunes.length];
   if (level === 1) source.connect(this.buses[kind]);
   else { const gain = this.ctx.createGain(); gain.gain.value = level; source.connect(gain); gain.connect(this.buses[kind]); }
   source.start(this.ctx.currentTime + delay);
@@ -319,7 +350,7 @@ export class AudioDirector {
  /** Everything one cue asks for: its sound made in the browser, its recorded effect and its voice line. */
  cue({ stinger, sfx, voice, delay = 0 }: Sound) {
   if (stinger) this.stinger(stinger, delay);
-  if (sfx) void this.play('sfx', sfx, delay);
+  for (const name of sfx ? [sfx].flat() : []) void this.play('sfx', name, delay);
   if (voice) void this.play('voice', voice, delay);
  }
 
@@ -376,11 +407,39 @@ export class AudioDirector {
   try { source.stop(t + fade + 0.05); } catch { /* already stopped */ }
  }
 
+ /**
+  * The map's ambience: on while the table shows the map, faded out in a fight, off with the sound or with its own setting. It is
+  * one loop under the effects' volume, at a level meant to be missed when it stops rather than heard while it plays.
+  */
+ async ambience(on: boolean) {
+  this.bedWanted = on;
+  const wanted = on && this.settings.ambience && this.ready();
+  if (!wanted) {
+   const bed = this.bed; this.bed = undefined;
+   if (bed && this.ctx) { const t = this.ctx.currentTime; bed.gain.gain.cancelScheduledValues(t); bed.gain.gain.setValueAtTime(bed.gain.gain.value, t); bed.gain.gain.linearRampToValueAtTime(0, t + AMBIENCE.fade); try { bed.source.stop(t + AMBIENCE.fade + 0.05); } catch { /* already stopped */ } }
+   return;
+  }
+  if (this.bed) return;
+  const buffer = await this.load(src('themes', AMBIENCE.file));
+  if (!buffer || !this.ctx || !this.buses || this.bed || !this.bedWanted || !this.settings.ambience || !this.ready()) return;
+  const gain = this.ctx.createGain(), source = this.ctx.createBufferSource(), t = this.ctx.currentTime;
+  gain.gain.setValueAtTime(0, t); gain.gain.linearRampToValueAtTime(AMBIENCE.level, t + AMBIENCE.fade);
+  gain.connect(this.buses.sfx);
+  source.buffer = buffer; source.loop = true; source.loopStart = AMBIENCE.lead; source.loopEnd = AMBIENCE.lead + AMBIENCE.period;
+  source.connect(gain); source.start(t, AMBIENCE.lead);
+  this.bed = { source, gain };
+ }
+
  /** No music while there is no campaign on the table. */
- silence() { this.wanted = undefined; clearTimeout(this.timer); this.stopMusic(); this.restUntil = { map: 0, battle: 0, boss: 0 }; this.phrases = { map: 0, battle: 0, boss: 0 }; }
+ silence() { this.wanted = undefined; clearTimeout(this.timer); this.stopMusic(); void this.ambience(false); this.restUntil = { map: 0, battle: 0, boss: 0 }; this.phrases = { map: 0, battle: 0, boss: 0 }; }
 }
 
 export const audio = new AudioDirector();
+/** Whether a click landed on something that can be pressed: a button, a tab, an option that is not disabled. */
+export const pressable = (target: EventTarget | null) => {
+ const el = target instanceof Element ? target.closest('button, [role="tab"], [role="radio"], summary') : null;
+ return !!el && !(el as HTMLButtonElement).disabled && el.getAttribute('aria-disabled') !== 'true';
+};
 
 /**
  * The map's themes on the table, the battle themes in combat, the boss theme against the Overlord, and the cues of each change of
@@ -391,9 +450,11 @@ export function useGameAudio(p: ContentPack, state: GameView | undefined, staged
  const previous = useRef<GameView | undefined>(undefined);
  useEffect(() => {
   const unlock = () => audio.unlock(), visibility = () => audio.suspend(document.hidden);
+  // Every button of the table answers with a quiet click, under the sound of whatever it then does.
+  const click = (e: MouseEvent) => { if (pressable(e.target)) void audio.play('sfx', 'click'); };
   window.addEventListener('pointerdown', unlock); window.addEventListener('keydown', unlock);
-  document.addEventListener('visibilitychange', visibility);
-  return () => { window.removeEventListener('pointerdown', unlock); window.removeEventListener('keydown', unlock); document.removeEventListener('visibilitychange', visibility); };
+  document.addEventListener('visibilitychange', visibility); document.addEventListener('click', click, true);
+  return () => { window.removeEventListener('pointerdown', unlock); window.removeEventListener('keydown', unlock); document.removeEventListener('visibilitychange', visibility); document.removeEventListener('click', click, true); };
  }, []);
  useEffect(() => {
   if (!state) { audio.silence(); previous.current = undefined; return; }
@@ -401,9 +462,10 @@ export function useGameAudio(p: ContentPack, state: GameView | undefined, staged
   const within = previous.current?.phase === 'combat' && state.phase === 'combat';
   const { sfx, voice } = pick(cues(p, previous.current, state).filter(cue => !staged || within || !cue.voice || !STAGED_VOICES.includes(cue.voice)));
   previous.current = state;
-  if (sfx) void audio.play('sfx', sfx);
+  for (const name of sfx ? [sfx].flat() : []) void audio.play('sfx', name);
   if (voice) void audio.play('voice', voice);
   void audio.music(scene(state));
+  void audio.ambience(scene(state) === 'map');
  }, [p, state, staged]);
 }
 
@@ -447,6 +509,7 @@ export function SoundControls() {
   <label className="setting-row"><input type="checkbox" checked={!s.muted} onChange={e => { audio.unlock(); audio.update({ muted: !e.target.checked }); }} />Play music and sound effects</label>
   {volume('music', 'Music')}{volume('effects', 'Effects')}
   <label className="setting-row"><input type="checkbox" checked={s.voices} onChange={e => { audio.unlock(); audio.update({ voices: e.target.checked }); }} />Voice lines (battle cries, turns, quests, Event cards, the Overlord, the merchant)</label>
-  <p className="sound-credit">The music comes and goes: a theme plays for about a minute, then rests, and another follows. Music, voices and the recorded effects made with Fish Audio; the short sounds of steps, bells and counters are made in your browser.</p>
+  <label className="setting-row"><input type="checkbox" checked={s.ambience} onChange={e => { audio.unlock(); audio.update({ ambience: e.target.checked }); }} />Ambience on the map (wind and birdsong)</label>
+  <p className="sound-credit">The music comes and goes: a theme plays for about a minute, then rests, and another follows. Music and voices made with Fish Audio; the recorded effects and the ambience are from Fish Audio too, and a few short sounds (horns, drums, wings, counters) are made in your browser.</p>
  </section>;
 }

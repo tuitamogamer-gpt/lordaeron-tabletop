@@ -59,7 +59,7 @@ describe('what the stage announces', () => {
  it('announces a bot’s journey with its way, and leaves a player’s own journey unannounced', () => {
   const s = createGame(p, DEFAULT_SETUP), c = legalActions(p, s).find((c): c is Extract<Command, { type: 'travel' }> => c.type === 'travel' && c.hero === MAGE && c.path.length === 2 && !c.power)!;
   const next = apply(p, s, c), [beat] = beats(p, s, next, c, true), to = p.regions.find(r => r.id === c.path[1])!.name, via = p.regions.find(r => r.id === c.path[0])!.name;
-  expect(beat).toMatchObject({ kind: 'travel', size: 'banner', title: `Sofeea travels to ${to}`, region: c.path[1], from: 'brill', path: c.path, art: { kind: 'hero', id: MAGE }, cue: { stinger: 'steps' } });
+  expect(beat).toMatchObject({ kind: 'travel', size: 'banner', title: `Sofeea travels to ${to}`, region: c.path[1], from: 'brill', path: c.path, art: { kind: 'hero', id: MAGE }, cue: { sfx: 'steps' } });
   expect(beat.lines[0]).toBe(`Through ${via}.`);
   expect(beats(p, s, next, c, false)).toEqual([]);
  });
@@ -69,7 +69,7 @@ describe('what the stage announces', () => {
   expect(beats(p, s, apply(p, s, pass), pass, true)[0]).toMatchObject({ kind: 'pass', title: 'Sofeea passes' });
   const rest = legalActions(p, s).filter((c): c is Extract<Command, { type: 'rest' }> => c.type === 'rest' && c.hero === MAGE && !c.food).at(-1)!;
   const rested = apply(p, s, rest), [beat] = beats(p, s, rested, rest, true);
-  expect(beat).toMatchObject({ kind: 'rest', title: 'Sofeea rests', cue: { stinger: 'heal' } });
+  expect(beat).toMatchObject({ kind: 'rest', title: 'Sofeea rests', cue: { sfx: 'camp' } });
   expect(beat.lines[0]).toBe([`+${hero(rested, MAGE).health - 1} health`, `+${hero(rested, MAGE).energy} energy`].filter(text => !text.startsWith('+0')).join(' · '));
   const train = legalActions(p, s).find((c): c is Extract<Command, { type: 'train' }> => c.type === 'train' && c.hero === WARRIOR && c.cards.length === 1 && c.cards[0] === 'warrior-heroic-strike')!;
   // What was learned is shown as the card itself, in the middle of the table.
@@ -81,7 +81,7 @@ describe('what the stage announces', () => {
   const offered = { ...s, phase: 'reward' as const, reward: { faction: 'horde' as const, eligible: [MAGE], items: [], special: [], offered: [taken.id, left.id], replacement: true } };
   const claim: Command = { type: 'reward', hero: MAGE, card: taken.id, discard: dropped.id }, claimed = { ...structuredClone(offered), revision: s.revision + 1 };
   const [reward] = beats(p, offered, claimed, claim, true);
-  expect(reward).toMatchObject({ kind: 'loot', size: 'card', eyebrow: 'Horde · Quest reward', title: `Sofeea takes ${taken.name}`, art: { kind: 'card', id: taken.id }, cue: { stinger: 'page' } });
+  expect(reward).toMatchObject({ kind: 'loot', size: 'card', eyebrow: 'Horde · Quest reward', title: `Sofeea takes ${taken.name}`, art: { kind: 'card', id: taken.id }, cue: { stinger: 'page', voice: 'spoils' } });
   expect(reward.lines.slice(1)).toEqual([`Also offered: ${left.name}, returned to its deck.`, `${dropped.name} is discarded to make room in the bag.`]);
   expect(reward.hold).toBeGreaterThanOrEqual(4000);
   // The only card offered: nothing else to mention.

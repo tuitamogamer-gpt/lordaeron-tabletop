@@ -96,6 +96,6 @@ describe('a player’s own action', () => {
   fireEvent.click(screen.getByRole('button', { name: /^Rest.*Recover health/ }));
   fireEvent.click(screen.getByRole('button', { name: 'Rest · 1 action' }));
   expect(JSON.parse(localStorage.getItem('lordaeron-base-save-v7')!).commands).toEqual([{ type: 'rest', hero: WARRIOR, health: 0 }]);
-  expect(cue.mock.calls).toEqual([[{ stinger: 'heal' }]]);
+  expect(cue.mock.calls).toEqual([[{ sfx: 'camp' }]]);
  });
 });
