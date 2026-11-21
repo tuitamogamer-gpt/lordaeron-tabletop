@@ -19,6 +19,17 @@ const COUNTER: Record<string, number> = {
  'thundershot': 13, 'burbon-fang': 14, 'leeam-sagewind': 15, 'sandrai-darkshine': 16,
 };
 /**
+ * How far each counter is turned clockwise, after the half turn that sets the token sheet upright, so that its face stands as it
+ * does in the character's painted portrait. The counters lie on the sheet each at its own angle; these were measured on
+ * 21 Nov 2026 by matching every counter's face against its portrait (docs/XP-TRACK-AND-COUNTERS-2026-11-21.md).
+ */
+const COUNTER_TURN: Record<string, number> = {
+ 'alissi-quicksting': 274, 'artumnis-moondream': 178, 'brandon-lightstone': 298, 'brebo-bigshot': 107, 'burbon-fang': 241, 'dongon-swiftblade': 310,
+ 'grumbaz-crowsblood': 213, 'leeam-sagewind': 236, 'meadowfrey': 9, 'sandrai-darkshine': 226, 'shailara-whitherblade': 341, 'sofeea-icecall': 322,
+ 'thundershot': 156, 'weefla-sorrowfall': 68, 'wennu-bloodsinger': 205, 'zowka-shattertusk': 309,
+};
+const CLEAR = { r: 0, g: 0, b: 0, alpha: 0 };
+/**
  * Other tokens by layer: the hourglass turn marker, the Overlord counters, and the tokens the interface draws as symbols: the Stun and
  * Curse tokens, the hit and armor tokens of the combat boxes, a gold coin, the health and energy tokens, the spellbook and the bag, and
  * the Horde and Alliance hexagons that stand for the factions.
@@ -99,7 +110,8 @@ function regionBox(region: Region, w: number, h: number) {
 
 /**
  * Writes one WebP; `crop` trims a black scan margin, `region` cuts a piece out of a sheet, `border` sets a small card in the printed black
- * border (see card-border.ts), `rotate` turns upside-down table art upright.
+ * border (see card-border.ts), `rotate` turns upside-down table art upright. A turn that is not a quarter turn is for a round
+ * counter: the picture grows to hold the turned square, and is trimmed back to the counter.
  */
 async function emit(group: keyof typeof manifest | string, dir: string, id: string, path: string, limit: number, options: { crop?: boolean; region?: Region; rotate?: number; quality?: number; border?: boolean } = {}) {
  const file = path.startsWith(ROOT) ? path : `${ROOT}/${path}`;
@@ -113,7 +125,7 @@ async function emit(group: keyof typeof manifest | string, dir: string, id: stri
   const cut = await image.raw().toBuffer({ resolveWithObject: true }), framed = await withPrintedBorder(cut.data, cut.info);
   image = sharp(framed.data, { raw: framed.info }); width = framed.info.width;
  }
- if (options.rotate) image = image.rotate(options.rotate);
+ if (options.rotate) image = options.rotate % 90 ? sharp(await sharp(await image.rotate(options.rotate, { background: CLEAR }).png().toBuffer()).trim({ background: CLEAR, threshold: 24 }).png().toBuffer()) : image.rotate(options.rotate);
  if (width > limit) image = image.resize({ width: limit });
  if (options.border) image = image.withExif(exif);
  const target = `${OUT}/${dir}/${id}.webp`, out = await image.webp({ quality: options.quality ?? 88, alphaQuality: 100, smartSubsample: true, effort: 5 }).toFile(target);
@@ -147,8 +159,8 @@ for (const e of p.events) { const path = pathOf(e.source?.reference); if (path) 
 for (const o of p.overlords) for (const n of [4, 6]) cards.push({ id: `overlord-${o.id}-${n}`, path: `Overlords/${OVERLORD_FILE[o.id]} ${n}.png`, crop: false, limit: 1700 });
 for (const { id, path, crop, limit, border } of cards) { const face = await emit('cards', 'cards', id, path, limit, { crop, border }); if (face) manifest.cards[id] = face; }
 
-// Character counters (upright) and the other tokens.
-for (const [id, layer] of Object.entries(COUNTER)) { const f = await emit('counters', 'counters', id, `${TOKENS}/Layer ${layer}.png`, 128, { rotate: 180 }); if (f) manifest.counters[id] = f.src; }
+// Character counters, each turned until its face is upright, and the other tokens.
+for (const [id, layer] of Object.entries(COUNTER)) { const f = await emit('counters', 'counters', id, `${TOKENS}/Layer ${layer}.png`, 128, { rotate: (180 + COUNTER_TURN[id]) % 360 }); if (f) manifest.counters[id] = f.src; }
 for (const [name, layer] of Object.entries(TOKEN_LAYER)) { const f = await emit('counters', 'counters', name, `${TOKENS}/Layer ${layer}.png`, 160); if (f) manifest.tokens[name] = f.src; }
 
 // Deck backs: quest decks by faction and difficulty, the item decks, each class deck and the event deck.

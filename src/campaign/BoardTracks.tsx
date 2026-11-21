@@ -25,22 +25,47 @@ export function TurnTrack({ state }: { state: Pick<GameView, 'turn' | 'lap' | 'f
  </div>;
 }
 
-/** The experience track printed down the board's edge: each character counter climbs toward level 5, one lane per faction. */
+/** The last space of the experience track: the experience that makes level 5. A counter never stands above it. */
+export const XP_SPACES = p.xp[p.xp.length - 1];
+/**
+ * Where the counters stand beside the track. A counter stands exactly at the height of its space, and it is taller than a space,
+ * so counters on the same space or on neighbouring ones stand side by side: each takes the first column that no counter within
+ * one space of it has taken. The Horde's counters are placed first, so they stand nearest the track.
+ */
+export function xpColumns(heroes: readonly { id: string; xp: number }[]) {
+ const placed: { id: string; space: number; column: number }[] = [];
+ for (const h of [...heroes].sort((a, b) => Number(faction(p, a.id) === 'alliance') - Number(faction(p, b.id) === 'alliance'))) {
+  const space = Math.max(0, Math.min(h.xp, XP_SPACES)), taken = placed.filter(v => Math.abs(v.space - space) <= 1).map(v => v.column);
+  let column = 0; while (taken.includes(column)) column++;
+  placed.push({ id: h.id, space, column });
+ }
+ return placed;
+}
+
+/**
+ * The experience track printed down the board's edge, as the game prints it: one space for every experience point from Start to
+ * the 28th, with the space that makes each level in green. Beside the spaces run the levels they belong to, and each character
+ * counter stands at the height of its own space, tied to it by a line in its faction's colour.
+ */
 export function ExperienceTrack({ state }: { state: Pick<GameView, 'heroes'> }) {
- const max = p.xp[4], at = (xp: number) => Math.min(xp, max) / max;
- // Counters sharing a space fan out so that every one stays visible: centre, right, left, then wider.
- const fan = (stack: number) => [0, 9, -9, 17, -17][stack] ?? 0;
- const lanes = (['horde', 'alliance'] as const).map(f => state.heroes.filter(h => faction(p, h.id) === f));
- return <div className="board-xp" role="img" aria-label={`Experience track: ${state.heroes.map(h => `${character(p, h.id).name.split(' ')[0]} ${h.xp} XP, level ${h.level}`).join('; ')}.`}>
+ const placed = xpColumns(state.heroes), columns = Math.max(1, ...placed.map(v => v.column + 1));
+ const first = (id: string) => character(p, id).name.split(' ')[0];
+ const next = (h: GameView['heroes'][number]) => h.level < p.xp.length ? `${Math.max(0, p.xp[h.level] - h.xp)} XP to level ${h.level + 1}` : 'highest level';
+ const vars = (v: { space: number; column: number }) => ({ '--space': v.space, '--column': v.column }) as CSSProperties;
+ return <div className="board-xp" role="img" aria-label={`Experience track, Start to ${XP_SPACES} XP: ${state.heroes.map(h => `${first(h.id)} ${h.xp} XP, level ${h.level}, ${next(h)}`).join('; ')}.`}>
   <span className="board-xp-title">Experience</span>
-  <div className="board-xp-scale" aria-hidden="true">
-   {p.xp.slice(1).map((xp, i) => <span key={xp} className="board-xp-level" style={{ '--at': at(xp) } as CSSProperties}><b>{i + 2}</b></span>)}
-   {lanes.map((heroes, lane) => <div key={lane} className={`board-xp-lane ${lane ? 'alliance' : 'horde'}`}>
-    {heroes.map(h => {
-     const stack = heroes.filter(v => Math.min(v.xp, max) === Math.min(h.xp, max)).indexOf(h);
-     return <span key={h.id} className={`board-xp-counter ${SCANS.counters[h.id] ? 'scanned' : ''}`} style={{ '--at': at(h.xp), '--dx': `${fan(stack)}px`, '--dy': `${stack * 13}px` } as CSSProperties} title={`${character(p, h.id).name} · ${h.xp} XP · level ${h.level}`}><img src={SCANS.counters[h.id] ?? `/assets/portraits/${h.id}.webp`} alt="" draggable={false}/></span>;
-    })}
-   </div>)}
+  <div className="board-xp-scale" aria-hidden="true" style={{ '--spaces': XP_SPACES + 1, '--gaps': Math.max(1, columns - 1) } as CSSProperties}>
+   <div className="board-xp-levels">
+    {p.xp.map((from, i) => { const to = (p.xp[i + 1] ?? XP_SPACES + 1) - 1; return <span key={from} className="board-xp-level" style={{ '--from': from, '--span': to - from + 1 } as CSSProperties} title={`Level ${i + 1}: ${from === to ? `${from} XP` : `${from} to ${to} XP`}`}><b>{i + 1}</b></span>; })}
+   </div>
+   <ol className="board-xp-spaces">
+    {Array.from({ length: XP_SPACES + 1 }, (_, n) => <li key={n} className={`board-xp-space ${n && p.xp.includes(n) ? 'level' : ''} ${placed.some(v => v.space === n) ? 'held' : ''}`}><b>{n}</b></li>)}
+   </ol>
+   <div className="board-xp-field">
+    {placed.map(v => <i key={v.id} className={`board-xp-tie ${faction(p, v.id)}`} style={vars(v)}/>)}
+    {placed.map(v => { const h = state.heroes.find(x => x.id === v.id)!;
+     return <span key={v.id} className={`board-xp-counter ${faction(p, v.id)} ${SCANS.counters[v.id] ? 'scanned' : ''}`} style={vars(v)} title={`${character(p, v.id).name} · ${h.xp} XP · level ${h.level} · ${next(h)}`}><img src={SCANS.counters[v.id] ?? `/assets/portraits/${v.id}.webp`} alt="" draggable={false}/></span>; })}
+   </div>
   </div>
   <span className="board-xp-start">Start</span>
  </div>;

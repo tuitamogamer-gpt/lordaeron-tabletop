@@ -8,25 +8,57 @@
 
 /* Around the map lies the board's printed border; the experience track runs down its left side. */
 .campaign-app .territorial-map.overview .campaign-map-scroll{background:radial-gradient(ellipse at 50% 42%,#302c1f 0%,#1b1911 68%,#100f0a 100%)}
+/* The experience track is part of the board: it stands against the board's left edge, and the two lie in the middle of the
+   table together. Where the table is not wide enough for both, the board gives the track its width; on a table narrower than
+   860px the track is left out. (Until 21 Nov 2026 the track took only what the board left over, so it was a strip 60px wide at
+   1440×900 and was missing at 1920×1200 and 2560×1440.) */
 .board-xp{display:none}
 @media(min-width:1000px){
  .campaign-app .territorial-map.overview .campaign-map-scroll{container:board / size}
- @container board (min-aspect-ratio: 172 / 100){
+ @container board (min-width:860px){
+  /* The track's width, and the board's size beside it: read where they are used, so the units are the table's. The track takes
+     what the table has beside the board, up to 232px, so that six counters on one space stand apart. It is 176px wide where
+     the table lacks no more than 3% of its width for that; on a taller table it takes 12% of the width, and never less than
+     112px. */
+  .campaign-app .territorial-map.overview .campaign-map-scroll>:is(svg,.board-xp){--xp-w:max(112px,min(176px,103cqw - 150cqh - 20px),min(232px,100cqw - 150cqh - 20px),min(176px,12cqw));--board-w:min(150cqh,100cqw - var(--xp-w));--board-h:calc(var(--board-w) / 1.5)}
+  .campaign-app .territorial-map.overview .campaign-map-scroll>svg{left:var(--xp-w);width:calc(100% - var(--xp-w))}
   .board-xp{display:flex}
   .campaign-app .territorial-map.overview .world-view-label{left:auto;right:12px}
  }
 }
-.board-xp{position:absolute;z-index:2;left:0;top:0;bottom:0;width:calc((100cqw - 150cqh) / 2);flex-direction:column;align-items:center;gap:6px;padding:10px 0 9px;pointer-events:none}
-.board-xp-title,.board-xp-start{font:600 9.5px/1 var(--sans);letter-spacing:1.3px;text-transform:uppercase;color:#cfb174}
-.board-xp-scale{--inset:14px;position:relative;flex:1;width:min(88px,calc(100% - 18px));border:1px solid #8b734777;border-radius:4px;background:linear-gradient(90deg,#3a1d16 0 50%,#16273a 50%);box-shadow:inset 0 0 14px #000c,0 2px 8px #0008}
-.board-xp-level{position:absolute;left:5px;right:5px;bottom:calc(var(--inset) + (100% - 2 * var(--inset)) * var(--at));border-top:1px solid #9fd08288}
-.board-xp-level b{position:absolute;left:50%;top:0;transform:translate(-50%,-50%);width:17px;height:17px;border:1px solid #b4dc98;border-radius:3px;background:#3c6a2c;color:#f0f9e6;font:700 10px/15px var(--serif);text-align:center;box-shadow:0 1px 3px #000a}
-.board-xp-lane{position:absolute;top:0;bottom:0;width:50%}
-.board-xp-lane.horde{left:0}.board-xp-lane.alliance{right:0}
-.board-xp-lane::before{content:'';position:absolute;left:50%;top:var(--inset,14px);bottom:var(--inset,14px);width:4px;transform:translateX(-50%);border-radius:2px;background:#0a0d09;box-shadow:inset 0 0 2px #000}
-.board-xp-counter{position:absolute;left:50%;bottom:calc(var(--inset) + (100% - 2 * var(--inset)) * var(--at));width:24px;height:24px;border:2px solid #c46a52;border-radius:50%;overflow:hidden;background:#111;box-shadow:0 2px 5px #000d;transform:translate(calc(-50% + var(--dx,0px)),calc(50% + var(--dy,0px)));pointer-events:auto}
-.board-xp-lane.alliance .board-xp-counter{border-color:#6fa6cf}
+.board-xp{position:absolute;z-index:2;left:calc((100cqw - var(--xp-w) - var(--board-w)) / 2);top:calc((100cqh - var(--board-h)) / 2);width:var(--xp-w);height:var(--board-h);flex-direction:column;gap:4px;padding:8px 5px 7px 8px;pointer-events:none}
+.board-xp-title,.board-xp-start{font:600 10.5px/1 var(--sans);letter-spacing:1.2px;text-transform:uppercase;color:#cfb174;white-space:nowrap}
+.board-xp-title{text-align:left}
+.board-xp-start{width:41px;text-align:center;letter-spacing:.6px}
+/* One row for every experience point, Start at the foot. Left of the rows run the levels; right of them stand the counters. */
+.board-xp-scale{--counter:clamp(24px,5.6cqh,36px);container-type:size;position:relative;flex:1;min-height:0;display:grid;grid-template-columns:17px 24px minmax(0,1fr)}
+/* The printed strip is the two narrow columns; the counters stand on the table beside it. */
+.board-xp-scale::before{content:'';position:absolute;left:-1px;top:-1px;bottom:-1px;width:43px;border:1px solid #8b734799;border-radius:4px;background:#17130c;box-shadow:inset 0 0 10px #000c,0 2px 8px #0008}
+.board-xp-spaces{grid-column:2;grid-row:1;position:relative;display:flex;flex-direction:column-reverse;min-height:0;margin:0;padding:0;list-style:none;border-left:1px solid #8b734766;border-radius:0 3px 3px 0;overflow:hidden}
+.board-xp-space{flex:1;min-height:0;display:grid;place-items:center;border-top:1px solid #7a674355;background:#2c2618}
+.board-xp-space:nth-child(even){background:#241f13}
+.board-xp-space:last-child{border-top:0}
+.board-xp-space>b{font:700 clamp(10.5px,2.5cqh,14px)/1 var(--sans);color:#c9b78d;font-variant-numeric:tabular-nums}
+.board-xp-space.level{background:linear-gradient(#4c8638,#356428)}
+.board-xp-space.level>b{color:#f2fae8}
+.board-xp-space.held{box-shadow:inset 0 0 0 1.5px #f0cd72}
+.board-xp-space.held>b{color:#ffe9a8}
+/* A level's stretch of the track: its number in the row that makes the level, and a line up to the row before the next. */
+.board-xp-levels{grid-column:1;grid-row:1;position:relative}
+.board-xp-level{position:absolute;left:0;right:0;bottom:calc(var(--from) * 100% / var(--spaces));height:calc(var(--span) * 100% / var(--spaces));pointer-events:auto}
+.board-xp-level::before{content:'';position:absolute;left:calc(50% - 1px);width:2px;top:3px;bottom:calc(100% / var(--span));background:#6ea457aa}
+.board-xp-level::after{content:'';position:absolute;left:30%;right:30%;top:3px;height:2px;background:#6ea457aa}
+.board-xp-level>b{position:absolute;left:1px;right:1px;bottom:1px;height:calc(100% / var(--span) - 2px);display:grid;place-items:center;border:1px solid #b4dc98;border-radius:3px;background:#3c6a2c;color:#f0f9e6;font:700 11px/1 var(--serif);box-shadow:0 1px 3px #000a}
+.board-xp-level:last-child::after{display:none}
+/* The counters. --stand is how much larger than its place on the track a counter is drawn: 1 on the flat board. */
+.board-xp-field{--step:min(var(--counter) * var(--stand,1) + 2px,(100% - var(--counter) * var(--stand,1)) / var(--gaps,1));grid-column:3;grid-row:1;position:relative;margin:0 4px 0 6px}
+.board-xp-tie{position:absolute;left:-6px;bottom:calc((var(--space) + .5) * 100% / var(--spaces));width:calc(6px + var(--column) * var(--step) + var(--counter) / 2);height:2px;transform:translateY(50%);border-radius:1px;background:#d0694f;opacity:.9}
+.board-xp-tie.alliance{background:#6fa6cf}
+.board-xp-counter{position:absolute;left:calc(var(--column) * var(--step));bottom:calc((var(--space) + .5) * 100% / var(--spaces));width:var(--counter);height:var(--counter);border:2px solid #c46a52;border-radius:50%;overflow:hidden;background:#111;box-shadow:0 2px 5px #000d;transform:translateY(50%);pointer-events:auto;transition:bottom .6s ease,left .3s ease}
+.board-xp-counter.alliance{border-color:#6fa6cf}
+.board-xp-counter:hover{z-index:2}
 .board-xp-counter img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 30%}
+@media(prefers-reduced-motion:reduce){.board-xp-counter{transition:none}}
 
 /* The turn track: thirty stamped spaces with Event and merchant symbols, and the hourglass on the current turn. */
 .board-turns{display:flex;align-items:center;gap:10px;flex-shrink:0;padding:7px 12px 6px;border-top:1px solid #8b744855;background:linear-gradient(#1d1b13,#121109)}

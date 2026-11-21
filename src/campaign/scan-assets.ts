@@ -3,7 +3,7 @@ import { BASE_PACK as p } from '../data/base';
 export interface ScanSize { src: string; width: number; height: number }
 export interface ScanAssets {
  cards: Record<string, ScanSize>;
- /** Character counters by character id, upright. */
+ /** Character counters by character id, each turned so that its face stands as in the character's portrait. */
  counters: Record<string, string>;
  /** Other printed tokens: the hourglass turn marker, the Overlord counters, and stun, curse, hit, armor, gold, health, energy, spellbook and bag. */
  tokens: Record<string, string>;

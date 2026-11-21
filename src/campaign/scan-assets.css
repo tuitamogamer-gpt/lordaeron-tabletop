@@ -18,7 +18,7 @@
 
 /* The printed counters carry their own faction rim, so the map and the experience track draw them as they are. */
 .portrait-map-token .portrait-token-counter{filter:drop-shadow(0 2px 2px #000c);pointer-events:none}
-.board-xp-counter.scanned{width:30px;height:30px;border:0;border-radius:0;overflow:visible;background:none;box-shadow:none;filter:drop-shadow(0 2px 3px #000d)}
+.board-xp-counter.scanned{border:0;border-radius:0;overflow:visible;background:none;box-shadow:none;filter:drop-shadow(0 2px 3px #000d)}
 .board-xp-counter.scanned>img{object-fit:contain;object-position:center}
 .board-turns li.current>.board-turns-hourglass{position:absolute;left:50%;top:50%;width:28px;height:28px;transform:translate(-50%,-50%);border-radius:50%;box-shadow:0 0 0 2px #fff0c4,0 0 12px #e7c67bc0,0 2px 5px #000}
 .board-turns li.current>.board-turns-hourglass.horde{box-shadow:0 0 0 2px #e58a6e,0 0 12px #e0603ec0,0 2px 5px #000}
