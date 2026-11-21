@@ -13,6 +13,7 @@ import { conditionText, effectText, staticCardText } from './rules-text';
 import { regionName } from './event-text';
 import ClassDeck from './ClassDeck';
 import { byTouch } from './pointer';
+import { cardGist } from './card-gist';
 import type { TradeDesk } from './trade';
 import RulesText from './RulesText';
 import { abilityRasterText } from './raster-card-text';
@@ -43,7 +44,7 @@ export default function CharacterSheet({hero:h,legal=[],inspect,open,preview=fal
   const id=h.slots[i]?.card??s.printed,c=id?card(p,id):undefined;
   return <section key={i} className={`character-slot ${c?'occupied':'vacant'} ${i<3?'power-slot':'equipment-slot'}`} aria-label={`Slot ${i+1}: ${slotLabel(s)}`}>
    <header><b>{String(i+1).padStart(2,'0')}</b><span>{slotLabel(s)}<small>{s.traits.includes('all')?'All traits':s.traits.join(' · ')}</small></span></header>
-   {c?<div className="sheet-slot-card"><CardThumbnail card={c} art="illustration" onClick={()=>inspect(c.id)} footer={c.printed?'Starting':c.type==='active'?'Equipped · constant':'Equipped'}/></div>:<div className="slot-placeholder"><AbilityArt icon={s.types.includes('active')?d.classId:s.types.includes('melee')?'melee':s.types.includes('armor')?'armor':'arcane'}/><strong>Open {s.stanceOnly?'stance':'slot'}</strong><span>Equip during management</span></div>}
+   {c?<div className="sheet-slot-card"><CardThumbnail card={c} art="illustration" onClick={()=>inspect(c.id)} footer={c.printed?'Starting':c.type==='active'?'Equipped · constant':'Equipped'}/><p className="sheet-slot-gist"><strong>{c.name}</strong><span>{cardGist(c)}</span></p></div>:<div className="slot-placeholder"><AbilityArt icon={s.types.includes('active')?d.classId:s.types.includes('melee')?'melee':s.types.includes('armor')?'armor':'arcane'}/><strong>Open {s.stanceOnly?'stance':'slot'}</strong><span>Equip during management</span></div>}
    {(!!c?.petHealth||!!h.slots[i]?.addons.length)&&<div className="sheet-slot-extras">
     {c?.petHealth&&<span className="pet-health"><GameIcon name="health" size={14}/>{h.pets[c.id]??c.petHealth} / {petCapacity(p,h,c.id)} pet HP</span>}
     {h.slots[i]?.addons.map(addon=><button key={addon} className="sheet-addon" onClick={()=>inspect(addon)} title={`Inspect ${card(p,addon).name}`}>+ {card(p,addon).name}</button>)}

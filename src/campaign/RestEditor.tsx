@@ -4,6 +4,7 @@ import { capacity, card, character } from '../rules/common';
 import { apply } from '../rules/game';
 import type { Command, Hero, State } from '../rules/model';
 import { GameIcon } from './GameIcon';
+import { CardThumbnail } from './parts';
 
 export default function RestEditor({ state, hero, legal, send }: { state: State; hero: Hero; legal: Command[]; send: (command: Command) => void }) {
  const cap = capacity(p, hero), town = ['both', state.faction].includes(p.regions.find(r => r.id === hero.location)?.town ?? '');
@@ -25,7 +26,8 @@ export default function RestEditor({ state, hero, legal, send }: { state: State;
   <p><strong>{character(p, hero.id).name}</strong> · {town ? 'Friendly town' : 'Wilderness'} · {budget} recovery points</p>
   <label className="rest-slider">Health recovery: <b>{healthRecovery}</b><input aria-label="Health recovery" type="range" min={0} max={maxHealth} value={healthRecovery} disabled={!allowed || !maxHealth} onChange={e => setHealth(Number(e.target.value))} /></label>
   <p className="muted">Allocate points to health. Remaining points restore energy, up to capacity.</p>
-  <label className="setting-row">Food<select value={selectedFood} disabled={!allowed || !foods.length} onChange={e => setFood(e.target.value)}><option value="">{foods.length ? 'No food' : 'No food in your bag'}</option>{foods.map(id => <option key={id} value={id}>{card(p, id).name}</option>)}</select></label>
+  {/* Food is chosen on its card, as every item is; with none in the bag there is nothing to ask. */}
+  {foods.length > 0 && <div className="rest-food" role="group" aria-label="Food"><span className="rest-food-label">Food from the bag<small>Eaten with this rest</small></span><div className="rest-food-cards"><button type="button" className={`rest-food-none ${selectedFood ? '' : 'selected'}`} aria-pressed={!selectedFood} disabled={!allowed} onClick={() => setFood('')}>No food</button>{foods.map(id => <CardThumbnail key={id} card={card(p, id)} selected={id === selectedFood} pressed={id === selectedFood} disabled={!allowed} actionLabel={`Eat ${card(p, id).name}`} onClick={() => setFood(id === selectedFood ? '' : id)} footer={id === selectedFood ? 'Eaten with this rest' : 'Eat with this rest'} />)}</div></div>}
   {selectedFood && <p className="muted">Food is consumed after recovery. Its effect is included below.</p>}
   {preview && <section className="rest-preview" aria-label="Recovery preview" aria-live="polite">
    {(['health', 'energy'] as const).map(type => <div key={type}><GameIcon name={type} size={28} /><span><small>{type === 'health' ? 'Health' : 'Energy'}</small><strong>{hero[type]} → {preview[type]} <em>/ {capacity(p, preview)[type]}</em></strong></span><b>+{preview[type] - hero[type]}</b></div>)}

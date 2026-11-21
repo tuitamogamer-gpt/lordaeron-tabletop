@@ -31,7 +31,9 @@ describe('Rest recovery preview', () => {
   hero.health = 1; hero.energy = 0;
   const food = p.cards.find(c => c.trait === 'Food')!; hero.bag = [food.id];
   render(<RestEditor state={state} hero={hero} legal={legalActions(p, state)} send={send} />);
-  fireEvent.change(screen.getByRole('combobox', { name: 'Food' }), { target: { value: food.id } });
+  // Food is chosen on its card, not by name in a list.
+  expect(screen.queryByRole('combobox')).toBeNull();
+  fireEvent.click(within(screen.getByRole('group', { name: 'Food' })).getByRole('button', { name: `Eat ${food.name}` }));
   expect(screen.getByText(/Food is consumed after recovery/)).toBeTruthy();
   const preview = within(screen.getByRole('region', { name: 'Recovery preview' })), cap = capacity(p, hero);
   expect(preview.getByText(`1 → ${cap.health}`, { exact: false })).toBeTruthy();

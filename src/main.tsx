@@ -57,6 +57,7 @@ import './campaign/visible-choices.css';
 import './campaign/responsive.css';
 import './campaign/finish.css';
 import './campaign/party-items.css';
+import './campaign/design-polish.css';
 import './campaign/clean-layout.css';
 // After a deployment, an open tab can ask for code chunks the server no longer has; reload once and resume from the autosave.
 window.addEventListener('vite:preloadError',event=>{if(reloadForUpdate())event.preventDefault();});

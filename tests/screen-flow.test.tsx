@@ -4,7 +4,7 @@ import { cleanup, fireEvent, render, screen, within } from '@testing-library/rea
 import { BASE_PACK as p, DEFAULT_SETUP } from '../src/data/base';
 import { createGame } from '../src/rules/game';
 import { view } from '../src/rules/view';
-import Chronicle from '../src/campaign/Chronicle';
+import Chronicle, { CHRONICLE_PAGE } from '../src/campaign/Chronicle';
 import EncounterPanel from '../src/campaign/EncounterPanel';
 import RulesGuide from '../src/campaign/RulesGuide';
 afterEach(cleanup);
@@ -19,7 +19,7 @@ describe('bounded chronicle browsing',()=>{
   const r=render(<Chronicle log={log}/>),seen:string[]=[];
   do{
    const entries=r.container.querySelectorAll('.chronicle-entries article');
-   expect(entries.length).toBeLessThanOrEqual(6);
+   expect(entries.length).toBeLessThanOrEqual(CHRONICLE_PAGE);
    entries.forEach(entry=>seen.push(entry.textContent!));
    const next=screen.getByRole('button',{name:'Next'}) as HTMLButtonElement;
    if(next.disabled)break;fireEvent.click(next);
@@ -33,7 +33,7 @@ describe('bounded chronicle browsing',()=>{
   fireEvent.change(screen.getByRole('textbox',{name:'Search the chronicle'}),{target:{value:'unmatched'}});
   expect(screen.getByText('No entries match your filters.')).toBeTruthy();
   fireEvent.click(screen.getByRole('button',{name:'Clear filters'}));
-  expect(screen.getByRole('status').textContent).toContain('1–6 of 19');
+  expect(screen.getByRole('status').textContent).toContain(`1–${CHRONICLE_PAGE} of 19`);
  });
 });
 describe('encounter sections',()=>{

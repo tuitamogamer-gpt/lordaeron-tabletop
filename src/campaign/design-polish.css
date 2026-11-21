@@ -1,0 +1,128 @@
+/*
+ * A design pass over the screens that lagged behind the rest (21. 11. 2026): the character dossier, the chronicle, the
+ * Encounter deck's overview, the rules guide, the quest decks and the Rest dialog. docs/DESIGN-POLISH-2026-11-21.md says what
+ * was wrong with each. Loaded after party-items.css; clean-layout.css stays last.
+ */
+
+/* ── The character dossier ─────────────────────────────────────────────────────────────────────────────────────────────── */
+/* Its heading stood on the frame's metalwork: the eyebrow touched the top edge and the class name ran under the corner gem. */
+@media(min-width:1000px){
+ /* The frame's lower band is as deep as its upper one: the last row of cards ran under it on a low screen. */
+ .full-character-sheet.compact-character-sheet.premium-character-sheet,
+ .character-codex .full-character-sheet.compact-character-sheet.premium-character-sheet,
+ .workspace-characters:has(.character-control-handover) .full-character-sheet.compact-character-sheet.premium-character-sheet{padding-bottom:36px}
+ .premium-character-sheet .sheet-dossier-heading{padding:12px 34px 0 2px}
+ /* The class is already named on the portrait ("Human · Paladin"): beside the buttons it was the word under the gem. */
+ .premium-character-sheet .sheet-dossier-class{display:none}
+ /* The row of slots takes the room there is and no more: with a fixed least height its cards ran under the frame's lower band. */
+ .campaign-app .premium-character-sheet .sheet-equipment-grid{grid-template-rows:minmax(0,1fr);min-height:0}
+ /* An equipped card stood in the middle of a column twice its height. It now stands under its slot's name, and the room
+    below says what the card is and does: at this size the printed text cannot be read. */
+ .premium-character-sheet .sheet-slot-card{flex-direction:column;justify-content:flex-start;gap:6px;padding:6px 6px 4px;container-type:size}
+ /* As wide as its column where the column is tall enough; on a low screen as tall as the room there is, so nothing is cut. */
+ .premium-character-sheet .sheet-slot-card>.card-thumbnail{flex:none;align-self:center;width:auto;max-width:100%;height:auto;height:min(100cqh,150cqw);min-height:0;aspect-ratio:2/3;padding:0}
+ .premium-character-sheet .sheet-slot-card .card-thumbnail-art{min-height:0;height:100%}
+ .premium-character-sheet .sheet-slot-card .card-portrait-face{min-height:0}
+ .premium-character-sheet .character-slot:has(.sheet-slot-extras) .sheet-slot-card>.card-thumbnail{min-height:0}
+ /* The other tabs' cards keep to the room there is too: with the heading clear of the frame, 170 px was more than a low screen had. */
+ .campaign-app .premium-character-sheet .sheet-card-grid .card-thumbnail,.campaign-app .premium-character-sheet .sheet-pane .bag-empty{height:clamp(120px,calc(100cqh - 52px),360px)}
+ /* A slot named on three lines pushed its card lower than its neighbours': every slot's name takes the same room. */
+ .premium-character-sheet .character-slot>header,.premium-character-sheet .character-slot:has(.sheet-slot-extras)>header{min-height:52px;align-items:flex-start}
+}
+/* The caption needs the room under a full-width card: it is shown where the slot is at least twice as tall as it is wide. */
+.sheet-slot-gist{display:none;flex-direction:column;gap:2px;min-height:0;margin:0;overflow:hidden}
+@container (max-aspect-ratio:1/2){.sheet-slot-gist{display:flex}}
+.sheet-slot-gist>strong{font:600 12.5px/1.2 var(--serif);color:#f2ddb5;text-wrap:balance}
+.sheet-slot-gist>span{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;overflow:hidden;font:11px/1.35 var(--sans);color:#c5bca6}
+
+/* ── The chronicle ─────────────────────────────────────────────────────────────────────────────────────────────────────── */
+/* Six tall boxes to a page, each holding one short line: 26 pages for 155 entries. Now a page of entries under their turns. */
+.campaign-app .chronicle-entries{display:flex;flex-direction:column;gap:14px;flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-right:6px;scrollbar-width:thin;scrollbar-color:#b3945c #17211b}
+.chronicle-turn{display:flex;flex-direction:column;gap:3px;min-width:0}
+.chronicle-turn>h3{display:flex;align-items:baseline;gap:12px;margin:0 0 3px;padding-bottom:5px;border-bottom:1px solid #a38e5544;font:600 15px/1.2 var(--serif);letter-spacing:.4px;color:#ecd6a6}
+.chronicle-turn>h3>small{font:10.5px/1.3 var(--sans);letter-spacing:.3px;color:#a99b7c}
+.campaign-app .chronicle-entries article{display:grid;grid-template-columns:22px minmax(0,1fr);align-items:center;gap:12px;min-height:30px;margin:0;padding:4px 12px;border:0;border-left:2px solid #806d3955;border-radius:0 3px 3px 0;background:linear-gradient(90deg,#2b33266b,#12201900 70%)}
+.campaign-app .chronicle-entries article>svg{color:#b8a67e}
+.campaign-app .chronicle-entries article>p{margin:0;font:13px/1.45 var(--sans);color:#d2cbb4;overflow-wrap:anywhere}
+.campaign-app .chronicle-entries article>p>b{font-weight:600;color:#f0dcb3}
+/* The sign of each kind carries its colour: a fight and a fall in red, a win in gold, growth in green, an Event in violet. */
+.campaign-app .chronicle-entries article.chronicle-turn-entry,.campaign-app .chronicle-entries article.chronicle-turn{border-left-color:#cfb17488}
+.campaign-app .chronicle-entries article.chronicle-combat{border-left-color:#c8705a}.campaign-app .chronicle-entries article.chronicle-combat>svg{color:#e0907c}
+.campaign-app .chronicle-entries article.chronicle-defeat{border-left-color:#a34a3c;background:linear-gradient(90deg,#4a23206b,#12201900 70%)}.campaign-app .chronicle-entries article.chronicle-defeat>svg{color:#e0806c}
+.campaign-app .chronicle-entries article.chronicle-victory{border-left-color:#e3c078;background:linear-gradient(90deg,#4a3d1c7a,#12201900 70%)}.campaign-app .chronicle-entries article.chronicle-victory>svg{color:#f0d28a}
+.campaign-app .chronicle-entries article.chronicle-growth{border-left-color:#8fb873}.campaign-app .chronicle-entries article.chronicle-growth>svg{color:#a9d48b}
+.campaign-app .chronicle-entries article.chronicle-event{border-left-color:#9a7fd0}.campaign-app .chronicle-entries article.chronicle-event>svg{color:#b9a2e6}
+.campaign-app .chronicle-entries article.chronicle-item>svg,.campaign-app .chronicle-entries article.chronicle-town>svg{color:#e3c078}
+.campaign-app .chronicle-entries article.chronicle-travel>svg,.campaign-app .chronicle-entries article.chronicle-rest>svg{color:#9fc3d6}
+
+/* ── The Encounter deck's overview ─────────────────────────────────────────────────────────────────────────────────────── */
+/* A narrow column of text pushed to the middle, a small Overlord card far to the right, and the last button cut off below.
+   Now two columns that start at the top: the deck on the left with its three counts as tiles, the Overlord with his combat
+   rules on the right. */
+@media(min-width:1000px){
+ .campaign-app .encounter-dashboard{grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);align-items:start;gap:36px;padding:10px 20px 14px;overflow-y:auto;overscroll-behavior:contain}
+ .campaign-app .encounter-brief{max-width:none;justify-self:stretch}
+ .campaign-app .encounter-brief h3{font-size:25px;margin:6px 0 8px}
+ .campaign-app .encounter-brief>p{max-width:62ch;font-size:13px;line-height:1.6}
+ .campaign-app .encounter-stat-grid{gap:12px;padding:14px 0 16px;border-bottom:0}
+ .campaign-app .encounter-stat-grid>div{gap:2px;padding:12px 14px;border:1px solid #8b734755;border-radius:5px;background:linear-gradient(160deg,#27301f9c,#141d18b8)}
+ .campaign-app .encounter-stat-grid>div:has(.encounter-deck-back){padding-left:64px}
+ .campaign-app .encounter-stat-grid strong{font-size:30px;line-height:1.1}
+ .campaign-app .encounter-stat-grid span{font-size:11.5px}
+ .campaign-app .encounter-deck-back{left:14px;width:38px}
+ .campaign-app .encounter-next{margin:18px 0 12px;padding-top:16px;border-top:1px solid #927b453f}
+ .campaign-app .encounter-boss{flex-direction:column;align-items:stretch;justify-content:flex-start;gap:14px;height:auto}
+ .campaign-app .encounter-boss>.folio-card,.campaign-app .encounter-boss>:first-child{width:100%;max-width:520px;height:auto;align-self:center}
+ .campaign-app .encounter-boss-rules{margin:0;padding:14px 16px;border:1px solid #8b734755;border-left:3px solid #cfb174;border-radius:0 5px 5px 0;background:#141d18b8;font-size:12.5px;line-height:1.65}
+ .campaign-app .encounter-boss-rules>strong{font:600 14px/1.3 var(--serif);letter-spacing:.3px;color:#ecd6a6}
+}
+
+/* ── The rules guide ───────────────────────────────────────────────────────────────────────────────────────────────────── */
+/* Six cards stretched over the page with three lines each. Now eight, four to a row, each with what it takes to play that part. */
+.rules-flow .rules-grid>article>header{display:flex;align-items:center;gap:10px}
+.rules-flow .rules-grid>article>header>svg{flex:none;width:22px;height:22px;color:#cbb176}
+.rules-flow .rules-grid>article>ul{display:flex;flex-direction:column;gap:5px;margin:0;padding:0;list-style:none}
+.rules-flow .rules-grid>article>ul>li{position:relative;padding-left:15px;font:12.5px/1.5 var(--sans);color:#d2cbb4}
+.rules-flow .rules-grid>article>ul>li::before{content:'';position:absolute;left:1px;top:.55em;width:6px;height:6px;border:1px solid #cfb174;background:#8d6935;transform:rotate(45deg)}
+@media(min-width:1000px){
+ .campaign-app .rules-flow .rules-grid{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:12px;overflow-y:auto;overscroll-behavior:contain}
+ .campaign-app .rules-flow .rules-grid>article{padding:16px 16px 14px;gap:10px}
+ .campaign-app .rules-flow .rules-grid h3{font-size:16px;line-height:1.25}
+ .campaign-app .rules-flow .rules-grid p{font-size:12.5px;line-height:1.55;color:#bdbba3}
+ .campaign-app .rules-flow .rules-grid small{margin-top:auto;font-size:11px;color:#a9a082}
+ .campaign-app .rules-flow .rules-grid .quiet-button{margin-top:auto}
+}
+@media(min-width:1000px) and (max-width:1199px){.campaign-app .rules-flow .rules-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:none}}
+
+/* ── The quest decks ───────────────────────────────────────────────────────────────────────────────────────────────────── */
+/* In the journal the three decks only show how many quests remain; a general rule for disabled buttons drew them at 44 %,
+   as if they were out of play. They are shown in full there. Where a replacement is drawn, an empty deck stays dimmed. */
+.campaign-app .quest-decks .quest-deck:disabled{opacity:1}
+.campaign-app .replacement-decks .quest-decks .quest-deck:disabled{opacity:.45}
+
+/* ── The Rest dialog ───────────────────────────────────────────────────────────────────────────────────────────────────── */
+/* Food was a drop-down list that said "No food in your bag" on most rests. It is now chosen on its card, and without food
+   the dialog does not ask. */
+.rest-food{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:14px;margin:14px 0 4px;padding:12px 0 0;border-top:1px solid #927b453f}
+.rest-food-label{font:600 13px/1.3 var(--serif);color:#ecd6a6}
+.rest-food-label>small{display:block;margin-top:3px;font:11px/1.35 var(--sans);color:#a99b7c}
+.rest-food-cards{display:flex;align-items:center;gap:10px}
+.rest-food-cards>.card-thumbnail{width:68px;height:auto;aspect-ratio:2/3;padding:0}
+.rest-food-cards>.card-thumbnail.selected{outline:2px solid #d7b878;outline-offset:2px;box-shadow:0 0 14px #d7b87855}
+.rest-food-none{min-height:36px;padding:6px 12px;border:1px solid #8b734766;border-radius:3px;background:#1a211c;color:#d9cdaa;font:11.5px/1.2 var(--sans);cursor:pointer}
+.rest-food-none.selected{border-color:#d7b878;background:#3a3120;color:#f0dcb3}
+.rest-food-none:disabled{opacity:.45;cursor:default}
+/* On every width the Overlord's rules stand under his card, never beside it. */
+.campaign-app .encounter-boss{flex-direction:column;align-items:center;gap:14px}
+.campaign-app .encounter-boss>.encounter-boss-rules{align-self:stretch;margin:0}
+/* A phone: the dossier's buttons ran 15 px past the screen beside its title. They take the next line. */
+@media(max-width:999px){
+ .premium-character-sheet .sheet-dossier-heading{flex-wrap:wrap;gap:8px 12px}
+ .premium-character-sheet .sheet-controls{flex-wrap:wrap;min-width:0}
+}
+/* Below the desktop layout a guide card is not a spaced column: its parts get their own distance. */
+@media(max-width:999px){
+ .rules-flow .rules-grid>article>p{margin:10px 0}
+ .rules-flow .rules-grid>article>ul{margin:0 0 12px}
+ .rules-flow .rules-grid>article>small{display:block;margin-bottom:6px}
+}
